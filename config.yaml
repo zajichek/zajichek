@@ -16,7 +16,6 @@ defaultContentLanguage: en
 hasCJKLanguage: false
 defaultContentLanguageInSubdir: false
 removePathAccents: true
-ignoreFiles: "\\.knit\\.md$", "\\.utf8\\.md$"
 
 ############################
 ## MODULES
