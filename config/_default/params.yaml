@@ -5,10 +5,10 @@
 
 # Appearance
 
-theme: forest
+theme: custom_site_theme
 day_night: true
-font: 'Times New Roman'
-font_size: S
+font: custom_site_font
+font_size: M
 
 # SEO
 

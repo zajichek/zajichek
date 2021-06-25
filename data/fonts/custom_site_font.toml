@@ -1,0 +1,11 @@
+# Font style metadata
+name = "Zajichek"
+
+# Optional Google font URL
+google_fonts = "family=Playfair"
+
+# Font families
+heading_font = "Playfair Display"
+body_font = "Playfair Display"
+nav_font = "Playfair Display"
+mono_font = "Playfair Display"

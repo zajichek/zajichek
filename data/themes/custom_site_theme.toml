@@ -1,0 +1,22 @@
+# Theme metadata
+name = "Zajichek"
+
+# Is theme light or dark?
+light = true
+
+# Primary
+primary = "#76b1f5"
+
+# Menu
+menu_primary = "#76b1f5"
+menu_text = "#0a0a0a"
+menu_text_active = "#aba4a4"
+menu_title = "#0a0a0a"
+
+# Home sections
+home_section_odd = "rgb(255, 255, 255)"
+home_section_even = "rgb(247, 247, 247)"
+
+[dark]
+  link = "#bbdefb"
+  link_hover = "#bbdefb"
