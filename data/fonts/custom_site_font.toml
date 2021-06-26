@@ -2,10 +2,10 @@
 name = "Zajichek"
 
 # Optional Google font URL
-google_fonts = "family=Playfair"
+google_fonts = "family=Kalam&family=Literata"
 
 # Font families
-heading_font = "Playfair Display"
-body_font = "Playfair Display"
-nav_font = "Playfair Display"
-mono_font = "Playfair Display"
+heading_font = "Kalam"
+body_font = "Literata"
+nav_font = "Kalam"
+mono_font = "Literata"

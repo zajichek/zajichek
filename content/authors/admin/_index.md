@@ -17,12 +17,10 @@ social:
 - icon: researchgate
   icon_pack: fab
   link: https://www.researchgate.net/search/publication?q=zajichek
-bio: My research interests include distributed robotics, mobile computing and programmable
-  matter.
 interests:
-- Statistical computing
-- Machine learning
-- Natural language processing
+- Building and automating statistical workflows
+- Model development and analysis
+- Creating data products
 education:
   courses:
   - course: MS, Statistics
@@ -36,6 +34,4 @@ highlight_name: false
 superuser: true
 ---
 
-I am a statistician/data scientist located in Central Wisconsin.
-
-{{< icon name="download" pack="fas" >}} Download my {{< staticref "uploads/demo_resume.pdf" "newtab" >}}resumé{{< /staticref >}}.
+I am a statistician/data scientist. My mission is to serve as a resource for organizations and businesses in Central Wisconsin and beyond to help solve problems with data.

@@ -29,13 +29,7 @@ experience:
     location: Wausau, Wisconsin
     date_start: '2020-11-02'
     date_end: ''
-    description: |2-
-        Responsibilities include:
-        
-        * Analyzing
-        * Modelling
-        * Deploying
-        
+    
   - title: Advanced Analytics Modeler
     company: Sentry Insurance
     company_url: https://www.sentry.com/
@@ -43,7 +37,6 @@ experience:
     location: Stevens Point, Wisconsin
     date_start: '2019-12-30'
     date_end: '2020-10-31'
-    description: Statistical analysis
     
   - title: Biostatistician
     company: Cleveland Clinic
@@ -52,8 +45,9 @@ experience:
     location: Cleveland, Ohio
     date_start: '2017-06-01'
     date_end: '2019-12-30'
-    description: Statistical analysis
 
 design:
-  columns: '2'
+  columns: '1'
 ---
+
+{{< icon name="download" pack="fas" >}} Download my {{< staticref "uploads/Alex Zajichek Resume.pdf" "newtab" >}}resume{{< /staticref >}}.

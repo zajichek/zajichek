@@ -2,21 +2,24 @@
 widget: hero
 headless: true
 weight: 10
-title: Statistical Consulting
-#hero_media: open-book.jpg
+title: Statistical Consulting For Business
 cta:
   label: '**Click to learn more**'
-  url: /#posts
+  url: /#consulting
 cta_alt:
   label: 'Contact me'
-  url: https://discord.gg/z8wNYzb
+  url: /#contact
 design:
+  columns: "1"
   background:
-    gradient_end: '#63615b'
-    gradient_start: '#c9c5b7'
-    #text_color_light: true
-    spacing:
-      padding: ["5px", "0", "5px", "0"]
+    image: open-book.jpg
+    image_darken: 1.0
+    image_parallax: true
+    image_position: center
+    image_size: cover
+    text_color_light: false
+  spacing:
+    padding: ["5px", "0", "5px", "0"]
 ---
 
-**For Business**
+Unlock your organization's data assets

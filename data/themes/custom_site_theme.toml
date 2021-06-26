@@ -5,13 +5,13 @@ name = "Zajichek"
 light = true
 
 # Primary
-primary = "#76b1f5"
+primary = "#004163"
 
 # Menu
-menu_primary = "#76b1f5"
-menu_text = "#0a0a0a"
-menu_text_active = "#aba4a4"
-menu_title = "#0a0a0a"
+menu_primary = "#004163"
+menu_text = "#c2c2c2"
+menu_text_active = "#bfa900"
+menu_title = "#c2c2c2"
 
 # Home sections
 home_section_odd = "rgb(255, 255, 255)"
