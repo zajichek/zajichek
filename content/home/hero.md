@@ -5,7 +5,7 @@ weight: 10
 title: Statistical Consulting For Business
 cta:
   label: '**Click to learn more**'
-  url: /#consulting
+  url: consulting/
 cta_alt:
   label: 'Contact me'
   url: /#contact

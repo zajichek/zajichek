@@ -5,7 +5,7 @@
 
 main:
   - name: Consulting
-    url: '#consulting'
+    url: "consulting/"
     weight: 10
   - name: Projects
     url: "#projects"
@@ -16,6 +16,9 @@ main:
   - name: Publications
     url: '#featured'
     weight: 40
+  - name: About
+    url: "about/"
+    weight: 50
   - name: Contact
     url: '#contact'
-    weight: 50
+    weight: 60

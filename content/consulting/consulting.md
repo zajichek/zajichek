@@ -3,7 +3,7 @@ widget: blank
 headless: true
 
 # ... Put Your Section Options Here (title etc.) ...
-title: Consulting
+title: Statistical Consulting Services
 subtitle:
 weight: 50
 design:
