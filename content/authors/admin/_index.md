@@ -19,8 +19,8 @@ social:
   link: https://www.researchgate.net/search/publication?q=zajichek
 interests:
 - Building and automating statistical workflows
-- Model development and analysis
-- Creating data products
+- Statistical analysis, modeling, and prediction
+- Creating data tools via web applications and packages
 education:
   courses:
   - course: MS, Statistics

@@ -2,12 +2,12 @@
 widget: hero
 headless: true
 weight: 10
-title: Statistical Consulting For Business
+title: Statistical Consulting Services
 cta:
   label: '**Click to learn more**'
   url: consulting/
 cta_alt:
-  label: 'Contact me'
+  label: "Let's talk"
   url: /#contact
 design:
   columns: "1"
@@ -19,7 +19,7 @@ design:
     image_size: cover
     text_color_light: false
   spacing:
-    padding: ["5px", "0", "5px", "0"]
+    padding: ["20px", "0", "20px", "0"]
 ---
 
-Unlock your organization's data assets
+Need help analyzing your data?
