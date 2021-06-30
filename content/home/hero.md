@@ -12,9 +12,9 @@ cta_alt:
 design:
   columns: "1"
   background:
-    image: header_background.jpeg
+    image: Rplot02.jpeg
     image_darken: .90
-    image_parallax: true
+    image_parallax: false
     image_position: center
     image_size: cover
     text_color_light: false
