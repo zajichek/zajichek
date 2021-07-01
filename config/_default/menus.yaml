@@ -8,13 +8,13 @@ main:
     url: "consulting/"
     weight: 10
   - name: Articles
-    url: 'articles/'
+    url: 'post/'
     weight: 20
   - name: Projects
-    url: "projects/"
+    url: "project/"
     weight: 30
   - name: Publications
-    url: 'publications/'
+    url: 'publication/'
     weight: 40
   - name: About
     url: "about/"
