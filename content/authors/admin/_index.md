@@ -26,7 +26,7 @@ education:
   - course: MS, Statistics
     institution: University of Iowa
     year: 2017
-  - course: BS, Statistics (CS minor)
+  - course: BS, Statistics
     institution: University of Wisconsin - La Crosse
     year: 2015
 email: alexzajichek@gmail.com
