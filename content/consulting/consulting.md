@@ -10,21 +10,16 @@ active: true
 headless: true
 
 # Order that this section appears on the page.
-weight: 15
+weight: 20
 
 title: Statistical Consulting
 subtitle:
-
-design:
-  columns: "1"
-  background:
-    image: icon.png
-    image_darken: 1.0
-    image_parallax: true
-    image_position: center
-    image_size: cover
-    text_color_light: false
-  spacing:
-    padding: ["20px", "0", "20px", "0"]
-    
 ---
+
+The majority of small to midsize organizations don't have the resources or even the need for a full-time statistician, but they have valuable data assets that could be leveraged.
+
+I use open source tools to build data products and conduct analysis. What this means for you? No overhead in the services, you are only paying for the time.
+
+Whether you need help analyzing a dataset, want to learn statistics or R, 
+
+Whether you're a business, organization, or individual, My mission is to serve as a resource for organizationsin Central Wisconsin and beyond to help solve problems with data.

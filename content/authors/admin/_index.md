@@ -34,4 +34,4 @@ highlight_name: false
 superuser: true
 ---
 
-I am a statistician/data scientist. My mission is to serve as a resource for organizations and businesses in Central Wisconsin and beyond to help solve problems with data.
+I am a statistician/data scientist. 
