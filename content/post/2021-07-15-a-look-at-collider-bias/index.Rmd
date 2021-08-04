@@ -21,7 +21,7 @@ There has been a lot of buzz around ["causal inference"](https://en.wikipedia.or
 
 # What is collider bias?
 
-In causal inference, the relationships between a network of events are represented in [_causal diagrams_](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7064555/). In the causal diagram below, event __A__ causes event __B__ causes event __C__. Here the term "event" refers to a random variable.
+In causal inference, the relationships between a network of events are represented in [_causal diagrams_](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7064555/). In the causal diagram below, event __A__ causes event __B__ which causes event __C__. Here the term "event" refers to a random variable.
 
 ```{r, fig.cap = "Not a collider", echo = FALSE}
 DiagrammeR::grViz("
@@ -39,7 +39,7 @@ DiagrammeR::grViz("
   ", height = 100, width = 500)
 ```
 
-The direction in which arrows point into the events (forming a _junction_) have major implications as to how the model behaves. One junction, that is the focus here, is called a [_collider_](https://catalogofbias.org/biases/collider-bias/), shown in the causal diagram below. 
+The direction in which arrows point into the events (forming a _junction_) have major implications as to how the model behaves. One junction in particular, which is the focus of this article, is called a [_collider_](https://catalogofbias.org/biases/collider-bias/). This is shown in the causal diagram below. 
 
 ```{r, fig.cap = "Collider junction", echo = FALSE}
 DiagrammeR::grViz("
@@ -58,13 +58,13 @@ DiagrammeR::grViz("
   ", height = 200, width = 500)
 ```
 
-This occurs when an event is independently caused by two (2) others. In our example, event __C__ is caused by events __A__ and __B__.
+A collider occurs when an event is independently caused by two other events. In the example, event __C__ is caused by events __A__ and __B__.
 
-Now, there is no causal relationship between __A__ and __B__ (since there are no arrows between the two). However, if we conditioned our model on a realization of __C__, we would observe an apparent correlation between __A__ and __B__ that does not exist in the marginal population. This is known as [_collider bias_](https://catalogofbias.org/biases/collider-bias/).
+Now, there is no causal relationship between __A__ and __B__ (since there are no arrows between the two). However, if the model were conditioned on __C__, a correlation between __A__ and __B__ would be induced that does not exist in the unconditional distribution. This is known as [_collider bias_](https://catalogofbias.org/biases/collider-bias/).
 
-One basic example [the book](http://bayes.cs.ucla.edu/WHY/) gives is to flip two (2) _fair_ coins simultaneously 100 times, only keep samples where at least one (1) head is observed, then tabulate the results. Let's do 10,000 flips:
+A basic example that [the book](http://bayes.cs.ucla.edu/WHY/) gives is to repeatedly flip two fair coins simultaneously but only keep samples where at least one of the coins shows heads. Let's do 10,000 flips and tabulate the results:
 
-```{r, echo = FALSE, message = FALSE}
+```{r, message = FALSE}
 
 # Load some packages
 require(tidyverse)
@@ -133,15 +133,15 @@ tibble(
 
 ```
 
-Now the question: Is the probability of a heads the same regardless of the value of the other coin? From our data,
+Now the question: Is the probability of a heads for one coin the same regardless of what the other coin shows? From our data,
 
 $$P(\text{Coin 1 = Heads}) = \frac{2403}{2403 + 2499} \approx 0.49$$
 
 $$P(\text{Coin 1 = Heads | Coin 2 = Tails}) = \frac{2540}{2540 + 0} = 1$$
 
-These results suggest that the coins are _not_ independent in that knowing coin 2 is tails changes the probability that coin 1 will be heads. However, we flipped the coins independently so we know there is not a relationship between them. This is an example of collider bias. Here is the causal diagram for this relationship:
+These results suggest that the coins are _not_ independent in that knowing coin 2 is tails changes the probability that coin 1 will be heads. However, we flipped the coins independently so we know there is not a relationship between them. This is an example of collider bias. Here is the causal diagram for this model:
 
-```{r, fig.cap = "Causal diagram for excluding trial results when observing two (2) tails after two coin flips", echo = FALSE}
+```{r, fig.cap = "Causal diagram for excluding trial results when observing two tails after two coin flips", echo = FALSE}
 DiagrammeR::grViz("
   digraph graph2 {
   
@@ -184,13 +184,13 @@ Let's go through a more practical example. _Note this is completely made up_.
 
 There is a clinical trial that we would like to recruit patients for which will be held at a single location. The study population consists of patients who have a disease of interest and live within 90 miles of the trial center. Suppose the following are true:
 
-1. 65% of patients live near (within 20 miles of) the trial center (denoted __N__)
-2. 25% of patients have severe disease regardless how far they live from the trial center (denoted __S__)
+1. 65% of patients live _near_ (within 20 miles) the trial center (denoted __N__)
+2. 25% of patients have _severe_ disease regardless how far they live from the trial center (denoted __S__)
 
 So we have...
 
 $$P(N) = 0.65 \hskip{.25in} P(S|N) = 0.25 \hskip{.25in} P(S|\bar{N}) = 0.25$$
-Our strategy will be to select patients at random from the entire population until 1000 are enrolled.
+Our sampling strategy will be to select patients at random from the entire population until 1000 are enrolled.
 
 ```{r, echo = FALSE}
 
@@ -266,23 +266,20 @@ patients <-
 
 ## The problem
 
-Suppose we reach the desired enrollment size and even though the follow-up is ongoing, we're handed a basic data set to do some preliminary analysis on the sample. Here are the first 5 rows:
+Suppose we eventually reach the desired enrollment size and even though the follow-up is ongoing, we're given a data set (called `patients`) to do some preliminary analysis on the sample. Here are the first 5 rows:
 
-```{r, echo = FALSE}
-knitr::kable(head(patients, 5))
+```{r}
+print(patients, n = 5)
 ```
 
-We have all `r n` patients represented in the data with two variables collected so far: disease severity (__S__) and distance from the trial center (__D__). Let's tabulate these columns:
+We have all `r n` patients represented in the data with two variables collected so far: disease severity (__S__) and distance from the trial center (__N__). Let's tabulate these columns:
 
-```{r, echo = FALSE}
+```{r}
 
 patients %>%
   
   # Count the rows
-  group_by(
-    N,
-    S
-  ) %>%
+  group_by(N, S) %>%
   summarise(
     Count = n(),
     .groups = "drop"
@@ -323,7 +320,7 @@ Well, the p-value from a chi-square test isn't 0 (it will never be), so it _is_ 
 
 If we think about the patients randomly selected versus those ultimately deciding to enroll, a reasonable assumption might be that those with less-severe disease, especially those who also live far away, may be more reluctant to join. This is exactly what happened.
 
-It turns out that the following are also true about this population with respect to their likelihood to join (denoted __J__):
+It turns out that the following are also true about this population with respect to their likelihood to _join_ the trial (denoted __J__):
 
 1. 85% of patients living within 20 miles of the trial center will join if asked regardless of disease severity
 2. Of those living more than 20 miles from the trial center, 50% will join if they have severe disease and only 10% will join if they don't.
@@ -373,13 +370,13 @@ Intuitively, this result makes sense. If patients who live far away and have les
 
 # Conclusion
 
-Collider bias is a very interesting and important concept to understand and consider when carrying out the statistical analysis process. In the examples throughout this article, we had the luxury of knowing the true probabilities of various events so we could easily identify problems in the estimates. In practice, these are generally unknown quantities which makes this problem much more subtle and unapparent when only looking at the data.
+Collider bias is a very interesting and important concept to consider when conducting a statistical analysis. In the examples throughout this article, we had the luxury of knowing the true probabilities of various events so we could easily identify problems in the estimates. In practice, these are generally unknown quantities which makes this problem much more subtle and unapparent when relying solely on the data. Thus illustrating the importance of incorporating prior knowledge and subject-matter expertise into the modeling process.
 
 # Code appendix
 
 ```{r, eval = FALSE}
 
-##################### Code snippets used
+##################### Code snippets
 
 ###### Figure 1
 DiagrammeR::grViz("
@@ -411,72 +408,6 @@ DiagrammeR::grViz("
   b -> c
   }
   ", height = 200, width = 500)
-
-###### Table 1: Build coin data set and table
-# Load some packages
-require(tidyverse)
-
-# Set the seed
-set.seed(123)
-
-# Number of coin flips 
-n <- 10000
-
-# Generate random binomials
-coin1 <- rbinom(n = n, size = 1, p = 0.5)
-coin2 <- rbinom(n = n, size = 1, p = 0.5)
-
-# Make a tibble
-tibble(
-  `Coin 1` = coin1,
-  `Coin 2` = coin2
-) %>%
-  
-  # Convert to factors
-  mutate_all(
-    ~
-      .x %>%
-      factor() %>%
-      fct_recode(
-        Heads = "1",
-        Tails = "0"
-      ) %>%
-      fct_relevel(
-        "Heads"
-      )
-  ) %>%
-  
-  ### Filter to at least one heads
-  filter(
-    `Coin 1` == "Heads" |
-      `Coin 2` == "Heads"
-  ) %>%
-  
-  # Count the rows
-  group_by_all() %>%
-  summarise(
-    N = n(),
-    .groups = "drop"
-  ) %>%
-  
-  # Send over columns
-  pivot_wider(
-    names_from = `Coin 2`,
-    values_from = N,
-    values_fill = 0
-  ) %>%
-  
-  # Make a kable
-  knitr::kable(
-    format = "html",
-    caption = str_c("Tabulation of ", n, " simulataneously coin flips excluding cases when both were tails.")
-  ) %>%
-  kableExtra::kable_styling(
-    full_width = FALSE
-  ) %>%
-  kableExtra::add_header_above(
-    c("", "Coin 2" = 2)
-  )
 
 ###### Figure 3
 DiagrammeR::grViz("
@@ -562,40 +493,6 @@ patients <-
   select(
     -E
   )
-
-##### Table 2
-patients %>%
-  
-  # Count the rows
-  group_by(
-    N,
-    S
-  ) %>%
-  summarise(
-    Count = n(),
-    .groups = "drop"
-  ) %>%
-  
-  # Send over the columns
-  pivot_wider(
-    names_from = N,
-    values_from = Count
-  ) %>%
-  
-  # Rename
-  rename(
-    `Disease severity` = S
-  ) %>%
-  
-  # Make a kable
-  knitr::kable(
-    format = "html",
-    caption = "Tabulation of disease severity and distance from trial center for 1000 sampled patients"
-  ) %>%
-  kableExtra::kable_styling(
-    full_width = FALSE
-  ) %>%
-  kableExtra::add_header_above(c("", "Distance to trial center" = 2))
 
 #### Figure 3
 DiagrammeR::grViz("
