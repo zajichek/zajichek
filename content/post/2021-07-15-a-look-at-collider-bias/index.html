@@ -26,7 +26,7 @@ projects: []
 <link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
 
 
-<p>There has been a lot of buzz around <a href="https://en.wikipedia.org/wiki/Causal_inference">“causal inference”</a> and given how fundamental the name seems to statistical analysis, I picked up <a href="http://bayes.cs.ucla.edu/WHY/"><em>The Book of Why: The New Science of Cause and Effect</em></a> as a starting point. It’s been a great resource for introducing causal concepts and thinking about modeling outside of a purely objective and mathematical point of view. This article looks into one of the concepts introduced: <a href="https://catalogofbias.org/biases/collider-bias/"><em>collider bias</em></a>. All code snippets are written in <a href="https://www.r-project.org/"><code>R</code></a>.</p>
+<p>There has been a lot of buzz around <a href="https://en.wikipedia.org/wiki/Causal_inference">“causal inference”</a> and given how fundamental the name seems to statistics, I picked up <a href="http://bayes.cs.ucla.edu/WHY/"><em>The Book of Why: The New Science of Cause and Effect</em></a> as a starting point. It’s been a great resource for introducing causal concepts and thinking about the importance of bringing subjectivity into the modeling process. This article looks into one of the concepts introduced: <a href="https://catalogofbias.org/biases/collider-bias/"><em>collider bias</em></a>. All code snippets are written in <a href="https://www.r-project.org/"><code>R</code></a>.</p>
 <div id="what-is-collider-bias" class="section level1">
 <h1>What is collider bias?</h1>
 <p>In causal inference, the relationships between a network of events are represented in <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7064555/"><em>causal diagrams</em></a>. In the causal diagram below, event <strong>A</strong> causes event <strong>B</strong> which causes event <strong>C</strong>. Here the term “event” refers to a random variable.</p>
@@ -164,9 +164,9 @@ Tails
 </tbody>
 </table>
 <p>Now the question: Is the probability of a heads for one coin the same regardless of what the other coin shows? From our data,</p>
-<p><span class="math display">\[P(\text{Coin 1 = Heads}) = \frac{2403}{2403 + 2499} \approx 0.49\]</span></p>
+<p><span class="math display">\[P(\text{Coin 1 = Heads | Coin 2 = Heads}) = \frac{2403}{2403 + 2499} \approx 0.49\]</span></p>
 <p><span class="math display">\[P(\text{Coin 1 = Heads | Coin 2 = Tails}) = \frac{2540}{2540 + 0} = 1\]</span></p>
-<p>These results suggest that the coins are <em>not</em> independent in that knowing coin 2 is tails changes the probability that coin 1 will be heads. However, we flipped the coins independently so we know there is not a relationship between them. This is an example of collider bias. Here is the causal diagram for this model:</p>
+<p>These results suggest that the coins are not independent. When coin 2 is heads, coin 1 is fair. When coin 2 is tails, coin 1 is certain to be heads. However, we flipped the coins independently so we know there is not a relationship between them. This is an example of collider bias. Here is the causal diagram for this model:</p>
 <div class="figure"><span id="fig:unnamed-chunk-4"></span>
 <div id="htmlwidget-3" style="width:250px;height:100px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3">{"x":{"diagram":"\n  digraph graph2 {\n  \n  graph [layout = dot, rankdir = LR]\n  \n  node [shape = oval]\n  a [label = \"Coin 1\"]\n  c [label = \"Keep trial result\"]\n  b [label = \"Coin 2\"]\n  \n  a -> c\n  b -> c\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
@@ -175,18 +175,6 @@ Figure 3: Causal diagram for excluding trial results when observing two tails af
 </p>
 </div>
 <p>The decision to keep the result depends on the values of both coins. Once we condition on the trials that we kept, a correlation is induced.</p>
-<div id="why-does-it-matter" class="section level2">
-<h2>Why does it matter?</h2>
-<p>The result in the example above seems obvious, but in practice it may be much more subtle. Consider the routine cases in which things are controlled for:</p>
-<div id="selecting-a-study-population" class="section level3">
-<h3>Selecting a study population</h3>
-<p>In any statistical analysis we must define the population that is represented and in doing so, are conditioning on those characteristics. If the bias exists, a spurious relationship between some treatment and outcome may be induced before collecting any data.</p>
-</div>
-<div id="adding-predictors-to-a-model" class="section level3">
-<h3>Adding predictors to a model</h3>
-<p>In observational studies, it tends to be seen as a “good thing” to control for <em>more</em> than less. Often times this is done passively, or at least without thinking through the relationship each factor might have with the treatment and outcome (I will add that it’s possible to reverse the bias if the right things are controlled for according to the causal diagram). In any case, you can see how it might be easy to induce the bias here as well.</p>
-</div>
-</div>
 </div>
 <div id="example-selecting-patients-for-a-trial" class="section level1">
 <h1>Example: selecting patients for a trial</h1>
@@ -199,7 +187,7 @@ Figure 3: Causal diagram for excluding trial results when observing two tails af
 <h2>The setup</h2>
 <p>There is a clinical trial that we would like to recruit patients for which will be held at a single location. The study population consists of patients who have a disease of interest and live within 90 miles of the trial center. Suppose the following are true:</p>
 <ol style="list-style-type: decimal">
-<li>65% of patients live <em>near</em> (within 20 miles) the trial center (denoted <strong>N</strong>)</li>
+<li>65% of patients live <em>near</em> (within 20 miles of) the trial center (denoted <strong>N</strong>)</li>
 <li>25% of patients have <em>severe</em> disease regardless how far they live from the trial center (denoted <strong>S</strong>)</li>
 </ol>
 <p>So we have…</p>
@@ -208,16 +196,16 @@ Our sampling strategy will be to select patients at random from the entire popul
 </div>
 <div id="the-problem" class="section level2">
 <h2>The problem</h2>
-<p>Suppose we eventually reach the desired enrollment size and even though the follow-up is ongoing, we’re given a data set (called <code>patients</code>) to do some preliminary analysis on the sample. Here are the first 5 rows:</p>
+<p>Suppose we reach the desired enrollment size and we’re given a data set (called <code>patients</code>) to do some preliminary analysis on the sample. Here are the first 5 rows:</p>
 <pre class="r"><code>print(patients, n = 5)</code></pre>
 <pre><code>## # A tibble: 1,000 x 2
-##   S          N        
-##   &lt;fct&gt;      &lt;fct&gt;    
-## 1 Non-severe &lt;20 miles
-## 2 Severe     &gt;20 miles
-## 3 Severe     &lt;20 miles
-## 4 Non-severe &lt;20 miles
-## 5 Non-severe &lt;20 miles
+##   S          N    
+##   &lt;fct&gt;      &lt;fct&gt;
+## 1 Non-severe Near 
+## 2 Severe     Far  
+## 3 Severe     Near 
+## 4 Non-severe Near 
+## 5 Non-severe Near 
 ## # … with 995 more rows</code></pre>
 <p>We have all 1000 patients represented in the data with two variables collected so far: disease severity (<strong>S</strong>) and distance from the trial center (<strong>N</strong>). Let’s tabulate these columns:</p>
 <pre class="r"><code>patients %&gt;%
@@ -248,7 +236,7 @@ Our sampling strategy will be to select patients at random from the entire popul
   kableExtra::kable_styling(
     full_width = FALSE
   ) %&gt;%
-  kableExtra::add_header_above(c(&quot;&quot;, &quot;Distance to trial center&quot; = 2))</code></pre>
+  kableExtra::add_header_above(c(&quot;&quot;, &quot;Distance from trial center&quot; = 2))</code></pre>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:unnamed-chunk-7">Table 2: </span>Tabulation of disease severity and distance from trial center for 1000 sampled patients
@@ -259,7 +247,7 @@ Our sampling strategy will be to select patients at random from the entire popul
 </th>
 <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
-Distance to trial center
+Distance from trial center
 </div>
 </th>
 </tr>
@@ -268,10 +256,10 @@ Distance to trial center
 Disease severity
 </th>
 <th style="text-align:right;">
-&lt;20 miles
+Near
 </th>
 <th style="text-align:right;">
-&gt;20 miles
+Far
 </th>
 </tr>
 </thead>
@@ -300,18 +288,18 @@ Non-severe
 </tr>
 </tbody>
 </table>
-<p>We immediately notice something strange. Of the patients who live within 20 miles of the trial center, 25.4% have severe disease (which is expected), but of those living more than 20 miles from the trial center, 63.6% have severe disease. We know that only 25% of patients have severe disease regardless of where they live. Is this possible? Did this just happen by chance?</p>
-<pre class="r"><code>chisq.test(table(patients$S,patients$N))$p.value</code></pre>
-<pre><code>## [1] 3.126409e-18</code></pre>
-<p>Well, the p-value from a chi-square test isn’t 0 (it will never be), so it <em>is</em> possible. However, there is likely something else going on. What else could be causing this discrepancy?</p>
+<p>There is something strange: Of the patients who live near the trial center, 25.4% have severe disease (which is expected), but of those living far from the trial center, 63.6% have severe disease. We know that only 25% of patients have severe disease regardless of where they live. Is this possible? Did this just happen by chance?</p>
+<pre class="r"><code>prop.test(sum(patients$S == &quot;Severe&quot; &amp; patients$N == &quot;Far&quot;), sum(patients$N == &quot;Far&quot;), p = 0.25)$p.value</code></pre>
+<pre><code>## [1] 1.321956e-23</code></pre>
+<p>Well, the p-value isn’t 0 (it will never be), so it <em>is</em> possible. However, there is probably something else going on. What else could be causing this discrepancy?</p>
 </div>
-<div id="explanation" class="section level2">
-<h2>Explanation</h2>
-<p>If we think about the patients randomly selected versus those ultimately deciding to enroll, a reasonable assumption might be that those with less-severe disease, especially those who also live far away, may be more reluctant to join. This is exactly what happened.</p>
+<div id="an-explanation" class="section level2">
+<h2>An explanation</h2>
+<p>If we think about the patients randomly selected and offered enrollment versus those ultimately deciding to enroll, a reasonable assumption might be that those with less-severe disease, especially those who also live far away, may be more reluctant to join. This is exactly what happened.</p>
 <p>It turns out that the following are also true about this population with respect to their likelihood to <em>join</em> the trial (denoted <strong>J</strong>):</p>
 <ol style="list-style-type: decimal">
-<li>85% of patients living within 20 miles of the trial center will join if asked regardless of disease severity</li>
-<li>Of those living more than 20 miles from the trial center, 50% will join if they have severe disease and only 10% will join if they don’t.</li>
+<li>85% of patients living near the trial center will join if asked regardless of disease severity</li>
+<li>Of those living far from the trial center, 50% will join if they have severe disease and only 10% will join if they don’t.</li>
 </ol>
 <p>In probability notation:</p>
 <p><span class="math display">\[P(J|N) = 0.85 \hskip{.25in} P(J|\bar{N} \cap S) = 0.50 \hskip{.25in} P(J|\bar{N} \cap \bar{S}) = 0.10\]</span>
@@ -320,12 +308,12 @@ Even though every patient had the same opportunity to enroll in the trial, our r
 <div id="htmlwidget-4" style="width:250px;height:100px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-4">{"x":{"diagram":"\n  digraph graph2 {\n  \n  graph [layout = dot, rankdir = LR]\n  \n  node [shape = oval]\n  a [label = \"Distance from center\"]\n  c [label = \"Decision to join trial\"]\n  b [label = \"Disease severity\"]\n  \n  a -> c\n  b -> c\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
-Figure 4: Causal diagram for the relationship between disease severity, distance away from trial center, and decision to join the trial.
+Figure 4: Causal diagram for the relationship between disease severity, distance from trial center, and decision to join the trial.
 </p>
 </div>
 <div id="does-the-math-show-it" class="section level3">
 <h3>Does the math show it?</h3>
-<p>We know that 25% of patients in the general population have severe disease regardless of where they live. How does this probability change for patients who live more than 20 miles away from the trial center when we condition on only those enrolled?</p>
+<p>We know that 25% of patients in the general population have severe disease regardless of where they live. How does this probability change for patients who live far from the trial center when we condition on only those enrolled?</p>
 <p><span class="math display">\[
 \begin{equation} 
 \begin{split}
@@ -339,14 +327,14 @@ P(S|\bar{N} \cap J) &amp; = \frac{P(S \cap \bar{N} \cap J)}{P(\bar{N} \cap J)} \
 \end{split}
 \end{equation}
 \]</span>
-Ah, much better. Recall that in our sample we observed that 63.6% of patients who lived more than 20 miles from the trial center had severe disease. This is much closer to the true probability after properly conditioning on the correct factors.</p>
-<p>Intuitively, this result makes sense. If patients who live far away and have less-severe disease are the most unlikely to join the trial, then if we observe a patient who is enrolled and lives far away, it is more likely that they have severe disease.</p>
+Ah, much better. Recall that in our sample 63.6% of patients who lived far from the trial center had severe disease. This is much closer to the true probability that we’d expect after conditioning on the correct factors.</p>
+<p>Intuitively, this result makes sense. If patients who live far away and have less-severe disease are the most unlikely to join the trial, then a patient who is enrolled and lives far away is more likely to have severe disease.</p>
 </div>
 </div>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>Collider bias is a very interesting and important concept to consider when conducting a statistical analysis. In the examples throughout this article, we had the luxury of knowing the true probabilities of various events so we could easily identify problems in the estimates. In practice, these are generally unknown quantities which makes this problem much more subtle and unapparent when relying solely on the data. Thus illustrating the importance of incorporating prior knowledge and subject-matter expertise into the modeling process.</p>
+<p>Collider bias is a very interesting and important concept to consider when conducting a statistical analysis. In the examples throughout this article, we had the luxury of knowing the true probabilities of various events so we could easily identify and reconcile problems in the estimates. In practice, these are generally unknown quantities which makes this problem much more subtle and unapparent when relying solely on the data. Thus illustrating the importance of incorporating prior knowledge and subject-matter expertise into the modeling process.</p>
 </div>
 <div id="code-appendix" class="section level1">
 <h1>Code appendix</h1>
