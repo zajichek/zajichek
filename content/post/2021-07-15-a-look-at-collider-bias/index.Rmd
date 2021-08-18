@@ -344,7 +344,7 @@ DiagrammeR::grViz("
   a -> c
   b -> c
   }
-  ", height = 200, width = 500)
+  ", height = 100, width = 250)
 ```
 
 ### Does the math show it?
