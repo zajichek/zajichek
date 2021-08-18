@@ -25,7 +25,7 @@ experience:
   - title: Data Scientist
     company: Aspirus Health
     company_url: https://www.aspirus.org/
-    company_logo: org-gc
+    company_logo: aspirus
     location: Wausau, Wisconsin
     date_start: '2020-11-02'
     date_end: ''
@@ -33,7 +33,7 @@ experience:
   - title: Advanced Analytics Modeler
     company: Sentry Insurance
     company_url: https://www.sentry.com/
-    company_logo: org-x
+    company_logo: sentry
     location: Stevens Point, Wisconsin
     date_start: '2019-12-30'
     date_end: '2020-10-31'
@@ -41,11 +41,19 @@ experience:
   - title: Biostatistician
     company: Cleveland Clinic
     company_url: https://my.clevelandclinic.org/
-    company_logo: org-x
+    company_logo: ccf
     location: Cleveland, Ohio
     date_start: '2017-06-01'
     date_end: '2019-12-30'
-
+  
+  - title: Graduate Teaching Assistant
+    company: University of Iowa
+    company_url: https://stat.uiowa.edu/
+    company_logo: iowa
+    location: Iowa City, Iowa
+    date_start: '2015-08-01'
+    date_end: '2017-05-31'
+    
 design:
   columns: '1'
 ---

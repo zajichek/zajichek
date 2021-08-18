@@ -36,7 +36,7 @@ DiagrammeR::grViz("
   
   a -> b -> c
   }
-  ", height = 100, width = 500)
+  ", height = 100, width = 250)
 ```
 
 The direction in which arrows point into the events (forming a _junction_) have major implications as to how the model behaves. One junction in particular, which is the focus of this article, is called a [_collider_](https://catalogofbias.org/biases/collider-bias/). This is shown in the causal diagram below. 
@@ -55,7 +55,7 @@ DiagrammeR::grViz("
   a -> c
   b -> c
   }
-  ", height = 200, width = 500)
+  ", height = 100, width = 250)
 ```
 
 A collider occurs when an event is independently caused by two other events. In the example, event __C__ is caused by events __A__ and __B__.
@@ -155,7 +155,7 @@ DiagrammeR::grViz("
   a -> c
   b -> c
   }
-  ", height = 200, width = 500)
+  ", height = 100, width = 250)
 ```
 
 The decision to keep the result depends on the values of both coins. Once we condition on the trials that we kept, a correlation is induced.
@@ -391,7 +391,7 @@ DiagrammeR::grViz("
   
   a -> b -> c
   }
-  ", height = 100, width = 500)
+  ", height = 100, width = 250)
 
 ###### Figure 2
 DiagrammeR::grViz("
@@ -407,7 +407,7 @@ DiagrammeR::grViz("
   a -> c
   b -> c
   }
-  ", height = 200, width = 500)
+  ", height = 100, width = 250)
 
 ###### Figure 3
 DiagrammeR::grViz("
@@ -423,7 +423,7 @@ DiagrammeR::grViz("
   a -> c
   b -> c
   }
-  ", height = 200, width = 500)
+  ", height = 100, width = 250)
 
 ##### Build trial data set
 # Set a seed
@@ -508,7 +508,7 @@ DiagrammeR::grViz("
   a -> c
   b -> c
   }
-  ", height = 200, width = 500)
+  ", height = 100, width = 250)
 
 ```
 
