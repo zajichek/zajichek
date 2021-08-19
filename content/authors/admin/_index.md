@@ -34,4 +34,4 @@ highlight_name: false
 superuser: true
 ---
 
-I am a statistician/data scientist. 
+I am a statistician/data scientist from Central Wisconsin interested in the application of statistical methodologies and development/usage of open source data tools to solve problems for business stakeholders and researchers.
