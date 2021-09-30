@@ -11,5 +11,4 @@ design:
     image_position: left
     image_size: contain
     text_color_light: false
-title: Statistics and Data Science Consulting
 ---

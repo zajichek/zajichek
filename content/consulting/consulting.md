@@ -13,11 +13,8 @@ headless: true
 weight: 20
 
 design:
-  columns: '2'
+  columns: '1'
+  
+title: Statistics and Data Science Consulting
+subtitle: Project steps and services
 ---
-__Under Construction__
-
-# Header
-
-## Another header
-
