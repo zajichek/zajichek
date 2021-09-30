@@ -20,6 +20,4 @@ feature:
   icon: project-diagram
   icon_pack: fas
 - name:
-
-title: 1
 ---

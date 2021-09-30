@@ -20,6 +20,4 @@ feature:
   icon: file-alt
   icon_pack: fas
 - name:
-
-title: 2
 ---

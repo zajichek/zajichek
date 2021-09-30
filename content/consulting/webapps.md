@@ -20,6 +20,4 @@ feature:
   icon: laptop-code
   icon_pack: fas
 - name:
-
-title: 3
 ---
