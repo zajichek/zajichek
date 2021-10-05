@@ -13,11 +13,21 @@ weight: 30
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
+title: Project development
+
 feature:
-- name:
-- name: Data project scoping and development
-  description: Documentation that clearly defines project components including the problem statement, goals and objectives, data sources/collection mechanisms, analysis approach and methodology, deliverables, timelines, and success indicators. 
+- name: Scoping and planning
+  description: problem statement / goals and objectives / KPI's
   icon: project-diagram
   icon_pack: fas
-- name:
+- name: Study design
+  description: hypotheses / data collection / research strategy
+  icon: balance-scale
+  icon_pack: fas
+- name: Analysis plan
+  description: methodology / assumptions / deliverables
+  icon: clipboard
+  icon_pack: fas
 ---
+
+The most important part of any data project is to document a strategy for translating the original problem statement into an algorithmic guide that produces tangible output. This includes defining the problem or hypothesis, determining what/how data needs to be collected, how the data will be analyzed, and what the results will look like. 
