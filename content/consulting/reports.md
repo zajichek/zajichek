@@ -20,12 +20,12 @@ feature:
   description: reproducible reports / interactive documents / automation
   icon: file-alt
   icon_pack: fas
-- name: Data summarization
+- name: Data summaries and visualization
   description: description / exploration / storytelling
   icon: book-open
   icon_pack: fas
 - name: Statistical analysis
-  description: assumptions / annotation / interpretation
+  description: methodology / assumptions / interpretation
   icon: chart-bar
   icon_pack: fas
 ---
