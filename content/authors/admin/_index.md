@@ -18,7 +18,7 @@ social:
   icon_pack: fab
   link: https://www.researchgate.net/search/publication?q=zajichek
 interests:
-- Building and automating statistical workflows
+- Building and automating statistical and reporting workflows
 - Statistical analysis, modeling, and prediction
 - Creating data tools via web applications and packages
 - Text mining and natural language processing
@@ -35,4 +35,4 @@ highlight_name: false
 superuser: true
 ---
 
-I am a statistician/data scientist from Central Wisconsin interested in the application of statistical methodologies and development/usage of open source data tools to solve problems for individuals, businesses and organizations.
+Hi, I'm Alex, a data scientist and statistician in Central Wisconsin with a passion for building and implementing data products (in the form of models, analyses, reports, web applications, etc.) to help individuals and business stakeholders get the most out of their data and empower them to make better decisions. I prefer and advocate for practicing data science using open source languages such as R and Python, specifically in the [RStudio](https://www.rstudio.com/products/rstudio/) environment. I thoroughly enjoy the entire life cycle of a data science project from defining/scoping the problem, wrangling the data, building the model/analysis, and disseminating the results, and am always up for learning, discussing, and debating statistical methodologies.

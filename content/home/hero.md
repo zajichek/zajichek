@@ -2,7 +2,7 @@
 widget: hero
 headless: true
 weight: 10
-title: Statistical Consulting Services
+title: Data Consulting Services
 cta:
   label: '**Click to learn more**'
   url: consulting/
@@ -22,4 +22,4 @@ design:
     padding: ["20px", "0", "20px", "0"]
 ---
 
-Need help analyzing your data?
+Need help analyzing your data, building a dashboard, or automating a reporting process?
