@@ -1,0 +1,35 @@
+---
+title: Exploring COM Poisson Regression
+subtitle: A method for underdispersed count data
+author: Alex Zajichek
+date: '2021-12-28'
+slug: com-poisson-regression
+categories: []
+tags: []
+summary: ''
+authors: []
+lastmod: '2021-12-28T06:53:32-06:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+$$\Large \it \text {In Progress}$$
+
+Often times when I encounter a count distribution, the instinct is to fit a [Poisson model](https://en.wikipedia.org/wiki/Poisson_distribution). However, this makes a restrictive assumption of _equidispersion_ (i.e., the population variance _equals_ its mean). An alternative, in the common case of _overdispersion_ (i.e., when the population variance is _greater_ than its mean), is to fit a [negative-binomial model](https://en.wikipedia.org/wiki/Negative_binomial_distribution). The less prominent case however, presumably due to its rarity in applications, is when the distribution is _underdispersed_ (i.e., the population variance is _less_ than its mean)--there seems to be a lower number of options to deal with this sort of data. This article explores a model suitable for this scenario, namely, the Conway-Maxwell Poisson model.
+
+* Poisson regression tends to be the go-to method for modeling count data.
+* Negative binomial for over dispersion
+* COM Poisson distribution, generalizes Poisson
+* Modeling different dispersions by groups
+* Zero inflated COM Poisson
+* Number of re-admissions in 30 day period
+
+```{r}
+# Load required packages
+require(COMPoissonReg)
+```
+

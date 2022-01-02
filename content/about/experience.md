@@ -58,4 +58,4 @@ design:
   columns: '1'
 ---
 
-{{< icon name="download" pack="fas" >}} Download my {{< staticref "uploads/Alex Zajichek Resume.pdf" "newtab" >}}resume{{< /staticref >}}.
+{{< icon name="download" pack="fas" >}} Download my {{< staticref "uploads/Alex Zajichek Resume 20220102.pdf" "newtab" >}}resume{{< /staticref >}}.

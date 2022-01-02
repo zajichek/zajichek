@@ -31,4 +31,4 @@ feature:
   icon_pack: fas
 ---
 
-I use open source languages in the [RStudio](https://www.rstudio.com/products/rstudio/) environment. This gives the flexibility to develop fully customized solutions and the transparency to collaborate and share code with no overhead. Processes can be setup to access solutions on the web, receive by e-mail, or code can be handed off to your team to implement and maintain in-house.
+I use open source languages (R/Python) through the [RStudio](https://www.rstudio.com/products/rstudio/) environment to enable flexibility to develop fully customized data products, transparency for code sharing and collaboration, and no overhead. We can setup processes to deliver and access solutions on the web through an [R Shiny](https://shiny.rstudio.com/) web application, an e-mailed report via [R Markdown](https://rmarkdown.rstudio.com/), or code can be handed off to you and/or your team to implement and maintain in-house.
