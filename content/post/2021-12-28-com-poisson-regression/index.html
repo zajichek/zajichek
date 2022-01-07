@@ -20,11 +20,95 @@ projects: []
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
-<p><span class="math display">\[\Large \it \text {In Progress}\]</span></p>
-<p>Often times when I encounter a count distribution, the instinct is to fit a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson model</a>. However, this makes a restrictive assumption of <em>equidispersion</em> (i.e., the population variance <em>equals</em> its mean). An alternative, in the common case of <em>overdispersion</em> (i.e., when the population variance is <em>greater</em> than its mean), is to fit a <a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution">negative-binomial model</a>. The less prominent case however, presumably due to its rarity in applications, is when the distribution is <em>underdispersed</em> (i.e., the population variance is <em>less</em> than its mean)–there seems to be a lower number of options to deal with this sort of data. This article explores a model suitable for this scenario, namely, the Conway-Maxwell Poisson model.</p>
+<p><span class="math display">\[\Large \it \text {In Progress}\]</span>
+A few years ago I encountered an interesting count distribution at work during a modeling project. The goal was to model the number of <a href="https://www.shoulderdoc.co.uk/article/538">suture anchors</a> used in rotator-cuff tendon tears, and how that was influenced by tear characteristics and surgeon preference. Typically the instinct would be to fit a standard <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> model, but the target (i.e., the # of anchors) took on relatively small values and was also non-zero, so I had to do some digging for alternative methods. I came across a method called Conway-Maxwell (COM) Poisson regression, which not only allowed for <em>overdispersion</em> (i.e., the population variance is <em>greater</em> than its mean), but also <em>underdispersion</em>. I had never really come across methodology for the latter and it seemed to fit my problem, so I was intrigued (FD: I also had heard of COM-Poisson, albeit knew nothing about it, prior when one of my super smart graduate school buddies was doing research on it, so that’s partially why it stuck).</p>
+<p>Ultimately, we didn’t end up using it for the <a href="https://www.jshoulderelbow.org/article/S1058-2746(18)30555-X/fulltext">anchor project</a> 😁, and instead went in favor of <a href="https://stats.oarc.ucla.edu/r/dae/zero-truncated-poisson/">Zero-Truncated Poisson regression</a>. Nevertheless I thought the COM-Poisson model was an awesome method that warranted further exploration and later did a <a href="NonTraditionalCountRegression.pdf">talk</a> on it. That was a few years ago–so this article is meant to be a reworking of that talk as a way to re-learn it for myself, but also to get the word out to you about this awesome method!</p>
+<div id="a-brief-review-of-poisson-regression" class="section level1">
+<h1>A brief review of Poisson regression</h1>
+<p>The Poisson distribution is used to model a count of the occurrences of some event <strong>Y</strong>, generally in a fixed amount of time (e.g., the number of patients entering the emergency department <em>per day</em>), thus, it can be interpreted as a rate. More formally, if the probability mass function (PMF) for a non-negative, integer-valued <strong>Y</strong> is:</p>
+<p><span class="math display">\[P(Y = y|\lambda) = \frac{e^{-\lambda}\lambda^y}{y!}\]</span>
+then <strong>Y</strong> is distributed as a Poisson random variable, which implies the following crucial assumption:</p>
+<p><span class="math display">\[E[Y] = Var[Y] = \lambda\]</span>
+Namely, the population average number of events is equal to its variance. Here is a look at the distribution of a number of simulated Poisson random variables for increasing <span class="math inline">\(\lambda\)</span>:</p>
+<pre class="r"><code># Load the tidyverse!
+require(tidyverse)</code></pre>
+<pre><code>## Loading required package: tidyverse</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.1.2     ✓ dplyr   1.0.6
+## ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code># Set a seed 
+set.seed(123)
+
+# Number of samples
+n &lt;- 10000
+
+# Grid of lambdas
+lambda_grid &lt;- c(0.5, 1, 2, 4, 8, 15, 25, 50, 100)
+
+lambda_grid %&gt;%
+  
+  # For each lambda
+  map_df(
+    ~
+      tibble(
+        lambda = .x,
+        y = rpois(n = n, lambda = .x)
+      )
+  ) %&gt;%
+  
+  # Make facet labels; maintain ordering
+  mutate(
+    lambda = 
+      lambda %&gt;%
+      factor() %&gt;%
+      fct_relabel(
+        ~paste0(&quot;lambda==&quot;, .x),
+      )
+  ) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_histogram(
+    aes(
+      x = y,
+      fill = lambda
+    )
+  ) +
+  facet_wrap(
+    ~lambda,
+    label = &quot;label_parsed&quot;,
+    scales = &quot;free_x&quot;
+  ) +
+  xlab(&quot;Y = y&quot;) +
+  ylab(&quot;Count&quot;) +
+  theme(
+    legend.position = &quot;none&quot;,
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = &quot;gray&quot;)
+  )</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>For small <span class="math inline">\(\lambda\)</span>, <strong>Y</strong> takes on a relatively small number of (small) values and appears right-skewed. As <span class="math inline">\(\lambda\)</span> increases, the distribution becomes much more symmetric and “organized”, partially because the standard deviation is decreasing relative to the mean.</p>
+<div id="how-does-the-regression-model-work" class="section level2">
+<h2>How does the regression model work?</h2>
+<p>Just like other <a href="https://en.wikipedia.org/wiki/Generalized_linear_model">generalized linear models</a> (GLM), in a Poisson regression model, we want to estimate the population average (the same average as described above), but conditioned on a given set of covariates.</p>
+<p>Suppose we have a collection of covariates <span class="math inline">\(x_1, x_2, .., x_p\)</span>, then we can assume the following functional form:</p>
+<p><span class="math display">\[log(\lambda_i) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+...+\beta_px_{ip}\]</span>
+This <em>log-linear</em> model then allows us to estimate the average number of events (i.e., the Poisson parameter) for a given arrangement of covariate values. We also get informative interpretation of the individual effects of each covariate. For example, if we look at the resulting <span class="math inline">\(\lambda\)</span> estimation for increasing <span class="math inline">\(x_1\)</span> by 1 unit, assuming all other covariates are the same, we get:</p>
+<p>$$$$</p>
+<p>$$$$</p>
+<p>To estimate the parameters, we can plug this equation into the Poisson PMF:</p>
+<p>$<span class="math display">\[$P(Y_i = y_i|\lambda_) \]</span></p>
+<p>If <span class="math inline">\(\lambda\)</span> is large, it can be reasonable to get away with a ordinary least-squares model.</p>
 <ul>
-<li>Poisson regression tends to be the go-to method for modeling count data.</li>
-<li>Negative binomial for over dispersion</li>
 <li>COM Poisson distribution, generalizes Poisson</li>
 <li>Modeling different dispersions by groups</li>
 <li>Zero inflated COM Poisson</li>
@@ -34,3 +118,5 @@ projects: []
 require(COMPoissonReg)</code></pre>
 <pre><code>## Loading required package: COMPoissonReg</code></pre>
 <pre><code>## Loading required package: Rcpp</code></pre>
+</div>
+</div>
