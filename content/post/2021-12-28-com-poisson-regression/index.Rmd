@@ -86,7 +86,7 @@ ed_volumes %>%
     ),
     fill = "gray",
     color = "black",
-    bins = 25
+    bins = 30
   ) +
   geom_vline(
     aes(
@@ -115,7 +115,7 @@ ed_volumes %>%
   )
 ```
 
-There were `r round(mean(ed_volumes$Volume), 1)` patients per day on average, and the volume ranged from `r min(range(ed_volumes$Volume))` to `r max(range(ed_volumes$Volume))`. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates. Let's remind ourselves the specifics of a Poisson random variable:
+There were `r round(mean(ed_volumes$Volume), 1)` patients per day on average, ranging from `r min(range(ed_volumes$Volume))` to `r max(range(ed_volumes$Volume))`. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates. Let's remind ourselves the specifics of a Poisson random variable:
 
 If the probability mass function (PMF) for a non-negative, integer-valued $Y$ is:
 
@@ -147,10 +147,59 @@ _We estimate that there is a `r round(question2*100,1)`% chance that we will see
 
 `r emo::ji("scared")`
 
-Unfortunately, after we handed off the results, we realized that we missed a crucial assumption about the Poisson distribution:
+Unfortunately, after we handed off the results, we realized that we missed a crucial assumption about the Poisson distribution that we didn't account for:
 
 $$E[Y] = Var[Y]$$
-Our estimates assumed that the mean and variance of our underlying distribution were equal, but we failed to check this assumption. The sample variance was `r round(var(ed_volumes$Volume), 1)` which is considerably larger than the mean of `r round(mean(ed_volumes$Volume), 1)`.
+The estimates we provided assumed that the mean and variance of our underlying distribution were equal, but we failed to check this assumption. The sample variance was `r round(var(ed_volumes$Volume), 1)` which is considerably larger than the mean of `r round(mean(ed_volumes$Volume), 1)`. Here is what an actual Poisson distribution looks like in comparison with our observed sample:
+
+```{r}
+tibble(
+  Group = "Original Sample",
+  Volume = ed_volumes$Volume
+) %>%
+  bind_rows(
+    tibble(
+      Group = "Actual Poisson",
+      Volume = rpois(100000, mean(ed_volumes$Volume))
+    ) 
+  ) %>%
+  ggplot() +
+  geom_density(
+    aes(
+      x = Volume,
+      fill = Group
+    ),
+    alpha = .5,
+    color = "black"
+  ) +
+  geom_vline(
+    aes(
+      xintercept = mean(Volume)
+    ),
+    color = "#b84f48"
+  ) +
+  xlab("Daily Patient Volume") +
+  ylab("Density") +
+  theme(
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "gray")
+  ) +
+  scale_fill_manual(
+    values = 
+      c(
+        "blue",
+        "gray"
+      ),
+    guide = guide_legend(reverse = T)
+  ) 
+```
+
 
 Fortunately, we remembered something the hospital administrators passively hypothesized during the consultation: they think the ED is less busy on the weekends than during the week.
 

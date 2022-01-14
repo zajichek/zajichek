@@ -40,11 +40,11 @@ print(ed_volumes, n = 5)</code></pre>
 <pre><code>## # A tibble: 365 x 2
 ##   Date       Volume
 ##   &lt;date&gt;      &lt;int&gt;
-## 1 2022-01-10     36
-## 2 2022-01-09     27
-## 3 2022-01-08     14
-## 4 2022-01-07     32
-## 5 2022-01-06     41
+## 1 2022-01-12     36
+## 2 2022-01-11     38
+## 3 2022-01-10     22
+## 4 2022-01-09     22
+## 5 2022-01-08     30
 ## # … with 360 more rows</code></pre>
 <p>First, let’s take a look at the distribution of patient volume over the time period:</p>
 <pre class="r"><code>ed_volumes %&gt;%
@@ -57,7 +57,7 @@ print(ed_volumes, n = 5)</code></pre>
     ),
     fill = &quot;gray&quot;,
     color = &quot;black&quot;,
-    bins = 25
+    bins = 30
   ) +
   geom_vline(
     aes(
@@ -85,7 +85,7 @@ print(ed_volumes, n = 5)</code></pre>
     panel.grid.major.y = element_line(color = &quot;gray&quot;)
   )</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<p>There were 29.1 patients per day on average, and the volume ranged from 11 to 51. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates. Let’s remind ourselves the specifics of a Poisson random variable:</p>
+<p>There were 29 patients per day on average, ranging from 13 to 49. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates. Let’s remind ourselves the specifics of a Poisson random variable:</p>
 <p>If the probability mass function (PMF) for a non-negative, integer-valued <span class="math inline">\(Y\)</span> is:</p>
 <p><span class="math display">\[P(Y = y|\lambda) = \frac{e^{-\lambda}\lambda^y}{y!}\]</span>
 then <span class="math inline">\(Y\)</span> is distributed as a Poisson random variable, and has the following property:</p>
@@ -93,22 +93,68 @@ then <span class="math inline">\(Y\)</span> is distributed as a Poisson random v
 It turns out that the maximum likelihood estimator (MLE) for <span class="math inline">\(\lambda\)</span> is the <a href="https://www.statlect.com/fundamentals-of-statistics/Poisson-distribution-maximum-likelihood">sample average</a>. Remembering this, <em>we provide the estimate for the first question to be 29 patients.</em></p>
 <pre class="r"><code>lambda_hat &lt;- mean(ed_volumes$Volume)
 lambda_hat</code></pre>
-<pre><code>## [1] 29.08219</code></pre>
+<pre><code>## [1] 29.00548</code></pre>
 <p>We also know that once we have an estimate for <span class="math inline">\(\lambda\)</span> that we can compute probabilities by plugging it into the PMF:</p>
 <p><span class="math display">\[P(Y&gt;40) = 1 - P(Y\leq40) = 1 - \sum_{y=0}^{40} \frac{e^{-\lambda}\lambda^y}{y!}\]</span></p>
 <pre class="r"><code>y &lt;- 0:40
 p &lt;- exp(-lambda_hat) * lambda_hat^y / factorial(y)
 question2 &lt;- 1 - sum(p)
 question2</code></pre>
-<pre><code>## [1] 0.0213487</code></pre>
+<pre><code>## [1] 0.02058696</code></pre>
 <pre class="r"><code># Alternative approach
 1- ppois(40, lambda_hat)</code></pre>
-<pre><code>## [1] 0.0213487</code></pre>
+<pre><code>## [1] 0.02058696</code></pre>
 <p><em>We estimate that there is a 2.1% chance that we will see more than 40 patients in the ED in a single day</em>–we’re done!</p>
 <p>😨</p>
-<p>Unfortunately, after we handed off the results, we realized that we missed a crucial assumption about the Poisson distribution:</p>
+<p>Unfortunately, after we handed off the results, we realized that we missed a crucial assumption about the Poisson distribution that we didn’t account for:</p>
 <p><span class="math display">\[E[Y] = Var[Y]\]</span>
-Our estimates assumed that the mean and variance of our underlying distribution were equal, but we failed to check this assumption. The sample variance was 46.9 which is considerably larger than the mean of 29.1.</p>
+The estimates we provided assumed that the mean and variance of our underlying distribution were equal, but we failed to check this assumption. The sample variance was 51.8 which is considerably larger than the mean of 29. Here is what an actual Poisson distribution looks like in comparison with our observed sample:</p>
+<pre class="r"><code>tibble(
+  Group = &quot;Original Sample&quot;,
+  Volume = ed_volumes$Volume
+) %&gt;%
+  bind_rows(
+    tibble(
+      Group = &quot;Actual Poisson&quot;,
+      Volume = rpois(100000, mean(ed_volumes$Volume))
+    ) 
+  ) %&gt;%
+  ggplot() +
+  geom_density(
+    aes(
+      x = Volume,
+      fill = Group
+    ),
+    alpha = .5,
+    color = &quot;black&quot;
+  ) +
+  geom_vline(
+    aes(
+      xintercept = mean(Volume)
+    ),
+    color = &quot;#b84f48&quot;
+  ) +
+  xlab(&quot;Daily Patient Volume&quot;) +
+  ylab(&quot;Density&quot;) +
+  theme(
+    legend.position = &quot;top&quot;,
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = &quot;gray&quot;)
+  ) +
+  scale_fill_manual(
+    values = 
+      c(
+        &quot;blue&quot;,
+        &quot;gray&quot;
+      ),
+    guide = guide_legend(reverse = T)
+  ) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Fortunately, we remembered something the hospital administrators passively hypothesized during the consultation: they think the ED is less busy on the weekends than during the week.</p>
 <p>Namely, the population average number of events is equal to its variance which is a crucial assumption. Here is a look at the distribution of a number of simulated Poisson random variables for increasing <span class="math inline">\(\lambda\)</span>:</p>
 <pre class="r"><code># Load the tidyverse!
@@ -168,7 +214,7 @@ lambda_grid %&gt;%
     panel.grid.major.y = element_line(color = &quot;gray&quot;)
   )</code></pre>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>For small <span class="math inline">\(\lambda\)</span>, <strong>Y</strong> takes on a relatively small number of (small) values and appears right-skewed. As <span class="math inline">\(\lambda\)</span> increases, the distribution becomes much more symmetric and “organized”, partially because the standard deviation is decreasing relative to the mean.</p>
 <div id="how-does-the-regression-model-work" class="section level2">
 <h2>How does the regression model work?</h2>
