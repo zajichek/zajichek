@@ -26,10 +26,11 @@ Long story short, we didn't end up using the COM-Poisson model for the [anchor p
 
 I really like making up examples, so lets start with that:
 
-Suppose hospital administrators are interested in emergency department (ED) utilization and have asked two specific questions:
+Suppose hospital administrators are interested in emergency department (ED) utilization and have asked a few questions:
 
-1. How many patients can we expect to see in a single day?
+1. How many patients can we expect to see in a given day?
 2. What is the likelihood that we see more than 40 patients in a single day?
+3. Do we see more variation during the week versus weekend, or in the AM versus PM hours?
 
 To expedite the process, we're given a pre-built dataset called `ed_volumes` containing the number of patients entering the ED each day over the past year.
 
@@ -47,19 +48,24 @@ set.seed(123)
 ed_true_mean <-
   runif(
     n = 1,
-    min = 25,
-    max = 50
+    min = 12.5,
+    max = 25
   )
 
 # Build the dataset
 ed_volumes <-
   tibble(
-    Date = Sys.Date() - seq(1, 365, 1),
+    Date = rep(Sys.Date() - seq(1, 365, 1), 2),
+    TimeOfDay = c(rep("AM", length(Date) / 2), rep("PM", length(Date) / 2)),
     Volume = 
       rpois(
         n = length(Date), 
-        lambda = ifelse(weekdays(Date) %in% c("Saturday", "Sunday"), ed_true_mean - 10, ed_true_mean)
+        lambda = ifelse(weekdays(Date) %in% c("Saturday", "Sunday"), ed_true_mean - 5, ed_true_mean)
       )
+  ) %>%
+  arrange(
+    desc(Date),
+    TimeOfDay
   )
 
 ```
@@ -73,10 +79,19 @@ print(ed_volumes, n = 5)
 
 ```
 
-First, let's take a look at the distribution of patient volume over the time period:
+First, let's take a look at the distribution of total daily patient volume over the time period:
 
 ```{r}
 ed_volumes %>%
+  
+  # For each date
+  group_by(Date) %>%
+  
+  # Compute the total 
+  summarise(
+    Volume = sum(Volume),
+    .groups = "drop"
+  ) %>%
   
   # Make a plot
   ggplot() +
@@ -115,7 +130,7 @@ ed_volumes %>%
   )
 ```
 
-There were `r round(mean(ed_volumes$Volume), 1)` patients per day on average, ranging from `r min(range(ed_volumes$Volume))` to `r max(range(ed_volumes$Volume))`. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates. Let's remind ourselves the specifics of a Poisson random variable:
+There were `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)` patients per day on average, ranging from `r min(range(with(ed_volumes, tapply(Volume, Date, sum))))` to `r max(range(with(ed_volumes, tapply(Volume, Date, sum))))`. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates for the first two questions. Let's remind ourselves the specifics of a Poisson random variable:
 
 If the probability mass function (PMF) for a non-negative, integer-valued $Y$ is:
 
@@ -123,10 +138,10 @@ $$P(Y = y|\lambda) = \frac{e^{-\lambda}\lambda^y}{y!}$$
 then $Y$ is distributed as a Poisson random variable, and has the following property:
 
 $$E[Y] = \lambda$$
-It turns out that the maximum likelihood estimator (MLE) for $\lambda$ is the [sample average](https://www.statlect.com/fundamentals-of-statistics/Poisson-distribution-maximum-likelihood). Remembering this, _we provide the estimate for the first question to be `r round(mean(ed_volumes$Volume))` patients._
+It turns out that the maximum likelihood estimator (MLE) for $\lambda$ is the [sample average](https://www.statlect.com/fundamentals-of-statistics/Poisson-distribution-maximum-likelihood). Remembering this, _we provide the estimate for the first question to be `r ceiling(mean(with(ed_volumes, tapply(Volume, Date, sum))))` patients. (rounding up)_
 
 ```{r}
-lambda_hat <- mean(ed_volumes$Volume)
+lambda_hat <- mean(with(ed_volumes, tapply(Volume, Date, sum)))
 lambda_hat
 ```
 
@@ -143,45 +158,72 @@ question2
 1- ppois(40, lambda_hat)
 ```
 
-_We estimate that there is a `r round(question2*100,1)`% chance that we will see more than 40 patients in the ED in a single day_--we're done! 
+_We estimate that there is a `r round(question2*100,1)`% chance that we will see more than 40 patients in the ED in a single day_--done with the first two questions! 
 
 `r emo::ji("scared")`
 
-Unfortunately, after we handed off the results, we realized that we missed a crucial assumption about the Poisson distribution that we didn't account for:
+Unfortunately, we missed a crucial assumption about the Poisson distribution that we didn't account for:
 
 $$E[Y] = Var[Y]$$
-The estimates we provided assumed that the mean and variance of our underlying distribution were equal, but we failed to check this assumption. The sample variance was `r round(var(ed_volumes$Volume), 1)` which is considerably larger than the mean of `r round(mean(ed_volumes$Volume), 1)`. Here is what an actual Poisson distribution looks like in comparison with our observed sample:
+The estimates we provided assumed that the mean and variance of our underlying distribution were equal. The sample variance was `r round(var(with(ed_volumes, tapply(Volume, Date, sum))), 1)` which is considerably larger than the mean of `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)`. Here is what an actual Poisson distribution looks like (blue curve) with $\lambda$ = `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)` (our sample average) in comparison with the observed data (bars):
 
 ```{r}
-tibble(
-  Group = "Original Sample",
-  Volume = ed_volumes$Volume
-) %>%
-  bind_rows(
-    tibble(
-      Group = "Actual Poisson",
-      Volume = rpois(100000, mean(ed_volumes$Volume))
-    ) 
+
+ed_volumes %>%
+  
+  # Compute the total for each date
+  group_by(Date) %>%
+  summarise(
+    Volume = sum(Volume),
+    .groups = "drop"
   ) %>%
-  ggplot() +
-  geom_density(
+  
+  # Count the occurrences of each daily volume
+  group_by(Volume) %>%
+  summarise(
+    N = n(),
+    .groups = "drop"
+  ) %>%
+  
+  # Compute the observed and theoretical relative frequencies
+  mutate(
+    Observed = N / sum(N),
+    Theoretical = dpois(Volume, lambda = lambda_hat)
+  ) %>%
+  
+  # Remove raw count
+  select(-N) %>% 
+  
+  # Make a plot
+  ggplot(
     aes(
-      x = Volume,
-      fill = Group
+      x = Volume
+    )
+  ) +
+  geom_col(
+    aes(
+      y = Observed
     ),
-    alpha = .5,
+    fill = "gray",
     color = "black"
+  ) +
+  geom_area(
+    aes(
+      y = Theoretical
+    ),
+    alpha = .25,
+    color = "black",
+    fill = "blue"
   ) +
   geom_vline(
     aes(
-      xintercept = mean(Volume)
+      xintercept = lambda_hat
     ),
     color = "#b84f48"
   ) +
   xlab("Daily Patient Volume") +
-  ylab("Density") +
+  ylab("Relative Frequency (%)") +
   theme(
-    legend.position = "top",
     legend.title = element_blank(),
     legend.text = element_text(size = 12),
     axis.title = element_text(size = 14),
@@ -190,103 +232,66 @@ tibble(
     panel.background = element_blank(),
     panel.grid.major.y = element_line(color = "gray")
   ) +
-  scale_fill_manual(
-    values = 
-      c(
-        "blue",
-        "gray"
-      ),
-    guide = guide_legend(reverse = T)
-  ) 
+  scale_y_continuous(labels = scales::percent)
+
 ```
 
+The tails of the observed sample are heavier than a Poisson would be with the same mean. Therefore, the estimates we provided for questions one and two are probably not very accurate. Let's take a different approach: _answer question three first, and then work our way back to the other two._ 
 
-Fortunately, we remembered something the hospital administrators passively hypothesized during the consultation: they think the ED is less busy on the weekends than during the week.
+As a reminder, we want to assess whether there is more variation in patient volume during the week versus weekend, or in the AM versus PM hours. To get this comparison, we need a way to simultaneously estimate the effect of each of these factors on the patient volume: enter Poisson regression. 
 
-Namely, the population average number of events is equal to its variance which is a crucial assumption. Here is a look at the distribution of a number of simulated Poisson random variables for increasing $\lambda$:
+## Model formulation
+
+Just like other [generalized linear models](https://en.wikipedia.org/wiki/Generalized_linear_model) (GLM), a Poisson regression model estimates the population average (the same average as described above!), _but conditioned on a set of covariates_. 
+
+More formally, for a given set of covariates $x_1, x_2, .., x_p$, we assume the following functional form:
+
+$$log(\lambda_i) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+...+\beta_px_{ip} = X_i\beta$$
+This _log-linear_ model then allows us to estimate the average number of events (i.e., the Poisson parameter $\lambda$) for a given arrangement of covariate values. We also get informative interpretation of the individual effects of each covariate. For our example, the model looks like this:
+
+$$log(\lambda_i) = \beta_0 + \beta_{weekend}x_{i_{weekend}} + \beta_{PM}x_{i_{PM}}$$
+where $\lambda_i$ is the expected patient volume, $x_{i_{weekend}} = 1$ if it is Saturday or Sunday, and $x_{i_{PM}} = 1$ if it is PM hours (and they are 0 otherwise). We can take the following steps to estimate the parameters:
+
+1. Plug the regression formula into the Poisson PMF
+
+$$
+\begin{equation} 
+\begin{split}
+P(Y_i = y_i|\lambda_i) & = \frac{e^{-\lambda_i}\lambda_i^{y_i}}{y_i!} \\
+& = \frac{e^{-e^{X_i\beta}}{(e^{X_i\beta})}^{y_i}}{y_i!} \\
+\end{split}
+\end{equation}
+$$
+where $Y_i$ is the patient volume.
+
+2. Compute the likelihood function
+
+$$L(\lambda_i) = \prod_{i=1}^N \frac{e^{-e^{X_i\beta}}{(e^{X_i\beta})}^{y_i}}{y_i!} \\$$
+where $N$ is the total sample size.
+
+3. Derive the MLE's
+
+$$\hat{\beta} = max_{\beta} L(\lambda_i)\\$$
+where $\hat{\beta}$ is the set of estimated parameters computed from maximizing the likelihood function. Once we have these, we can plug them into the regression formula, and away we go! Luckily, our software will compute these for us--all we need to do is supply the data.
 
 ```{r}
-
-# Load the tidyverse!
-require(tidyverse)
-
-# Set a seed 
-set.seed(123)
-
-# Number of samples
-n <- 10000
-
-# Grid of lambdas
-lambda_grid <- c(0.5, 1, 2, 4, 8, 15, 25, 50, 100)
-
-lambda_grid %>%
-  
-  # For each lambda
-  map_df(
-    ~
-      tibble(
-        lambda = .x,
-        y = rpois(n = n, lambda = .x)
-      )
-  ) %>%
-  
-  # Make facet labels; maintain ordering
-  mutate(
-    lambda = 
-      lambda %>%
-      factor() %>%
-      fct_relabel(
-        ~paste0("lambda==", .x),
-      )
-  ) %>%
-  
-  # Make a plot
-  ggplot() +
-  geom_histogram(
-    aes(
-      x = y,
-      fill = lambda
-    )
-  ) +
-  facet_wrap(
-    ~lambda,
-    label = "label_parsed",
-    scales = "free_x"
-  ) +
-  xlab("Y = y") +
-  ylab("Count") +
-  theme(
-    legend.position = "none",
-    axis.title = element_text(size = 14),
-    axis.text = element_text(size = 12),
-    strip.text = element_text(size = 12),
-    panel.background = element_blank(),
-    panel.grid.major.y = element_line(color = "gray")
+# Fit a generalized linear model
+model <-
+  glm(
+    formula = Volume ~ Weekend + PM, # Specify the model form
+    data = # Supply the data
+      ed_volumes %>% 
+      mutate(
+        Weekend = weekdays(Date) %in% c("Saturday", "Sunday"),
+        PM = TimeOfDay == "PM"
+      ),
+    family = "poisson" # Indicate the likelihood
   )
 
+# Show the model summary
+summary(model)
+
 ```
-
-For small $\lambda$, __Y__ takes on a relatively small number of (small) values and appears right-skewed. As $\lambda$ increases, the distribution becomes much more symmetric and "organized", partially because the standard deviation is decreasing relative to the mean.
-
-## How does the regression model work?
-
-Just like other [generalized linear models](https://en.wikipedia.org/wiki/Generalized_linear_model) (GLM), in a Poisson regression model, we want to estimate the population average (the same average as described above), but conditioned on a given set of covariates. 
-
-Suppose we have a collection of covariates $x_1, x_2, .., x_p$, then we can assume the following functional form:
-
-$$log(\lambda_i) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+...+\beta_px_{ip}$$
-This _log-linear_ model then allows us to estimate the average number of events (i.e., the Poisson parameter) for a given arrangement of covariate values. We also get informative interpretation of the individual effects of each covariate. For example, if we look at the resulting $\lambda$ estimation for increasing $x_1$ by 1 unit, assuming all other covariates are the same, we get:
-
-$$$$
-
-$$$$
-
-To estimate the parameters, we can plug this equation into the Poisson PMF:
-
-$$P(Y_i = y_i|\lambda_) $$
-
-
-If $\lambda$ is large, it can be reasonable to get away with a ordinary least-squares model.
 
 
 
@@ -316,19 +321,24 @@ set.seed(123)
 ed_true_mean <-
   runif(
     n = 1,
-    min = 25,
-    max = 50
+    min = 12.5,
+    max = 25
   )
 
 # Build the dataset
 ed_volumes <-
   tibble(
-    Date = Sys.Date() - seq(1, 365, 1),
+    Date = rep(Sys.Date() - seq(1, 365, 1), 2),
+    TimeOfDay = c(rep("AM", length(Date) / 2), rep("PM", length(Date) / 2)),
     Volume = 
       rpois(
         n = length(Date), 
-        lambda = ifelse(weekdays(Date) %in% c("Saturday", "Sunday"), ed_true_mean - 10, ed_true_mean)
+        lambda = ifelse(weekdays(Date) %in% c("Saturday", "Sunday"), ed_true_mean - 5, ed_true_mean)
       )
+  ) %>%
+  arrange(
+    desc(Date),
+    TimeOfDay
   )
 
 ```
