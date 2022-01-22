@@ -22,7 +22,12 @@ A few years ago I encountered an interesting count distribution at work during a
 
 Long story short, we didn't end up using the COM-Poisson model for the [anchor project](https://www.jshoulderelbow.org/article/S1058-2746(18)30555-X/fulltext) `r emo::ji("grin")`, and instead went in favor of [Zero-Truncated Poisson regression](https://stats.oarc.ucla.edu/r/dae/zero-truncated-poisson/). Nevertheless I thought it was an awesome method that warranted further exploration and later did a [talk](NonTraditionalCountRegression.pdf) on it. That was a few years ago--so this article is intended to be a reworking of that talk to relearn it for myself, but also to get the word out about this awesome method!
 
-# A review of Poisson regression
+# Table Of Contents
+
+* [Review of Poisson Regression](#reviewofpoisson)
+  + [Model Formulation](#modelformulation)
+
+# A review of Poisson regression {#reviewofpoisson}
 
 I really like making up examples, so lets start with that:
 
@@ -32,7 +37,7 @@ Suppose hospital administrators are interested in emergency department (ED) util
 2. What is the likelihood that we see more than 40 patients in a single day?
 3. Do we see more variation during the week versus weekend, or in the AM versus PM hours?
 
-To expedite the process, we're given a pre-built dataset called `ed_volumes` containing the number of patients entering the ED each day over the past year.
+To expedite the process, we're given a pre-built dataset called `ed_volumes` containing the number of patients entering the ED each (half) day over the past calendar year.
 
 ```{r, echo = FALSE, message = FALSE}
 
@@ -55,7 +60,7 @@ ed_true_mean <-
 # Build the dataset
 ed_volumes <-
   tibble(
-    Date = rep(Sys.Date() - seq(1, 365, 1), 2),
+    Date = rep(as.Date("2021-12-31") - seq(0, 364, 1), 2),
     TimeOfDay = c(rep("AM", length(Date) / 2), rep("PM", length(Date) / 2)),
     Volume = 
       rpois(
@@ -130,7 +135,7 @@ ed_volumes %>%
   )
 ```
 
-There were `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)` patients per day on average, ranging from `r min(range(with(ed_volumes, tapply(Volume, Date, sum))))` to `r max(range(with(ed_volumes, tapply(Volume, Date, sum))))`. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates for the first two questions. Let's remind ourselves the specifics of a Poisson random variable:
+There were `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)` patients per day on average, ranging from `r min(range(with(ed_volumes, tapply(Volume, Date, sum))))` to `r max(range(with(ed_volumes, tapply(Volume, Date, sum))))`. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates for the first two questions. Let's remind ourselves of the specifics:
 
 If the probability mass function (PMF) for a non-negative, integer-valued $Y$ is:
 
@@ -165,7 +170,7 @@ _We estimate that there is a `r round(question2*100,1)`% chance that we will see
 Unfortunately, we missed a crucial assumption about the Poisson distribution that we didn't account for:
 
 $$E[Y] = Var[Y]$$
-The estimates we provided assumed that the mean and variance of our underlying distribution were equal. The sample variance was `r round(var(with(ed_volumes, tapply(Volume, Date, sum))), 1)` which is considerably larger than the mean of `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)`. Here is what an actual Poisson distribution looks like (blue curve) with $\lambda$ = `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)` (our sample average) in comparison with the observed data (bars):
+The estimates we provided assumed that the mean and variance of our underlying distribution were equal. The sample variance was `r round(var(with(ed_volumes, tapply(Volume, Date, sum))), 1)` which is considerably larger than the mean of `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)`. Here is what an actual Poisson distribution looks like with $\lambda$ = `r round(mean(with(ed_volumes, tapply(Volume, Date, sum))), 1)` (our sample average) in comparison with the observed data:
 
 ```{r}
 
@@ -202,18 +207,18 @@ ed_volumes %>%
   ) +
   geom_col(
     aes(
-      y = Observed
+      y = Observed,
+      fill = "Observed Data"
     ),
-    fill = "gray",
     color = "black"
   ) +
   geom_area(
     aes(
-      y = Theoretical
+      y = Theoretical,
+      fill = "Actual Poisson"
     ),
     alpha = .25,
-    color = "black",
-    fill = "blue"
+    color = "black"
   ) +
   geom_vline(
     aes(
@@ -226,31 +231,33 @@ ed_volumes %>%
   theme(
     legend.title = element_blank(),
     legend.text = element_text(size = 12),
+    legend.position = "top",
     axis.title = element_text(size = 14),
     axis.text = element_text(size = 12),
     strip.text = element_text(size = 12),
     panel.background = element_blank(),
     panel.grid.major.y = element_line(color = "gray")
   ) +
-  scale_y_continuous(labels = scales::percent)
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = c("blue", "gray"))
 
 ```
 
-The tails of the observed sample are heavier than a Poisson would be with the same mean. Therefore, the estimates we provided for questions one and two are probably not very accurate. Let's take a different approach: _answer question three first, and then work our way back to the other two._ 
+The tails of the observed sample are heavier than a Poisson would be with the same mean. Therefore, the estimates we provided for questions 1 and 2 are probably not very accurate. Let's take a different approach: _answer question 3 first, and then work our way back to the other two._ 
 
 As a reminder, we want to assess whether there is more variation in patient volume during the week versus weekend, or in the AM versus PM hours. To get this comparison, we need a way to simultaneously estimate the effect of each of these factors on the patient volume: enter Poisson regression. 
 
-## Model formulation
+## Model formulation {#modelformulation}
 
 Just like other [generalized linear models](https://en.wikipedia.org/wiki/Generalized_linear_model) (GLM), a Poisson regression model estimates the population average (the same average as described above!), _but conditioned on a set of covariates_. 
 
 More formally, for a given set of covariates $x_1, x_2, .., x_p$, we assume the following functional form:
 
 $$log(\lambda_i) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+...+\beta_px_{ip} = X_i\beta$$
-This _log-linear_ model then allows us to estimate the average number of events (i.e., the Poisson parameter $\lambda$) for a given arrangement of covariate values. We also get informative interpretation of the individual effects of each covariate. For our example, the model looks like this:
+This _log-linear_ model allows us to estimate the mean number of events (i.e., the Poisson parameter $\lambda$) for a given arrangement of covariate values. We also get informative interpretation of the individual effects of each covariate. For our example, the model looks like this:
 
 $$log(\lambda_i) = \beta_0 + \beta_{weekend}x_{i_{weekend}} + \beta_{PM}x_{i_{PM}}$$
-where $\lambda_i$ is the expected patient volume, $x_{i_{weekend}} = 1$ if it is Saturday or Sunday, and $x_{i_{PM}} = 1$ if it is PM hours (and they are 0 otherwise). We can take the following steps to estimate the parameters:
+where $\lambda_i$ is the expected (half-day) patient volume, $x_{i_{weekend}} = 1$ if it is Saturday or Sunday, and $x_{i_{PM}} = 1$ if it is PM hours (and they are 0 otherwise). We can take the following steps to estimate the $\beta$ parameters:
 
 1. Plug the regression formula into the Poisson PMF
 
@@ -262,17 +269,16 @@ P(Y_i = y_i|\lambda_i) & = \frac{e^{-\lambda_i}\lambda_i^{y_i}}{y_i!} \\
 \end{split}
 \end{equation}
 $$
-where $Y_i$ is the patient volume.
 
-2. Compute the likelihood function
+2. Derive the likelihood function
 
 $$L(\lambda_i) = \prod_{i=1}^N \frac{e^{-e^{X_i\beta}}{(e^{X_i\beta})}^{y_i}}{y_i!} \\$$
-where $N$ is the total sample size.
+where $N$ is the total number of (half) days.
 
-3. Derive the MLE's
+3. Compute the MLE's
 
 $$\hat{\beta} = max_{\beta} L(\lambda_i)\\$$
-where $\hat{\beta}$ is the set of estimated parameters computed from maximizing the likelihood function. Once we have these, we can plug them into the regression formula, and away we go! Luckily, our software will compute these for us--all we need to do is supply the data.
+$\hat{\beta}$ is the set of estimated parameter values computed from maximizing the likelihood function. Once we have these, we can plug them into the regression formula, and away we go! Luckily, our software will compute these for us--all we need to do is supply the data.
 
 ```{r}
 # Fit a generalized linear model
@@ -293,18 +299,88 @@ summary(model)
 
 ```
 
+The estimated model turns out to be:
 
-
-
-* COM Poisson distribution, generalizes Poisson
-* Modeling different dispersions by groups
-* Zero inflated COM Poisson
-* Number of re-admissions in 30 day period
+$$log(\hat{\lambda_i}) = 2.7853 - 0.4143x_{i_{weekend}} + 0.0176x_{i_{PM}}$$
+where $\hat{\lambda_i}$ is the _estimated_ average number of patients showing up to the ED in a given half-day and day of the week. Let's take a look at the four possible estimated means:
 
 ```{r}
-# Load required packages
-require(COMPoissonReg)
+# Make grid of possible values for each input
+list(
+  Weekend = c(TRUE, FALSE),
+  PM = c(TRUE, FALSE)
+) %>%
+  
+  # Find cross-product
+  cross_df() %>%
+  
+  # Add some columns
+  mutate(
+    
+    # Add predictions
+    EstimatedVolume =
+      predict(
+        model, # Supply the model
+        newdata = data.frame(Weekend, PM),
+        type = "response" # Applies the inverse link to the linear predictor
+      ),
+    EstimatedVolume = round(EstimatedVolume, 2),
+    
+    # Clean up names
+    Weekend = 
+      case_when(
+        Weekend ~ "Sat, Sun",
+        TRUE ~ "Mon - Fri"
+      ) %>%
+      factor() %>%
+      fct_relevel("Mon - Fri"),
+    PM = 
+      case_when(
+        PM ~ "PM",
+        TRUE ~ "AM"
+      ) %>%
+      factor() %>%
+      fct_relevel(
+        "AM"
+      )
+  ) %>%
+  
+  # Rearrange
+  arrange(
+    Weekend,
+    PM
+  ) %>%
+  
+  # Send over the columns
+  pivot_wider(
+    names_from = PM,
+    values_from = EstimatedVolume
+  ) %>%
+  
+  # Rename column
+  rename(
+    `Day of week` = Weekend
+  ) %>%
+  
+  # Make a kable
+  knitr::kable(
+    format = "html",
+    caption = "Expected ED patient volume"
+  ) %>%
+  kableExtra::kable_styling(
+    full_width = FALSE,
+    bootstrap_options = c("striped", "responsive")
+  ) %>%
+  kableExtra::add_header_above(c("", "Time of day" = 2))
 ```
+
+Our model suggests that we see $1 - e^{\beta_{weekend}} \approx$ `r paste0(round((1 - exp(coefficients(model)[["WeekendTRUE"]])) * 100, 1), "%")` _less_ patient volume on the weekends compared to during the week, regardless if it is AM or PM hours--this is reflected in our table estimates. We can also see that there is little difference in patient volume by the time of day, regardless of the day of the week. 
+
+__*Final Answer to Question 3*__
+
+Our empirical evidence that there is more variability between weekdays and the weekend compared to AM versus PM hours can be confidently confirmed by looking at the model's p-values. Together, these tell us that not only is the day of the week the _more important_ factor, but the time of day does not matter at all.
+
+__*Answers to Questions 1 & 2*__
 
 # Code Appendix
 ```{r, eval = FALSE}
@@ -328,7 +404,7 @@ ed_true_mean <-
 # Build the dataset
 ed_volumes <-
   tibble(
-    Date = rep(Sys.Date() - seq(1, 365, 1), 2),
+    Date = rep(as.Date("2021-12-31")  - seq(0, 364, 1), 2),
     TimeOfDay = c(rep("AM", length(Date) / 2), rep("PM", length(Date) / 2)),
     Volume = 
       rpois(
