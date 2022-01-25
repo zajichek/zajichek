@@ -23,19 +23,20 @@ projects: []
 
 
 <p><span class="math display">\[\Large \it \text {In Progress}\]</span>
-A few years ago I encountered an interesting count distribution at work during a modeling project. The goal was to model the number of <a href="https://www.shoulderdoc.co.uk/article/538">suture anchors</a> used in rotator-cuff tendon tears, and how that was influenced by tear characteristics and surgeon preference. My instinct would typically be to fit a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> model, but the target took on relatively small values and was also non-zero, so I had to do some digging for an alternative approach. I came across a method called Conway-Maxwell (COM) Poisson regression, which not only allowed for <em>overdispersion</em> (i.e., the population variance is greater than its mean), but also <em>underdispersion</em>. It hit me that I had never come across methodology for the latter and it seemed to align with my problem, so I was intrigued (FD: I heard of COM-Poisson prior to that, albeit knew nothing about it, when one of my super smart graduate school buddies was doing research on it, so that’s also why it stuck).</p>
-<p>Long story short, we didn’t end up using the COM-Poisson model for the <a href="https://www.jshoulderelbow.org/article/S1058-2746(18)30555-X/fulltext">anchor project</a> 😁, and instead went in favor of <a href="https://stats.oarc.ucla.edu/r/dae/zero-truncated-poisson/">Zero-Truncated Poisson regression</a>. Nevertheless I thought it was an awesome method that warranted further exploration and later did a <a href="NonTraditionalCountRegression.pdf">talk</a> on it. That was a few years ago–so this article is intended to be a reworking of that talk to relearn it for myself, but also to get the word out about this awesome method!</p>
+A few years ago I encountered an interesting count distribution at work during a modeling project. The goal was to model the number of <a href="https://www.shoulderdoc.co.uk/article/538">suture anchors</a> used in rotator-cuff tendon tears, and how that was influenced by tear characteristics and surgeon preference. My instinct would typically be to fit a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> model, but the target took on relatively small values and was also non-zero, so I had to do some digging for an alternative approach. I came across a method called Conway-Maxwell (COM) Poisson regression, which not only allowed for <em>overdispersion</em> (i.e., the population variance is greater than its mean), but also <em>underdispersion</em>. It hit me that I had never come across methodology for the latter and it seemed to align with my problem, so I was intrigued (Full Disclosure: I heard of COM-Poisson prior to that, albeit knew nothing about it, when one of my super smart graduate school buddies was doing research on it, so that’s also why it stuck).</p>
+<p>Long story short, we didn’t end up using the COM-Poisson model for the <a href="https://www.jshoulderelbow.org/article/S1058-2746(18)30555-X/fulltext">anchor project</a> 😁, and instead went in favor of <a href="https://stats.oarc.ucla.edu/r/dae/zero-truncated-poisson/">Zero-Truncated Poisson regression</a>. Nevertheless I thought it was an awesome method that warranted further exploration and later did a <a href="NonTraditionalCountRegression.pdf">talk</a> on it. That was a few years ago–so this article is intended to be a reworking of that talk to relearn it for myself, but also to get the word out about this awesome method! All code is written in R.</p>
 <div id="table-of-contents" class="section level1">
 <h1>Table Of Contents</h1>
 <ul>
-<li><a href="#reviewofpoisson">Review of Poisson Regression</a>
+<li><a href="#reviewofpoisson">A Review of Poisson Regression</a>
 <ul>
+<li><a href="#poissondistribution">The Poisson Distribution</a></li>
 <li><a href="#modelformulation">Model Formulation</a></li>
 </ul></li>
 </ul>
 </div>
 <div id="reviewofpoisson" class="section level1">
-<h1>A review of Poisson regression</h1>
+<h1>A Review of Poisson Regression</h1>
 <p>I really like making up examples, so lets start with that:</p>
 <p>Suppose hospital administrators are interested in emergency department (ED) utilization and have asked a few questions:</p>
 <ol style="list-style-type: decimal">
@@ -107,6 +108,8 @@ print(ed_volumes, n = 5)</code></pre>
   )</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>There were 29.5 patients per day on average, ranging from 11 to 47. Knowing that this is a count distribution, we think to use a Poisson model to provide our estimates for the first two questions. Let’s remind ourselves of the specifics:</p>
+<div id="poissondistribution" class="section level2">
+<h2>The Poisson Distribution</h2>
 <p>If the probability mass function (PMF) for a non-negative, integer-valued <span class="math inline">\(Y\)</span> is:</p>
 <p><span class="math display">\[P(Y = y|\lambda) = \frac{e^{-\lambda}\lambda^y}{y!}\]</span>
 then <span class="math inline">\(Y\)</span> is distributed as a Poisson random variable, and has the following property:</p>
@@ -199,8 +202,9 @@ The estimates we provided assumed that the mean and variance of our underlying d
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The tails of the observed sample are heavier than a Poisson would be with the same mean. Therefore, the estimates we provided for questions 1 and 2 are probably not very accurate. Let’s take a different approach: <em>answer question 3 first, and then work our way back to the other two.</em></p>
 <p>As a reminder, we want to assess whether there is more variation in patient volume during the week versus weekend, or in the AM versus PM hours. To get this comparison, we need a way to simultaneously estimate the effect of each of these factors on the patient volume: enter Poisson regression.</p>
+</div>
 <div id="modelformulation" class="section level2">
-<h2>Model formulation</h2>
+<h2>Model Formulation</h2>
 <p>Just like other <a href="https://en.wikipedia.org/wiki/Generalized_linear_model">generalized linear models</a> (GLM), a Poisson regression model estimates the population average (the same average as described above!), <em>but conditioned on a set of covariates</em>.</p>
 <p>More formally, for a given set of covariates <span class="math inline">\(x_1, x_2, .., x_p\)</span>, we assume the following functional form:</p>
 <p><span class="math display">\[log(\lambda_i) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+...+\beta_px_{ip} = X_i\beta\]</span>
@@ -270,7 +274,7 @@ summary(model)</code></pre>
 ## Number of Fisher Scoring iterations: 4</code></pre>
 <p>The estimated model turns out to be:</p>
 <p><span class="math display">\[log(\hat{\lambda_i}) = 2.7853 - 0.4143x_{i_{weekend}} + 0.0176x_{i_{PM}}\]</span>
-where <span class="math inline">\(\hat{\lambda_i}\)</span> is the <em>estimated</em> average number of patients showing up to the ED in a given half-day and day of the week. Let’s take a look at the four possible estimated means:</p>
+where <span class="math inline">\(\hat{\lambda_i}\)</span> is the <em>estimated</em> average number of patients showing up to the ED on a given day of the week and time of day. Let’s take a look at the four possible estimated means:</p>
 <pre class="r"><code># Make grid of possible values for each input
 list(
   Weekend = c(TRUE, FALSE),
@@ -390,9 +394,130 @@ Sat, Sun
 </tbody>
 </table>
 <p>Our model suggests that we see <span class="math inline">\(1 - e^{\beta_{weekend}} \approx\)</span> 33.9% <em>less</em> patient volume on the weekends compared to during the week, regardless if it is AM or PM hours–this is reflected in our table estimates. We can also see that there is little difference in patient volume by the time of day, regardless of the day of the week.</p>
-<p><strong><em>Final Answer to Question 3</em></strong></p>
-<p>Our empirical evidence that there is more variability between weekdays and the weekend compared to AM versus PM hours can be confidently confirmed by looking at the model’s p-values. Together, these tell us that not only is the day of the week the <em>more important</em> factor, but the time of day does not matter at all.</p>
+<p><strong><em>Answer to Question 3</em></strong></p>
+<p>The model output in combination with the empirical evidence tells us that not only is the day of the week the <em>more important</em> factor, but the time of day does not appear to matter at all. This is clear when we stratify our observed sample distribution:</p>
+<pre class="r"><code>ed_volumes %&gt;% 
+  
+  # Make the indicators
+  mutate(
+    Weekend = 
+      case_when(
+        weekdays(Date) %in% c(&quot;Saturday&quot;, &quot;Sunday&quot;) ~ &quot;Sat, Sun&quot;,
+        TRUE ~ &quot;Mon - Fri&quot;
+      ) %&gt;%
+      factor() %&gt;%
+      fct_relevel(&quot;Mon - Fri&quot;),
+    TimeOfDay = 
+      TimeOfDay %&gt;%
+      factor() %&gt;%
+      fct_relevel(
+        &quot;AM&quot;
+      )
+  ) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_histogram(
+    aes(
+      x = Volume,
+      fill = Weekend
+    ),
+    color = &quot;black&quot;,
+    bins = 20,
+    position = &quot;identity&quot;,
+    alpha = .5
+  ) + 
+  facet_wrap(
+    ~TimeOfDay,
+    nrow = 2
+  ) +
+  xlab(&quot;Half-Day Patient Volume&quot;) +
+  ylab(&quot;Frequency&quot;) +
+  theme(
+    legend.position = &quot;none&quot;,
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = &quot;gray&quot;)
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p><strong><em>Answers to Questions 1 &amp; 2</em></strong></p>
+<p>So back to the first two questions. How can we use what we found for question 3 to inform us of these answers? Remember, we need to provide estimates regarding the <em>total</em> daily patient volume even though our model target was half-day patient volume. We have a couple options:</p>
+<ol style="list-style-type: decimal">
+<li>Since we have established that the time of day does not impact patient volume, we could fit a new model by first aggregating the target to reflect the total daily patient volume and then only add the weekday versus weekend factor as a covariate.</li>
+</ol>
+<pre class="r"><code># Fit a generalized linear model
+model2 &lt;-
+  glm(
+    formula = Volume ~ Weekend, # Specify the model form
+    data = 
+      ed_volumes %&gt;% 
+      
+      # For each date
+      group_by(Date) %&gt;%
+      
+      # Compute the total daily patient volume
+      summarise(
+        Volume = sum(Volume),
+        .groups = &quot;drop&quot;
+      ) %&gt;%
+      
+      # Make the indicator
+      mutate(
+        Weekend = weekdays(Date) %in% c(&quot;Saturday&quot;, &quot;Sunday&quot;)
+      ),
+    family = &quot;poisson&quot; # Indicate the likelihood
+  )
+
+# Show the model summary
+summary(model2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = Volume ~ Weekend, family = &quot;poisson&quot;, data = ed_volumes %&gt;% 
+##     group_by(Date) %&gt;% summarise(Volume = sum(Volume), .groups = &quot;drop&quot;) %&gt;% 
+##     mutate(Weekend = weekdays(Date) %in% c(&quot;Saturday&quot;, &quot;Sunday&quot;)))
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.2441  -0.6594   0.0529   0.5682   2.6417  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  3.48729    0.01082  322.15   &lt;2e-16 ***
+## WeekendTRUE -0.41433    0.02371  -17.47   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 681.97  on 364  degrees of freedom
+## Residual deviance: 352.21  on 363  degrees of freedom
+## AIC: 2252.7
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Notice the relative effect of the day of week factor remained consistent from the original model–the intercept just changed to reflect the shifted distribution for the total patient volume. This approach works, but lets use the model we originally developed…</p>
+<ol start="2" style="list-style-type: decimal">
+<li>The alternative option requires us to know a <a href="https://math.stackexchange.com/questions/221078/poisson-distribution-of-sum-of-two-random-independent-variables-x-y">property</a> of Poisson random variables. Specifically, if <em>X</em> and <em>Y</em> are two independent Poisson random variables and <span class="math inline">\(Z = X + Y\)</span>, then</li>
+</ol>
+<p><span class="math display">\[Z \sim Poisson(\lambda_X + \lambda_Y)\]</span>
+where <span class="math inline">\(\lambda_X\)</span> and <span class="math inline">\(\lambda_Y\)</span> are the expected values (means) for <em>X</em> and <em>Y</em>, respectively. This is relevant to us because we need to aggregate our model estimates over the time of day in order to get estimates for the total daily volume. Specifically, if <span class="math inline">\(V\)</span> is the patient volume, then <span class="math inline">\(V_{Daily} = V_{AM} + V_{PM}\)</span> for a particular day of the week. We assume from our model specification above that <span class="math inline">\(V_{AM}\)</span> and <span class="math inline">\(V_{PM}\)</span> follow independent Poisson distributions. Thus, we get the following:</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+E[V_{Daily}] &amp; = E[V_{AM} + V_{PM}] \\
+&amp; = E[V_{AM}] + E[V_{PM}] \\
+&amp; = \lambda_{AM} + \lambda_{PM} \\
+&amp; = e^{\beta_0 + \beta_{weekend}x_{i_{weekend}}} + e^{\beta_0 + \beta_{weekend}x_{i_{weekend}} + \beta_{PM}} \\
+&amp; = \lambda_{Daily} \\
+\end{split}
+\end{equation}
+\]</span>
+Simply put, to get estimates around the total daily volume, all we need to do is sum the regression equation over the time of day variable. Once we do that, we’ll have day-of-week-specific Poisson distributions which we can compute estimates for questions 1 and 2 the same way we did <a href="#poissondistribution">above</a>.</p>
+<ul>
+<li>total = AM + PM</li>
+<li>We have AM and PM, just aggregate the models</li>
+</ul>
 </div>
 </div>
 <div id="code-appendix" class="section level1">
