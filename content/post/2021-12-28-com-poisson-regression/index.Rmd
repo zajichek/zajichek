@@ -422,7 +422,9 @@ ed_volumes %>%
   xlab("Half-Day Patient Volume") +
   ylab("Frequency") +
   theme(
-    legend.position = "none",
+    legend.position = "top",
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 12),
     axis.title = element_text(size = 14),
     axis.text = element_text(size = 12),
     strip.text = element_text(size = 12),
@@ -467,7 +469,7 @@ summary(model2)
 
 Notice the relative effect of the day of week factor remained consistent from the original model--the intercept just changed to reflect the shifted distribution for the total patient volume. This approach works, but lets use the model we originally developed...
 
-2. The alternative option requires us to know a [property](https://math.stackexchange.com/questions/221078/poisson-distribution-of-sum-of-two-random-independent-variables-x-y) of Poisson random variables. Specifically, if _X_ and _Y_ are two independent Poisson random variables and $Z = X + Y$, then
+2. This option requires us to know a [property](https://math.stackexchange.com/questions/221078/poisson-distribution-of-sum-of-two-random-independent-variables-x-y) of Poisson random variables. Specifically, if _X_ and _Y_ are two independent Poisson random variables and $Z = X + Y$, then
 
 $$Z \sim Poisson(\lambda_X + \lambda_Y)$$
 where $\lambda_X$ and $\lambda_Y$ are the expected values (means) for _X_ and _Y_, respectively. This is relevant to us because we need to aggregate our model estimates over the time of day in order to get estimates for the total daily volume. Specifically, if $V$ is the patient volume, then $V_{Daily} = V_{AM} + V_{PM}$ for a particular day of the week. We assume from our model specification above that $V_{AM}$ and $V_{PM}$ follow independent Poisson distributions. Thus, we get the following:
@@ -475,19 +477,91 @@ where $\lambda_X$ and $\lambda_Y$ are the expected values (means) for _X_ and _Y
 $$
 \begin{equation}
 \begin{split}
-E[V_{Daily}] & = E[V_{AM} + V_{PM}] \\
+\lambda_{Daily} & = E[V_{Daily}] \\
+& = E[V_{AM} + V_{PM}] \\
 & = E[V_{AM}] + E[V_{PM}] \\
 & = \lambda_{AM} + \lambda_{PM} \\
 & = e^{\beta_0 + \beta_{weekend}x_{i_{weekend}}} + e^{\beta_0 + \beta_{weekend}x_{i_{weekend}} + \beta_{PM}} \\
-& = \lambda_{Daily} \\
+& = e^{\beta_0 + \beta_{weekend}x_{i_{weekend}}} (1 + e^{\beta_{PM}})\\
+& =
+\begin{cases} 
+e^{\beta_0} (1 + e^{\beta_{PM}}) & \text{if M-F} \\
+e^{\beta_0 + \beta_{weekend}} (1 + e^{\beta_{PM}}) & \text{if Sat, Sun} \\
+\end{cases} \\
+& \approx
+\begin{cases} 
+32.70 & \text{if M-F} \\
+21.61         & \text{if Sat, Sun} \\
+\end{cases}
 \end{split}
 \end{equation}
 $$
-Simply put, to get estimates around the total daily volume, all we need to do is sum the regression equation over the time of day variable. Once we do that, we'll have day-of-week-specific Poisson distributions which we can compute estimates for questions 1 and 2 the same way we did [above](#poissondistribution).
+Simply put, to get estimates around the total daily volume, we summed the regression equation over the time of day variable. Note that this is exactly what we would have gotten by just taking the sample mean of total daily volume stratified by weekday and weekend:
 
-* total = AM + PM 
-* We have AM and PM, just aggregate the models
+```{r}
+stratified_means <-
+  ed_volumes %>% 
+  
+  # For each date
+  group_by(Date) %>%
+  
+  # Compute the total daily patient volume
+  summarise(
+    Volume = sum(Volume),
+    .groups = "drop"
+  ) %>%
+  
+  # Make the indicator
+  mutate(
+    Weekend = 
+      case_when(
+        weekdays(Date) %in% c("Saturday", "Sunday") ~ "Sat, Sun",
+        TRUE ~ "Mon - Fri"
+      ) %>%
+      factor() %>%
+      fct_relevel("Mon - Fri")
+  ) %>%
+  
+  # For each group
+  group_by(Weekend) %>%
+  
+  # Compute the mean
+  summarise(
+    Mean = mean(Volume),
+    Variance = var(Volume),
+    .groups = "drop"
+  )
 
+stratified_means %>%
+  
+  # Make a kable
+  knitr::kable(
+    format = "html",
+    caption = "Stratified Daily Sample Means and Variances"
+  ) %>%
+  kableExtra::kable_styling(
+    full_width = FALSE,
+    bootstrap_options = c("striped", "responsive")
+  ) 
+```
+
+Notice also that the stratified sample _variances_ align much more with our assumptions in using a Poisson distribution--this was one of our [problems earlier](#poissondistribution), but it appears to be resolved! Now that we have weekday and weekend-specific Poisson distributions, we can confidently compute our final estimates for questions 1 and 2 the same way we did [above](#poissondistribution). 
+
+Of course, the previous table already shows the answer to question 1: _we can expect to see 33 patients per day Monday-Friday, and 22 patients on Saturdays or Sundays._ To get the updated estimates for question 2, we just need to plug in the new means to the PDF and compute the cumulative probability:
+
+```{r}
+question2_updated <-
+  stratified_means %>%
+  
+  # For each set, compute the cumulative probability
+  cheese::stratiply(
+    by = Weekend,
+    f = ~1 - sum(exp(-.x$Mean) * .x$Mean^c(0:40) / factorial(c(0:40)))
+  )
+question2_updated
+```
+
+_We estimate that there is a `r paste0(round(question2_updated[[1]] * 100, 2), "%")` chance that we will see more than 40 patients on any given Monday-Friday, and a `r paste0(round(question2_updated[[2]] * 100, 2), "%")` chance that we will see that many patients on the weekend._
 
 # Code Appendix
 ```{r, eval = FALSE}
