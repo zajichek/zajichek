@@ -33,6 +33,11 @@ A few years ago I encountered an interesting count distribution at work during a
 <li><a href="#poissondistribution">The Poisson Distribution</a></li>
 <li><a href="#modelformulation">Model Formulation</a></li>
 </ul></li>
+<li><a href="#compoisson">Conway-Maxwell (COM) Poisson Regression</a>
+<ul>
+<li><a href="#compoissondistribution">The COM-Poisson Distribution</a></li>
+</ul></li>
+<li><a href="#codeappendix">Code Appendix</a></li>
 </ul>
 </div>
 <div id="reviewofpoisson" class="section level1">
@@ -630,10 +635,33 @@ question2_updated</code></pre>
 ## $`Sat, Sun`
 ## [1] 0.0001298706</code></pre>
 <p><em>We estimate that there is a 8.96% chance that we will see more than 40 patients on any given Monday-Friday, and a 0.01% chance that we will see that many patients on the weekend.</em></p>
+<p>Okay we got a little carried away with that but hopefully you have an idea of how Poisson regression works.</p>
 </div>
 </div>
-<div id="code-appendix" class="section level1">
+<div id="compoisson" class="section level1">
+<h1>Conway-Maxwell (COM) Poisson Regression</h1>
+<p>Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson!</p>
+<div id="compoissondistribution" class="section level2">
+<h2>The COM-Poisson Distribution</h2>
+<p>If the PMF for a non-negative, integer-valued <span class="math inline">\(Y\)</span> is:</p>
+<p><span class="math display">\[P(Y = y|\lambda, \nu) = \frac{\lambda^y}{y!^{\nu}Z(\lambda, \nu)}\]</span>
+where <span class="math inline">\(\lambda, \nu &gt; 0\)</span>, and</p>
+<p><span class="math display">\[Z(\lambda, \nu) = \sum_{k=0}^{\infty}\frac{\lambda^k}{k!^{\nu}}\]</span>
+then <span class="math inline">\(Y\)</span> is distributed as a COM-Poisson random variable.</p>
+<p>That’s kind of a mouthful, but we can see some similarities in its form to the <a href="#poissondistribution">Poisson PDF</a>. In fact, if you’re really math-savvy (which I’m not, I had to look this up), you’ll notice that the function <span class="math inline">\(Z\)</span> is a <em><a href="https://en.wikipedia.org/wiki/Power_series">power series</a></em>. When we set <span class="math inline">\(\nu = 1\)</span>, then</p>
+<p><span class="math display">\[Z(\lambda, \nu = 1) = \sum_{k=0}^{\infty}\frac{\lambda^k}{k!} = e^\lambda\]</span>
+Plugging that result back into the full PMF, it turns out to be <em>exactly</em> the same as a Poisson distribution. This tells us that <strong><em>the Poisson distribution is a special case of the COM-Poisson</em></strong>.</p>
+<ul>
+<li>If X … give definition of it</li>
+<li>You’ll notice that this looks similar in form of the Poisson distribution</li>
+<li>In fact, if … then it is</li>
+<li>The expected value,</li>
+</ul>
+</div>
+</div>
+<div id="codeappendix" class="section level1">
 <h1>Code Appendix</h1>
+<p>This appendix only contains code snippets that were hidden from being displayed in the text.</p>
 <pre class="r"><code># Load packages
 require(tidyverse)
 

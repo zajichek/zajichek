@@ -27,6 +27,10 @@ Long story short, we didn't end up using the COM-Poisson model for the [anchor p
 * [A Review of Poisson Regression](#reviewofpoisson)
   + [The Poisson Distribution](#poissondistribution)
   + [Model Formulation](#modelformulation)
+* [Conway-Maxwell (COM) Poisson Regression](#compoisson)
+  + [The COM-Poisson Distribution](#compoissondistribution)
+* [Code Appendix](#codeappendix)
+
 
 # A Review of Poisson Regression {#reviewofpoisson}
 
@@ -563,7 +567,37 @@ question2_updated
 
 _We estimate that there is a `r paste0(round(question2_updated[[1]] * 100, 2), "%")` chance that we will see more than 40 patients on any given Monday-Friday, and a `r paste0(round(question2_updated[[2]] * 100, 2), "%")` chance that we will see that many patients on the weekend._
 
-# Code Appendix
+Okay we got a little carried away with that but hopefully you have an idea of how Poisson regression works.
+
+# Conway-Maxwell (COM) Poisson Regression {#compoisson}
+
+Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson!
+
+## The COM-Poisson Distribution {#compoissondistribution}
+
+If the PMF for a non-negative, integer-valued $Y$ is:
+
+$$P(Y = y|\lambda, \nu) = \frac{\lambda^y}{y!^{\nu}Z(\lambda, \nu)}$$
+where $\lambda, \nu > 0$, and 
+
+$$Z(\lambda, \nu) = \sum_{k=0}^{\infty}\frac{\lambda^k}{k!^{\nu}}$$
+then $Y$ is distributed as a COM-Poisson random variable.
+
+That's kind of a mouthful, but we can see some similarities in its form to the [Poisson PDF](#poissondistribution). In fact, if you're really math-savvy (which I'm not, I had to look this up), you'll notice that the function $Z$ is a _[power series](https://en.wikipedia.org/wiki/Power_series)_. When we set $\nu = 1$, then
+
+$$Z(\lambda, \nu = 1) = \sum_{k=0}^{\infty}\frac{\lambda^k}{k!} = e^\lambda$$
+Plugging that result back into the full PMF, it turns out to be _exactly_ the same as a Poisson distribution. This tells us that **_the Poisson distribution is a special case of the COM-Poisson_**.
+
+
+* If X ... give definition of it
+* You'll notice that this looks similar in form of the Poisson distribution
+* In fact, if ... then it is
+* The expected value, 
+
+# Code Appendix {#codeappendix}
+
+This appendix only contains code snippets that were hidden from being displayed in the text.
+
 ```{r, eval = FALSE}
 
 # Load packages
