@@ -7,7 +7,7 @@ cta:
   label: '**Click to learn more**'
   url: consulting/
 cta_alt:
-  label: "Let's talk"
+  label: "Reach out"
   url: /#contact
 design:
   columns: "1"
@@ -22,4 +22,4 @@ design:
     padding: ["20px", "0", "20px", "0"]
 ---
 
-Need help analyzing your data, building a dashboard, or automating a reporting process?
+Need statistical advice or help building a data tool?

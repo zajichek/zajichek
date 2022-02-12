@@ -14,7 +14,7 @@ weight: 20
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
 title: Statistical and Data Science Consulting
-subtitle: Services
+subtitle: Ways to collaborate
 
 feature:
 - name: Statistical analysis
@@ -31,4 +31,6 @@ feature:
   icon_pack: fas
 ---
 
-I use open source languages (R/Python) with the [RStudio](https://www.rstudio.com/products/rstudio/) environment to enable flexibility to develop fully customized data products, transparency for code sharing and collaboration, and no overhead (it's free!). We can setup tools on the web with [R Shiny](https://shiny.rstudio.com/), static (or interactive) reports with [R Markdown](https://rmarkdown.rstudio.com/), or I can send you the code to run on your own.
+Whether you want to work together to build a data tool, need strategic advice for your statistical analysis, or just want to engage in a conversation about the problems you're working on, feel free to [reach out](/#contact). 
+
+I use open source languages (R/Python) with the [RStudio](https://www.rstudio.com/products/rstudio/) environment to enable flexibility to develop custom data products, transparency for code sharing and collaboration, and no overhead (it's free!). I like to build web tools with [R Shiny](https://shiny.rstudio.com/) and static/interactive reports with [R Markdown](https://rmarkdown.rstudio.com/), but also enjoy developing functions and packages.
