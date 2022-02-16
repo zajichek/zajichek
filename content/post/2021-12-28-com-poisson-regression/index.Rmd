@@ -588,6 +588,28 @@ That's kind of a mouthful, but we can see some similarities in its form to the [
 $$Z(\lambda, \nu = 1) = \sum_{k=0}^{\infty}\frac{\lambda^k}{k!} = e^\lambda$$
 Plugging that result back into the full PMF, it turns out to be _exactly_ the same as a Poisson distribution. This tells us that **_the Poisson distribution is a special case of the COM-Poisson_**.
 
+### Dispersion Parameter
+
+An important feature of the COM-Poisson PDF is the parameter $\nu$, which determines its _dispersion_ (i.e., how variable it is relative to its mean). The following table describes the properties when it is above, below, and equal to 1:
+
+Parameter|Dispersion|Moments
+------|-----------|----------
+$\nu=1$|Equidispersed|$E[Y] = Var[Y]$
+$\nu<1$|Overdispersed|$E[Y] < Var[Y]$
+$\nu>1$|Underdispersed|$E[Y] > Var[Y]$
+
+### Mean and Variance
+
+There is [no closed form solution](https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf) for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties:
+
+1. The centrality 
+
+$$E[Y^\nu] = \lambda$$
+2. The mean and variance can be approximated when $\nu \leq 1$ (overdispersed) or $\lambda > 10^\nu$ (large counts):
+
+$$E[Y] \approx \lambda^{1/\nu} - \frac{\nu-1}{2\nu}$$
+$$Var[Y] \approx \frac{\lambda^{1/\nu}}{\nu}$$
+This is a bit disappointing because we have methods for those cases. The seemingly more appealing case of this method is when we have underdispersed data with small counts.
 
 * If X ... give definition of it
 * You'll notice that this looks similar in form of the Poisson distribution
