@@ -571,7 +571,13 @@ Okay we got a little carried away with that but hopefully you have an idea of ho
 
 # Conway-Maxwell (COM) Poisson Regression {#compoisson}
 
-Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson!
+Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson! We will use the [`COMPoissonReg`](https://github.com/lotze/COMPoissonReg) package, which can be installed from CRAN with `install.packages("COMPoissonReg")`.
+
+```{r}
+# Load the package
+require(COMPoissonReg)
+```
+
 
 ## The COM-Poisson Distribution {#compoissondistribution}
 
@@ -586,23 +592,23 @@ then $Y$ is distributed as a COM-Poisson random variable.
 That's kind of a mouthful, but we can see some similarities in its form to the [Poisson PDF](#poissondistribution). In fact, if you're really math-savvy (which I'm not, I had to look this up), you'll notice that the function $Z$ is a _[power series](https://en.wikipedia.org/wiki/Power_series)_. When we set $\nu = 1$, then
 
 $$Z(\lambda, \nu = 1) = \sum_{k=0}^{\infty}\frac{\lambda^k}{k!} = e^\lambda$$
-Plugging that result back into the full PMF, it turns out to be _exactly_ the same as a Poisson distribution. This tells us that **_the Poisson distribution is a special case of the COM-Poisson_**.
+Plugging that result back into the full PMF, it turns out to be _exactly_ the same as a Poisson distribution. This tells us that **_the Poisson distribution is a special case of the COM-Poisson_**. In the other words, the COM-Poisson is a generalization of the Poisson distribution, so we'll expect it do everything that the latter can--plus more.
 
 ### Dispersion Parameter
 
-An important feature of the COM-Poisson PDF is the parameter $\nu$, which determines its _dispersion_ (i.e., how variable it is relative to its mean). The following table describes the properties when it is above, below, and equal to 1:
+An important feature of the COM-Poisson PDF is the parameter $\nu$, which determines its _dispersion_ (i.e., how variable it is relative to its mean). In the standard Poisson distribution, the mean and variance are always the same, by definition. The $\nu$ parameter allows us to relax that restriction in cases where it does apply (or we don't want to force it to). The following table describes the properties when it is above, below, and equal to 1:
 
-Parameter|Dispersion|Moments
+Parameter|Implies|Described As
 ------|-----------|----------
-$\nu=1$|Equidispersed|$E[Y] = Var[Y]$
-$\nu<1$|Overdispersed|$E[Y] < Var[Y]$
-$\nu>1$|Underdispersed|$E[Y] > Var[Y]$
+$\nu=1$|$E[Y] = Var[Y]$|Equidispersed
+$\nu<1$|$E[Y] < Var[Y]$|Overdispersed
+$\nu>1$|$E[Y] > Var[Y]$|Underdispersed
 
 ### Mean and Variance
 
-There is [no closed form solution](https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf) for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties:
+Unfortunately, there is [no closed form solution](https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf) for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties that are worth relaying:
 
-1. The centrality 
+1. The $\lambda$ parameter, which _is_ the mean when $\nu=1$ (standard Poisson), is the mean of the
 
 $$E[Y^\nu] = \lambda$$
 2. The mean and variance can be approximated when $\nu \leq 1$ (overdispersed) or $\lambda > 10^\nu$ (large counts):
@@ -610,6 +616,50 @@ $$E[Y^\nu] = \lambda$$
 $$E[Y] \approx \lambda^{1/\nu} - \frac{\nu-1}{2\nu}$$
 $$Var[Y] \approx \frac{\lambda^{1/\nu}}{\nu}$$
 This is a bit disappointing because we have methods for those cases. The seemingly more appealing case of this method is when we have underdispersed data with small counts.
+
+### Simulated Assessment
+
+The properties above give us some information, but it is hard to make sense of exactly how these parameters will govern the actual data we might observe from a COM-Poisson distribution. Additionally, the approximations above hold in cases where we may tend to use alternative methods (e.g., negative-binomial models). The more interesting case, and the focus here, is how these methods can help us for underdispersed data (with smaller counts). To give us a bit more insight into this behavior, lets randomly generate a bunch of data for different parameter combinations and see what we find.
+
+```{r}
+# Make a grid of parameters
+require(tidyverse)
+
+# Make a parameter grid
+params <-
+  list(
+    lambda = c(1, 10, 15, 50, 100),
+    nu = c(.1, .5, 1, 1.5, 1.9)
+  ) %>%
+  cross_df()
+
+# Number of samples
+n <- 10
+
+# Set a seed
+set.seed(123)
+
+params %>%
+  
+  # Split into a list
+  split(1:nrow(.)) %>%
+  
+  # For each element
+  map_df(
+    ~
+      tibble(
+        value = rcmp(n = n, lambda = .x$lambda, nu = .x$nu),
+        lambda = .x$lambda,
+        nu = .x$nu
+      )
+  )
+
+```
+
+
+
+* Plots of actual observed data
+* Simulation of sample means/variances and it's relation to nu and lambda
 
 * If X ... give definition of it
 * You'll notice that this looks similar in form of the Poisson distribution

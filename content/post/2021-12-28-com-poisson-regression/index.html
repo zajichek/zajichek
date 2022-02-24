@@ -640,7 +640,11 @@ question2_updated</code></pre>
 </div>
 <div id="compoisson" class="section level1">
 <h1>Conway-Maxwell (COM) Poisson Regression</h1>
-<p>Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson!</p>
+<p>Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson! We will use the <a href="https://github.com/lotze/COMPoissonReg"><code>COMPoissonReg</code></a> package, which can be installed from CRAN with <code>install.packages("COMPoissonReg")</code>.</p>
+<pre class="r"><code># Load the package
+require(COMPoissonReg)</code></pre>
+<pre><code>## Loading required package: COMPoissonReg</code></pre>
+<pre><code>## Loading required package: Rcpp</code></pre>
 <div id="compoissondistribution" class="section level2">
 <h2>The COM-Poisson Distribution</h2>
 <p>If the PMF for a non-negative, integer-valued <span class="math inline">\(Y\)</span> is:</p>
@@ -650,53 +654,115 @@ where <span class="math inline">\(\lambda, \nu &gt; 0\)</span>, and</p>
 then <span class="math inline">\(Y\)</span> is distributed as a COM-Poisson random variable.</p>
 <p>That’s kind of a mouthful, but we can see some similarities in its form to the <a href="#poissondistribution">Poisson PDF</a>. In fact, if you’re really math-savvy (which I’m not, I had to look this up), you’ll notice that the function <span class="math inline">\(Z\)</span> is a <em><a href="https://en.wikipedia.org/wiki/Power_series">power series</a></em>. When we set <span class="math inline">\(\nu = 1\)</span>, then</p>
 <p><span class="math display">\[Z(\lambda, \nu = 1) = \sum_{k=0}^{\infty}\frac{\lambda^k}{k!} = e^\lambda\]</span>
-Plugging that result back into the full PMF, it turns out to be <em>exactly</em> the same as a Poisson distribution. This tells us that <strong><em>the Poisson distribution is a special case of the COM-Poisson</em></strong>.</p>
+Plugging that result back into the full PMF, it turns out to be <em>exactly</em> the same as a Poisson distribution. This tells us that <strong><em>the Poisson distribution is a special case of the COM-Poisson</em></strong>. In the other words, the COM-Poisson is a generalization of the Poisson distribution, so we’ll expect it do everything that the latter can–plus more.</p>
 <div id="dispersion-parameter" class="section level3">
 <h3>Dispersion Parameter</h3>
-<p>An important feature of the COM-Poisson PDF is the parameter <span class="math inline">\(\nu\)</span>, which determines its <em>dispersion</em> (i.e., how variable it is relative to its mean). The following table describes the properties when it is above, below, and equal to 1:</p>
+<p>An important feature of the COM-Poisson PDF is the parameter <span class="math inline">\(\nu\)</span>, which determines its <em>dispersion</em> (i.e., how variable it is relative to its mean). In the standard Poisson distribution, the mean and variance are always the same, by definition. The <span class="math inline">\(\nu\)</span> parameter allows us to relax that restriction in cases where it does apply (or we don’t want to force it to). The following table describes the properties when it is above, below, and equal to 1:</p>
 <table>
 <thead>
 <tr class="header">
 <th>Parameter</th>
-<th>Dispersion</th>
-<th>Moments</th>
+<th>Implies</th>
+<th>Described As</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><span class="math inline">\(\nu=1\)</span></td>
-<td>Equidispersed</td>
 <td><span class="math inline">\(E[Y] = Var[Y]\)</span></td>
+<td>Equidispersed</td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(\nu&lt;1\)</span></td>
-<td>Overdispersed</td>
 <td><span class="math inline">\(E[Y] &lt; Var[Y]\)</span></td>
+<td>Overdispersed</td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(\nu&gt;1\)</span></td>
-<td>Underdispersed</td>
 <td><span class="math inline">\(E[Y] &gt; Var[Y]\)</span></td>
+<td>Underdispersed</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div id="mean-and-variance" class="section level3">
 <h3>Mean and Variance</h3>
-<p>There is <a href="https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf">no closed form solution</a> for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties:</p>
+<p>Unfortunately, there is <a href="https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf">no closed form solution</a> for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties that are worth relaying:</p>
 <ol style="list-style-type: decimal">
-<li>The centrality</li>
+<li>The <span class="math inline">\(\lambda\)</span> parameter, which <em>is</em> the mean when <span class="math inline">\(\nu=1\)</span> (standard Poisson), is the mean of the</li>
 </ol>
 <p><span class="math display">\[E[Y^\nu] = \lambda\]</span>
 2. The mean and variance can be approximated when <span class="math inline">\(\nu \leq 1\)</span> (overdispersed) or <span class="math inline">\(\lambda &gt; 10^\nu\)</span> (large counts):</p>
 <p><span class="math display">\[E[Y] \approx \lambda^{1/\nu} - \frac{\nu-1}{2\nu}\]</span>
 <span class="math display">\[Var[Y] \approx \frac{\lambda^{1/\nu}}{\nu}\]</span>
 This is a bit disappointing because we have methods for those cases. The seemingly more appealing case of this method is when we have underdispersed data with small counts.</p>
+</div>
+<div id="simulated-assessment" class="section level3">
+<h3>Simulated Assessment</h3>
+<p>The properties above give us some information, but it is hard to make sense of exactly how these parameters will govern the actual data we might observe from a COM-Poisson distribution. Additionally, the approximations above hold in cases where we may tend to use alternative methods (e.g., negative-binomial models). The more interesting case, and the focus here, is how these methods can help us for underdispersed data (with smaller counts). To give us a bit more insight into this behavior, lets randomly generate a bunch of data for different parameter combinations and see what we find.</p>
+<pre class="r"><code># Make a grid of parameters
+require(tidyverse)
+
+# Make a parameter grid
+params &lt;-
+  list(
+    lambda = c(1, 10, 15, 50, 100),
+    nu = c(.1, .5, 1, 1.5, 1.9)
+  ) %&gt;%
+  cross_df()
+
+# Number of samples
+n &lt;- 10
+
+# Set a seed
+set.seed(123)
+
+params %&gt;%
+  
+  # Split into a list
+  split(1:nrow(.)) %&gt;%
+  
+  # For each element
+  map_df(
+    ~
+      tibble(
+        value = rcmp(n = n, lambda = .x$lambda, nu = .x$nu),
+        lambda = .x$lambda,
+        nu = .x$nu
+      )
+  )</code></pre>
+<pre><code>## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
+##  options(COMPoissonReg.ymax = 1e+06)
+
+## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
+##  options(COMPoissonReg.ymax = 1e+06)
+
+## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
+##  options(COMPoissonReg.ymax = 1e+06)
+
+## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
+##  options(COMPoissonReg.ymax = 1e+06)</code></pre>
+<pre><code>## # A tibble: 250 × 3
+##    value lambda    nu
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+##  1     2      1   0.1
+##  2     7      1   0.1
+##  3     3      1   0.1
+##  4    10      1   0.1
+##  5    12      1   0.1
+##  6     0      1   0.1
+##  7     4      1   0.1
+##  8    10      1   0.1
+##  9     4      1   0.1
+## 10     3      1   0.1
+## # … with 240 more rows</code></pre>
 <ul>
-<li>If X … give definition of it</li>
-<li>You’ll notice that this looks similar in form of the Poisson distribution</li>
-<li>In fact, if … then it is</li>
-<li>The expected value,</li>
+<li><p>Plots of actual observed data</p></li>
+<li><p>Simulation of sample means/variances and it’s relation to nu and lambda</p></li>
+<li><p>If X … give definition of it</p></li>
+<li><p>You’ll notice that this looks similar in form of the Poisson distribution</p></li>
+<li><p>In fact, if … then it is</p></li>
+<li><p>The expected value,</p></li>
 </ul>
 </div>
 </div>
