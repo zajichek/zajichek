@@ -571,7 +571,7 @@ Okay we got a little carried away with that but hopefully you have an idea of ho
 
 # Conway-Maxwell (COM) Poisson Regression {#compoisson}
 
-Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson! We will use the [`COMPoissonReg`](https://github.com/lotze/COMPoissonReg) package, which can be installed from CRAN with `install.packages("COMPoissonReg")`.
+Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson! We will use the [`COMPoissonReg`](https://github.com/lotze/COMPoissonReg) package in R, which can be installed from CRAN with `install.packages("COMPoissonReg")`.
 
 ```{r}
 # Load the package
@@ -608,58 +608,273 @@ $\nu>1$|$E[Y] > Var[Y]$|Underdispersed
 
 Unfortunately, there is [no closed form solution](https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf) for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties that are worth relaying:
 
-1. The $\lambda$ parameter, which _is_ the mean when $\nu=1$ (standard Poisson), is the mean of the
+* The $\lambda$ parameter is the mean of the power-transformed counts
 
 $$E[Y^\nu] = \lambda$$
-2. The mean and variance can be approximated when $\nu \leq 1$ (overdispersed) or $\lambda > 10^\nu$ (large counts):
+
+* The mean and variance can be approximated as:
 
 $$E[Y] \approx \lambda^{1/\nu} - \frac{\nu-1}{2\nu}$$
 $$Var[Y] \approx \frac{\lambda^{1/\nu}}{\nu}$$
-This is a bit disappointing because we have methods for those cases. The seemingly more appealing case of this method is when we have underdispersed data with small counts.
+when $\nu \leq 1$ (overdispersed) or $\lambda > 10^\nu$ (larger counts). This is a bit disappointing because we have common methods that we may tend to use in those cases (e.g, negative-binomial models). The more interesting case, and the focus here, is how these methods can help us for underdispersed data (with smaller counts).
 
 ### Simulated Assessment
 
-The properties above give us some information, but it is hard to make sense of exactly how these parameters will govern the actual data we might observe from a COM-Poisson distribution. Additionally, the approximations above hold in cases where we may tend to use alternative methods (e.g., negative-binomial models). The more interesting case, and the focus here, is how these methods can help us for underdispersed data (with smaller counts). To give us a bit more insight into this behavior, lets randomly generate a bunch of data for different parameter combinations and see what we find.
+The properties described above give us some useful information, but it is hard to make sense of exactly how these parameters directly govern the data we might observe from a COM-Poisson distribution. To give us a bit more insight, lets randomly generate a bunch of data for different parameter combinations and see what we find. To do this, we'll use the `rcmp` function.
 
-```{r}
-# Make a grid of parameters
-require(tidyverse)
+```{r, echo = FALSE, message = FALSE}
 
 # Make a parameter grid
 params <-
   list(
-    lambda = c(1, 10, 15, 50, 100),
-    nu = c(.1, .5, 1, 1.5, 1.9)
+    lambda = c(1, 3, 5, 10, 25, 50),
+    nu = c(.5, 1, 1.25, 1.5)
   ) %>%
   cross_df()
 
 # Number of samples
-n <- 10
+n <- 500
+
+# Number of simulations
+s <- 100
+
+```
+
+```{r, eval = FALSE}
+
+# Make a parameter grid
+params <-
+  list(
+    lambda = c(1, 3, 5, 10, 25, 50),
+    nu = c(.5, 1, 1.25, 1.5)
+  ) %>%
+  cross_df()
+
+# Number of samples
+n <- 500
+
+# Number of simulations
+s <- 100
 
 # Set a seed
 set.seed(123)
 
-params %>%
+compoisson_sim1 <-
+  params %>%
   
   # Split into a list
   split(1:nrow(.)) %>%
   
   # For each element
   map_df(
-    ~
-      tibble(
-        value = rcmp(n = n, lambda = .x$lambda, nu = .x$nu),
-        lambda = .x$lambda,
-        nu = .x$nu
-      )
+    function(.x) {
+      
+      1:s %>%
+        
+        # For each iteration
+        map_df(
+          function(.sim) {
+            
+            # Time the sampling
+            temp_time <- system.time(temp_value <- rcmp(n = n, lambda = .x$lambda, nu = .x$nu))
+            
+            tibble(
+              s = .sim,
+              lambda = .x$lambda,
+              nu = .x$nu,
+              value = temp_value,
+              time = temp_time["elapsed"][[1]]
+            )
+            
+          }
+        )
+    }
   )
 
 ```
 
+```{r, echo = FALSE, message = FALSE}
 
+# Load the simulated data set
+load(file = "/Users/alexzajichek/R/Resources/compoisson_sim1.RData")
 
-* Plots of actual observed data
-* Simulation of sample means/variances and it's relation to nu and lambda
+```
+
+We took `r s` random samples of size `r n` from `r nrow(params)` parameter combinations. This process took about `r round(with(distinct(select(compoisson_sim1, -value)), sum(time)), 1)` seconds to run. Lets first take a quick look at the distributions from the first simulation for each parameter set.
+
+```{r}
+compoisson_sim1 %>%
+  
+  # Filter to the first simulated value
+  filter(
+    s == 1
+  ) %>%
+  
+  # Convert to factors
+  mutate(
+    across(
+      c(
+        lambda,
+        nu
+      ),
+      factor
+    ),
+    lambda = 
+      lambda %>%
+      fct_relabel(
+        function(x) paste0("lambda == ", x)
+      )
+  ) %>%
+  
+  # Make a plot
+  ggplot() +
+  geom_histogram(
+    aes(
+      x = value,
+      fill = nu
+    ),
+    position = "identity",
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    ~lambda,
+    scales = "free",
+    label = "label_parsed"
+  ) +
+  xlab("Observed Value") +
+  ylab("Frequency") +
+  theme(
+    legend.position = "top",
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "gray")
+  ) +
+  labs(
+    fill = expression(nu)
+  )
+```
+
+It looks like the magnitude of counts increases with $\lambda$, and decreases with $\nu$. To get a more concrete view of this, lets compute the sample mean and variance for each iteration, and then average those over the simulations for each parameter combination. By doing this, we'll also get a sense of the sampling variability of these statistics when $n=$ `r n`.
+
+```{r}
+compoisson_sim1 %>%
+  
+  # For each group
+  group_by(lambda, nu, s) %>%
+  
+  # Compute the statistics
+  summarise(
+    Mean = mean(value),
+    Variance = var(value),
+    .groups = "drop"
+  ) %>%
+  
+  # Send the statistics down the rows
+  pivot_longer(
+    cols = c(Mean, Variance)
+  ) %>%
+  
+  # For each group
+  group_by(lambda, nu, name) %>%
+  
+  # Compute the mean/standard error
+  summarise(
+    Mean = mean(value),
+    SE = sd(value),
+    .groups = "drop"
+  ) %>%
+  
+  # Join to get the average time for each iteration
+  inner_join(
+    y = 
+      compoisson_sim1 %>%
+      
+      # Remove the value, get unique rows
+      select(-value) %>%
+      distinct() %>%
+      
+      # For each group
+      group_by(lambda, nu) %>%
+      
+      # Compute the average time per iteration
+      summarise(
+        time = mean(time),
+        .groups = "drop"
+      ),
+    by = 
+      c(
+        "lambda",
+        "nu"
+      )
+  ) %>%
+  
+  # Convert to factors
+  mutate(
+    nu = 
+      nu %>%
+      factor() %>%
+      fct_relabel(
+        function(x) paste0("nu == ", x)
+      )
+  ) %>%
+  
+  # Make a plot
+  ggplot(
+    aes(
+      x = lambda,
+      y = Mean
+    )
+  ) +
+  geom_line(
+    aes(
+      color = name
+    ),
+    size = 1.25
+  ) +
+  geom_point(
+    aes(
+      color = name
+    ),
+    size = 3
+  ) +
+  geom_ribbon(
+    aes(
+      ymin = Mean - 2*SE,
+      ymax = Mean + 2*SE,
+      fill = name
+    ),
+    alpha = .25
+  ) +
+  facet_wrap(
+    ~nu,
+    scales = "free_y",
+    label = "label_parsed"
+  ) +
+  ylab("Value") +
+  theme(
+    legend.position = "top",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "gray")
+  ) +
+  scale_x_continuous(
+    breaks = unique(params$lambda)
+  ) +
+  labs(
+    x = expression(lambda)
+  )
+
+```
+
+When $\nu=0.5$ (overdispersed), the counts become large quickly with an increasing $\lambda$. As the data becomes more underdispersed ($\nu > 1$), the variance increases at a slower rate as $\lambda$ increases, relative to the mean.
 
 * If X ... give definition of it
 * You'll notice that this looks similar in form of the Poisson distribution
@@ -678,7 +893,7 @@ require(tidyverse)
 # Set a seed
 set.seed(123)
 
-### 1. Create simulated dataset
+### Create simulated dataset
 
 # Generating a random Poisson parameter
 ed_true_mean <-

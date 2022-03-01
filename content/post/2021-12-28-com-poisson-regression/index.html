@@ -640,7 +640,7 @@ question2_updated</code></pre>
 </div>
 <div id="compoisson" class="section level1">
 <h1>Conway-Maxwell (COM) Poisson Regression</h1>
-<p>Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson! We will use the <a href="https://github.com/lotze/COMPoissonReg"><code>COMPoissonReg</code></a> package, which can be installed from CRAN with <code>install.packages("COMPoissonReg")</code>.</p>
+<p>Now that we have a foundation for standard Poisson regression, we can dig into COM-Poisson! We will use the <a href="https://github.com/lotze/COMPoissonReg"><code>COMPoissonReg</code></a> package in R, which can be installed from CRAN with <code>install.packages("COMPoissonReg")</code>.</p>
 <pre class="r"><code># Load the package
 require(COMPoissonReg)</code></pre>
 <pre><code>## Loading required package: COMPoissonReg</code></pre>
@@ -688,81 +688,242 @@ Plugging that result back into the full PMF, it turns out to be <em>exactly</em>
 <div id="mean-and-variance" class="section level3">
 <h3>Mean and Variance</h3>
 <p>Unfortunately, there is <a href="https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf">no closed form solution</a> for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties that are worth relaying:</p>
-<ol style="list-style-type: decimal">
-<li>The <span class="math inline">\(\lambda\)</span> parameter, which <em>is</em> the mean when <span class="math inline">\(\nu=1\)</span> (standard Poisson), is the mean of the</li>
-</ol>
-<p><span class="math display">\[E[Y^\nu] = \lambda\]</span>
-2. The mean and variance can be approximated when <span class="math inline">\(\nu \leq 1\)</span> (overdispersed) or <span class="math inline">\(\lambda &gt; 10^\nu\)</span> (large counts):</p>
+<ul>
+<li>The <span class="math inline">\(\lambda\)</span> parameter is the mean of the power-transformed counts</li>
+</ul>
+<p><span class="math display">\[E[Y^\nu] = \lambda\]</span></p>
+<ul>
+<li>The mean and variance can be approximated as:</li>
+</ul>
 <p><span class="math display">\[E[Y] \approx \lambda^{1/\nu} - \frac{\nu-1}{2\nu}\]</span>
 <span class="math display">\[Var[Y] \approx \frac{\lambda^{1/\nu}}{\nu}\]</span>
-This is a bit disappointing because we have methods for those cases. The seemingly more appealing case of this method is when we have underdispersed data with small counts.</p>
+when <span class="math inline">\(\nu \leq 1\)</span> (overdispersed) or <span class="math inline">\(\lambda &gt; 10^\nu\)</span> (larger counts). This is a bit disappointing because we have common methods that we may tend to use in those cases (e.g, negative-binomial models). The more interesting case, and the focus here, is how these methods can help us for underdispersed data (with smaller counts).</p>
 </div>
 <div id="simulated-assessment" class="section level3">
 <h3>Simulated Assessment</h3>
-<p>The properties above give us some information, but it is hard to make sense of exactly how these parameters will govern the actual data we might observe from a COM-Poisson distribution. Additionally, the approximations above hold in cases where we may tend to use alternative methods (e.g., negative-binomial models). The more interesting case, and the focus here, is how these methods can help us for underdispersed data (with smaller counts). To give us a bit more insight into this behavior, lets randomly generate a bunch of data for different parameter combinations and see what we find.</p>
-<pre class="r"><code># Make a grid of parameters
-require(tidyverse)
-
-# Make a parameter grid
+<p>The properties described above give us some useful information, but it is hard to make sense of exactly how these parameters directly govern the data we might observe from a COM-Poisson distribution. To give us a bit more insight, lets randomly generate a bunch of data for different parameter combinations and see what we find. To do this, we’ll use the <code>rcmp</code> function.</p>
+<pre class="r"><code># Make a parameter grid
 params &lt;-
   list(
-    lambda = c(1, 10, 15, 50, 100),
-    nu = c(.1, .5, 1, 1.5, 1.9)
+    lambda = c(1, 3, 5, 10, 25, 50),
+    nu = c(.5, 1, 1.25, 1.5)
   ) %&gt;%
   cross_df()
 
 # Number of samples
-n &lt;- 10
+n &lt;- 500
+
+# Number of simulations
+s &lt;- 100
 
 # Set a seed
 set.seed(123)
 
-params %&gt;%
+compoisson_sim1 &lt;-
+  params %&gt;%
   
   # Split into a list
   split(1:nrow(.)) %&gt;%
   
   # For each element
   map_df(
-    ~
-      tibble(
-        value = rcmp(n = n, lambda = .x$lambda, nu = .x$nu),
-        lambda = .x$lambda,
-        nu = .x$nu
-      )
+    function(.x) {
+      
+      1:s %&gt;%
+        
+        # For each iteration
+        map_df(
+          function(.sim) {
+            
+            # Time the sampling
+            temp_time &lt;- system.time(temp_value &lt;- rcmp(n = n, lambda = .x$lambda, nu = .x$nu))
+            
+            tibble(
+              s = .sim,
+              lambda = .x$lambda,
+              nu = .x$nu,
+              value = temp_value,
+              time = temp_time[&quot;elapsed&quot;][[1]]
+            )
+            
+          }
+        )
+    }
   )</code></pre>
-<pre><code>## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
-##  options(COMPoissonReg.ymax = 1e+06)
-
-## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
-##  options(COMPoissonReg.ymax = 1e+06)
-
-## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
-##  options(COMPoissonReg.ymax = 1e+06)
-
-## Warning in rcmp_cpp(n, prep$lambda, prep$nu, ymax = ymax): Larger values of cmp may be needed. Try increasing this setting:
-##  options(COMPoissonReg.ymax = 1e+06)</code></pre>
-<pre><code>## # A tibble: 250 × 3
-##    value lambda    nu
-##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-##  1     2      1   0.1
-##  2     7      1   0.1
-##  3     3      1   0.1
-##  4    10      1   0.1
-##  5    12      1   0.1
-##  6     0      1   0.1
-##  7     4      1   0.1
-##  8    10      1   0.1
-##  9     4      1   0.1
-## 10     3      1   0.1
-## # … with 240 more rows</code></pre>
+<p>We took 100 random samples of size 500 from 24 parameter combinations. This process took about 94.1 seconds to run. Lets first take a quick look at the distributions from the first simulation for each parameter set.</p>
+<pre class="r"><code>compoisson_sim1 %&gt;%
+  
+  # Filter to the first simulated value
+  filter(
+    s == 1
+  ) %&gt;%
+  
+  # Convert to factors
+  mutate(
+    across(
+      c(
+        lambda,
+        nu
+      ),
+      factor
+    ),
+    lambda = 
+      lambda %&gt;%
+      fct_relabel(
+        function(x) paste0(&quot;lambda == &quot;, x)
+      )
+  ) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_histogram(
+    aes(
+      x = value,
+      fill = nu
+    ),
+    position = &quot;identity&quot;,
+    alpha = 0.5
+  ) +
+  facet_wrap(
+    ~lambda,
+    scales = &quot;free&quot;,
+    label = &quot;label_parsed&quot;
+  ) +
+  xlab(&quot;Observed Value&quot;) +
+  ylab(&quot;Frequency&quot;) +
+  theme(
+    legend.position = &quot;top&quot;,
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = &quot;gray&quot;)
+  ) +
+  labs(
+    fill = expression(nu)
+  )</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>It looks like the magnitude of counts increases with <span class="math inline">\(\lambda\)</span>, and decreases with <span class="math inline">\(\nu\)</span>. To get a more concrete view of this, lets compute the sample mean and variance for each iteration, and then average those over the simulations for each parameter combination. By doing this, we’ll also get a sense of the sampling variability of these statistics when <span class="math inline">\(n=\)</span> 500.</p>
+<pre class="r"><code>compoisson_sim1 %&gt;%
+  
+  # For each group
+  group_by(lambda, nu, s) %&gt;%
+  
+  # Compute the statistics
+  summarise(
+    Mean = mean(value),
+    Variance = var(value),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  
+  # Send the statistics down the rows
+  pivot_longer(
+    cols = c(Mean, Variance)
+  ) %&gt;%
+  
+  # For each group
+  group_by(lambda, nu, name) %&gt;%
+  
+  # Compute the mean/standard error
+  summarise(
+    Mean = mean(value),
+    SE = sd(value),
+    .groups = &quot;drop&quot;
+  ) %&gt;%
+  
+  # Join to get the average time for each iteration
+  inner_join(
+    y = 
+      compoisson_sim1 %&gt;%
+      
+      # Remove the value, get unique rows
+      select(-value) %&gt;%
+      distinct() %&gt;%
+      
+      # For each group
+      group_by(lambda, nu) %&gt;%
+      
+      # Compute the average time per iteration
+      summarise(
+        time = mean(time),
+        .groups = &quot;drop&quot;
+      ),
+    by = 
+      c(
+        &quot;lambda&quot;,
+        &quot;nu&quot;
+      )
+  ) %&gt;%
+  
+  # Convert to factors
+  mutate(
+    nu = 
+      nu %&gt;%
+      factor() %&gt;%
+      fct_relabel(
+        function(x) paste0(&quot;nu == &quot;, x)
+      )
+  ) %&gt;%
+  
+  # Make a plot
+  ggplot(
+    aes(
+      x = lambda,
+      y = Mean
+    )
+  ) +
+  geom_line(
+    aes(
+      color = name
+    ),
+    size = 1.25
+  ) +
+  geom_point(
+    aes(
+      color = name
+    ),
+    size = 3
+  ) +
+  geom_ribbon(
+    aes(
+      ymin = Mean - 2*SE,
+      ymax = Mean + 2*SE,
+      fill = name
+    ),
+    alpha = .25
+  ) +
+  facet_wrap(
+    ~nu,
+    scales = &quot;free_y&quot;,
+    label = &quot;label_parsed&quot;
+  ) +
+  ylab(&quot;Value&quot;) +
+  theme(
+    legend.position = &quot;top&quot;,
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = &quot;gray&quot;)
+  ) +
+  scale_x_continuous(
+    breaks = unique(params$lambda)
+  ) +
+  labs(
+    x = expression(lambda)
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>When <span class="math inline">\(\nu=0.5\)</span> (overdispersed), the counts become large quickly with an increasing <span class="math inline">\(\lambda\)</span>. As the data becomes more underdispersed (<span class="math inline">\(\nu &gt; 1\)</span>), the variance increases at a slower rate as <span class="math inline">\(\lambda\)</span> increases, relative to the mean.</p>
 <ul>
-<li><p>Plots of actual observed data</p></li>
-<li><p>Simulation of sample means/variances and it’s relation to nu and lambda</p></li>
-<li><p>If X … give definition of it</p></li>
-<li><p>You’ll notice that this looks similar in form of the Poisson distribution</p></li>
-<li><p>In fact, if … then it is</p></li>
-<li><p>The expected value,</p></li>
+<li>If X … give definition of it</li>
+<li>You’ll notice that this looks similar in form of the Poisson distribution</li>
+<li>In fact, if … then it is</li>
+<li>The expected value,</li>
 </ul>
 </div>
 </div>
@@ -776,7 +937,7 @@ require(tidyverse)
 # Set a seed
 set.seed(123)
 
-### 1. Create simulated dataset
+### Create simulated dataset
 
 # Generating a random Poisson parameter
 ed_true_mean &lt;-
