@@ -23,7 +23,7 @@ projects: []
 
 
 <p><span class="math display">\[\Large \it \text {In Progress}\]</span>
-A few years ago I encountered an interesting count distribution at work during a modeling project. The goal was to model the number of <a href="https://www.shoulderdoc.co.uk/article/538">suture anchors</a> used in rotator-cuff tendon tears, and how that was influenced by tear characteristics and surgeon preference. My instinct would typically be to fit a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> model, but the target took on relatively small values and was also non-zero, so I had to do some digging for an alternative approach. I came across a method called Conway-Maxwell (COM) Poisson regression, which not only allowed for <em>overdispersion</em> (i.e., the population variance is greater than its mean), but also <em>underdispersion</em>. It hit me that I had never come across methodology for the latter and it seemed to align with my problem, so I was intrigued (Full Disclosure: I heard of COM-Poisson prior to that, albeit knew nothing about it, when one of my super smart graduate school buddies was doing research on it, so that’s also why it stuck).</p>
+A few years ago I encountered an interesting count distribution at work during a modeling project. The goal was to model the number of <a href="https://www.shoulderdoc.co.uk/article/538">suture anchors</a> used in rotator-cuff tendon tears, and how that was influenced by tear characteristics and surgeon preference. My instinct was to fit a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> model, but the target took on relatively small values and was also non-zero, so I had to do some digging for an alternative approach. I came across a method called Conway-Maxwell (COM) Poisson regression, which not only allowed for <em>overdispersion</em> (i.e., the population variance is greater than its mean), but also <em>underdispersion</em>. It hit me that I had never come across methodology for the latter and it seemed to align with my problem, so I was intrigued (Full Disclosure: I heard of COM-Poisson prior to that, albeit knew nothing about it, when one of my super smart graduate school buddies was doing research on it, so that’s also why it stuck).</p>
 <p>Long story short, we didn’t end up using the COM-Poisson model for the <a href="https://www.jshoulderelbow.org/article/S1058-2746(18)30555-X/fulltext">anchor project</a> 😁, and instead went in favor of <a href="https://stats.oarc.ucla.edu/r/dae/zero-truncated-poisson/">Zero-Truncated Poisson regression</a>. Nevertheless I thought it was an awesome method that warranted further exploration and later did a <a href="NonTraditionalCountRegression.pdf">talk</a> on it. That was a few years ago–so this article is intended to be a reworking of that talk to relearn it for myself, but also to get the word out about this awesome method! All code is written in R.</p>
 <div id="table-of-contents" class="section level1">
 <h1>Table Of Contents</h1>
@@ -36,6 +36,7 @@ A few years ago I encountered an interesting count distribution at work during a
 <li><a href="#compoisson">Conway-Maxwell (COM) Poisson Regression</a>
 <ul>
 <li><a href="#compoissondistribution">The COM-Poisson Distribution</a></li>
+<li><a href="#compoissonregressionmodel">The Regression Model</a></li>
 </ul></li>
 <li><a href="#codeappendix">Code Appendix</a></li>
 </ul>
@@ -400,7 +401,7 @@ Sat, Sun
 </table>
 <p>Our model suggests that we see <span class="math inline">\(1 - e^{\beta_{weekend}} \approx\)</span> 33.9% <em>less</em> patient volume on the weekends compared to during the week, regardless if it is AM or PM hours–this is reflected in our table estimates. We can also see that there is little difference in patient volume by the time of day, regardless of the day of the week.</p>
 <p><strong><em>Answer to Question 3</em></strong></p>
-<p>The model output in combination with the empirical evidence tells us that not only is the day of the week the <em>more important</em> factor, but the time of day does not appear to matter at all. This is clear when we stratify our observed sample distribution:</p>
+<p>The evidence tells us that not only is the day of the week the <em>more important</em> factor, but the time of day does not appear to matter at all. This is clear when we stratify our observed sample distribution:</p>
 <pre class="r"><code>ed_volumes %&gt;% 
   
   # Make the indicators
@@ -531,7 +532,7 @@ e^{\beta_0 + \beta_{weekend}} (1 + e^{\beta_{PM}}) &amp; \text{if Sat, Sun} \\
 \end{split}
 \end{equation}
 \]</span>
-Simply put, to get estimates around the total daily volume, we summed the regression equation over the time of day variable. Note that this is exactly what we would have gotten by just taking the sample mean of total daily volume stratified by weekday and weekend:</p>
+Simply put, to get estimates around the total daily volume, we summed the regression equation over the time of day variable. Note that this is exactly what we would have gotten by just taking the sample mean of total daily volume stratified by each day of week grouping:</p>
 <pre class="r"><code>stratified_means &lt;-
   ed_volumes %&gt;% 
   
@@ -619,7 +620,7 @@ Sat, Sun
 </tbody>
 </table>
 <p>Notice also that the stratified sample <em>variances</em> align much more with our assumptions in using a Poisson distribution–this was one of our <a href="#poissondistribution">problems earlier</a>, but it appears to be resolved! Now that we have weekday and weekend-specific Poisson distributions, we can confidently compute our final estimates for questions 1 and 2 the same way we did <a href="#poissondistribution">above</a>.</p>
-<p>Of course, the previous table already shows the answer to question 1: <em>we can expect to see 33 patients per day Monday-Friday, and 22 patients on Saturdays or Sundays.</em> To get the updated estimates for question 2, we just need to plug in the new means to the PDF and compute the cumulative probability:</p>
+<p>Table 2 already shows the answer to question 1: <em>we can expect to see 33 patients per day Monday-Friday, and 22 patients on Saturdays or Sundays.</em> To get the updated estimates for question 2, we just need to plug in the new means to the PDF and compute the cumulative probability:</p>
 <pre class="r"><code>question2_updated &lt;-
   stratified_means %&gt;%
   
@@ -697,11 +698,11 @@ Plugging that result back into the full PMF, it turns out to be <em>exactly</em>
 </ul>
 <p><span class="math display">\[E[Y] \approx \lambda^{1/\nu} - \frac{\nu-1}{2\nu}\]</span>
 <span class="math display">\[Var[Y] \approx \frac{\lambda^{1/\nu}}{\nu}\]</span>
-when <span class="math inline">\(\nu \leq 1\)</span> (overdispersed) or <span class="math inline">\(\lambda &gt; 10^\nu\)</span> (larger counts). This is a bit disappointing because we have common methods that we may tend to use in those cases (e.g, negative-binomial models). The more interesting case, and the focus here, is how these methods can help us for underdispersed data (with smaller counts).</p>
+when <span class="math inline">\(\nu \leq 1\)</span> (overdispersed) or <span class="math inline">\(\lambda &gt; 10^\nu\)</span> (larger counts).</p>
 </div>
 <div id="simulated-assessment" class="section level3">
 <h3>Simulated Assessment</h3>
-<p>The properties described above give us some useful information, but it is hard to make sense of exactly how these parameters directly govern the data we might observe from a COM-Poisson distribution. To give us a bit more insight, lets randomly generate a bunch of data for different parameter combinations and see what we find. To do this, we’ll use the <code>rcmp</code> function.</p>
+<p>The properties described above give us some useful information, but it is hard to make sense of how these parameters directly govern the data we might observe from a COM-Poisson distribution. To give us a bit more insight, lets randomly generate a bunch of data for different parameter combinations and see what we find. To do this, we’ll use the <code>rcmp</code> function.</p>
 <pre class="r"><code># Make a parameter grid
 params &lt;-
   list(
@@ -919,13 +920,18 @@ compoisson_sim1 &lt;-
   )</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>When <span class="math inline">\(\nu=0.5\)</span> (overdispersed), the counts become large quickly with an increasing <span class="math inline">\(\lambda\)</span>. As the data becomes more underdispersed (<span class="math inline">\(\nu &gt; 1\)</span>), the variance increases at a slower rate as <span class="math inline">\(\lambda\)</span> increases, relative to the mean.</p>
-<ul>
-<li>If X … give definition of it</li>
-<li>You’ll notice that this looks similar in form of the Poisson distribution</li>
-<li>In fact, if … then it is</li>
-<li>The expected value,</li>
-</ul>
 </div>
+</div>
+<div id="compoissonregressionmodel" class="section level2">
+<h2>The Regression Model</h2>
+<p>The model structure for COM-Poisson is very similar to the <a href="#modelformulation">standard Poisson model</a>. In fact, we can just copy and paste the model form above down here:</p>
+<p><span class="math display">\[log(\lambda_i) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+...+\beta_px_{ip} = X_i\beta\]</span>
+Just like in standard model, we are modeling the (log) <span class="math inline">\(\lambda\)</span> parameter as a linear combination of some covariates. The only difference here is that this <span class="math inline">\(\lambda\)</span> parameter no longer represents the adjusted mean. So, the steps for estimating the parameters are also the same:</p>
+<ol style="list-style-type: decimal">
+<li>Plug the regression formula into the COM-Poisson PDF</li>
+<li>Derive the likelihood function</li>
+<li>Compute the maximum likelihood estimates (MLEs)</li>
+</ol>
 </div>
 </div>
 <div id="codeappendix" class="section level1">

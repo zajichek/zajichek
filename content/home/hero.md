@@ -2,7 +2,7 @@
 widget: hero
 headless: true
 weight: 10
-title: Statistical Consulting Services
+title: Statistical Consulting
 cta:
   label: '**Click to learn more**'
   url: consulting/

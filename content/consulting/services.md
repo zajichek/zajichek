@@ -14,7 +14,7 @@ weight: 20
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
 title: Statistical and Data Science Consulting
-subtitle: Services
+subtitle: How can I help?
 
 feature:
 - name: Data Wrangling
@@ -26,7 +26,7 @@ feature:
   icon: chart-bar
   icon_pack: fas
 - name: Results and Presentation
-  description: Display the results on custom reports or web applications
+  description: Display results on custom reports or web applications
   icon: laptop-code
   icon_pack: fas
 ---
