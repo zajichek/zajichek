@@ -920,18 +920,64 @@ compoisson_sim1 &lt;-
   )</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>When <span class="math inline">\(\nu=0.5\)</span> (overdispersed), the counts become large quickly with an increasing <span class="math inline">\(\lambda\)</span>. As the data becomes more underdispersed (<span class="math inline">\(\nu &gt; 1\)</span>), the variance increases at a slower rate as <span class="math inline">\(\lambda\)</span> increases, relative to the mean.</p>
+<p>So how does this translate to a regression model?</p>
 </div>
 </div>
 <div id="compoissonregressionmodel" class="section level2">
 <h2>The Regression Model</h2>
-<p>The model structure for COM-Poisson is very similar to the <a href="#modelformulation">standard Poisson model</a>. In fact, we can just copy and paste the model form above down here:</p>
+<p>It turns out that the model structure for COM-Poisson regression is very similar to the <a href="#modelformulation">standard Poisson model</a>. In fact, we can just copy and paste it from above:</p>
 <p><span class="math display">\[log(\lambda_i) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+...+\beta_px_{ip} = X_i\beta\]</span>
-Just like in standard model, we are modeling the (log) <span class="math inline">\(\lambda\)</span> parameter as a linear combination of some covariates. The only difference here is that this <span class="math inline">\(\lambda\)</span> parameter no longer represents the adjusted mean. So, the steps for estimating the parameters are also the same:</p>
+The basic structure models the <span class="math inline">\(\lambda\)</span> parameter (on the log scale) as a linear combination of covariates. In turn, the steps for estimating the parameters are also the same:</p>
 <ol style="list-style-type: decimal">
 <li>Plug the regression formula into the COM-Poisson PDF</li>
 <li>Derive the likelihood function</li>
 <li>Compute the maximum likelihood estimates (MLEs)</li>
 </ol>
+<p>The only difference is that the <span class="math inline">\(\lambda\)</span> parameter in this model no longer <a href="#poissondistribution">represents the mean</a>. So when we generate fitted values or interpret parameter estimates, there has to be a little more care taken as to what those represent.</p>
+<p>Let’s jump into a quick example to see how a model is fit with the <code>glm.cmp</code> function. We’ll use the <code>ed_volumes</code> dataset from <a href="#reviewofpoisson">previous section</a> to fit a COM-Poisson model by regressing the day of week and AM/PM indicators on the ED patient volume.</p>
+<pre class="r"><code>compoisson_model1 &lt;-
+  glm.cmp(
+    formula.lambda = Volume ~ Weekend + PM,
+    data = 
+      ed_volumes %&gt;% 
+      mutate(
+        Weekend = weekdays(Date) %in% c(&quot;Saturday&quot;, &quot;Sunday&quot;),
+        PM = TimeOfDay == &quot;PM&quot;
+      )
+  )
+
+compoisson_model1</code></pre>
+<pre><code>## CMP coefficients
+##               Estimate     SE  z.value   p.value
+## X:(Intercept)   2.8472 0.1551  18.3534 3.101e-75
+## X:WeekendTRUE  -0.4231 0.0324 -13.0517 6.211e-39
+## X:PMTRUE        0.0180 0.0195   0.9235    0.3557
+## S:(Intercept)   0.0217 0.0537   0.4050    0.6855
+## --
+## Transformed intercept-only parameters
+##    Estimate     SE
+## nu    1.022 0.0548
+## --
+## Chi-squared test for equidispersion
+## X^2 = 0.1614, df = 1, p-value = 6.8787e-01
+## --
+## Elapsed Sec: 4.11   Sample size: 730   SEs via Hessian
+## LogLik: -2000.6310   AIC: 4009.2620   BIC: 4027.6342   
+## Optimization Method: L-BFGS-B   Converged status: 0
+## Message: CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH</code></pre>
+<p>If we take a quick look at the p-values, we see some familiar results. Namely, the day of week indicator appears to be associated with ED volumes, and the AM/PM indicator does not. Looking closer, there is an additional parameter estimated in the output that we did not see in the standard Poisson model–this is where the dispersion comes in. In addition to estimating the effects of each covariate on the <span class="math inline">\(\lambda\)</span> parameter, it also estimated the dispersion parameter value <a href="#compoissondistribution">discussed above</a>. We can look at this output to determine if there is evidence of over/under dispersion. The package also provides the <code>equitest</code> function to carry out the <em>likelihood ratio test</em> for the following hypotheses:</p>
+<p><span class="math display">\[H_0: \nu = 1 \hskip.25in H_A: \nu \neq 1\]</span>
+It tests whether there is evidence that the data is <em>not</em> equidispersed. It does not indicate a direction, so it is up to us to look at the estimated parameter value to know if over or under dispersion was detected. We get the following output when performing this test on our model:</p>
+<pre class="r"><code>equitest(compoisson_model1)</code></pre>
+<pre><code>## $teststat
+## [1] 0.1614062
+## 
+## $pvalue
+## [1] 0.6878651</code></pre>
+<p>The p-value of 0.6879 does not indicate that over or under dispersion was detected. This is of course expected here, because we generated this dataset from a standard Poisson model, which we know means that <span class="math inline">\(\nu=1\)</span>.</p>
+<ul>
+<li>Notice the <code>formula.lambda</code> argument</li>
+</ul>
 </div>
 </div>
 <div id="codeappendix" class="section level1">
