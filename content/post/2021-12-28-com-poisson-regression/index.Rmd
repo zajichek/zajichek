@@ -18,7 +18,7 @@ projects: []
 ---
 
 $$\Large \it \text {In Progress}$$
-A few years ago I encountered an interesting count distribution at work during a modeling project. The goal was to model the number of [suture anchors](https://www.shoulderdoc.co.uk/article/538) used in rotator-cuff tendon tears, and how that was influenced by tear characteristics and surgeon preference. My instinct was to fit a [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution) model, but the target took on relatively small values and was also non-zero, so I had to do some digging for an alternative approach. I came across a method called Conway-Maxwell (COM) Poisson regression, which not only allowed for _overdispersion_ (i.e., the population variance is greater than its mean), but also _underdispersion_. It hit me that I had never come across methodology for the latter and it seemed to align with my problem, so I was intrigued (Full Disclosure: I heard of COM-Poisson prior to that, albeit knew nothing about it, when one of my super smart graduate school buddies was doing research on it, so that's also why it stuck). 
+A few years ago I encountered an interesting count distribution during a modeling project. The goal was to model the number of [suture anchors](https://www.shoulderdoc.co.uk/article/538) used in rotator-cuff tendon tears, and how that was influenced by tear characteristics and surgeon preference. My instinct was to fit a [Poisson](https://en.wikipedia.org/wiki/Poisson_distribution) model, but the target took on relatively small values and was also non-zero, so I had to do some digging for an alternative approach. I came across a method called Conway-Maxwell (COM) Poisson regression, which not only allowed for _overdispersion_ (i.e., the population variance is greater than its mean), but also _underdispersion_. It hit me that I had never come across methodology for the latter and it seemed to align with my problem, so I was intrigued (Full Disclosure: I heard of COM-Poisson prior to that, albeit knew nothing about it, when one of my super smart graduate school buddies was doing research on it, so that's also why it stuck). 
 
 Long story short, we didn't end up using the COM-Poisson model for the [anchor project](https://www.jshoulderelbow.org/article/S1058-2746(18)30555-X/fulltext) `r emo::ji("grin")`, and instead went in favor of [Zero-Truncated Poisson regression](https://stats.oarc.ucla.edu/r/dae/zero-truncated-poisson/). Nevertheless I thought it was an awesome method that warranted further exploration and later did a [talk](NonTraditionalCountRegression.pdf) on it. That was a few years ago--so this article is intended to be a reworking of that talk to relearn it for myself, but also to get the word out about this awesome method! All code is written in R.
 
@@ -30,6 +30,10 @@ Long story short, we didn't end up using the COM-Poisson model for the [anchor p
 * [Conway-Maxwell (COM) Poisson Regression](#compoisson)
   + [The COM-Poisson Distribution](#compoissondistribution)
   + [The Regression Model](#compoissonregressionmodel)
+  + [Testing for Violations of Equidispersion](#compoissonlrt)
+  + [Stratified Dispersion](#stratifieddispersion)
+  + [Generating Fitted Values](#comfittedvalues)
+  + [Simulation: Power of Equidispersion Test](#compowersim)
 * [Code Appendix](#codeappendix)
 
 
@@ -597,7 +601,7 @@ Plugging that result back into the full PMF, it turns out to be _exactly_ the sa
 
 ### Dispersion Parameter
 
-An important feature of the COM-Poisson PDF is the parameter $\nu$, which determines its _dispersion_ (i.e., how variable it is relative to its mean). In the standard Poisson distribution, the mean and variance are always the same, by definition. The $\nu$ parameter allows us to relax that restriction in cases where it does apply (or we don't want to force it to). The following table describes the properties when it is above, below, and equal to 1:
+An important feature of the COM-Poisson PDF is the parameter $\nu$, which determines its _dispersion_ (i.e., how variable it is relative to its mean). In the standard Poisson distribution, the mean and variance are always the same, by definition. The $\nu$ parameter allows us to relax that restriction in cases where it does not apply (or we don't want to force it to). The following table describes the properties when it is above, below, and equal to 1:
 
 Parameter|Implies|Described As
 ------|-----------|----------
@@ -605,7 +609,7 @@ $\nu=1$|$E[Y] = Var[Y]$|Equidispersed
 $\nu<1$|$E[Y] < Var[Y]$|Overdispersed
 $\nu>1$|$E[Y] > Var[Y]$|Underdispersed
 
-### Mean and Variance
+### Mean and Variance {#compoissonmeanapprox}
 
 Unfortunately, there is [no closed form solution](https://faculty.georgetown.edu/kfs7/MY%20PUBLICATIONS/COMPoissonModelForCountDataWithDiscussion.pdf) for the mean and variance of a COM-Poisson random variable. However, there are a couple related properties that are worth relaying:
 
@@ -619,7 +623,7 @@ $$E[Y] \approx \lambda^{1/\nu} - \frac{\nu-1}{2\nu}$$
 $$Var[Y] \approx \frac{\lambda^{1/\nu}}{\nu}$$
 when $\nu \leq 1$ (overdispersed) or $\lambda > 10^\nu$ (larger counts).
 
-### Simulated Assessment
+### Centrality Simulation {#centralitysimulation}
 
 The properties described above give us some useful information, but it is hard to make sense of how these parameters directly govern the data we might observe from a COM-Poisson distribution. To give us a bit more insight, lets randomly generate a bunch of data for different parameter combinations and see what we find. To do this, we'll use the `rcmp` function.
 
@@ -892,12 +896,14 @@ The basic structure models the $\lambda$ parameter (on the log scale) as a linea
 
 The only difference is that the $\lambda$ parameter in this model no longer [represents the mean](#poissondistribution). So when we generate fitted values or interpret parameter estimates, there has to be a little more care taken as to what those represent. 
 
-Let's jump into a quick example to see how a model is fit with the `glm.cmp` function. We'll use the `ed_volumes` dataset from [previous section](#reviewofpoisson) to fit a COM-Poisson model by regressing the day of week and AM/PM indicators on the ED patient volume.
+Let's take a quick look at how to fit a model with the `glm.cmp` function and orient ourselves with its output. We'll use the `ed_volumes` dataset from the [previous section](#reviewofpoisson).
 
 ```{r}
 compoisson_model1 <-
+  
+  # Function to fit a COM-Poisson model
   glm.cmp(
-    formula.lambda = Volume ~ Weekend + PM,
+    formula.lambda = Volume ~ Weekend + PM, # lamda parameter linear predictor
     data = 
       ed_volumes %>% 
       mutate(
@@ -909,18 +915,215 @@ compoisson_model1 <-
 compoisson_model1
 ```
 
-If we take a quick look at the p-values, we see some familiar results. Namely, the day of week indicator appears to be associated with ED volumes, and the AM/PM indicator does not. Looking closer, there is an additional parameter estimated in the output that we did not see in the standard Poisson model--this is where the dispersion comes in. In addition to estimating the effects of each covariate on the $\lambda$ parameter, it also estimated the dispersion parameter value [discussed above](#compoissondistribution). We can look at this output to determine if there is evidence of over/under dispersion. The package also provides the `equitest` function to carry out the _likelihood ratio test_ for the following hypotheses:
+We see some familiar results. Namely, the parameter estimates and p-values are pretty similar to the standard Poisson model [above](#modelformulation). However, there is additional output--this is where the dispersion comes in. When we fit the model, the function also estimated the value of the $\nu$ parameter, which in this case was `r round(exp(compoisson_model1$gamma)[[1]], 3)` (it was expected to be near 1, given that our data was generated from a standard Poisson distribution). The `X` components make up the regression equation for $\lambda$, and the `S` components make up the regression equation for $\nu$. We just need to evaluate those equations on an observation's covariate values, and we'll have its estimated conditional COM-Poisson distribution.
+
+## Testing for Violations of Equidispersion {#compoissonlrt}
+
+We could just look at the estimated $\nu$ parameter and its standard error in the model output to draw a conclusion about the dispersion. Nevertheless, the package also provides a function called `equitest` to more formally carry out a _likelihood ratio test (LRT)_ for the following hypotheses:
 
 $$H_0: \nu = 1 \hskip.25in H_A: \nu \neq 1$$
-It tests whether there is evidence that the data is _not_ equidispersed. It does not indicate a direction, so it is up to us to look at the estimated parameter value to know if over or under dispersion was detected. We get the following output when performing this test on our model:
+
+It tests for evidence that the data is _not_ equidispersed, but does not specify its direction. Therefore, if $H_0$ is rejected, it is up to us to garner from the model output whether there is over or under dispersion. Here is the output when performing this test on our model:
 
 ```{r}
 equitest(compoisson_model1)
 ```
 
-The p-value of `r round(equitest(compoisson_model1)$pvalue, 4)` does not indicate that over or under dispersion was detected. This is of course expected here, because we generated this dataset from a standard Poisson model, which we know means that $\nu=1$.
+As expected, the p-value of `r round(equitest(compoisson_model1)$pvalue, 4)` does not indicate that over or under dispersion was detected.
 
-* Notice the `formula.lambda` argument
+## Stratified Dispersion {#stratifieddispersion}
+
+One of the coolest features of this modeling framework (in my opinion) is that not only can you fit a model for over or under dispersed data, but you can allow the dispersion parameter to vary by covariate values. You probably noticed the `formula.lambda` argument in the `glm.cmp` function call where we specified the model form for the $\lambda$ parameter. There is an additional argument called `formula.nu` where we can analogously specify a linear predictor for the $\nu$ parameter, which, like $\lambda$, is on the _log_ scale. This means that, for example, if we suspect that one group has _overdispersed_ data, and another has _underdispersed_ data, we can account for that within a single model. Very cool! Just for kicks, let's see what this looks like when we allow the $\nu$ parameter to vary between AM and PM hours from our `ed_volumes` dataset:
+
+```{r}
+compoisson_model2 <-
+  glm.cmp(
+    formula.lambda = Volume ~ Weekend, # Linear predictor for log-lambda
+    formula.nu = Volume ~ PM, # Linear predictor for log-nu
+    data = 
+      ed_volumes %>% 
+      mutate(
+        Weekend = weekdays(Date) %in% c("Saturday", "Sunday"),
+        PM = TimeOfDay == "PM"
+      )
+  )
+compoisson_model2
+```
+
+We can see that there are now two parameters associated with the `S` component of the model. We can simply evaluate and exponentiate those terms to get the $\nu$ estimates for each group:
+
+```{r}
+# Make a simple design matrix
+nu_design <- matrix(c(1,1,0,1), nrow = 2)
+
+# Multiply by the S component of the model
+nu_log_estimates <- nu_design %*% as.matrix(compoisson_model2$gamma)
+
+# Exponentiate
+nu_estimates <- exp(nu_log_estimates)
+
+# Add the names
+rownames(nu_estimates) <- names(compoisson_model2$gamma)
+nu_estimates
+```
+
+Again, both groups' data were knowingly generated from a standard Poisson distribution here, so we expected the conditional estimates to be near 1 as well. Nevertheless, it illustrates the power and flexibility of this framework. 
+
+## Generating Fitted Values {#comfittedvalues}
+
+As [previously mentioned](#compoissonmeanapprox), there is no closed form solution for the mean of a COM-Poisson random variable. So when we generate fitted values from the model's linear predictor, it is hard to conceptualize what they represent (it is _NOT_ the mean). Since our model _does_ produce estimates for both $\lambda$ and $\nu$, the [recommendation](https://projecteuclid.org/journals/annals-of-applied-statistics/volume-4/issue-2/A-flexible-regression-model-for-count-data/10.1214/09-AOAS306.full) is to plug these into the inverse cumulative density function (CDF) to obtain quantile-based fitted values. Specifically, we can use the _median_. The figure below displays the median and $25^{th}$/$75^{th}$ percentiles from the parameter grid used in the [simulation above](#centralitysimulation).
+
+```{r}
+params %>%
+  
+  # Add the quantiles
+  inner_join(
+    y = 
+      tibble(
+        Quantile = c(0.25, 0.50, 0.75)
+      ),
+    by = character()
+  ) %>%
+  
+  # Get the value
+  mutate(
+    Value = qcmp(Quantile, lambda, nu),
+    Linegroup = factor(Quantile == 0.50) %>% fct_rev(),
+    nu = 
+      nu %>%
+      factor() %>%
+      fct_relabel(
+        function(x) paste0("nu == ", x)
+      )
+  ) %>%
+  
+  # Make a plot
+  ggplot(
+    aes(
+      x = lambda,
+      y = Value,
+      group = Quantile
+    )
+  ) +
+  geom_line(
+    aes(
+      linetype = Linegroup,
+      color = Linegroup
+    ),
+    size = 1.25
+  ) +
+  geom_point(
+    size = 2
+  ) +
+  facet_wrap(
+    ~nu,
+    scales = "free_y",
+    label = "label_parsed"
+  ) +
+  ylab("Median & 25th/75th Percentiles") +
+  theme(
+    legend.position = "none",
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    strip.text = element_text(size = 12),
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "gray")
+  ) +
+  scale_x_continuous(
+    breaks = unique(params$lambda)
+  ) +
+  labs(
+    x = expression(lambda)
+  ) +
+  scale_color_manual(
+    values = c("black", "red")
+  )
+```
+
+The median values seem to have a relatively similar behavior to the simulated means.
+
+So, to obtain _predicted_ values with our model object (we'll use the [first model we made](#compoissonregressionmodel)), we have to:
+
+1. Produce observation-level estimates of $\lambda$ and $\nu$ with the regression equation
+
+```{r}
+# Multiply the design matrices by the parameter estimates for each linear predictor, then exponentiate
+lambda_hat <- exp(compoisson_model1$X %*% as.matrix(compoisson_model1$beta))
+nu_hat <- exp(compoisson_model1$S %*% as.matrix(compoisson_model1$gamma))
+head(data.frame(lambda_hat, nu_hat))
+```
+
+2. Plug the estimates into the inverse CDF at the 50th percentile
+
+```{r}
+y_hat <- qcmp(rep(0.5, length(lambda_hat)), lambda = lambda_hat, nu = nu_hat)
+table(y_hat)
+```
+
+There does exist a `predict.cmp` function that uses the [mean approximation](#compoissonmeanapprox) by default, so this could be used for fitted values as well if those conditions are satisfied.
+
+## Simulation: Power of Equidispersion Test {#compowersim}
+
+So how well does the likelihood ratio test [described above](#compoissonlrt) detect over or under dispersion in the data-generating process? We can use simulation! To keep it simple, we will base it off of intercept-only regression models with no covariates, in effect assessing power at varying values of $\lambda$. Presumably, power may depend on the complexity of the model, so coverage might vary as terms are added. Here is the setup for the simulation using the previous [parameter grid](#centralitysimulation):
+
+```{r, eval = FALSE}
+S <- 100
+result <-
+  params %>%
+  
+  # Cross-join to add sample size to the parameter grid
+  inner_join(
+    y = 
+      tibble(
+        N = c(10, 25, 50, 100, 500, 1000)
+      ),
+    by = character()
+  ) %>% head() %>%
+  
+  # Cross-join for each iteration
+  inner_join(
+    y = 
+      tibble(
+        S = seq_len(S)
+      ),
+    by = character()
+  ) %>%
+  
+  # Split into a list
+  split(1:nrow(.)) %>%
+  
+  # For each element
+  map_df(
+    function(x) {
+      
+      # 1. Generate sample for the specified parameter set
+      y_i <- rcmp(n = x$N, lambda = x$lambda, nu = x$nu)
+      
+      # 2. Fit the COM-Poisson model
+      model <- glm.cmp(y_i ~ 1)
+      
+      # 3. Compute the p-value
+      pvalue <- equitest(model)$pvalue
+      
+      # 4. Add to set
+      x %>%
+        add_column(
+          PValue = pvalue
+        )
+      
+    }
+  )
+
+result %>%
+  group_by(
+    lambda,
+    nu,
+    N
+  ) %>%
+  summarise(
+    Rate = mean(PValue < 0.05)
+  )
+```
 
 # Code Appendix {#codeappendix}
 
