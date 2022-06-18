@@ -1,0 +1,52 @@
+---
+title: Filterable Maps with leaflet and crosstalk
+subtitle: For runtime-free content delivery
+author: Alex Zajichek
+date: '2022-06-18'
+slug: filterable-maps
+categories: []
+tags: []
+summary: ''
+authors: []
+lastmod: '2022-06-18T07:49:36-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+_**In Progress**_
+
+When you run `R` locally and don't have a server to process, how can you still deliver engaging analytic content?
+
+Lately I've been spending a lot of time finding creative ways to deliver interactive and explorable analytic content to end-users in self-contained documents, without depending on a server to process the `R` code. There have been some incredible packages developed to help with this. Namely, two I focus on here are `leaflet` and `crosstalk`.
+
+```{r}
+require(tidyverse)
+require(leaflet)
+require(crosstalk)
+
+state_outlines <-
+  maps::map(
+    database = "state",
+    regions = "wisconsin",
+    fill = TRUE,
+    plot = FALSE
+  )
+
+  leaflet() %>%
+  
+  # Add geographic tiles
+  addTiles() %>%
+  
+  # Add US state outlines
+  addPolygons(
+    data = state_outlines,
+    fillColor = "gray",
+    stroke = FALSE
+  ) 
+```
+
+
