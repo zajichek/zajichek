@@ -6,7 +6,6 @@ date: '2022-06-18'
 slug: filterable-maps
 categories: []
 tags: []
-summary: ''
 authors: []
 lastmod: '2022-06-18T07:49:36-05:00'
 featured: no
@@ -15,19 +14,23 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+summary: So you run `R` locally and don't have access to a runtime server, but want to be able to deliver engaging, interactive analytic content to your stakeholders. Is there a way to do that?
 ---
 
 _**In Progress**_
 
-When you run `R` locally and don't have a server to process, how can you still deliver engaging analytic content?
+Want to learn how to make a map widget like this one?
 
-Lately I've been spending a lot of time finding creative ways to deliver interactive and explorable analytic content to end-users in self-contained documents, without depending on a server to process the `R` code. There have been some incredible packages developed to help with this. Namely, two I focus on here are `leaflet` and `crosstalk`.
+```{r, echo = FALSE, message = FALSE}
 
-```{r}
+### This junk builds the final map from start to finish
+
+# Load packages
 require(tidyverse)
 require(leaflet)
 require(crosstalk)
 
+# Build the state outline
 state_outlines <-
   maps::map(
     database = "state",
@@ -36,7 +39,8 @@ state_outlines <-
     plot = FALSE
   )
 
-  leaflet() %>%
+# Build the base map
+leaflet() %>%
   
   # Add geographic tiles
   addTiles() %>%
@@ -47,6 +51,10 @@ state_outlines <-
     fillColor = "gray",
     stroke = FALSE
   ) 
-```
 
+```
+<br>
+Read On! `r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")`
+
+So you run `R` locally and don't have access to a runtime server, but want to be able to deliver engaging, interactive analytic content to your stakeholders. Is there a way to do that? Lately, I've spent a lot of time learning and exploring tools to find the answer to that question. Luckily, the answer is _yes_, because there are many amazing packages that have been developed to help with this, including [`reactable`](https://glin.github.io/reactable/), [`plotly`](https://plotly.com/r/), [`DT`](https://rstudio.github.io/DT/), [`leaflet`](https://rstudio.github.io/leaflet/), and [`crosstalk`](https://rstudio.github.io/crosstalk/), among others. This article focuses on the latter two, and how we can build map widgets that are changeable by the user through filters, all in a self-contained HTML document.
 
