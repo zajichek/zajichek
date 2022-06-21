@@ -19,7 +19,7 @@ summary: So you run `R` locally and don't have access to a runtime server, but w
 
 _**In Progress**_
 
-Want to learn how to make a map widget like this one?
+Want to make the map widget below? Read On! `r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")`
 
 ```{r, echo = FALSE, message = FALSE}
 
@@ -53,8 +53,34 @@ leaflet() %>%
   ) 
 
 ```
+
 <br>
-Read On! `r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")`
+<br>
 
 So you run `R` locally and don't have access to a runtime server, but want to be able to deliver engaging, interactive analytic content to your stakeholders. Is there a way to do that? Lately, I've spent a lot of time learning and exploring tools to find the answer to that question. Luckily, the answer is _yes_, because there are many amazing packages that have been developed to help with this, including [`reactable`](https://glin.github.io/reactable/), [`plotly`](https://plotly.com/r/), [`DT`](https://rstudio.github.io/DT/), [`leaflet`](https://rstudio.github.io/leaflet/), and [`crosstalk`](https://rstudio.github.io/crosstalk/), among others. This article focuses on the latter two, and how we can build map widgets that are changeable by the user through filters, all in a self-contained HTML document.
 
+# Table of Contents
+
+* [Defining a Use-Case: Hospital Readmissions](#usecase)
+  + [Creating the dataset](#usecasedataset)
+* [Building the Map](#mapoverview)
+  1. [Create the base layer](#baselayer)
+* [Conclusion](#conclusion)
+* [Code Appendix](#codeappendix)
+
+# Defining a Use-Case: Hospital Readmissions {#usecase}
+
+A _readmission_ occurs when a patient returns to a hospital for acute care within 30 calendar days of previously being discharged. Each year the [_Centers for Medicare & Medicaid Services (CMS)_](https://www.cms.gov/) [penalize hospitals](https://www.cms.gov/Medicare/Medicare-Fee-for-Service-Payment/AcuteInpatientPPS/Readmissions-Reduction-Program) across the United States that have _excess_ readmissions in a select set of high-risk patient populations. This is determined by
+
+1. Adjusting for the hospital's specific patient population acuity by a collection of clinical risk factors
+2. Comparing the expected readmission rate of _those_ patients had they been treated at _your_ hospital versus the _national average_ hospital. The difference between those rates yield the penalty amount (with some additional steps and caveats).
+
+For the stats gurus, it is just a mixed-effects logistic regression model that uses the hospital as a random-intercept term, and many clinical factors as fixed effects. The hospital's specific estimated effect is plugged into the regression to compute the _predicted_ readmission rate. You can read more about the methodology [here](https://qualitynet.cms.gov/inpatient/measures/readmission/methodology).
+
+The goal of this exercise is to build a map widget to identify and explore participating Wisconsin hospitals who were penalized in the _FY 2022 Hospital Readmissions Reduction Program (HRRP)_.
+
+## Creating the dataset {#usecasedataset}
+
+# Building the Map {#mapoverview}
+
+## 1. Create the base layer {#baselayer}
