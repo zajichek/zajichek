@@ -1,5 +1,5 @@
 ---
-title: Filterable Maps with leaflet and crosstalk
+title: Building a Filterable Map with leaflet and crosstalk for Hospital Readmissions
 subtitle: For runtime-free content delivery
 author: Alex Zajichek
 date: '2022-06-18'
@@ -21,17 +21,188 @@ _**In Progress**_
 
 Want to make the map widget below? Read On! `r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")`
 
-```{r, echo = FALSE, message = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, comment = FALSE, results = 'hide'}
 
-### This junk builds the final map from start to finish
-
-# Load packages
+### Load packages
 require(tidyverse)
+require(readxl)
+require(tigris)
+require(sf)
 require(leaflet)
 require(crosstalk)
 
-# Build the state outline
-state_outlines <-
+### 1. Import CMS data
+
+## i. FY22 final rule (indicates penalties for each hospital)
+
+# Set location of zip file (publicly available on CMS website)
+hrrp_zip <- "https://www.cms.gov/files/zip/fy2022-hrrp-final-rule-supplemental-file.zip"
+
+# Create a temporary file (Credits: rpubs.com/otienodominic/398952)
+temp_file <- tempfile()
+
+# Download into the temporary file
+download.file(hrrp_zip, temp_file)
+
+# Name of file needed within zip
+hrrp_file <- "FY2022_Final_Rule_Supplemental_File.xlsx"
+
+# Unzip, and place the file in the current working directory
+unzip(temp_file, hrrp_file, exdir = ".")
+
+# Import the data file into a data frame
+hrrp_results <-
+  read_xlsx(
+    path = hrrp_file,
+    sheet = "FR FY 2022",
+    skip = 3,
+    na = c("", " ", ".", "-", "NA", "N/A")
+  )
+
+# Delete the downloaded file
+file.remove(hrrp_file)
+unlink(temp_file)
+
+## ii. Hospital Information
+
+# Set path to file (from CMS)
+hosp_file <- "https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1641873938/Hospital_General_Information.csv"
+
+# Import the file
+hosp_info <-
+  read_csv(
+    file = hosp_file
+  )
+
+### 2. Obtain zip code centroids
+
+# Get set of zip codes for Wisconsin
+zips_wi <- zctas(year = 2010, state = "WI")
+
+# Gather centroids of corrdinates for each zip
+zips_wi_centroids <-
+  zips_wi %>%
+  
+  # Get the centroid
+  st_centroid() %>%
+  
+  # Pluck the coordinates
+  st_coordinates() %>%
+  
+  # Make a tibble
+  as_tibble() %>%
+  
+  # Add identifying column
+  add_column(
+    Zip = zips_wi$ZCTA5CE10
+  ) %>%
+  
+  # Rename columns
+  rename(
+    lon = X,
+    lat = Y
+  )
+
+### 3. Build an analysis dataset
+map_data <-
+  hosp_info %>%
+  
+  # Filter to Wisconsin hospitals
+  filter(
+    State == "WI"
+  ) %>%
+  
+  # Keep a few pieces of information
+  select(
+    FacilityID = `Facility ID`,
+    FacilityName = `Facility Name`,
+    Zip = `ZIP Code`
+  ) %>%
+  
+  # Join to get the centroid for the hospital's zip code
+  inner_join(
+    y = zips_wi_centroids,
+    by = "Zip"
+  ) %>%
+  
+  # Join to get HRRP program results
+  inner_join(
+    y = 
+      hrrp_results %>%
+      
+      # Make cleaner levels for penalty indicators
+      mutate(
+        across(
+          starts_with("Penalty indicator"),
+          ~
+            case_when(
+              .x == "Y" ~ "Yes",
+              .x == "N" ~ "No",
+              TRUE ~ NA_character_
+            )
+        )
+      ) %>%
+      
+      # Keep a few columns
+      select(
+        FacilityID = `Hospital CCN`,
+        PeerGroup = `Peer group assignment`,
+        DualProportion = `Dual proportion`,
+        Penalty = `Payment Reduction Percentage`,
+        starts_with("Penalty indicator")
+      ) %>%
+      
+      # Remove the prefix from the cohort columns
+      rename_with(
+        ~str_remove(.x, "^Penalty indicator for "),
+        starts_with("Penalty indicator")
+      ),
+    by = "FacilityID"
+  ) %>% 
+  
+  # Join to get list of penalized cohorts (for labeling)
+  left_join(
+    y = 
+      hrrp_results %>%
+      
+      # Send down the rows
+      pivot_longer(
+        cols = starts_with("Penalty indicator"),
+        names_prefix = "Penalty indicator for "
+      ) %>%
+      
+      # Filter to penalty cohorts
+      filter(
+        value == "Y"
+      ) %>%
+      
+      # For each hospital
+      group_by(`Hospital CCN`) %>%
+      
+      # Concatenate the list of penalty cohorts
+      summarise(
+        PenalizedCohortCount = n(),
+        PenalizedCohorts = paste(sort(unique(name)), collapse = ", "),
+        .groups = "drop"
+      ) %>%
+      
+      # Rename the column
+      rename(
+        FacilityID = `Hospital CCN`
+      ),
+    by = "FacilityID"
+  ) %>%
+  
+  # Fill in non-penalized hospitals
+  mutate(
+    PenalizedCohortCount = coalesce(PenalizedCohortCount, 0),
+    PenalizedCohorts = coalesce(PenalizedCohorts, "")
+  ) 
+
+### 4. Map data components
+
+# State outline
+state_outline <-
   maps::map(
     database = "state",
     regions = "wisconsin",
@@ -39,20 +210,175 @@ state_outlines <-
     plot = FALSE
   )
 
-# Build the base map
-leaflet() %>%
+# County outlines
+county_outlines <- 
+  counties(cb = TRUE) %>%
+  filter(
+    STATE_NAME == "Wisconsin"
+  )
+
+### 4. Build map
+
+## i. State outline
+my_map <- 
+  leaflet() %>%
   
   # Add geographic tiles
   addTiles() %>%
   
-  # Add US state outlines
+  # Add WI state outline
   addPolygons(
-    data = state_outlines,
+    data = state_outline,
     fillColor = "gray",
     stroke = FALSE
   ) 
 
+## ii. County outline
+my_map <-
+  my_map %>%
+  
+  # Add county outlines
+  addPolygons(
+    data = county_outlines,
+    color = "black",
+    fillColor = "#ff59f7",
+    weight = 1,
+    opacity = .5,
+    highlightOptions = 
+      highlightOptions(
+        color = "black",
+        weight = 3,
+        bringToFront = FALSE
+      ),
+    label = ~NAME
+  )
+
 ```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, comment = FALSE}
+
+## iii. Add hospitals
+
+# Make the shared data set
+sd <- SharedData$new(data = map_data %>% mutate(DualProportion = round(DualProportion*100, 2)))
+
+# Make filters
+bscols(
+  widths = c(1, 11),
+  "",
+  htmltools::h3("Hospital Readmissions Reduction Program (HRRP) Map - FY 2022")
+)
+# Row 1:
+bscols(
+  widths = c(1, 10, 1),
+  "",
+  filter_slider(
+    id = "penalty",
+    label = "Payment Reduction",
+    sharedData = sd,
+    column = ~Penalty,
+    step = 0.1,
+    min = 0,
+    max = 3,
+    post = "%"
+  ),
+  ""
+)
+
+# Row 2:
+bscols(
+  widths = c(1, 5, 5, 1),
+  "",
+  filter_slider(
+    id = "dual_proportion",
+    label = "Dual Proportion",
+    sharedData = sd,
+    column = ~DualProportion,
+    step = 10
+  ),
+  filter_select(
+    id = "peer_group",
+    label = "Peer Group",
+    sharedData = sd,
+    group = ~PeerGroup
+  ),
+  ""
+)
+
+# Row 3-4:
+bscols(
+  widths = c(1, 11),
+  "",
+  "Cohort-specific penalty:"
+)
+bscols(
+  widths = c(1, 3, 3, 3, 1),
+  "",
+  filter_select(
+    id = "ami",
+    label = "AMI",
+    sharedData = sd,
+    group = ~AMI
+  ),
+  filter_select(
+    id = "cabg",
+    label = "CABG",
+    sharedData = sd,
+    group = ~CABG
+  ),
+  filter_select(
+    id = "copd",
+    label = "COPD",
+    sharedData = sd,
+    group = ~COPD
+  ),
+  ""
+)
+bscols(
+  widths = c(1, 3, 3, 3, 1),
+  "",
+  filter_select(
+    id = "hf",
+    label = "HF",
+    sharedData = sd,
+    group = ~HF
+  ),
+  filter_select(
+    id = "pneu",
+    label = "PNEU",
+    sharedData = sd,
+    group = ~pneumonia
+  ),
+  filter_select(
+    id = "tja",
+    label = "THA/TKA",
+    sharedData = sd,
+    group = ~`THA/TKA`
+  ),
+  ""
+)
+
+# Add shared data to the map
+my_map %>%
+  
+  addCircleMarkers(
+    data = sd, # A dataset containing coordinates for each zip code (or anything)
+    lng = ~lon, # The coordinates of that entitity
+    lat = ~lat,
+    label = ~paste0(FacilityName, " (click for info)"),
+    popup = 
+      ~paste0(
+        "Hospital: ", FacilityName, 
+        "<br>Zip Code: ", Zip,
+        "<br>Peer Group: ", PeerGroup,
+        "<br>Dual-Eligibility: ", DualProportion, "%",
+        "<br>Penalties: ", PenalizedCohorts,
+        "<br>Payment Reduction: ", Penalty, "%"
+      )
+  )
+
+```
+
 
 <br>
 <br>
