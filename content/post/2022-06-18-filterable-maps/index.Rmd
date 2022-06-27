@@ -1,6 +1,6 @@
 ---
-title: Building a Filterable Map with leaflet and crosstalk for Hospital Readmissions
-subtitle: For runtime-free content delivery
+title: 'Hospital Readmissions: Building a Filterable Map with leaflet and crosstalk'
+subtitle: Series on runtime-free content delivery
 author: Alex Zajichek
 date: '2022-06-18'
 slug: filterable-maps
@@ -14,12 +14,12 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
-summary: So you run `R` locally and don't have access to a runtime server, but want to be able to deliver engaging, interactive analytic content to your stakeholders. Is there a way to do that?
+summary: So you run `R` locally but want to be able to deliver engaging, interactive analytic content to your stakeholders. Is there a way to do that?
 ---
 
 _**In Progress**_
 
-Want to make the map widget below? Read On! `r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")`
+Want to make this map widget? Read On! `r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")``r emo::ji("backhand index pointing down")`
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, error = FALSE, comment = FALSE, results = 'hide'}
 
@@ -123,6 +123,18 @@ map_data <-
   inner_join(
     y = zips_wi_centroids,
     by = "Zip"
+  ) %>%
+  
+  # Add random jitter to coordinates
+  mutate(
+    across(
+      c(
+        lat,
+        lon
+      ),
+      jitter,
+      amount = 0.05
+    )
   ) %>%
   
   # Join to get HRRP program results
@@ -244,6 +256,7 @@ my_map <-
     fillColor = "#ff59f7",
     weight = 1,
     opacity = .5,
+    fillOpacity = .35,
     highlightOptions = 
       highlightOptions(
         color = "black",
@@ -260,13 +273,13 @@ my_map <-
 ## iii. Add hospitals
 
 # Make the shared data set
-sd <- SharedData$new(data = map_data %>% mutate(DualProportion = round(DualProportion*100, 2)))
+sd <- SharedData$new(data = map_data)
 
 # Make filters
 bscols(
   widths = c(1, 11),
   "",
-  htmltools::h3("Hospital Readmissions Reduction Program (HRRP) Map - FY 2022")
+  htmltools::h3("Hospital Readmissions Reduction Program (HRRP) FY 2022 - WI Map", style = "font-style:italic;")
 )
 # Row 1:
 bscols(
@@ -285,27 +298,7 @@ bscols(
   ""
 )
 
-# Row 2:
-bscols(
-  widths = c(1, 5, 5, 1),
-  "",
-  filter_slider(
-    id = "dual_proportion",
-    label = "Dual Proportion",
-    sharedData = sd,
-    column = ~DualProportion,
-    step = 10
-  ),
-  filter_select(
-    id = "peer_group",
-    label = "Peer Group",
-    sharedData = sd,
-    group = ~PeerGroup
-  ),
-  ""
-)
-
-# Row 3-4:
+# Row 2-3:
 bscols(
   widths = c(1, 11),
   "",
@@ -358,6 +351,13 @@ bscols(
   ""
 )
 
+# Create a color pallete
+pal <- 
+  colorNumeric(
+    palette = "RdYlGn",
+    domain = -1*seq(0, 3, .1)
+  )
+
 # Add shared data to the map
 my_map %>%
   
@@ -371,23 +371,24 @@ my_map %>%
         "Hospital: ", FacilityName, 
         "<br>Zip Code: ", Zip,
         "<br>Peer Group: ", PeerGroup,
-        "<br>Dual-Eligibility: ", DualProportion, "%",
+        "<br>Dual-Eligibility: ", round(DualProportion*100, 2), "%",
         "<br>Penalties: ", PenalizedCohorts,
         "<br>Payment Reduction: ", Penalty, "%"
-      )
+      ),
+    color = ~pal(-1*Penalty),
+    fillOpacity = .75
   )
 
 ```
 
-
 <br>
 <br>
 
-So you run `R` locally and don't have access to a runtime server, but want to be able to deliver engaging, interactive analytic content to your stakeholders. Is there a way to do that? Lately, I've spent a lot of time learning and exploring tools to find the answer to that question. Luckily, the answer is _yes_, because there are many amazing packages that have been developed to help with this, including [`reactable`](https://glin.github.io/reactable/), [`plotly`](https://plotly.com/r/), [`DT`](https://rstudio.github.io/DT/), [`leaflet`](https://rstudio.github.io/leaflet/), and [`crosstalk`](https://rstudio.github.io/crosstalk/), among others. This article focuses on the latter two, and how we can build map widgets that are changeable by the user through filters, all in a self-contained HTML document.
+So you run `R` locally but want to be able to deliver engaging, interactive analytic content to your stakeholders. Is there a way to do that? Lately, I've spent a lot of time learning and exploring tools to find the answer to that question. Luckily, the answer is _yes_, because there are many amazing packages that have been developed to help with this, including [`reactable`](https://glin.github.io/reactable/), [`plotly`](https://plotly.com/r/), [`DT`](https://rstudio.github.io/DT/), [`leaflet`](https://rstudio.github.io/leaflet/), and [`crosstalk`](https://rstudio.github.io/crosstalk/), among others. This article focuses on the latter two, and how we can build map widgets that are changeable by the user through filters, all in a self-contained HTML document.
 
 # Table of Contents
 
-* [Defining a Use-Case: Hospital Readmissions](#usecase)
+* [The Use-Case: Hospital Readmissions](#usecase)
   + [Creating the dataset](#usecasedataset)
 * [Building the Map](#mapoverview)
   1. [Create the base layer](#baselayer)
