@@ -355,7 +355,7 @@ bscols(
 pal <- 
   colorNumeric(
     palette = "RdYlGn",
-    domain = -1*map_data$Penalty
+    domain = -1*seq(0,3,.1)
   )
 
 # Add shared data to the map
@@ -390,8 +390,12 @@ So you run `R` locally but want to be able to deliver engaging, interactive anal
 
 * [The Use-Case: Hospital Readmissions](#usecase)
 * [Constructing the Map](#mapoverview)
-  1. [Building the dataset](#usecasedataset)
-  2. [Create the base layer](#baselayer)
+  1. [Build the dataset](#usecasedataset)
+  2. [Create a shareable dataset](#shareddata)
+  3. [Create the base layer](#baselayer)
+  4. [Add county lines](#countylines)
+  5. [Show data points](#datapoints)
+  6. [Make filters](#filters)
 * [Conclusion](#conclusion)
 * [Code Appendix](#codeappendix)
 
@@ -597,7 +601,7 @@ The penalty information can be added next. We'll add the:
 * Peer group: The group that the hospital was compared against to determine penalty status. This is based on the dual-eligibility proportion.
 * Cohort-specific penalty indicators: A flag of whether or not the hospital was penalized in each of the six (6) focus cohorts
 
-We'll do a little clean-up on the cohort indicators for cleaner names and nicer presentation.
+We'll do a little clean-up on the cohort indicators for nicer names and presentation.
 
 ```{r, eval = FALSE}
 
@@ -693,6 +697,240 @@ map_data <-
 print(map_data, n = 5)
 ```
 
-## 2. Create the base layer {#baselayer}
+## 2. Create a sharable dataset {#shareddata}
+
+In order to enable the map to be controlled and interacted through filters, we need to create a `SharedData` object using the `crosstalk` package. This allows the rendered HTML document to hold a connection between the data that feeds the map and the filters.
+
+```{r, eval = FALSE}
+
+# Make the shared data set
+sd <- SharedData$new(data = map_data)
+
+```
+
+
+## 3. Create the base layer {#baselayer}
+
+The first layer of the map will consist of making a focal point on the state of Wisconsin. We will use the `maps` package to obtain the geometries for this region.
+
+```{r, eval = FALSE}
+
+state_outline <-
+  maps::map(
+    database = "state",
+    regions = "wisconsin",
+    fill = TRUE,
+    plot = FALSE
+  )
+
+```
+
+Now, we can initiate the map with the `leaflet` toolkit and add the first layer with a simple gray shading.
+
+```{r}
+
+my_map <- 
+  leaflet() %>%
+  
+  # Add geographic tiles
+  addTiles() %>%
+  
+  # Add WI state outline
+  addPolygons(
+    data = state_outline,
+    fillColor = "gray",
+    stroke = FALSE
+  ) 
+
+my_map
+```
+
+## 4. Add county lines {#countylines}
+
+Next, we want to fill in the map with the Wisconsin county lines. The `tigris` package has a function called `counties` that enable us to extract these geometries.
+
+```{r, eval = FALSE}
+
+county_outlines <- 
+  counties(cb = TRUE) %>%
+  filter(
+    STATE_NAME == "Wisconsin"
+  )
+
+```
+
+We can add the county lines to the current map by supplying another layer with `addPolygons`. The `highlightOptions` argument allows us to control how a county appears when hovered over, and the `label` argument builds strings for tooltip display with column references to the input dataset.
+
+```{r}
+
+my_map <-
+  my_map %>%
+  
+  # Add county outlines
+  addPolygons(
+    data = county_outlines,
+    color = "black",
+    fillColor = "#ff59f7",
+    weight = 1,
+    opacity = .5,
+    fillOpacity = .35,
+    highlightOptions = 
+      highlightOptions(
+        color = "black",
+        weight = 3,
+        bringToFront = FALSE
+      ),
+    label = ~NAME
+  )
+
+my_map
+
+```
+
+## 5. Show data points {#datapoints}
+
+The data points representing the hospitals can be added as yet another layer to the map. We want the color of the data points to reflect the amount of payment penalty the hospital received, so we'll first create a color palette ranging from 0% (no penalty) to 3% (maximum penalty).
+
+```{r, eval = FALSE}
+
+# Create a color pallete
+pal <- 
+  colorNumeric(
+    palette = "RdYlGn",
+    domain = -1*seq(0,3,.1)
+  )
+
+```
+
+Then we will use the shared data that was created in a [prior section](#shareddata) to add the map layer with `addCircleMarkers`.
+
+```{r}
+
+# Add shared data to the map
+my_map %>%
+  
+  addCircleMarkers(
+    data = sd, # A dataset containing coordinates for each zip code (or anything)
+    lng = ~lon, # The coordinates of that entitity
+    lat = ~lat,
+    label = ~paste0(FacilityName, " (click for info)"),
+    popup = 
+      ~paste0(
+        "Hospital: ", FacilityName, 
+        "<br>Zip Code: ", Zip,
+        "<br>Peer Group: ", PeerGroup,
+        "<br>Dual-Eligibility: ", round(DualProportion*100, 2), "%",
+        "<br>Penalties: ", PenalizedCohorts,
+        "<br>Payment Reduction: ", Penalty, "%"
+      ),
+    color = ~pal(-1*Penalty),
+    fillOpacity = .75
+  )
+
+```
+
+## 6. Make filters {#filters}
+
+Each row of the filters are derived from calls to the `bscols` function in the `crosstalk` package, which enable us to align objects across columns within the row. From there, we can add dropdown selectors with `filter_select` or slider selectors with `filter_slider`. Here's a breakdown of each of these rows:
+
+```{r}
+
+# Make filters
+bscols(
+  widths = c(1, 11),
+  "",
+  htmltools::h3("Hospital Readmissions Reduction Program (HRRP) FY 2022 - WI Map", style = "font-style:italic;")
+)
+# Row 1:
+bscols(
+  widths = c(1, 10, 1),
+  "",
+  filter_slider(
+    id = "penalty",
+    label = "Payment Reduction",
+    sharedData = sd,
+    column = ~Penalty,
+    step = 0.1,
+    min = 0,
+    max = 3,
+    post = "%"
+  ),
+  ""
+)
+
+# Row 2-3:
+bscols(
+  widths = c(1, 11),
+  "",
+  "Cohort-specific penalty:"
+)
+bscols(
+  widths = c(1, 3, 3, 3, 1),
+  "",
+  filter_select(
+    id = "ami",
+    label = "AMI",
+    sharedData = sd,
+    group = ~AMI
+  ),
+  filter_select(
+    id = "cabg",
+    label = "CABG",
+    sharedData = sd,
+    group = ~CABG
+  ),
+  filter_select(
+    id = "copd",
+    label = "COPD",
+    sharedData = sd,
+    group = ~COPD
+  ),
+  ""
+)
+bscols(
+  widths = c(1, 3, 3, 3, 1),
+  "",
+  filter_select(
+    id = "hf",
+    label = "HF",
+    sharedData = sd,
+    group = ~HF
+  ),
+  filter_select(
+    id = "pneu",
+    label = "PNEU",
+    sharedData = sd,
+    group = ~pneumonia
+  ),
+  filter_select(
+    id = "tja",
+    label = "THA/TKA",
+    sharedData = sd,
+    group = ~`THA/TKA`
+  ),
+  ""
+)
+
+my_map %>%
+  
+  addCircleMarkers(
+    data = sd, # A dataset containing coordinates for each zip code (or anything)
+    lng = ~lon, # The coordinates of that entitity
+    lat = ~lat,
+    label = ~paste0(FacilityName, " (click for info)"),
+    popup = 
+      ~paste0(
+        "Hospital: ", FacilityName, 
+        "<br>Zip Code: ", Zip,
+        "<br>Peer Group: ", PeerGroup,
+        "<br>Dual-Eligibility: ", round(DualProportion*100, 2), "%",
+        "<br>Penalties: ", PenalizedCohorts,
+        "<br>Payment Reduction: ", Penalty, "%"
+      ),
+    color = ~pal(-1*Penalty),
+    fillOpacity = .75
+  )
+
+```
 
 
