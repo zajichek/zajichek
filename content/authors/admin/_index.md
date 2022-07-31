@@ -18,7 +18,7 @@ social:
   icon_pack: fab
   link: https://www.researchgate.net/search/publication?q=zajichek
 interests:
-- Building and automating statistical and reporting workflows
+- Building modeling and reporting pipelines from discovery to finished data product
 - Statistical analysis, modeling, and prediction
 - Creating data tools via web applications and packages
 - Text mining and natural language processing

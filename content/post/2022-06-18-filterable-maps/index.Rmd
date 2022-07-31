@@ -1,5 +1,5 @@
 ---
-title: 'Hospital Readmissions: Building a Filterable Map with leaflet and crosstalk'
+title: Building a filterable map with {leaflet} and {crosstalk}
 subtitle: Series on runtime-free content delivery
 author: Alex Zajichek
 date: '2022-06-18'
@@ -61,7 +61,7 @@ unlink(temp_file)
 ## ii. Hospital Information
 
 # Set path to file (from CMS)
-hosp_file <- "https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1641873938/Hospital_General_Information.csv"
+hosp_file <- "https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1657310748/Hospital_General_Information.csv"
 
 # Import the file
 hosp_info <-
