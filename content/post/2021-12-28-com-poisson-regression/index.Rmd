@@ -1,11 +1,11 @@
 ---
-title: Exploring COM Poisson Regression
+title: Exploring COM Poisson regression
 subtitle: A method for underdispersed count data
 author: Alex Zajichek
 date: '2021-12-28'
 slug: com-poisson-regression
 categories: []
-tags: []
+tags: ['statistics', 'rstats', 'healthcare']
 summary: ''
 authors: []
 lastmod: '2021-12-28T06:53:32-06:00'

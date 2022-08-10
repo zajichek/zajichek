@@ -1,10 +1,10 @@
 ---
-title: A Look at Collider Bias
+title: A look at Collider Bias
 author: Alex Zajichek
 date: '2021-07-15'
 slug: a-look-at-collider-bias
 categories: []
-tags: []
+tags: ['statistics', 'datascience', 'causation', 'healthcare']
 subtitle: ''
 summary: ''
 authors: []

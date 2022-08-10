@@ -1,11 +1,11 @@
 ---
-title: Exploring COM Poisson Regression
+title: Exploring COM Poisson regression
 subtitle: A method for underdispersed count data
 author: Alex Zajichek
 date: '2021-12-28'
 slug: com-poisson-regression
 categories: []
-tags: []
+tags: ['statistics', 'rstats', 'healthcare']
 summary: ''
 authors: []
 lastmod: '2021-12-28T06:53:32-06:00'
@@ -225,7 +225,7 @@ where <span class="math inline">\(\lambda_i\)</span> is the expected (half-day) 
 <li>Plug the regression formula into the Poisson PMF</li>
 </ol>
 <p><span class="math display">\[
-\begin{equation} 
+\begin{equation}
 \begin{split}
 P(Y_i = y_i|\lambda_i) &amp; = \frac{e^{-\lambda_i}\lambda_i^{y_i}}{y_i!} \\
 &amp; = \frac{e^{-e^{X_i\beta}}{(e^{X_i\beta})}^{y_i}}{y_i!} \\
@@ -524,12 +524,12 @@ where <span class="math inline">\(\lambda_X\)</span> and <span class="math inlin
 &amp; = e^{\beta_0 + \beta_{weekend}x_{i_{weekend}}} + e^{\beta_0 + \beta_{weekend}x_{i_{weekend}} + \beta_{PM}} \\
 &amp; = e^{\beta_0 + \beta_{weekend}x_{i_{weekend}}} (1 + e^{\beta_{PM}})\\
 &amp; =
-\begin{cases} 
+\begin{cases}
 e^{\beta_0} (1 + e^{\beta_{PM}}) &amp; \text{if M-F} \\
 e^{\beta_0 + \beta_{weekend}} (1 + e^{\beta_{PM}}) &amp; \text{if Sat, Sun} \\
 \end{cases} \\
 &amp; \approx
-\begin{cases} 
+\begin{cases}
 32.70 &amp; \text{if M-F} \\
 21.61         &amp; \text{if Sat, Sun} \\
 \end{cases}
@@ -967,7 +967,7 @@ compoisson_model1</code></pre>
 ## Chi-squared test for equidispersion
 ## X^2 = 0.1614, df = 1, p-value = 6.8787e-01
 ## --
-## Elapsed Sec: 3.29   Sample size: 730   SEs via Hessian
+## Elapsed Sec: 3.32   Sample size: 730   SEs via Hessian
 ## LogLik: -2000.6310   AIC: 4009.2620   BIC: 4027.6342   
 ## Optimization Method: L-BFGS-B   Converged status: 0
 ## Message: CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH</code></pre>
@@ -1011,7 +1011,7 @@ compoisson_model2</code></pre>
 ## Chi-squared test for equidispersion
 ## X^2 = 1.0118, df = 1, p-value = 3.1446e-01
 ## --
-## Elapsed Sec: 3.73   Sample size: 730   SEs via Hessian
+## Elapsed Sec: 3.51   Sample size: 730   SEs via Hessian
 ## LogLik: -2000.6243   AIC: 4009.2487   BIC: 4027.6209   
 ## Optimization Method: L-BFGS-B   Converged status: 0
 ## Message: CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH</code></pre>

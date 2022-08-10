@@ -1,10 +1,10 @@
 ---
-title: A Look at Collider Bias
+title: A look at Collider Bias
 author: Alex Zajichek
 date: '2021-07-15'
 slug: a-look-at-collider-bias
 categories: []
-tags: []
+tags: ['statistics', 'datascience', 'causation', 'healthcare']
 subtitle: ''
 summary: ''
 authors: []
@@ -198,7 +198,7 @@ Our sampling strategy will be to select patients at random from the entire popul
 <h2>The problem</h2>
 <p>Suppose we reach the desired enrollment size and we’re given a data set (called <code>patients</code>) to do some preliminary analysis on the sample. Here are the first 5 rows:</p>
 <pre class="r"><code>print(patients, n = 5)</code></pre>
-<pre><code>## # A tibble: 1,000 x 2
+<pre><code>## # A tibble: 1,000 × 2
 ##   S          N    
 ##   &lt;fct&gt;      &lt;fct&gt;
 ## 1 Non-severe Near 
@@ -315,7 +315,7 @@ Figure 4: Causal diagram for the relationship between disease severity, distance
 <h3>Does the math show it?</h3>
 <p>We know that 25% of patients in the general population have severe disease regardless of where they live. How does this probability change for patients who live far from the trial center when we condition on only those enrolled?</p>
 <p><span class="math display">\[
-\begin{equation} 
+\begin{equation}
 \begin{split}
 P(S|\bar{N} \cap J) &amp; = \frac{P(S \cap \bar{N} \cap J)}{P(\bar{N} \cap J)} \\
 &amp; = \frac{P(S \cap \bar{N} \cap J)}{P(S \cap \bar{N} \cap J) + P(\bar{S} \cap \bar{N} \cap J)} \\

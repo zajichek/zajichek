@@ -1,11 +1,11 @@
 ---
-title: Building a filterable map with {leaflet} and {crosstalk}
+title: Building a filterable map with {leaflet} and {crosstalk} for hospital readmissions
 subtitle: Series on runtime-free content delivery
 author: Alex Zajichek
 date: '2022-06-18'
 slug: filterable-maps
 categories: []
-tags: []
+tags: ['rstats', 'html', 'healthcare']
 authors: []
 lastmod: '2022-06-18T07:49:36-05:00'
 featured: no
