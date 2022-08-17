@@ -19,5 +19,120 @@ projects: []
 
 **__In Progress__**
 
-In my [last post](https://www.zajichekstats.com/post/filterable-maps/) we demonstrated how to build a filterable map widget that was free of runtime dependency. In continuation of the latter theme, this article focuses on the [`reactable`](https://glin.github.io/reactable/) package, which allows for embedding interactive data tables into your HTML document. Specifically, we look into a few custom JavaScript functions needed to do commonly-desired aggregation.
+In my [last post](https://www.zajichekstats.com/post/filterable-maps/) we demonstrated how to build a filterable map widget that was free of `R` runtime dependency. In continuation of the latter theme, this article focuses on the [`reactable`](https://glin.github.io/reactable/) package, which allows for embedding interactive data tables into your HTML document. Specifically, we look into a few custom JavaScript functions needed to do commonly-desired aggregation. We'll use the [`heart_disease`](https://zajichek.github.io/cheese/reference/heart_disease.html) dataset from the [`cheese`](https://zajichek.github.io/cheese/index.html) package.
+
+```{r}
+heart_disease <- cheese::heart_disease
+heart_disease
+```
+
+# The Basics
+
+## Make a summary dataset
+
+First, let's the load some packages.
+
+```{r}
+require(tidyverse)
+require(reactable)
+```
+
+We'll need to create some summary information that we want to display in a table. Let's look at the average age, cholesterol, and rate of heart disease with sex and chest pain categories.
+
+```{r}
+heart_disease_summary <-
+  heart_disease %>%
+  
+  # For each group
+  group_by(Sex, ChestPain) %>%
+  
+  # Compute some statistics
+  summarise(
+    Patients = n(),
+    Age = mean(Age),
+    Cholesterol = mean(Cholesterol),
+    HeartDisease = mean(HeartDisease == "Yes"),
+    .groups = "drop"
+  ) %>%
+  
+  # Rename columns
+  rename(
+    `Chest Pain` = ChestPain,
+    `Heart Disease` = HeartDisease
+  )
+heart_disease_summary
+```
+
+## Default table
+
+Now we could simply call the `reactable` function with our data frame, and produce a table:
+
+```{r}
+heart_disease_summary %>% reactable()
+```
+
+That gives us a table, but we want to clean up a few things such as rounding, number representation, and of course the aggregation piece.
+
+## Built in aggregation
+
+There are a number of [built-in aggregation functions](#https://glin.github.io/reactable/articles/examples.html#grouping-and-aggregation) in the package. We just need to specify:
+
+1. The groups we want with the `groupBy` argument
+2. The columns to aggregate by specifying column definitions using `colDef` within the `columns` argument
+
+Let's enable the table to aggregate the total patient counts and average the other numeric columns within each sex category:
+
+```{r}
+heart_disease_summary %>%
+  reactable(
+    groupBy = "Sex",
+    columns = 
+      list(
+        Patients = colDef(aggregate = "sum"),
+        Age = colDef(aggregate = "mean"),
+        Cholesterol = colDef(aggregate = "mean"),
+        `Heart Disease` = colDef(aggregate = "mean")
+      )
+  )
+```
+
+We can now see the summary statistics at the level of sex, and use the arrows expand into the chest pain groups. 
+
+The problem with this table is that the mean values shown for age, cholesterol, and rate of heart disease _do not_ represent the sex-specific group average, they represent the average mean value across each chest pain category in the group. In order for us to get the quantity we want, we'll need weight the mean calculation by the patient count, which is where JavaScript comes in.
+
+# Custom JavaScript Functions
+
+Each row of our table is accessible through a JavaScript interface, making it easy for us define custom ways to aggregate data in the table. We can use the `JS` function from `htmlwidgets` to define a JavaScript function as a text string, and then call that function from as the `aggregate` argument within `colDef`.
+
+## Defining the function
+
+```{r}
+weighted_mean <-
+  JS(
+    "function(values, rows) {
+    var numerator = 0
+    var denominator = 0
+    
+    rows.forEach(function(row, index) {
+      numerator += row['Patients'] * values[index]
+      denominator += row['Patients']
+    })
+    
+    return numerator / denominator
+  
+  }"
+  )
+
+heart_disease_summary %>%
+  reactable(
+    groupBy = "Sex",
+    columns = 
+      list(
+        Patients = colDef(aggregate = "sum"),
+        Age = colDef(aggregate = weighted_mean),
+        Cholesterol = colDef(aggregate = weighted_mean),
+        `Heart Disease` = colDef(aggregate = weighted_mean)
+      )
+  )
+```
 
