@@ -27,7 +27,24 @@ projects: []
 
 
 <p><strong><strong>In Progress</strong></strong></p>
-<p>In my <a href="https://www.zajichekstats.com/post/filterable-maps/">last post</a> we demonstrated how to build a filterable map widget that was free of <code>R</code> runtime dependency. In continuation of the latter theme, this article focuses on the <a href="https://glin.github.io/reactable/"><code>reactable</code></a> package, which allows for embedding interactive data tables into your HTML document. Specifically, we look into a few custom JavaScript functions needed to do commonly-desired aggregation. We’ll use the <a href="https://zajichek.github.io/cheese/reference/heart_disease.html"><code>heart_disease</code></a> dataset from the <a href="https://zajichek.github.io/cheese/index.html"><code>cheese</code></a> package.</p>
+<p>In my <a href="https://www.zajichekstats.com/post/filterable-maps/">last post</a> we demonstrated how to build a filterable map widget that was free of <code>R</code> runtime dependency. In continuation of the latter theme, this article focuses on the <a href="https://glin.github.io/reactable/"><code>reactable</code></a> package, which enables you to embed interactive data tables into your HTML document. In this article, we will focus on how we can define custom JavaScript functions to do commonly-desired aggregation.</p>
+<pre class="r"><code>require(reactable)</code></pre>
+<pre><code>## Loading required package: reactable</code></pre>
+<pre class="r"><code>require(tidyverse)</code></pre>
+<pre><code>## Loading required package: tidyverse</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
+## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
+## ✓ readr   2.1.2     ✓ forcats 0.5.1</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<div id="the-basics" class="section level1">
+<h1>The Basics</h1>
+<div id="make-a-summary-dataset" class="section level2">
+<h2>Make a summary dataset</h2>
+<p>The first step to building a summary table is to create some group-level statistics that we want to display. For this example, we’ll use the <a href="https://zajichek.github.io/cheese/reference/heart_disease.html"><code>heart_disease</code></a> dataset from the <a href="https://zajichek.github.io/cheese/index.html"><code>cheese</code></a> package, which provides various clinical characteristics for a set of patients.</p>
 <pre class="r"><code>heart_disease &lt;- cheese::heart_disease
 heart_disease</code></pre>
 <pre><code>## # A tibble: 303 × 9
@@ -44,24 +61,7 @@ heart_disease</code></pre>
 ##  9    63 Male  Asymptom…   130         254 FALSE            147 No              
 ## 10    53 Male  Asymptom…   140         203 TRUE             155 Yes             
 ## # … with 293 more rows, and 1 more variable: HeartDisease &lt;fct&gt;</code></pre>
-<div id="the-basics" class="section level1">
-<h1>The Basics</h1>
-<div id="make-a-summary-dataset" class="section level2">
-<h2>Make a summary dataset</h2>
-<p>First, let’s the load some packages.</p>
-<pre class="r"><code>require(tidyverse)</code></pre>
-<pre><code>## Loading required package: tidyverse</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
-## ✓ tibble  3.1.6     ✓ dplyr   1.0.8
-## ✓ tidyr   1.2.0     ✓ stringr 1.4.0
-## ✓ readr   2.1.2     ✓ forcats 0.5.1</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>require(reactable)</code></pre>
-<pre><code>## Loading required package: reactable</code></pre>
-<p>We’ll need to create some summary information that we want to display in a table. Let’s look at the average age, cholesterol, and rate of heart disease with sex and chest pain categories.</p>
+<p>Let’s look at the average age, average cholesterol level, and rate of heart disease within sex and chest pain categories.</p>
 <pre class="r"><code>heart_disease_summary &lt;-
   heart_disease %&gt;%
   
@@ -95,13 +95,13 @@ heart_disease_summary</code></pre>
 ## 7 Male   Non-anginal pain       51  52.8        232.          0.333 
 ## 8 Male   Asymptomatic          104  55.1        244.          0.798</code></pre>
 </div>
-<div id="default-table" class="section level2">
-<h2>Default table</h2>
-<p>Now we could simply call the <code>reactable</code> function with our data frame, and produce a table:</p>
+<div id="the-default-table" class="section level2">
+<h2>The default table</h2>
+<p>If we call the <code>reactable</code> function without any additional arguments to our data frame, we’ll get a basic table.</p>
 <pre class="r"><code>heart_disease_summary %&gt;% reactable()</code></pre>
 <div id="htmlwidget-1" class="reactable html-widget" style="width:auto;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Sex":["Female","Female","Female","Female","Male","Male","Male","Male"],"Chest Pain":["Typical angina","Atypical angina","Non-anginal pain","Asymptomatic","Typical angina","Atypical angina","Non-anginal pain","Asymptomatic"],"Patients":[4,18,35,40,19,32,51,104],"Age":[63.25,51.9444444444444,54.9714285714286,57.325,54.3157894736842,51.03125,52.8235294117647,55.1057692307692],"Cholesterol":[247,251.444444444444,261.057142857143,268.475,235.052631578947,241.03125,232.235294117647,243.605769230769],"Heart Disease":[0,0.111111111111111,0.0285714285714286,0.55,0.368421052631579,0.21875,0.333333333333333,0.798076923076923]},"columns":[{"accessor":"Sex","name":"Sex","type":"factor"},{"accessor":"Chest Pain","name":"Chest Pain","type":"factor"},{"accessor":"Patients","name":"Patients","type":"numeric"},{"accessor":"Age","name":"Age","type":"numeric"},{"accessor":"Cholesterol","name":"Cholesterol","type":"numeric"},{"accessor":"Heart Disease","name":"Heart Disease","type":"numeric"}],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"d42e2edcfa263f74d2714b6b30ce2176","key":"d42e2edcfa263f74d2714b6b30ce2176"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-<p>That gives us a table, but we want to clean up a few things such as rounding, number representation, and of course the aggregation piece.</p>
+<p>There are a number of things to clean up here such as rounding, number representations, and, of course, aggregating the statistics to get “rolled-up” summaries.</p>
 </div>
 <div id="built-in-aggregation" class="section level2">
 <h2>Built in aggregation</h2>
@@ -110,7 +110,7 @@ heart_disease_summary</code></pre>
 <li>The groups we want with the <code>groupBy</code> argument</li>
 <li>The columns to aggregate by specifying column definitions using <code>colDef</code> within the <code>columns</code> argument</li>
 </ol>
-<p>Let’s enable the table to aggregate the total patient counts and average the other numeric columns within each sex category:</p>
+<p>Let’s add functionality to the table above to aggregate the <em>total</em> patient count and the <em>average</em> of the remaining variables over the chest pain categories within each sex group:</p>
 <pre class="r"><code>heart_disease_summary %&gt;%
   reactable(
     groupBy = &quot;Sex&quot;,
@@ -124,30 +124,37 @@ heart_disease_summary</code></pre>
   )</code></pre>
 <div id="htmlwidget-2" class="reactable html-widget" style="width:auto;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Sex":["Female","Female","Female","Female","Male","Male","Male","Male"],"Chest Pain":["Typical angina","Atypical angina","Non-anginal pain","Asymptomatic","Typical angina","Atypical angina","Non-anginal pain","Asymptomatic"],"Patients":[4,18,35,40,19,32,51,104],"Age":[63.25,51.9444444444444,54.9714285714286,57.325,54.3157894736842,51.03125,52.8235294117647,55.1057692307692],"Cholesterol":[247,251.444444444444,261.057142857143,268.475,235.052631578947,241.03125,232.235294117647,243.605769230769],"Heart Disease":[0,0.111111111111111,0.0285714285714286,0.55,0.368421052631579,0.21875,0.333333333333333,0.798076923076923]},"columns":[{"accessor":"Sex","name":"Sex","type":"factor"},{"accessor":"Chest Pain","name":"Chest Pain","type":"factor"},{"accessor":"Patients","name":"Patients","type":"numeric","aggregate":"sum"},{"accessor":"Age","name":"Age","type":"numeric","aggregate":"mean"},{"accessor":"Cholesterol","name":"Cholesterol","type":"numeric","aggregate":"mean"},{"accessor":"Heart Disease","name":"Heart Disease","type":"numeric","aggregate":"mean"}],"pivotBy":["Sex"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"e923423bd01db3fb2aefcadd1c442ba5","key":"e923423bd01db3fb2aefcadd1c442ba5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-<p>We can now see the summary statistics at the level of sex, and use the arrows expand into the chest pain groups.</p>
-<p>The problem with this table is that the mean values shown for age, cholesterol, and rate of heart disease <em>do not</em> represent the sex-specific group average, they represent the average mean value across each chest pain category in the group. In order for us to get the quantity we want, we’ll need weight the mean calculation by the patient count, which is where JavaScript comes in.</p>
+<p>The problem with this table is that the displayed sex-specific average values for age, cholesterol, and heart disease represent the <em>averaged</em> average value across the chest pain categories. What we really want in the aggregation is for the chest pain group average values to be weighted by the respective patient volume so that the sex-specific group averages are correct. This is where JavaScript comes in.</p>
 </div>
 </div>
 <div id="custom-javascript-functions" class="section level1">
 <h1>Custom JavaScript Functions</h1>
-<p>Each row of our table is accessible through a JavaScript interface, making it easy for us define custom ways to aggregate data in the table. We can use the <code>JS</code> function from <code>htmlwidgets</code> to define a JavaScript function as a text string, and then call that function from as the <code>aggregate</code> argument within <code>colDef</code>.</p>
+<p>Each row of our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation behavior when the default options won’t suffice. We can use the <code>JS</code> function from the <code>htmlwidgets</code> package to:</p>
+<ol style="list-style-type: decimal">
+<li>Define a JavaScript function as a text string</li>
+<li>Supply that function as the <code>aggregate</code> argument within <code>colDef</code> in our column definition list.</li>
+</ol>
 <div id="defining-the-function" class="section level2">
 <h2>Defining the function</h2>
 <pre class="r"><code>weighted_mean &lt;-
-  JS(
-    &quot;function(values, rows) {
-    var numerator = 0
-    var denominator = 0
+  function(weight) {
+    JS(
+      paste0(
+        &quot;function(values, rows) {
+          var numerator = 0
+          var denominator = 0
     
-    rows.forEach(function(row, index) {
-      numerator += row[&#39;Patients&#39;] * values[index]
-      denominator += row[&#39;Patients&#39;]
-    })
+          rows.forEach(function(row, index) {
+            numerator += row[&#39;&quot;, weight, &quot;&#39;] * values[index]
+            denominator += row[&#39;&quot;, weight, &quot;&#39;]
+          })
     
-    return numerator / denominator
+          return numerator / denominator
   
-  }&quot;
-  )
+        }&quot;
+      )
+    )
+  }
 
 heart_disease_summary %&gt;%
   reactable(
@@ -155,12 +162,12 @@ heart_disease_summary %&gt;%
     columns = 
       list(
         Patients = colDef(aggregate = &quot;sum&quot;),
-        Age = colDef(aggregate = weighted_mean),
-        Cholesterol = colDef(aggregate = weighted_mean),
-        `Heart Disease` = colDef(aggregate = weighted_mean)
+        Age = colDef(aggregate = weighted_mean(&quot;Patients&quot;)),
+        Cholesterol = colDef(aggregate = weighted_mean(&quot;Patients&quot;)),
+        `Heart Disease` = colDef(aggregate = weighted_mean(&quot;Patients&quot;))
       )
   )</code></pre>
 <div id="htmlwidget-3" class="reactable html-widget" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Sex":["Female","Female","Female","Female","Male","Male","Male","Male"],"Chest Pain":["Typical angina","Atypical angina","Non-anginal pain","Asymptomatic","Typical angina","Atypical angina","Non-anginal pain","Asymptomatic"],"Patients":[4,18,35,40,19,32,51,104],"Age":[63.25,51.9444444444444,54.9714285714286,57.325,54.3157894736842,51.03125,52.8235294117647,55.1057692307692],"Cholesterol":[247,251.444444444444,261.057142857143,268.475,235.052631578947,241.03125,232.235294117647,243.605769230769],"Heart Disease":[0,0.111111111111111,0.0285714285714286,0.55,0.368421052631579,0.21875,0.333333333333333,0.798076923076923]},"columns":[{"accessor":"Sex","name":"Sex","type":"factor"},{"accessor":"Chest Pain","name":"Chest Pain","type":"factor"},{"accessor":"Patients","name":"Patients","type":"numeric","aggregate":"sum"},{"accessor":"Age","name":"Age","type":"numeric","aggregate":"function(values, rows) {\n    var numerator = 0\n    var denominator = 0\n    \n    rows.forEach(function(row, index) {\n      numerator += row['Patients'] * values[index]\n      denominator += row['Patients']\n    })\n    \n    return numerator / denominator\n  \n  }"},{"accessor":"Cholesterol","name":"Cholesterol","type":"numeric","aggregate":"function(values, rows) {\n    var numerator = 0\n    var denominator = 0\n    \n    rows.forEach(function(row, index) {\n      numerator += row['Patients'] * values[index]\n      denominator += row['Patients']\n    })\n    \n    return numerator / denominator\n  \n  }"},{"accessor":"Heart Disease","name":"Heart Disease","type":"numeric","aggregate":"function(values, rows) {\n    var numerator = 0\n    var denominator = 0\n    \n    rows.forEach(function(row, index) {\n      numerator += row['Patients'] * values[index]\n      denominator += row['Patients']\n    })\n    \n    return numerator / denominator\n  \n  }"}],"pivotBy":["Sex"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"13b78ce73c71de8c4e8e27c9c7686aa4","key":"13b78ce73c71de8c4e8e27c9c7686aa4"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate","tag.attribs.columns.4.aggregate","tag.attribs.columns.5.aggregate"],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Sex":["Female","Female","Female","Female","Male","Male","Male","Male"],"Chest Pain":["Typical angina","Atypical angina","Non-anginal pain","Asymptomatic","Typical angina","Atypical angina","Non-anginal pain","Asymptomatic"],"Patients":[4,18,35,40,19,32,51,104],"Age":[63.25,51.9444444444444,54.9714285714286,57.325,54.3157894736842,51.03125,52.8235294117647,55.1057692307692],"Cholesterol":[247,251.444444444444,261.057142857143,268.475,235.052631578947,241.03125,232.235294117647,243.605769230769],"Heart Disease":[0,0.111111111111111,0.0285714285714286,0.55,0.368421052631579,0.21875,0.333333333333333,0.798076923076923]},"columns":[{"accessor":"Sex","name":"Sex","type":"factor"},{"accessor":"Chest Pain","name":"Chest Pain","type":"factor"},{"accessor":"Patients","name":"Patients","type":"numeric","aggregate":"sum"},{"accessor":"Age","name":"Age","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Patients'] * values[index]\n            denominator += row['Patients']\n          })\n    \n          return numerator / denominator\n  \n        }"},{"accessor":"Cholesterol","name":"Cholesterol","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Patients'] * values[index]\n            denominator += row['Patients']\n          })\n    \n          return numerator / denominator\n  \n        }"},{"accessor":"Heart Disease","name":"Heart Disease","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Patients'] * values[index]\n            denominator += row['Patients']\n          })\n    \n          return numerator / denominator\n  \n        }"}],"pivotBy":["Sex"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"b6b7fc869b6e9a5ad8530b88ec86a7db","key":"b6b7fc869b6e9a5ad8530b88ec86a7db"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate","tag.attribs.columns.4.aggregate","tag.attribs.columns.5.aggregate"],"jsHooks":[]}</script>
 </div>
 </div>

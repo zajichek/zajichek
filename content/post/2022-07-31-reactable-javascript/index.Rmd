@@ -19,25 +19,25 @@ projects: []
 
 **__In Progress__**
 
-In my [last post](https://www.zajichekstats.com/post/filterable-maps/) we demonstrated how to build a filterable map widget that was free of `R` runtime dependency. In continuation of the latter theme, this article focuses on the [`reactable`](https://glin.github.io/reactable/) package, which allows for embedding interactive data tables into your HTML document. Specifically, we look into a few custom JavaScript functions needed to do commonly-desired aggregation. We'll use the [`heart_disease`](https://zajichek.github.io/cheese/reference/heart_disease.html) dataset from the [`cheese`](https://zajichek.github.io/cheese/index.html) package.
+In my [last post](https://www.zajichekstats.com/post/filterable-maps/) we demonstrated how to build a filterable map widget that was free of `R` runtime dependency. In continuation of the latter theme, this article focuses on the [`reactable`](https://glin.github.io/reactable/) package, which enables you to embed interactive data tables into your HTML document. In this article, we will focus on how we can define custom JavaScript functions to do commonly-desired aggregation. 
 
 ```{r}
-heart_disease <- cheese::heart_disease
-heart_disease
+require(reactable)
+require(tidyverse)
 ```
 
 # The Basics
 
 ## Make a summary dataset
 
-First, let's the load some packages.
+The first step to building a summary table is to create some group-level statistics that we want to display. For this example, we'll use the [`heart_disease`](https://zajichek.github.io/cheese/reference/heart_disease.html) dataset from the [`cheese`](https://zajichek.github.io/cheese/index.html) package, which provides various clinical characteristics for a set of patients.
 
 ```{r}
-require(tidyverse)
-require(reactable)
+heart_disease <- cheese::heart_disease
+heart_disease
 ```
 
-We'll need to create some summary information that we want to display in a table. Let's look at the average age, cholesterol, and rate of heart disease with sex and chest pain categories.
+Let's look at the average age, average cholesterol level, and rate of heart disease within sex and chest pain categories.
 
 ```{r}
 heart_disease_summary <-
@@ -63,15 +63,15 @@ heart_disease_summary <-
 heart_disease_summary
 ```
 
-## Default table
+## The default table
 
-Now we could simply call the `reactable` function with our data frame, and produce a table:
+If we call the `reactable` function without any additional arguments to our data frame, we'll get a basic table.
 
 ```{r}
 heart_disease_summary %>% reactable()
 ```
 
-That gives us a table, but we want to clean up a few things such as rounding, number representation, and of course the aggregation piece.
+There are a number of things to clean up here such as rounding, number representations, and, of course, aggregating the statistics to get "rolled-up" summaries.
 
 ## Built in aggregation
 
@@ -80,7 +80,7 @@ There are a number of [built-in aggregation functions](#https://glin.github.io/r
 1. The groups we want with the `groupBy` argument
 2. The columns to aggregate by specifying column definitions using `colDef` within the `columns` argument
 
-Let's enable the table to aggregate the total patient counts and average the other numeric columns within each sex category:
+Let's add functionality to the table above to aggregate the _total_ patient count and the _average_ of the remaining variables over the chest pain categories within each sex group:
 
 ```{r}
 heart_disease_summary %>%
@@ -96,32 +96,37 @@ heart_disease_summary %>%
   )
 ```
 
-We can now see the summary statistics at the level of sex, and use the arrows expand into the chest pain groups. 
-
-The problem with this table is that the mean values shown for age, cholesterol, and rate of heart disease _do not_ represent the sex-specific group average, they represent the average mean value across each chest pain category in the group. In order for us to get the quantity we want, we'll need weight the mean calculation by the patient count, which is where JavaScript comes in.
+The problem with this table is that the displayed sex-specific average values for age, cholesterol, and heart disease represent the _averaged_ average value across the chest pain categories. What we really want in the aggregation is for the chest pain group average values to be weighted by the respective patient volume so that the sex-specific group averages are correct. This is where JavaScript comes in.
 
 # Custom JavaScript Functions
 
-Each row of our table is accessible through a JavaScript interface, making it easy for us define custom ways to aggregate data in the table. We can use the `JS` function from `htmlwidgets` to define a JavaScript function as a text string, and then call that function from as the `aggregate` argument within `colDef`.
+Each row of our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation behavior when the default options won't suffice. We can use the `JS` function from the `htmlwidgets` package to:
+
+1. Define a JavaScript function as a text string
+2. Supply that function as the `aggregate` argument within `colDef` in our column definition list.
 
 ## Defining the function
 
 ```{r}
 weighted_mean <-
-  JS(
-    "function(values, rows) {
-    var numerator = 0
-    var denominator = 0
+  function(weight) {
+    JS(
+      paste0(
+        "function(values, rows) {
+          var numerator = 0
+          var denominator = 0
     
-    rows.forEach(function(row, index) {
-      numerator += row['Patients'] * values[index]
-      denominator += row['Patients']
-    })
+          rows.forEach(function(row, index) {
+            numerator += row['", weight, "'] * values[index]
+            denominator += row['", weight, "']
+          })
     
-    return numerator / denominator
+          return numerator / denominator
   
-  }"
-  )
+        }"
+      )
+    )
+  }
 
 heart_disease_summary %>%
   reactable(
@@ -129,9 +134,9 @@ heart_disease_summary %>%
     columns = 
       list(
         Patients = colDef(aggregate = "sum"),
-        Age = colDef(aggregate = weighted_mean),
-        Cholesterol = colDef(aggregate = weighted_mean),
-        `Heart Disease` = colDef(aggregate = weighted_mean)
+        Age = colDef(aggregate = weighted_mean("Patients")),
+        Cholesterol = colDef(aggregate = weighted_mean("Patients")),
+        `Heart Disease` = colDef(aggregate = weighted_mean("Patients"))
       )
   )
 ```
