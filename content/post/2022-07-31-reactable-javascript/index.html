@@ -1,5 +1,5 @@
 ---
-title: A few useful JavaScript aggregation functions for {reactable}
+title: A few useful JavaScript aggregation and formatting functions for {reactable}
 subtitle: Series on runtime-free content delivery
 author: R package build
 date: '2022-07-31'
@@ -27,7 +27,20 @@ projects: []
 
 
 <p><strong><strong>In Progress</strong></strong></p>
-<p>In my <a href="https://www.zajichekstats.com/post/filterable-maps/">last post</a> we demonstrated how to build a filterable map widget that was free of <code>R</code> runtime dependency. In continuation of the latter theme, this article focuses on the <a href="https://glin.github.io/reactable/"><code>reactable</code></a> package, which enables you to embed interactive data tables into your HTML document. In this article, we will focus on how we can define custom JavaScript functions to do commonly-desired aggregation.</p>
+<p>In my <a href="https://www.zajichekstats.com/post/filterable-maps/">last post</a> we demonstrated how to build a filterable map widget into an HTML output that was free of <code>R</code> runtime dependency. In continuation of that theme, this article focuses on the <a href="https://glin.github.io/reactable/"><code>reactable</code></a> package, which enables you to embed interactive data tables into your output. Specifically, we’ll look at how we can use its built-in JavaScript interface to define custom functions for commonly-desired aggregation and formatting.</p>
+<div id="table-of-contents" class="section level1">
+<h1>Table of Contents</h1>
+<ul>
+<li><a href="#thebasics">The Basics</a>
+<ol style="list-style-type: decimal">
+<li><a href="#summarydata">Make a summary dataset</a></li>
+<li><a href="#defaulttable">The default table</a></li>
+</ol></li>
+</ul>
+</div>
+<div id="the-basics" class="section level1">
+<h1>The Basics</h1>
+<p>Let’s start with loading the packages we’ll use.</p>
 <pre class="r"><code>require(reactable)</code></pre>
 <pre><code>## Loading required package: reactable</code></pre>
 <pre class="r"><code>require(tidyverse)</code></pre>
@@ -40,68 +53,86 @@ projects: []
 <pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
-<div id="the-basics" class="section level1">
-<h1>The Basics</h1>
-<div id="make-a-summary-dataset" class="section level2">
+<div id="summarydata" class="section level2">
 <h2>Make a summary dataset</h2>
-<p>The first step to building a summary table is to create some group-level statistics that we want to display. For this example, we’ll use the <a href="https://zajichek.github.io/cheese/reference/heart_disease.html"><code>heart_disease</code></a> dataset from the <a href="https://zajichek.github.io/cheese/index.html"><code>cheese</code></a> package, which provides various clinical characteristics for a set of patients.</p>
-<pre class="r"><code>heart_disease &lt;- cheese::heart_disease
-heart_disease</code></pre>
-<pre><code>## # A tibble: 303 × 9
-##      Age Sex   ChestPain    BP Cholesterol BloodSugar MaximumHR ExerciseInduced…
-##    &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;     &lt;dbl&gt;       &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;fct&gt;           
-##  1    63 Male  Typical …   145         233 TRUE             150 No              
-##  2    67 Male  Asymptom…   160         286 FALSE            108 Yes             
-##  3    67 Male  Asymptom…   120         229 FALSE            129 Yes             
-##  4    37 Male  Non-angi…   130         250 FALSE            187 No              
-##  5    41 Fema… Atypical…   130         204 FALSE            172 No              
-##  6    56 Male  Atypical…   120         236 FALSE            178 No              
-##  7    62 Fema… Asymptom…   140         268 FALSE            160 No              
-##  8    57 Fema… Asymptom…   120         354 FALSE            163 Yes             
-##  9    63 Male  Asymptom…   130         254 FALSE            147 No              
-## 10    53 Male  Asymptom…   140         203 TRUE             155 Yes             
-## # … with 293 more rows, and 1 more variable: HeartDisease &lt;fct&gt;</code></pre>
-<p>Let’s look at the average age, average cholesterol level, and rate of heart disease within sex and chest pain categories.</p>
-<pre class="r"><code>heart_disease_summary &lt;-
-  heart_disease %&gt;%
-  
-  # For each group
-  group_by(Sex, ChestPain) %&gt;%
-  
-  # Compute some statistics
-  summarise(
-    Patients = n(),
-    Age = mean(Age),
-    Cholesterol = mean(Cholesterol),
-    HeartDisease = mean(HeartDisease == &quot;Yes&quot;),
-    .groups = &quot;drop&quot;
+<p>First we’ll need to create a data frame with group-level summary statistics that we want to display. For this example, we’ll look at the 30-day hospital readmission rate for heart failure patients at the top five (5) most voluminous hospitals in a handful of Midwest states.</p>
+<pre class="r"><code># Import dataset
+readmission_rates &lt;-
+  read_csv(
+    file = &quot;https://data.cms.gov/provider-data/sites/default/files/resources/37e3c1486ad47b7a0eb471ecf3f7e428_1657310806/Unplanned_Hospital_Visits-Hospital.csv&quot;,
+    na = c(&quot;&quot;, &quot; &quot;, &quot;NA&quot;, &quot;N/A&quot;, &quot;Not Available&quot;)
   ) %&gt;%
   
-  # Rename columns
-  rename(
-    `Chest Pain` = ChestPain,
-    `Heart Disease` = HeartDisease
-  )
-heart_disease_summary</code></pre>
-<pre><code>## # A tibble: 8 × 6
-##   Sex    `Chest Pain`     Patients   Age Cholesterol `Heart Disease`
-##   &lt;fct&gt;  &lt;fct&gt;               &lt;int&gt; &lt;dbl&gt;       &lt;dbl&gt;           &lt;dbl&gt;
-## 1 Female Typical angina          4  63.2        247           0     
-## 2 Female Atypical angina        18  51.9        251.          0.111 
-## 3 Female Non-anginal pain       35  55.0        261.          0.0286
-## 4 Female Asymptomatic           40  57.3        268.          0.55  
-## 5 Male   Typical angina         19  54.3        235.          0.368 
-## 6 Male   Atypical angina        32  51.0        241.          0.219 
-## 7 Male   Non-anginal pain       51  52.8        232.          0.333 
-## 8 Male   Asymptomatic          104  55.1        244.          0.798</code></pre>
+  # Filter to states with non-null values
+  filter(
+    State %in% c(&quot;WI&quot;, &quot;MN&quot;, &quot;MI&quot;, &quot;IL&quot;),
+    `Measure ID` == &quot;READM_30_HF&quot;,
+    !is.na(Denominator),
+    !is.na(Score)
+  ) %&gt;%
+  
+  # Convert to proportion
+  mutate(
+    Score = Score / 100
+  ) %&gt;%
+  
+  # Keep a few columns
+  select(
+    State,
+    Hospital = `Facility Name`,
+    Cases = Denominator,
+    `30-Day Readmission Rate` = Score
+  ) %&gt;%
+  
+  # For each state, keep the top 5 most voluminous hospitals
+  group_by(State) %&gt;%
+  slice_max(
+    n = 5,
+    order_by = Cases,
+    with_ties = FALSE
+  ) %&gt;%
+  ungroup()</code></pre>
+<pre><code>## Warning: One or more parsing issues, see `problems()` for details</code></pre>
+<pre><code>## Rows: 67802 Columns: 20
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (15): Facility ID, Facility Name, Address, City, State, ZIP Code, County...
+## dbl  (5): Denominator, Score, Lower Estimate, Higher Estimate, Footnote
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>readmission_rates</code></pre>
+<pre><code>## # A tibble: 20 × 4
+##    State Hospital                                         Cases `30-Day Readmi…`
+##    &lt;chr&gt; &lt;chr&gt;                                            &lt;dbl&gt;            &lt;dbl&gt;
+##  1 IL    NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON H…  2205            0.212
+##  2 IL    PALOS COMMUNITY HOSPITAL                          1292            0.219
+##  3 IL    ADVOCATE CHRIST HOSPITAL &amp; MEDICAL CENTER         1225            0.221
+##  4 IL    NORTHWESTERN MEMORIAL HOSPITAL                    1211            0.212
+##  5 IL    NORTHWESTERN MEDICINE MCHENRY                     1046            0.189
+##  6 MI    BEAUMONT HOSPITAL ROYAL OAK                       1736            0.216
+##  7 MI    BEAUMONT HOSPITAL, TROY                           1580            0.213
+##  8 MI    ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND N…  1249            0.221
+##  9 MI    ST JOSEPH MERCY HOSPITAL                          1095            0.18 
+## 10 MI    SPECTRUM HEALTH                                   1039            0.188
+## 11 MN    MAYO CLINIC HOSPITAL ROCHESTER                    1218            0.185
+## 12 MN    ABBOTT NORTHWESTERN HOSPITAL                       639            0.186
+## 13 MN    MINNEAPOLIS VA MEDICAL CENTER                      585            0.213
+## 14 MN    MERCY HOSPITAL                                     567            0.183
+## 15 MN    PARK NICOLLET METHODIST HOSPITAL                   554            0.219
+## 16 WI    AURORA ST LUKES MEDICAL CENTER                    1236            0.203
+## 17 WI    UNIVERSITY OF WI  HOSPITALS &amp; CLINICS AUTHORITY    597            0.231
+## 18 WI    FROEDTERT MEMORIAL LUTHERAN HOSPITAL               592            0.216
+## 19 WI    MERITER HOSPITAL                                   559            0.213
+## 20 WI    MILWAUKEE VA MEDICAL CENTER                        544            0.244</code></pre>
 </div>
-<div id="the-default-table" class="section level2">
+<div id="defaulttable" class="section level2">
 <h2>The default table</h2>
-<p>If we call the <code>reactable</code> function without any additional arguments to our data frame, we’ll get a basic table.</p>
-<pre class="r"><code>heart_disease_summary %&gt;% reactable()</code></pre>
+<p>As a starting point, let’s see what we get when we call the <code>reactable</code> function without any additional arguments.</p>
+<pre class="r"><code>readmission_rates %&gt;% reactable()</code></pre>
 <div id="htmlwidget-1" class="reactable html-widget" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Sex":["Female","Female","Female","Female","Male","Male","Male","Male"],"Chest Pain":["Typical angina","Atypical angina","Non-anginal pain","Asymptomatic","Typical angina","Atypical angina","Non-anginal pain","Asymptomatic"],"Patients":[4,18,35,40,19,32,51,104],"Age":[63.25,51.9444444444444,54.9714285714286,57.325,54.3157894736842,51.03125,52.8235294117647,55.1057692307692],"Cholesterol":[247,251.444444444444,261.057142857143,268.475,235.052631578947,241.03125,232.235294117647,243.605769230769],"Heart Disease":[0,0.111111111111111,0.0285714285714286,0.55,0.368421052631579,0.21875,0.333333333333333,0.798076923076923]},"columns":[{"accessor":"Sex","name":"Sex","type":"factor"},{"accessor":"Chest Pain","name":"Chest Pain","type":"factor"},{"accessor":"Patients","name":"Patients","type":"numeric"},{"accessor":"Age","name":"Age","type":"numeric"},{"accessor":"Cholesterol","name":"Cholesterol","type":"numeric"},{"accessor":"Heart Disease","name":"Heart Disease","type":"numeric"}],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"d42e2edcfa263f74d2714b6b30ce2176","key":"d42e2edcfa263f74d2714b6b30ce2176"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-<p>There are a number of things to clean up here such as rounding, number representations, and, of course, aggregating the statistics to get “rolled-up” summaries.</p>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric"}],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"2f550a9ae4f75138ed95661384b09599","key":"2f550a9ae4f75138ed95661384b09599"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<p>We get about what we’d expect: a basic, paginated table where each row from our dataset is represented verbatim. There are a number of things to clean up here such as rounding, number representations, and, of course, aggregating the statistics to get state-specific readmission rates.</p>
 </div>
 <div id="built-in-aggregation" class="section level2">
 <h2>Built in aggregation</h2>
@@ -111,25 +142,23 @@ heart_disease_summary</code></pre>
 <li>The columns to aggregate by specifying column definitions using <code>colDef</code> within the <code>columns</code> argument</li>
 </ol>
 <p>Let’s add functionality to the table above to aggregate the <em>total</em> patient count and the <em>average</em> of the remaining variables over the chest pain categories within each sex group:</p>
-<pre class="r"><code>heart_disease_summary %&gt;%
+<pre class="r"><code>readmission_rates %&gt;%
   reactable(
-    groupBy = &quot;Sex&quot;,
+    groupBy = &quot;State&quot;,
     columns = 
       list(
-        Patients = colDef(aggregate = &quot;sum&quot;),
-        Age = colDef(aggregate = &quot;mean&quot;),
-        Cholesterol = colDef(aggregate = &quot;mean&quot;),
-        `Heart Disease` = colDef(aggregate = &quot;mean&quot;)
+        Cases = colDef(aggregate = &quot;sum&quot;),
+        `30-Day Readmission Rate` = colDef(aggregate = &quot;mean&quot;)
       )
   )</code></pre>
 <div id="htmlwidget-2" class="reactable html-widget" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Sex":["Female","Female","Female","Female","Male","Male","Male","Male"],"Chest Pain":["Typical angina","Atypical angina","Non-anginal pain","Asymptomatic","Typical angina","Atypical angina","Non-anginal pain","Asymptomatic"],"Patients":[4,18,35,40,19,32,51,104],"Age":[63.25,51.9444444444444,54.9714285714286,57.325,54.3157894736842,51.03125,52.8235294117647,55.1057692307692],"Cholesterol":[247,251.444444444444,261.057142857143,268.475,235.052631578947,241.03125,232.235294117647,243.605769230769],"Heart Disease":[0,0.111111111111111,0.0285714285714286,0.55,0.368421052631579,0.21875,0.333333333333333,0.798076923076923]},"columns":[{"accessor":"Sex","name":"Sex","type":"factor"},{"accessor":"Chest Pain","name":"Chest Pain","type":"factor"},{"accessor":"Patients","name":"Patients","type":"numeric","aggregate":"sum"},{"accessor":"Age","name":"Age","type":"numeric","aggregate":"mean"},{"accessor":"Cholesterol","name":"Cholesterol","type":"numeric","aggregate":"mean"},{"accessor":"Heart Disease","name":"Heart Disease","type":"numeric","aggregate":"mean"}],"pivotBy":["Sex"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"e923423bd01db3fb2aefcadd1c442ba5","key":"e923423bd01db3fb2aefcadd1c442ba5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-<p>The problem with this table is that the displayed sex-specific average values for age, cholesterol, and heart disease represent the <em>averaged</em> average value across the chest pain categories. What we really want in the aggregation is for the chest pain group average values to be weighted by the respective patient volume so that the sex-specific group averages are correct. This is where JavaScript comes in.</p>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric","aggregate":"sum"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric","aggregate":"mean"}],"pivotBy":["State"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"9630209e4a0e018135df53b7de3f29e5","key":"9630209e4a0e018135df53b7de3f29e5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+<p>The problem with this table is that the displayed state-specific readmission rates represent the <em>averaged</em> rates across the individual hospitals. What we really want in the aggregation is for the hospital-specific values to be weighted by the respective case volume so that the state-specific group rates are correct. This is where JavaScript comes in.</p>
 </div>
 </div>
 <div id="custom-javascript-functions" class="section level1">
 <h1>Custom JavaScript Functions</h1>
-<p>Each row of our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation behavior when the default options won’t suffice. We can use the <code>JS</code> function from the <code>htmlwidgets</code> package to:</p>
+<p>Our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation behavior when the default options won’t suffice. We can use the <code>JS</code> function from the <code>htmlwidgets</code> package to:</p>
 <ol style="list-style-type: decimal">
 <li>Define a JavaScript function as a text string</li>
 <li>Supply that function as the <code>aggregate</code> argument within <code>colDef</code> in our column definition list.</li>
@@ -156,18 +185,16 @@ heart_disease_summary</code></pre>
     )
   }
 
-heart_disease_summary %&gt;%
+readmission_rates %&gt;%
   reactable(
-    groupBy = &quot;Sex&quot;,
+    groupBy = &quot;State&quot;,
     columns = 
       list(
-        Patients = colDef(aggregate = &quot;sum&quot;),
-        Age = colDef(aggregate = weighted_mean(&quot;Patients&quot;)),
-        Cholesterol = colDef(aggregate = weighted_mean(&quot;Patients&quot;)),
-        `Heart Disease` = colDef(aggregate = weighted_mean(&quot;Patients&quot;))
+        Cases = colDef(aggregate = &quot;sum&quot;),
+        `30-Day Readmission Rate` = colDef(aggregate = weighted_mean(&quot;Cases&quot;))
       )
   )</code></pre>
 <div id="htmlwidget-3" class="reactable html-widget" style="width:auto;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Sex":["Female","Female","Female","Female","Male","Male","Male","Male"],"Chest Pain":["Typical angina","Atypical angina","Non-anginal pain","Asymptomatic","Typical angina","Atypical angina","Non-anginal pain","Asymptomatic"],"Patients":[4,18,35,40,19,32,51,104],"Age":[63.25,51.9444444444444,54.9714285714286,57.325,54.3157894736842,51.03125,52.8235294117647,55.1057692307692],"Cholesterol":[247,251.444444444444,261.057142857143,268.475,235.052631578947,241.03125,232.235294117647,243.605769230769],"Heart Disease":[0,0.111111111111111,0.0285714285714286,0.55,0.368421052631579,0.21875,0.333333333333333,0.798076923076923]},"columns":[{"accessor":"Sex","name":"Sex","type":"factor"},{"accessor":"Chest Pain","name":"Chest Pain","type":"factor"},{"accessor":"Patients","name":"Patients","type":"numeric","aggregate":"sum"},{"accessor":"Age","name":"Age","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Patients'] * values[index]\n            denominator += row['Patients']\n          })\n    \n          return numerator / denominator\n  \n        }"},{"accessor":"Cholesterol","name":"Cholesterol","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Patients'] * values[index]\n            denominator += row['Patients']\n          })\n    \n          return numerator / denominator\n  \n        }"},{"accessor":"Heart Disease","name":"Heart Disease","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Patients'] * values[index]\n            denominator += row['Patients']\n          })\n    \n          return numerator / denominator\n  \n        }"}],"pivotBy":["Sex"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"b6b7fc869b6e9a5ad8530b88ec86a7db","key":"b6b7fc869b6e9a5ad8530b88ec86a7db"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate","tag.attribs.columns.4.aggregate","tag.attribs.columns.5.aggregate"],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric","aggregate":"sum"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Cases'] * values[index]\n            denominator += row['Cases']\n          })\n    \n          return numerator / denominator\n  \n        }"}],"pivotBy":["State"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"7a9069fa82082c2cd20667e37e672471","key":"7a9069fa82082c2cd20667e37e672471"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate"],"jsHooks":[]}</script>
 </div>
 </div>
