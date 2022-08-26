@@ -27,20 +27,27 @@ projects: []
 
 
 <p><strong><strong>In Progress</strong></strong></p>
-<p>In my <a href="https://www.zajichekstats.com/post/filterable-maps/">last post</a> we demonstrated how to build a filterable map widget into an HTML output that was free of <code>R</code> runtime dependency. In continuation of that theme, this article focuses on the <a href="https://glin.github.io/reactable/"><code>reactable</code></a> package, which enables you to embed interactive data tables into your output. Specifically, we’ll look at how we can use its built-in JavaScript interface to define custom functions for commonly-desired aggregation and formatting.</p>
+<p>In my <a href="https://www.zajichekstats.com/post/filterable-maps/">last post</a> we demonstrated how to build a filterable map widget into an HTML output that was free of <code>R</code> runtime dependency. In continuation of that theme, this article focuses on the <a href="https://glin.github.io/reactable/"><code>reactable</code></a> package, which enables you to embed interactive data tables into your document. Specifically, we’ll look at how we can use its built-in JavaScript interface to define custom functions for commonly-desired aggregation and formatting.</p>
 <div id="table-of-contents" class="section level1">
 <h1>Table of Contents</h1>
-<ul>
-<li><a href="#thebasics">The Basics</a>
 <ol style="list-style-type: decimal">
+<li><a href="#thebasics">The Basics</a></li>
+</ol>
+<ul>
 <li><a href="#summarydata">Make a summary dataset</a></li>
 <li><a href="#defaulttable">The default table</a></li>
-</ol></li>
+<li><a href="#builtinaggregation">Built-in aggregation</a></li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li><a href="#jsinterface">Using the JavaScript Interface</a></li>
+</ol>
+<ul>
+<li><a href="#function1">Function 1: Weighted mean</a></li>
 </ul>
 </div>
 <div id="the-basics" class="section level1">
 <h1>The Basics</h1>
-<p>Let’s start with loading the packages we’ll use.</p>
+<p>Let’s start with loading some packages.</p>
 <pre class="r"><code>require(reactable)</code></pre>
 <pre><code>## Loading required package: reactable</code></pre>
 <pre class="r"><code>require(tidyverse)</code></pre>
@@ -132,16 +139,16 @@ readmission_rates &lt;-
 <pre class="r"><code>readmission_rates %&gt;% reactable()</code></pre>
 <div id="htmlwidget-1" class="reactable html-widget" style="width:auto;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric"}],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"2f550a9ae4f75138ed95661384b09599","key":"2f550a9ae4f75138ed95661384b09599"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-<p>We get about what we’d expect: a basic, paginated table where each row from our dataset is represented verbatim. There are a number of things to clean up here such as rounding, number representations, and, of course, aggregating the statistics to get state-specific readmission rates.</p>
+<p>We get about what we’d expect: a basic, paginated table where each row from our dataset is represented verbatim. There are many things we could clean up here such as rounding, number representations, formatting, and, of course, aggregating the statistics to get state-specific readmission rates.</p>
 </div>
-<div id="built-in-aggregation" class="section level2">
-<h2>Built in aggregation</h2>
-<p>There are a number of <a href="#https://glin.github.io/reactable/articles/examples.html#grouping-and-aggregation">built-in aggregation functions</a> in the package. We just need to specify:</p>
+<div id="builtinaggregation" class="section level2">
+<h2>Built-in aggregation</h2>
+<p>There are a number of <a href="#https://glin.github.io/reactable/articles/examples.html#grouping-and-aggregation">built-in aggregation functions</a> available to us by default. We just need to specify:</p>
 <ol style="list-style-type: decimal">
-<li>The groups we want with the <code>groupBy</code> argument</li>
-<li>The columns to aggregate by specifying column definitions using <code>colDef</code> within the <code>columns</code> argument</li>
+<li>The groups we want the aggregation applied within using the <code>groupBy</code> argument</li>
+<li>The columns we want to aggregate, and how, using <code>colDef</code> within the <code>columns</code> argument</li>
 </ol>
-<p>Let’s add functionality to the table above to aggregate the <em>total</em> patient count and the <em>average</em> of the remaining variables over the chest pain categories within each sex group:</p>
+<p>Let’s add functionality to the table above to aggregate the <em>total</em> case count and the <em>average</em> 30-day readmission rate within each state.</p>
 <pre class="r"><code>readmission_rates %&gt;%
   reactable(
     groupBy = &quot;State&quot;,
@@ -153,18 +160,19 @@ readmission_rates &lt;-
   )</code></pre>
 <div id="htmlwidget-2" class="reactable html-widget" style="width:auto;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric","aggregate":"sum"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric","aggregate":"mean"}],"pivotBy":["State"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"9630209e4a0e018135df53b7de3f29e5","key":"9630209e4a0e018135df53b7de3f29e5"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
-<p>The problem with this table is that the displayed state-specific readmission rates represent the <em>averaged</em> rates across the individual hospitals. What we really want in the aggregation is for the hospital-specific values to be weighted by the respective case volume so that the state-specific group rates are correct. This is where JavaScript comes in.</p>
+<p>The problem with this table is that the displayed state-level readmission rates represent the <em>averaged</em> rates across the individual hospitals. What we really want in the aggregation is for the hospital-specific rates to be weighted by their respective case volumes so that the state-level readmission rates are correct. This is where JavaScript comes in.</p>
 </div>
 </div>
-<div id="custom-javascript-functions" class="section level1">
-<h1>Custom JavaScript Functions</h1>
-<p>Our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation behavior when the default options won’t suffice. We can use the <code>JS</code> function from the <code>htmlwidgets</code> package to:</p>
+<div id="jsinterface" class="section level1">
+<h1>Using the JavaScript Interface</h1>
+<p>During the call to <code>reactable</code>, our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation and formatting behavior when the default options won’t suffice. We can use the <code>JS</code> function from the <a href="https://www.htmlwidgets.org/"><code>htmlwidgets</code></a> package to:</p>
 <ol style="list-style-type: decimal">
 <li>Define a JavaScript function as a text string</li>
-<li>Supply that function as the <code>aggregate</code> argument within <code>colDef</code> in our column definition list.</li>
+<li>Supply that function as an argument in the <code>colDef</code> applicable to the function’s context</li>
 </ol>
-<div id="defining-the-function" class="section level2">
-<h2>Defining the function</h2>
+<div id="function1" class="section level2">
+<h2>Function 1: Weighted mean</h2>
+<p>Referring back to our <a href="#builtinaggregation">example</a>, we want to average the 30-day readmission rates over the hospitals within each state, but we need to weight them by their respective case volume. To do this, we can supply a custom JavaScript function to the <code>aggregate</code> argument. This function takes the entire vector of values within the group as its argument, as well as the group’s rows, and returns a scalar value. We can specify the column containing the case weights directly by name within the row.</p>
 <pre class="r"><code>weighted_mean &lt;-
   function(weight) {
     JS(
@@ -183,9 +191,9 @@ readmission_rates &lt;-
         }&quot;
       )
     )
-  }
-
-readmission_rates %&gt;%
+  }</code></pre>
+<p>In our implementation, we encoded the <code>JS</code> function into an <code>R</code> function that calls for the weight column name, which generalizes its usage to any <code>reactable</code> in which we want this functionality applied.</p>
+<pre class="r"><code>readmission_rates %&gt;%
   reactable(
     groupBy = &quot;State&quot;,
     columns = 
