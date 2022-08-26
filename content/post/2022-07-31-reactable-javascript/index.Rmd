@@ -1,5 +1,5 @@
 ---
-title: A few useful JavaScript aggregation and formatting functions for {reactable}
+title: A couple useful JavaScript aggregation and formatting functions for {reactable}
 subtitle: Series on runtime-free content delivery
 author: R package build
 date: '2022-07-31'
@@ -17,18 +17,18 @@ image:
 projects: []
 ---
 
-**__In Progress__**
-
 In my [last post](https://www.zajichekstats.com/post/filterable-maps/) we demonstrated how to build a filterable map widget into an HTML output that was free of `R` runtime dependency. In continuation of that theme, this article focuses on the [`reactable`](https://glin.github.io/reactable/) package, which enables you to embed interactive data tables into your document. Specifically, we'll look at how we can use its built-in JavaScript interface to define custom functions for commonly-desired aggregation and formatting. 
 
 # Table of Contents
 
-1. [The Basics](#thebasics)
-  * [Make a summary dataset](#summarydata)
-  * [The default table](#defaulttable)
-  * [Built-in aggregation](#builtinaggregation)
-2. [Using the JavaScript Interface](#jsinterface)
-  * [Function 1: Weighted mean](#function1)
+* [The Basics](#thebasics)
+  + [Make a summary dataset](#summarydata)
+  + [The default table](#defaulttable)
+  + [Built-in aggregation](#builtinaggregation)
+* [Using the JavaScript Interface](#jsinterface)
+  + [Function 1: Weighted mean](#function1)
+  + [Function 2: Conditional coloring](#function2)
+  + [Final touches](#finaltouches)
 
 # The Basics
 
@@ -41,7 +41,7 @@ require(tidyverse)
 
 ## Make a summary dataset {#summarydata}
 
-First we'll need to create a data frame with group-level summary statistics that we want to display. For this example, we'll look at the 30-day hospital readmission rate for heart failure patients at the top five (5) most voluminous hospitals in a handful of Midwest states.
+First we'll need to create a data frame with group-level summary statistics that we want to display. For this example, we'll look at the 30-day hospital readmission rate for heart failure patients on Medicare at the top five (5) most voluminous hospitals in a handful of Midwest states.
 
 ```{r}
 # Import dataset
@@ -121,7 +121,7 @@ The problem with this table is that the displayed state-level readmission rates 
 During the call to `reactable`, our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation and formatting behavior when the default options won't suffice. We can use the `JS` function from the [`htmlwidgets`](https://www.htmlwidgets.org/) package to:
 
 1. Define a JavaScript function as a text string
-2. Supply that function as an argument in the `colDef` applicable to the function's context
+2. Supply that function as the argument to `colDef` applicable to the function's context
 
 ## Function 1: Weighted mean {#function1}
 
@@ -149,7 +149,7 @@ weighted_mean <-
   }
 ```
 
-In our implementation, we encoded the `JS` function into an `R` function that calls for the weight column name, which generalizes its usage to any `reactable` in which we want this functionality applied.
+In our implementation, we encoded the `JS` function into an `R` function that calls for the weight column name so we can use it in any `reactable` in which we want this functionality applied. Let's see what our table looks when we plug it in:
 
 ```{r}
 readmission_rates %>%
@@ -158,8 +158,117 @@ readmission_rates %>%
     columns = 
       list(
         Cases = colDef(aggregate = "sum"),
-        `30-Day Readmission Rate` = colDef(aggregate = weighted_mean("Cases"))
+        `30-Day Readmission Rate` = colDef(aggregate = weighted_mean(weight = "Cases"))
       )
   )
 ```
+
+Now we have correctly calculated the state-level 30-day readmission rates.
+
+## Function 2: Conditional coloring {#function2}
+
+Suppose we would like to differentiate readmission rates in our table that are above or below the national average. To do this, we can define another JavaScript function and supply it to the `style` argument within `colDef`. First, lets pull in the comparison value.
+
+```{r}
+national_rate <-
+  read_csv(
+    file = "https://data.cms.gov/provider-data/sites/default/files/resources/6a36e0b7e124bc6f9afd036021cce397_1657310809/Unplanned_Hospital_Visits-National.csv",
+    na = c("Not Available", "Not Applicable")
+  ) %>%
+  
+  # Filter to the measure
+  filter(
+    `Measure ID` == "READM_30_HF"
+  ) %>%
+  
+  # Pull the rate
+  pull(`National Rate`)
+
+national_rate <- national_rate / 100
+national_rate
+```
+
+Next, lets define another `JS` function wrapped in an `R` function that takes the column to evaluate, the comparison value, and the colors to fill in the table cell when it is above or below (or the same as) that threshold. These arguments will feed into the JavaScript function that applies the specified HTML styling to each value in the column.
+
+```{r}
+conditional_coloring <-
+  function(column, threshold, color_above, color_below, color_same = "#fcfffd") {
+    JS(
+      paste0(
+        "function(rowInfo) {
+          var value = rowInfo.row['", column, "']
+    
+          if(value > ", threshold, ") {
+            var color = '", color_above, "'
+          } else if(value < ", threshold, ") {
+            var color = '", color_below, "'
+          } else {
+            var color = '", color_same, "'
+          }
+    
+          return {background:color}
+        }"
+      )
+    )
+  }
+```
+
+We can now add it to the table:
+
+```{r}
+readmission_rates %>%
+  reactable(
+    groupBy = "State",
+    columns = 
+      list(
+        Cases = colDef(aggregate = "sum"),
+        `30-Day Readmission Rate` = 
+          colDef(
+            aggregate = weighted_mean(weight = "Cases"),
+            style = 
+              conditional_coloring(
+                column = "30-Day Readmission Rate",
+                threshold = national_rate,
+                color_above = "#eb7554",
+                color_below = "#54a637"
+              )
+          )
+      )
+  )
+```
+
+Note that the national 30-day readmission rate for heart failure patients on Medicare was `r paste0(national_rate*100, "%")`.
+
+## Final touches {#finaltouches}
+
+Finally, let's add a few finishing touches to really make the table pop.
+
+```{r}
+readmission_rates %>%
+  reactable(
+    groupBy = "State",
+    columns = 
+      list(
+        Cases = colDef(aggregate = "sum"),
+        `30-Day Readmission Rate` = 
+          colDef(
+            aggregate = weighted_mean(weight = "Cases"),
+            style = 
+              conditional_coloring(
+                column = "30-Day Readmission Rate",
+                threshold = national_rate,
+                color_above = "#eb7554",
+                color_below = "#54a637"
+              ),
+            format = colFormat(digits = 2, percent = TRUE)
+          )
+      ),
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    resizable = TRUE,
+    theme = reactablefmtr::sandstone()
+  )
+```
+
 

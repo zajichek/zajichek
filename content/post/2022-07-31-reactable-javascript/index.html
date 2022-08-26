@@ -1,5 +1,5 @@
 ---
-title: A few useful JavaScript aggregation and formatting functions for {reactable}
+title: A couple useful JavaScript aggregation and formatting functions for {reactable}
 subtitle: Series on runtime-free content delivery
 author: R package build
 date: '2022-07-31'
@@ -26,23 +26,22 @@ projects: []
 <script src="{{< blogdown/postref >}}index_files/reactable-binding/reactable.js"></script>
 
 
-<p><strong><strong>In Progress</strong></strong></p>
 <p>In my <a href="https://www.zajichekstats.com/post/filterable-maps/">last post</a> we demonstrated how to build a filterable map widget into an HTML output that was free of <code>R</code> runtime dependency. In continuation of that theme, this article focuses on the <a href="https://glin.github.io/reactable/"><code>reactable</code></a> package, which enables you to embed interactive data tables into your document. Specifically, we’ll look at how we can use its built-in JavaScript interface to define custom functions for commonly-desired aggregation and formatting.</p>
 <div id="table-of-contents" class="section level1">
 <h1>Table of Contents</h1>
-<ol style="list-style-type: decimal">
-<li><a href="#thebasics">The Basics</a></li>
-</ol>
+<ul>
+<li><a href="#thebasics">The Basics</a>
 <ul>
 <li><a href="#summarydata">Make a summary dataset</a></li>
 <li><a href="#defaulttable">The default table</a></li>
 <li><a href="#builtinaggregation">Built-in aggregation</a></li>
-</ul>
-<ol start="2" style="list-style-type: decimal">
-<li><a href="#jsinterface">Using the JavaScript Interface</a></li>
-</ol>
+</ul></li>
+<li><a href="#jsinterface">Using the JavaScript Interface</a>
 <ul>
 <li><a href="#function1">Function 1: Weighted mean</a></li>
+<li><a href="#function2">Function 2: Conditional coloring</a></li>
+<li><a href="#finaltouches">Final touches</a></li>
+</ul></li>
 </ul>
 </div>
 <div id="the-basics" class="section level1">
@@ -62,7 +61,7 @@ projects: []
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <div id="summarydata" class="section level2">
 <h2>Make a summary dataset</h2>
-<p>First we’ll need to create a data frame with group-level summary statistics that we want to display. For this example, we’ll look at the 30-day hospital readmission rate for heart failure patients at the top five (5) most voluminous hospitals in a handful of Midwest states.</p>
+<p>First we’ll need to create a data frame with group-level summary statistics that we want to display. For this example, we’ll look at the 30-day hospital readmission rate for heart failure patients on Medicare at the top five (5) most voluminous hospitals in a handful of Midwest states.</p>
 <pre class="r"><code># Import dataset
 readmission_rates &lt;-
   read_csv(
@@ -168,7 +167,7 @@ readmission_rates &lt;-
 <p>During the call to <code>reactable</code>, our table is accessible through a JavaScript interface which makes it easy for us to customize the aggregation and formatting behavior when the default options won’t suffice. We can use the <code>JS</code> function from the <a href="https://www.htmlwidgets.org/"><code>htmlwidgets</code></a> package to:</p>
 <ol style="list-style-type: decimal">
 <li>Define a JavaScript function as a text string</li>
-<li>Supply that function as an argument in the <code>colDef</code> applicable to the function’s context</li>
+<li>Supply that function as the argument to <code>colDef</code> applicable to the function’s context</li>
 </ol>
 <div id="function1" class="section level2">
 <h2>Function 1: Weighted mean</h2>
@@ -192,17 +191,122 @@ readmission_rates &lt;-
       )
     )
   }</code></pre>
-<p>In our implementation, we encoded the <code>JS</code> function into an <code>R</code> function that calls for the weight column name, which generalizes its usage to any <code>reactable</code> in which we want this functionality applied.</p>
+<p>In our implementation, we encoded the <code>JS</code> function into an <code>R</code> function that calls for the weight column name so we can use it in any <code>reactable</code> in which we want this functionality applied. Let’s see what our table looks when we plug it in:</p>
 <pre class="r"><code>readmission_rates %&gt;%
   reactable(
     groupBy = &quot;State&quot;,
     columns = 
       list(
         Cases = colDef(aggregate = &quot;sum&quot;),
-        `30-Day Readmission Rate` = colDef(aggregate = weighted_mean(&quot;Cases&quot;))
+        `30-Day Readmission Rate` = colDef(aggregate = weighted_mean(weight = &quot;Cases&quot;))
       )
   )</code></pre>
 <div id="htmlwidget-3" class="reactable html-widget" style="width:auto;height:auto;"></div>
 <script type="application/json" data-for="htmlwidget-3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric","aggregate":"sum"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Cases'] * values[index]\n            denominator += row['Cases']\n          })\n    \n          return numerator / denominator\n  \n        }"}],"pivotBy":["State"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"7a9069fa82082c2cd20667e37e672471","key":"7a9069fa82082c2cd20667e37e672471"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate"],"jsHooks":[]}</script>
+<p>Now we have correctly calculated the state-level 30-day readmission rates.</p>
+</div>
+<div id="function2" class="section level2">
+<h2>Function 2: Conditional coloring</h2>
+<p>Suppose we would like to differentiate readmission rates in our table that are above or below the national average. To do this, we can define another JavaScript function and supply it to the <code>style</code> argument within <code>colDef</code>. First, lets pull in the comparison value.</p>
+<pre class="r"><code>national_rate &lt;-
+  read_csv(
+    file = &quot;https://data.cms.gov/provider-data/sites/default/files/resources/6a36e0b7e124bc6f9afd036021cce397_1657310809/Unplanned_Hospital_Visits-National.csv&quot;,
+    na = c(&quot;Not Available&quot;, &quot;Not Applicable&quot;)
+  ) %&gt;%
+  
+  # Filter to the measure
+  filter(
+    `Measure ID` == &quot;READM_30_HF&quot;
+  ) %&gt;%
+  
+  # Pull the rate
+  pull(`National Rate`)</code></pre>
+<pre><code>## Warning: One or more parsing issues, see `problems()` for details</code></pre>
+<pre><code>## Rows: 14 Columns: 14
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr  (4): Measure ID, Measure Name, Start Date, End Date
+## dbl (10): National Rate, Number of Hospitals Worse, Number of Hospitals Same...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>national_rate &lt;- national_rate / 100
+national_rate</code></pre>
+<pre><code>## [1] 0.213</code></pre>
+<p>Next, lets define another <code>JS</code> function wrapped in an <code>R</code> function that takes the column to evaluate, the comparison value, and the colors to fill in the table cell when it is above or below (or the same as) that threshold. These arguments will feed into the JavaScript function that applies the specified HTML styling to each value in the column.</p>
+<pre class="r"><code>conditional_coloring &lt;-
+  function(column, threshold, color_above, color_below, color_same = &quot;#fcfffd&quot;) {
+    JS(
+      paste0(
+        &quot;function(rowInfo) {
+          var value = rowInfo.row[&#39;&quot;, column, &quot;&#39;]
+    
+          if(value &gt; &quot;, threshold, &quot;) {
+            var color = &#39;&quot;, color_above, &quot;&#39;
+          } else if(value &lt; &quot;, threshold, &quot;) {
+            var color = &#39;&quot;, color_below, &quot;&#39;
+          } else {
+            var color = &#39;&quot;, color_same, &quot;&#39;
+          }
+    
+          return {background:color}
+        }&quot;
+      )
+    )
+  }</code></pre>
+<p>We can now add it to the table:</p>
+<pre class="r"><code>readmission_rates %&gt;%
+  reactable(
+    groupBy = &quot;State&quot;,
+    columns = 
+      list(
+        Cases = colDef(aggregate = &quot;sum&quot;),
+        `30-Day Readmission Rate` = 
+          colDef(
+            aggregate = weighted_mean(weight = &quot;Cases&quot;),
+            style = 
+              conditional_coloring(
+                column = &quot;30-Day Readmission Rate&quot;,
+                threshold = national_rate,
+                color_above = &quot;#eb7554&quot;,
+                color_below = &quot;#54a637&quot;
+              )
+          )
+      )
+  )</code></pre>
+<div id="htmlwidget-4" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric","aggregate":"sum"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Cases'] * values[index]\n            denominator += row['Cases']\n          })\n    \n          return numerator / denominator\n  \n        }","style":"function(rowInfo) {\n          var value = rowInfo.row['30-Day Readmission Rate']\n    \n          if(value > 0.213) {\n            var color = '#eb7554'\n          } else if(value < 0.213) {\n            var color = '#54a637'\n          } else {\n            var color = '#fcfffd'\n          }\n    \n          return {background:color}\n        }"}],"pivotBy":["State"],"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"004e89c1add43ebbbab59ceae602adf0","key":"004e89c1add43ebbbab59ceae602adf0"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate","tag.attribs.columns.3.style"],"jsHooks":[]}</script>
+<p>Note that the national 30-day readmission rate for heart failure patients on Medicare was 21.3%.</p>
+</div>
+<div id="finaltouches" class="section level2">
+<h2>Final touches</h2>
+<p>Finally, let’s add a few finishing touches to really make the table pop.</p>
+<pre class="r"><code>readmission_rates %&gt;%
+  reactable(
+    groupBy = &quot;State&quot;,
+    columns = 
+      list(
+        Cases = colDef(aggregate = &quot;sum&quot;),
+        `30-Day Readmission Rate` = 
+          colDef(
+            aggregate = weighted_mean(weight = &quot;Cases&quot;),
+            style = 
+              conditional_coloring(
+                column = &quot;30-Day Readmission Rate&quot;,
+                threshold = national_rate,
+                color_above = &quot;#eb7554&quot;,
+                color_below = &quot;#54a637&quot;
+              ),
+            format = colFormat(digits = 2, percent = TRUE)
+          )
+      ),
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    resizable = TRUE,
+    theme = reactablefmtr::sandstone()
+  )</code></pre>
+<div id="htmlwidget-5" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"State":["IL","IL","IL","IL","IL","MI","MI","MI","MI","MI","MN","MN","MN","MN","MN","WI","WI","WI","WI","WI"],"Hospital":["NORTHSHORE UNIVERSITY HEALTHSYSTEM - EVANSTON HOSPITAL","PALOS COMMUNITY HOSPITAL","ADVOCATE CHRIST HOSPITAL & MEDICAL CENTER","NORTHWESTERN MEMORIAL HOSPITAL","NORTHWESTERN MEDICINE MCHENRY","BEAUMONT HOSPITAL ROYAL OAK","BEAUMONT HOSPITAL, TROY","ASCENSION PROVIDENCE HOSPITAL, SOUTHFIELD AND NOVI","ST JOSEPH MERCY HOSPITAL","SPECTRUM HEALTH","MAYO CLINIC HOSPITAL ROCHESTER","ABBOTT NORTHWESTERN HOSPITAL","MINNEAPOLIS VA MEDICAL CENTER","MERCY HOSPITAL","PARK NICOLLET METHODIST HOSPITAL","AURORA ST LUKES MEDICAL CENTER","UNIVERSITY OF WI  HOSPITALS & CLINICS AUTHORITY","FROEDTERT MEMORIAL LUTHERAN HOSPITAL","MERITER HOSPITAL","MILWAUKEE VA MEDICAL CENTER"],"Cases":[2205,1292,1225,1211,1046,1736,1580,1249,1095,1039,1218,639,585,567,554,1236,597,592,559,544],"30-Day Readmission Rate":[0.212,0.219,0.221,0.212,0.189,0.216,0.213,0.221,0.18,0.188,0.185,0.186,0.213,0.183,0.219,0.203,0.231,0.216,0.213,0.244]},"columns":[{"accessor":"State","name":"State","type":"character"},{"accessor":"Hospital","name":"Hospital","type":"character"},{"accessor":"Cases","name":"Cases","type":"numeric","aggregate":"sum"},{"accessor":"30-Day Readmission Rate","name":"30-Day Readmission Rate","type":"numeric","aggregate":"function(values, rows) {\n          var numerator = 0\n          var denominator = 0\n    \n          rows.forEach(function(row, index) {\n            numerator += row['Cases'] * values[index]\n            denominator += row['Cases']\n          })\n    \n          return numerator / denominator\n  \n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"style":"function(rowInfo) {\n          var value = rowInfo.row['30-Day Readmission Rate']\n    \n          if(value > 0.213) {\n            var color = '#eb7554'\n          } else if(value < 0.213) {\n            var color = '#54a637'\n          } else {\n            var color = '#fcfffd'\n          }\n    \n          return {background:color}\n        }"}],"pivotBy":["State"],"resizable":true,"defaultPageSize":10,"paginationType":"numbers","showPageInfo":true,"minRows":1,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"fc94944daabc128358044df587bce6c8","key":"fc94944daabc128358044df587bce6c8"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate","tag.attribs.columns.3.style"],"jsHooks":[]}</script>
 </div>
 </div>
