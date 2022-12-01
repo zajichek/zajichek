@@ -1,0 +1,161 @@
+---
+title: Ordering dimensions within facets with {ggplot2}
+subtitle: A look at Medicare spending in WI counties
+author: R package build
+date: '2022-11-29'
+slug: ordering-dimensions-within-facets-in-ggplot2
+categories: []
+tags: []
+summary: ''
+authors: []
+lastmod: '2022-11-29T11:09:28-06:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p><strong>In progress</strong></p>
+<p>Over the years I’ve found myself frequently wanting to rank a dimension <em>within</em> facets in a single <a href="https://ggplot2.tidyverse.org/"><code>ggplot</code></a>. The <code>reorder_within</code> function (a <a href="https://ggplot2.tidyverse.org/"><code>ggplot</code></a> add-on) is a hidden gem within the <a href="https://cran.r-project.org/web/packages/tidytext/index.html"><code>tidytext</code></a> package and has been my go-to solution for this task. This article goes through an example of creating such a plot for Medicare spending in Wisconsin counties. First, lets load some packages:</p>
+<pre class="r"><code>require(tidyverse)</code></pre>
+<pre><code>## Loading required package: tidyverse</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<div id="table-of-contents" class="section level1">
+<h1>Table of Contents</h1>
+<ol style="list-style-type: decimal">
+<li><a href="#buildingthedataset">Building the dataset</a></li>
+</ol>
+<ul>
+<li><a href="#extractspending">Extract Medicare spending</a></li>
+<li><a href="#extracthospital">Extract hospital details</a></li>
+<li><a href="#synthesize">Synthesize for plotting</a></li>
+</ul>
+</div>
+<div id="buildingthedataset" class="section level1">
+<h1>1. Building the dataset</h1>
+<p>The objective here is going to be to display the top and bottom five (5) Wisconsin counties in terms of relative <a href="https://www.cms.gov/">Medicare</a>) spending for a few different categories. The source for all data used is the <a href="https://data.cms.gov/provider-data/">CMS Provider Data Catalog</a>.</p>
+<div id="extractspending" class="section level2">
+<h2>Extract Medicare spending</h2>
+<p>The core dataset (described <a href="https://data.cms.gov/provider-data/dataset/nrth-mfg3">here</a>) contains a listing of Medicare spending for U.S. hospitals by various claim types. We can import it directly with <a href="https://readr.tidyverse.org/reference/read_delim.html"><code>readr:read_csv</code></a>:</p>
+<pre class="r"><code># Link copied from &#39;Download full dataset&#39;
+medicare_spend &lt;-
+  read_csv(
+    file = &quot;https://data.cms.gov/provider-data/sites/default/files/resources/baae89c939191d1ccb76feb4f9382234_1665414667/Medicare_Hospital_Spending_by_Claim.csv&quot;
+  )</code></pre>
+<pre><code>## Rows: 55242 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (10): Facility Name, Facility ID, State, Period, Claim Type, Percent of ...
+## dbl  (3): Avg Spndg Per EP Hospital, Avg Spndg Per EP State, Avg Spndg Per E...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>medicare_spend</code></pre>
+<pre><code>## # A tibble: 55,242 × 13
+##    Facili…¹ Facil…² State Period Claim…³ Avg S…⁴ Avg S…⁵ Avg S…⁶ Perce…⁷ Perce…⁸
+##    &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+##  1 SOUTHEA… 010001  AL    1 to … Home H…       0      17      12 0.00%   0.08%  
+##  2 SOUTHEA… 010001  AL    1 to … Hospice       0       1       1 0.00%   0.00%  
+##  3 SOUTHEA… 010001  AL    1 to … Inpati…       0       9       6 0.00%   0.04%  
+##  4 SOUTHEA… 010001  AL    1 to … Outpat…     154     116     179 0.62%   0.54%  
+##  5 SOUTHEA… 010001  AL    1 to … Skille…       0       3       6 0.00%   0.02%  
+##  6 SOUTHEA… 010001  AL    1 to … Durabl…       2       9      10 0.01%   0.04%  
+##  7 SOUTHEA… 010001  AL    1 to … Carrier     536     622     664 2.17%   2.90%  
+##  8 SOUTHEA… 010001  AL    Durin… Home H…       0       0       0 0.00%   0.00%  
+##  9 SOUTHEA… 010001  AL    Durin… Hospice       0       0       0 0.00%   0.00%  
+## 10 SOUTHEA… 010001  AL    Durin… Inpati…   11409   10987   11467 46.22%  51.24% 
+## # … with 55,232 more rows, 3 more variables: `Percent of Spndg National` &lt;chr&gt;,
+## #   `Start Date` &lt;chr&gt;, `End Date` &lt;chr&gt;, and abbreviated variable names
+## #   ¹​`Facility Name`, ²​`Facility ID`, ³​`Claim Type`,
+## #   ⁴​`Avg Spndg Per EP Hospital`, ⁵​`Avg Spndg Per EP State`,
+## #   ⁶​`Avg Spndg Per EP National`, ⁷​`Percent of Spndg Hospital`,
+## #   ⁸​`Percent of Spndg State`</code></pre>
+</div>
+<div id="extracthospital" class="section level2">
+<h2>Extract hospital details</h2>
+<p>The county that the hospital resides is not located in the <a href="#extractspending">spending file</a>. Therefore, we’ll need an additional look-up file (described <a href="https://data.cms.gov/provider-data/dataset/xubh-q36u">here</a>) that we can tie back in.</p>
+<pre class="r"><code># Link copied from &#39;Download full dataset&#39;
+hospital_information &lt;-
+  read_csv(
+    file = &quot;https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1666224317/Hospital_General_Information.csv&quot;
+  )</code></pre>
+<pre><code>## Rows: 5307 Columns: 38
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (38): Facility ID, Facility Name, Address, City, State, ZIP Code, County...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>hospital_information</code></pre>
+<pre><code>## # A tibble: 5,307 × 38
+##    Facilit…¹ Facil…² Address City  State ZIP C…³ Count…⁴ Phone…⁵ Hospi…⁶ Hospi…⁷
+##    &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  
+##  1 010001    SOUTHE… 1108 R… DOTH… AL    36301   HOUSTON (334) … Acute … Govern…
+##  2 010005    MARSHA… 2505 U… BOAZ  AL    35957   MARSHA… (256) … Acute … Govern…
+##  3 010006    NORTH … 1701 V… FLOR… AL    35630   LAUDER… (256) … Acute … Propri…
+##  4 010007    MIZELL… 702 N … OPP   AL    36467   COVING… (334) … Acute … Volunt…
+##  5 010008    CRENSH… 101 HO… LUVE… AL    36049   CRENSH… (334) … Acute … Propri…
+##  6 010011    ST. VI… 50 MED… BIRM… AL    35235   JEFFER… (205) … Acute … Volunt…
+##  7 010012    DEKALB… 200 ME… FORT… AL    35968   DE KALB (256) … Acute … Propri…
+##  8 010016    SHELBY… 1000 F… ALAB… AL    35007   SHELBY  (205) … Acute … Volunt…
+##  9 010018    CALLAH… 1720 U… BIRM… AL    35233   JEFFER… (205) … Acute … Volunt…
+## 10 010019    HELEN … 1300 S… SHEF… AL    35660   COLBERT (256) … Acute … Govern…
+## # … with 5,297 more rows, 28 more variables: `Emergency Services` &lt;chr&gt;,
+## #   `Meets criteria for promoting interoperability of EHRs` &lt;chr&gt;,
+## #   `Hospital overall rating` &lt;chr&gt;, `Hospital overall rating footnote` &lt;chr&gt;,
+## #   `MORT Group Measure Count` &lt;chr&gt;, `Count of Facility MORT Measures` &lt;chr&gt;,
+## #   `Count of MORT Measures Better` &lt;chr&gt;,
+## #   `Count of MORT Measures No Different` &lt;chr&gt;,
+## #   `Count of MORT Measures Worse` &lt;chr&gt;, `MORT Group Footnote` &lt;chr&gt;, …</code></pre>
+</div>
+<div id="synthesize" class="section level2">
+<h2>Synthesize for plotting</h2>
+<p>We can now take some steps to creating the plot-ready dataset.</p>
+<div id="i.-filter-to-wi-hospitals" class="section level3">
+<h3>i. Filter to WI hospitals</h3>
+<pre class="r"><code>hospital_information %&gt;%
+  
+  # Filter to Wisconsin
+  filter(
+    State == &quot;WI&quot;
+  ) %&gt;%
+  
+  # Keep a couple columns
+  select(
+    HospitalID = `Facility ID`,
+    Hospital = `Facility Name`,
+    County = `County Name`
+  ) %&gt;%
+  
+  # Keep the first letter capitalized only
+  mutate(
+    County = str_c(str_sub(County, 1, 1), tolower(str_sub(County, 2)))
+  )</code></pre>
+<pre><code>## # A tibble: 138 × 3
+##    HospitalID Hospital                                                County    
+##    &lt;chr&gt;      &lt;chr&gt;                                                   &lt;chr&gt;     
+##  1 520002     ASPIRUS STEVENS POINT HOSPITAL &amp; CLINICS, INC.          Portage   
+##  2 520004     MAYO CLINIC HEALTH SYSTEM-FRANCISCAN MEDICAL CENTER INC La crosse 
+##  3 520008     WAUKESHA MEMORIAL HOSPITAL                              Waukesha  
+##  4 520009     ASCENSION NE WISCONSIN - ST ELIZABETH CAMPUS            Outagamie 
+##  5 520011     MARSHFIELD MEDICAL CENTER - RICE LAKE                   Barron    
+##  6 520013     SACRED HEART HOSPITAL                                   Eau claire
+##  7 520017     ST JOSEPH&#39;S HOSPITAL                                    Chippewa  
+##  8 520019     ASCENSION ST MARYS HOSPITAL                             Oneida    
+##  9 520021     UNITED HOSPITAL SYSTEM                                  Kenosha   
+## 10 520027     ASCENSION COLUMBIA ST MARY&#39;S HOSPITAL OZAUKEE           Ozaukee   
+## # … with 128 more rows</code></pre>
+</div>
+</div>
+</div>
