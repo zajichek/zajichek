@@ -27,18 +27,18 @@ require(tidyverse)
 
 # Table of Contents
 
-1. [Building the dataset](#buildingthedataset)
-  * [Extract Medicare spending](#extractspending)
-  * [Extract hospital details](#extracthospital)
-  * [Synthesize for plotting](#synthesize)
+* [Building the dataset](#buildingthedataset)
+  1. [Import Medicare spending data](#extractspending)
+  2. [Retrieve hospital counties](#extracthospital)
+  3. [Synthesize for plotting](#synthesize)
 
-# 1. Building the dataset {#buildingthedataset}
+# Building the dataset {#buildingthedataset}
 
-The objective here is going to be to display the top and bottom five (5) Wisconsin counties in terms of relative [Medicare](https://www.cms.gov/)) spending for a few different categories. The source for all data used is the [CMS Provider Data Catalog](https://data.cms.gov/provider-data/).
+The objective here is going to be to display the top and bottom five (5) Wisconsin counties in terms of relative [Medicare](https://www.cms.gov/) hospital spending for a few different types of claims. The source for all data used is the [CMS Provider Data Catalog](https://data.cms.gov/provider-data/).
 
-## Extract Medicare spending {#extractspending}
+## 1. Import Medicare spending data {#extractspending}
 
-The core dataset (described [here](https://data.cms.gov/provider-data/dataset/nrth-mfg3)) contains a listing of Medicare spending for U.S. hospitals by various claim types. We can import it directly with [`readr:read_csv`](https://readr.tidyverse.org/reference/read_delim.html):
+The core dataset (described [here](https://data.cms.gov/provider-data/dataset/nrth-mfg3)) contains a listing of Medicare spending for U.S. hospitals by various claim types. We can import it directly with [`readr::read_csv`](https://readr.tidyverse.org/reference/read_delim.html):
 
 ```{r}
 # Link copied from 'Download full dataset'
@@ -49,9 +49,9 @@ medicare_spend <-
 medicare_spend
 ```
 
-## Extract hospital details {#extracthospital}
+## 2. Retrieve hospital counties {#extracthospital}
 
-The county that the hospital resides is not located in the [spending file](#extractspending). Therefore, we'll need an additional look-up file (described [here](https://data.cms.gov/provider-data/dataset/xubh-q36u)) that we can tie back in.
+The county that the hospital resides is not located in the [spending file](#extractspending). Therefore, we'll need an additional look-up table (described [here](https://data.cms.gov/provider-data/dataset/xubh-q36u)) containing that field.
 
 ```{r}
 # Link copied from 'Download full dataset'
@@ -62,32 +62,12 @@ hospital_information <-
 hospital_information
 ```
 
-## Synthesize for plotting {#synthesize}
+## 3. Synthesize for plotting {#synthesize}
 
-We can now take some steps to creating the plot-ready dataset.
+We have all of the data elements we need. We'll just need to get them into plot-ready format by taking the following steps:
 
-### i. Filter to WI hospitals
-
-```{r}
-hospital_information %>%
-  
-  # Filter to Wisconsin
-  filter(
-    State == "WI"
-  ) %>%
-  
-  # Keep a couple columns
-  select(
-    HospitalID = `Facility ID`,
-    Hospital = `Facility Name`,
-    County = `County Name`
-  ) %>%
-  
-  # Keep the first letter capitalized only
-  mutate(
-    County = str_c(str_sub(County, 1, 1), tolower(str_sub(County, 2)))
-  )
-```
+1. Filter to Wisconsin hospitals, keeping the County of residence for the hospital
+2. 
 
 
 
