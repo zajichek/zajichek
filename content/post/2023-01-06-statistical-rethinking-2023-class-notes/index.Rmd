@@ -1,0 +1,378 @@
+---
+title: Statistical Rethinking 2023 Class Notes
+author: Alex Zajichek
+date: '2023-01-06'
+slug: statistical-rethinking-2023-class-notes
+categories: []
+tags: []
+subtitle: 'Summaries, interpretations, and examples'
+summary: ''
+authors: []
+lastmod: '2023-01-06T09:37:10-06:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+This document is intended to be a repository for my (raw, unedited) notes, interpretations, examples, and summaries from the [Statistical Rethinking 2023](https://github.com/rmcelreath/stat_rethinking_2023) course (which Richard McElreath has graciously made available for free (!) covering [his book](https://xcelab.net/rm/statistical-rethinking/)). I'm not actually enrolled in the course, but just following the lectures and material as they are released on a weekly basis. I have a strong interest in learning and incorporating Bayesian analysis and causal principles into my work, and this seemed like a great opportunity to build a foundation for that.
+
+# Table of Contents
+
+1. [Science Before Statistics](#lecture1)
+2. [Garden of Forking Data](#lecture2)
+3. [Basic Regression](#lecture3)
+4. [Not-so-basic Regression](#lecture4)
+
+# 1. Science Before Statistics {#lecture1}
+
+Week #    Lecture #   Chapter(s)    Week End    Notes Taken
+------    ---------   ----------    --------    -----------
+1         1           1             1/6/2023    1/3/2023
+
+## Summary
+
+This course focus is on scientific modeling via causal inference, which is focused on identifying causes in *observational* data. Causal Inference requires us to consider the mechanism of a phenomenon, and think about not only which variables cause other variables, but in what order--subject matter expertise is of utmost importance, and we don't really depend on the data at hand until the very end of our inference process. Causal modeling must become the foundation to do analysis by--we can't just do simple statistics in one project and then think about causal modeling in another--samples are from populations and there are causes associated with why we observed the sample we did, even if we're answering very basic questions. Also, *Bayesian* modeling as a means to performing causal inference is not due to philosophical reasons (e.g., frequentist vs. Bayesian), it's more so because a Bayesian framework provides the most natural tools to employ the specified causal model (i.e., if the frequentist model made sense for answering the causal question, we'd use it). The generative aspect of Bayesian modeling is one aspect in particular that makes it very inviting to represent the causal model in a statistical framework, and apply distributions. Finally, coding is not just a means to employ the math, but rather needs to be treated as part of the product, therefore employing software engineering principles, having documentation, making things reproducible. These things need to be employed if you really want to advance knowledge with confidence.
+
+## Notes
+
+**Overview**
+
+-   Most interested in Causal Inference, focusing on the *science* before the *statistics*
+-   We must be able to talk about causes to obtain scientific knowledge, why else would we do it?
+-   Causes can't be extracted from data; must come from knowledge, assumptions
+
+**What is Causal Inference?**
+
+-   It is more than associations; associations are bi-directional, and correlation is only a basic measure of association;
+-   It is all about intervention, directionality, and the *prediction* of the consequence of changing one variable on another (asking *what-if?*)
+
+**Causal Imputation**
+
+-   This is about being able to construct *counterfactual* outcomes
+-   Asking the question, *what if I had done something else?*
+-   We only observe a single outcome, but we want to know what would have happened had a certain intervention not taken place
+
+**Directed Acyclic Graph (DAG)**
+
+-   Nothing more than an abstraction about which variables cause which other variables
+-   Shows the direction at which variables cause each other, but doesn't specify *how* (i.e., effect shapes, etc.)
+-   We can use this to know which things to control for, answer hypothetical interventions, under the assumption that the model is true
+-   It provides a tool to answer very specific questions (queries); not necessarily all questions lead to the same statistical model, but the appropriate statistical model can be derived from the causal model depending on the question
+-   *Intuition Pumps*: Gets the researcher to think about mechanism; great way to problem solve with SME's without looking at the data (which is how it should be)
+
+**Golems (statistical models)**
+
+-   Metaphor for what a statistical model is; it's a very useful machine that will do what it's asked very well, but has no wisdom or forethought
+-   Does not know the intent of the task
+-   Statistical models are just objective tools, but we need causal models to know how and when certain models are actually appropriate
+
+**Statistical Models**
+
+-   Having a flowchart of tests is not useful, except maybe in the *experimental* setting (remember we're talking observational data)
+-   Statistical models/tests don't make a clear relationship between the research and the data; it's just math
+
+**Hypotheses & Models**
+
+-   We need *generative* causal models that are guided by the DAG's
+-   We need *estimands* that are statistical models justified by the generative models (how do we quantify what we're after?)
+-   Introduce real data at the end--this is the easy part
+
+**Justifying Controls**
+
+-   Cannot just control for everything in your dataset like is done so much in current research (e.g., colliders have undesired effect)
+-   Need the causal model (DAG) to be able to deduce what should be controlled for based on the specific question that is asked
+-   *Adjustment Set:* The variables determined appropriate to control for for a particular query
+
+**Why Bayesian?**
+
+-   Bayesian happens to be the easiest approach for generative models; it's not because we're stuck in a philosophical debate
+-   Easiest way to take the scientific structure of the assumed model and generate it, since it naturally has *direction* (i.e., priors)
+-   In most cases, Bayes can be appropriate (sometimes not--cut cake with chainsaw)
+    -   Measurement error, missing data, latent variables, regularization
+-   It is *practical*, not *philosophical*
+
+**Owls**
+
+-   Classic joke: Step 1 = Draw two circles, Step 2 = draw remaining owl
+    -   Programming and technical things tend to be taught this way, but we want to avoid this and document all the intermediate steps
+-   We need to have an explicit workflow with clear steps
+-   We need to treat coding/scripting seriously, not just a means to something (apply software engineering principles, documentation, quality control)
+-   Understand what you are doing, document your work and reduce error, have a respectable scientific workflow, be professional and organized to maintain *reproducible* scientific knowledge, otherwise it's all bullshit
+-   Workflow
+    1.  Theoretical Estimand (what are we trying to do?)
+    2.  Scientific (Causal) Model (DAG + Generative)
+    3.  Use 1 & 2 to build appropriate statistical model
+    4.  Simulate from 2 to validate that 3 yields 1
+    5.  Analyze the actual data
+
+# 2. Garden of Forking Data {#lecture2}
+
+Week #    Lecture #   Chapter(s)    Week End    Notes Taken
+------    ---------   ----------    --------    -----------
+1         2           2, 3          1/6/2023    1/6/2023
+
+## Summary
+
+This scientific modeling framework provides an _objective_ process to incorporate _subjective_ (expert, scientfic) knowledge into the modeling process, enabling us to incorporate all of the uncertainty associated with those processes, predicated on the assumption of the causal model. Further, one of the key takeaways was that _samples do not need to be representative of the population for us to provide good estimates_. This is profound because generally we are taught the opposite, but because of the process, we can explicitly account for how we know/assume the data was generated, and use that information to create a good estimate of the quantity we are interested in. This is much more _practical_ than the assumptions that are made in a typical frequentist analysis--which tend to be blindly made which ironically makes them more wrong than the "subjective" information in the generative approach. We can then use sampling of our posterior distribution(s) to answer questions about what might happen if we do another experiment, etc. (e.g., what if we take 10 more samples?). Instead of relying on asymptotics for the sampling distribution of a statistic (frequentist), we can just take samples from the posterior for any complex quantity of interest and get the uncertainty surrounding that. This is especially important once we are dealing with analytically intractable posteriors that don't have closed form solutions. Instead of needing expert-level calculus knowledge for such problem, we just have to follow the same workflow as in this basic problem. After years of frequentist modeling, that is always full of limitations and disatisfaction in the results, this approach will lead to much more rewarding scientific discovery and confidence in the conclusions of research.
+
+### My check for understanding
+
+Let's go through and reproduce some of the content/concepts from slides but using our own explanation, implementation and interpretation along the way. 
+
+#### 1. What is the objective?
+
+The main question asked in the demonstration was _what proportion of the globe is water?_. Thus, the quantity we are interested in is a single quantity: the _true_ proportion of of the globe that is water. 
+
+#### 2. What is the sampling strategy?
+
+We want to collect data to try to answer the question of interest. This will be done by spinning the globe and dropping a pin at a random location to indicate if it is either land or water. Some initial assumptions are
+
+* All points on the globe are equally-likely to be selected
+* Any given point on the globe is either land or water (only two possibilities)
+* There is no measurement error associated with indicating if the selected point was land or water
+
+#### 3. What is the generative model?
+
+We want to consider the different variables at play here as it relates to any observed sample we get as a result of the sampling strategy. First and foremost, the primary _unknown_ parameter is:
+
+$$p=\text{proportion of water on the globe}$$
+
+The other two at play (under this simplistic model) are:
+
+$$N=\text{Number of globe spins} \hskip.5in W=\text{Number of spins resulting in water}$$
+_Note that the number of spins resulting in land is just $N-W$_
+
+With the variables defined, the next step is determine how these variables relate to each other. We'll use the following DAG:
+
+```{r, fig.cap="Unobserved quantities are highlighted in yellow"}
+DiagrammeR::grViz("
+  digraph graph2 {
+    graph [layout = dot, rankdir = LR]
+    node [style = filled]
+    a [label = 'p', fillcolor = yellow]
+    b [label = 'N']
+    c [label = 'W']
+    a -> c
+    b -> c
+  }
+", height = 200, width = 350)
+```
+
+This assumes that the number of water spins observed in our sample is determined by:
+
+1. The true proportion of water on the globe
+2. The total number of spins of the globe made (samples)
+
+#### 4. What is the statistical model/estimation procedure?
+
+Let's suppose we execute the sampling procedure which yields the following response vector:
+
+```{r}
+observed_sample <- c(1, 0, 1, 1, 1, 0, 1, 0, 1) # 1 = water; 0 = land
+W <- sum(observed_sample) # Number of water samples
+N <- length(observed_sample) # Number of spins
+W; N
+```
+
+We just need to _count_ all of the ways that this sample could have arose across all of the different possibilities of $p$, and then estimate $p$ as that of where the sample was most likely to have occurred.
+
+##### Basic (incorrect) solution with finite possibilities
+
+We know that there are infinitely many possibilities for $p$. Let's first go through this assuming the globe is that of a 4-sided die, such that the only possibilities are $p \in (0,.25,.50,.75,1)$. For each possible value of $p$, what is number of ways we could have observed our data? (thinking of the generative process, starting with $N$ and $p$).
+
+```{r}
+# Set possible values for p
+p <- c(0, .25, .5, .75, 1)
+
+# Number of sides of globe
+sides <- length(p) - 1
+
+# Number of ways to observe sample (for each p)
+ways <- (sides*p)^W * (sides*(1-p))^(N-W)
+ways
+
+# Posterior probability
+ways / sum(ways)
+
+```
+
+What is key to note about the posterior probabilities is that they are relative to the total across all values of $p$. So we could approach this differently and get the same result:
+
+1. We could think of each observed value as an (unfair) coin flip (according to the value of $p$) and calculate the likelihood of the sequence of flips:
+
+```{r}
+# Likelihood of sequence of observed sample
+likelihood <- p^W * (1-p)^(N-W)
+likelihood
+
+# Compute posterior
+likelihood / sum(likelihood) # Same as before
+```
+
+2. We could think of it as finding the likelihood of observing the total number of water spins (which is the same as the prior example, except we're accounting for all of the combinations as well):
+
+```{r}
+# Make the normalizing constant
+normalizing_constant <- factorial(N) / (factorial(W)*factorial(N-W))
+
+# Multiply the likelihood by the normalizing constant by the likelihood to get the true probability of the observed sample for each value of p
+probability <- normalizing_constant * likelihood
+probability
+
+# Compute the posterior
+probability / sum(probability)
+```
+
+Note that the normalizing constant had no effect on the posterior, but it did calculate the correct probabilities of the observed sample. In fact, this was just a Binomial distribution:
+
+```{r}
+# What is the probability of observing W water values in a sample of N globe spins for each p?
+dbinom(x = W, size = N, prob = p)
+```
+
+That is, the probability distribution for the number of water samples is:
+
+$$W|p \sim Binomial(N, p)$$
+$$P(W|p) = \frac{N!}{W!(N-W)!}p^W(1-p)^{(N-W)}$$
+
+So what is going on here? We are after the distribution of probability weights associated with each possible value of $p$ (which is what the posterior distribution is). In mathematical notation, we're just applying Bayes' formula:
+
+$$
+\begin{equation} 
+\begin{split}
+P(p|sample) 
+& = \frac{P(p)P(sample|p)}{P(sample)} \\
+& = \frac{P(p)P(W|p)}{P(W)} \\
+& = \frac{P(p)P(W|p)}{P(W \cap p = 0) + P(W \cap p = .25) + ... + P(W \cap p = 1)} \\
+& = \frac{P(p)P(W|p)}{P(p=0)P(W|p=0) + ... + P(p=1)P(W|p=1)} \\
+\end{split}
+\end{equation}
+$$
+We have a _uniform_ prior on the parameter $p$, so we can factor out that term:
+
+$$
+\begin{equation} 
+\begin{split}
+\text{(from previous)}
+& = \frac{P(W|p)}{P(W|p=0) + ... + P(W|p=1)} \\
+(binomials) &= \frac{choose(N,W)p^W(1-p)^{(N-W)}}{choose(N,W)0^W(1-0)^{(N-W)} + ... + choose(N,W)1^W(1-1)^{(N-W)}} \\
+& = \frac{p^W(1-p)^{(N-W)}}{0^W(1-0)^{(N-W)} + ... + 1^W(1-1)^{(N-W)}} \\
+& = \frac{p^W(1-p)^{(N-W)}}{\text{Normalizing constant}} \\
+\end{split}
+\end{equation}
+$$
+As you can see, the combination term also factors out of each term, so when computing the posterior probability, it doesn't matter if we use the counts, base likelihood, or the probability distribution.
+
+## Homework
+
+
+## Notes
+
+**Goal: Estimate the percent of the globe that is covered in water**
+
+-   Think of spinning the globe and stopping on a point and repeating many times
+-   How do we use that collection of points to come up with an estimate? That's the goal of today's lecture
+-   First thought is just indicate each time whether land or water appear as the point; however, how does the shape of the globe impact the likelihood that I will come up with land or water on a "random" toss? Has to do with sampling strategy
+
+1.  Define a generative model
+
+-   Think conceptually about scientifically how the sample was produced (how do variables influence one another)
+-   Variables: Things we *want* to observe/estimate or things we actually do observe
+
+$$\bf{p} = \text{proportion of water}\hskip.5inW=\text{water observations}$$ 
+$$N = \text{number of tosses}\hskip.5inL=\text{land observations}$$
+
+2.  Define a specific estimand
+
+Were interested in the true proportion of water **p**
+
+3.  Design a statistical way to produce estimate
+
+-   How are these related to each other?
+    -   N influences W and L (the more tosses leads to change on other variables)
+    -   p also influences W and L (i.e., the true proportion dictates the number of water observations and land observations)
+    -   The DAG shows relationships, but not what the relationships *are*. We can say $W,L=f(p,N)$; what is $f$?
+-   Assume a model (e.g., $p$ = .25, then count likely the sample was under that model, do that for all possible models)
+
+4.  Test (3) using (1)
+
+```{r}
+sim_globe <-
+  function(p = .7, N = 9) {
+    sample(
+      c("W","L"), # Possible observations
+      size = N, # Number of tosses
+      prob = c(p, 1-p), # The probability of each possible observation
+      replace = TRUE)
+  }
+sim_globe()
+replicate(sim_globe(p =.5, N=9), n=10)
+
+```
+
+-   Test the intent of the code first
+-   If our procedure doesn't work when *we know* the answer, it certainly won't when we *don't* know the answer
+
+Infinite sample:
+
+$$p^W(1-p)^L$$ Posterior probability:
+
+$$p = \frac{(W+L+1)!}{W!L!}p^W(1-p)^L$$ 
+
+* This is a *Beta* distribution, and the likelihood was a *Binomial*.
+* The minimum sample size for Bayesian analysis is 1.
+* The shape of the posterior distribution embodies the sample size
+* No point estimate, we work with the entire posterior distribution
+* The distribution *is* the estimate; always use the entire distribution, never a single point
+* The fact that an arbitrary interval contains an arbitrary value is not meaningful
+
+5.  Analyze sample, summarize
+
+* Implications depend on entire posterior
+* Average over the uncertainty of the posterior
+* What can we do with the posterior distribution?
+  + We can take samples from it, and then do calculations with the samples
+* Posterior Prediction
+  + Given what we've learned, what would happen if we took more samples?
+  + Sampling distribution (predictive distribution) of draws represents the likelihood of each outcome in a new experiment for a particular value
+  + The _posterior predictive_ distribution then represents the entire distribution of the statistic of interest, and contains all the uncertainty around that estimate (analogous to the sampling distribution of a statistic (e.g., mean) in the frequentist paradigm, except this is completely model-driven by the posterior instead of based on asymptotics in the frequentist approach)
+  + Sampling turns calculus into a data summary problem; this is important when models get complex and numerically intractable to compute by hand
+
+* This generative, Bayesian framework is the optimal approach for causal estimation _if your model is correct_.
+* It honestly carries out the assumptions we put into it, using logical implications
+* Quantitative framework/asset that activates our qualitative knowledge as scientists, subject matter experts, etc. Let's the subjective and objective work together. Subjectivity is expertise.
+
+**Misclassification**
+
+* Use circles around variable in DAG to represent unobserved vs. observed variables
+
+* Imagine the true number of water samples (W) are unobserved (e.g., measurement error, data error, etc.)
+* We observe a _contaminated_ W (called W*) that is the _misclassified_ sample
+* W* is caused by the _measurement process_ M. We can get get back to the correct posterior distribution for p if we use M through W*.
+* The posterior is honest about the uncertaintly induced by the misclassification process
+* When there is measurement error, model it instead of ignoring it (same for missing data, compliance, inclusion)
+* _Key point: Samples do not need to be representative of population to provide good estimates, since we can correct them through our causal diagram (modeling the source, sampling process, etc.)_
+* This concept may also arise if, for example, the globe was not spun equally likely for every point to be selected.
+
+# 3. Basic Regression {#lecture3}
+
+Week #    Lecture #   Chapter(s)    Week End    Notes Taken
+------    ---------   ----------    --------    -----------
+2         3           4             1/13/2023   
+
+## Summary
+
+## Notes
+
+# 4. Not-so-basic Regression {#lecture4}
+
+Week #    Lecture #   Chapter(s)    Week End    Notes Taken
+------    ---------   ----------    --------    -----------
+2         4           4             1/13/2023   
+
+## Summary
+
+## Notes
