@@ -18,10 +18,12 @@ social:
   icon_pack: fab
   link: https://www.researchgate.net/search/publication?q=zajichek
 interests:
-- Building modeling and reporting pipelines from discovery to finished data product
-- Statistical analysis, modeling, and prediction
-- Creating data tools via web applications and packages
-- Text mining and natural language processing
+- Creating data tools, packages, web applications, interactive documents, etc.
+- Data modeling, cleaning, and manipulation
+- Building predictive modeling pipelines
+- Bayesian analysis and causal inference
+- Text mining and natural language processing (NLP)
+- Applying data science to health system/clinical operations and decision making
 education:
   courses:
   - course: MS, Statistics
@@ -35,4 +37,4 @@ highlight_name: false
 superuser: true
 ---
 
-Hi, I'm Alex, a data scientist and statistician in Central Wisconsin. I have a passion for building and implementing data tools to help individuals and business stakeholders get the most out of their data. I'm an advocate for practicing data science using open source languages such as R and Python, specifically in the [RStudio](https://www.rstudio.com/products/rstudio/) environment. I thoroughly enjoy the entire life cycle of a data project, from defining/scoping the problem, wrangling the data, building a model/analysis, and disseminating the results, and am always up for learning, discussing, and debating statistical methodologies. The intention of this website is to serve as a repository for content and projects related to statistics and data science that I find interesting. 
+Hi, I'm Alex, a statistician and data scientist in Central Wisconsin. I have a passion for applying statistics to building and implementing data tools and analyses to help individuals and business stakeholders make data-informed decisions, particularly in the context of health system/clinical operations. I'm an advocate for practicing data science using open source languages such as R and Python, specifically in the [RStudio](https://www.rstudio.com/products/rstudio/) environment. I thoroughly enjoy the entire life cycle of a data project, from defining/scoping the problem, wrangling the data, building a model/analysis, and disseminating the results, and am always up for learning, discussing, and debating statistical methodologies. The intention of this website is to serve as a repository for content and projects related to statistics and data science that I find interesting. 

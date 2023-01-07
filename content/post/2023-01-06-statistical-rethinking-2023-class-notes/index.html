@@ -224,33 +224,58 @@ W; N</code></pre>
 <p>We just need to <em>count</em> all of the ways that this sample could have arose across all of the different possibilities of <span class="math inline">\(p\)</span>, and then estimate <span class="math inline">\(p\)</span> as that of where the sample was most likely to have occurred.</p>
 <div id="basic-incorrect-solution-with-finite-possibilities" class="section level5">
 <h5>Basic (incorrect) solution with finite possibilities</h5>
-<p>We know that there are infinitely many possibilities for <span class="math inline">\(p\)</span>. Let’s first go through this assuming the globe is that of a 4-sided die, such that the only possibilities are <span class="math inline">\(p \in (0,.25,.50,.75,1)\)</span>. For each possible value of <span class="math inline">\(p\)</span>, what is number of ways we could have observed our data? (thinking of the generative process, starting with <span class="math inline">\(N\)</span> and <span class="math inline">\(p\)</span>).</p>
+<p>We know that there are infinitely many possibilities for <span class="math inline">\(p\)</span>. Let’s first go through this assuming the globe is that of a 4-sided die, such that each side is land or water, implying the only possibilities are <span class="math inline">\(p \in (0,.25,.50,.75,1)\)</span>. For each possible value of <span class="math inline">\(p\)</span>, what is number of ways we could have observed our sequence of data? (thinking of the generative process, starting with <span class="math inline">\(N\)</span> and <span class="math inline">\(p\)</span>).</p>
+<p>First of all, we can set our <em>possible</em> set of parameter values, and the number of “sides” of the globe this implies (i.e., we’re saying that there are only 4 sides and each one is either Water or Land, so we have a limited number of <span class="math inline">\(p\)</span> values that could occur).</p>
 <pre class="r"><code># Set possible values for p
 p &lt;- c(0, .25, .5, .75, 1)
 
 # Number of sides of globe
-sides &lt;- length(p) - 1
-
-# Number of ways to observe sample (for each p)
+sides &lt;- length(p) - 1</code></pre>
+<p>For each of the 5 possible values of <span class="math inline">\(p\)</span>, how many combinations are there that produce our observed sequence of data?</p>
+<pre class="r"><code># Number of ways to observe sample for each p (this is the count of the possible sequences of indicators)
 ways &lt;- (sides*p)^W * (sides*(1-p))^(N-W)
 ways</code></pre>
 <pre><code>## [1]   0  27 512 729   0</code></pre>
+<p>Now, of those possibilities, which was the most likely to occur?</p>
 <pre class="r"><code># Posterior probability
-ways / sum(ways)</code></pre>
+posterior_prob &lt;- ways / sum(ways)
+cbind(p, ways, posterior_prob)</code></pre>
+<pre><code>##         p ways posterior_prob
+## [1,] 0.00    0     0.00000000
+## [2,] 0.25   27     0.02129338
+## [3,] 0.50  512     0.40378549
+## [4,] 0.75  729     0.57492114
+## [5,] 1.00    0     0.00000000</code></pre>
+<p>It looks like <span class="math inline">\(p=0.75\)</span> was the most likely value of those that are possible.</p>
+<p>What is key to note about the posterior probabilities is that they are relative to the total across all values of <span class="math inline">\(p\)</span>. We simply found all of the raw counts associated with each <span class="math inline">\(p\)</span> and then normalized them by the total to get the posterior probability. But this process was <em>exactly</em> the same thing as finding the <em>likelihood</em> of the data:</p>
+<p><span class="math display">\[Likelihood = \prod_{i=1}^NP(X=1|p)\]</span></p>
+<p>where <span class="math inline">\(X\)</span> is the binary indicator from a single globe spin.</p>
+<p>If we just look at all the <em>possible</em> sequences of indicators that could have occurred:</p>
+<pre class="r"><code># Total possible sequences of indicators (each one could be a 1 or a 0)
+total_possible_sequences &lt;- sides^N
+total_possible_sequences</code></pre>
+<pre><code>## [1] 262144</code></pre>
+<p>And then divide our original combination counts by that, we’ll get <em>exactly</em> the likelihood of the data:</p>
+<pre class="r"><code># Divide the total number of combinations we could have saw our sample, by the total number of possibilities
+likelihood &lt;- ways / total_possible_sequences
+likelihood</code></pre>
+<pre><code>## [1] 0.0000000000 0.0001029968 0.0019531250 0.0027809143 0.0000000000</code></pre>
+<p>However, as stated above, this will <em>not</em> change the resulting posterior distribution because the number we divided by was just a normalizing constant:</p>
+<pre class="r"><code>likelihood / sum(likelihood)</code></pre>
 <pre><code>## [1] 0.00000000 0.02129338 0.40378549 0.57492114 0.00000000</code></pre>
-<p>What is key to note about the posterior probabilities is that they are relative to the total across all values of <span class="math inline">\(p\)</span>. So we could approach this differently and get the same result:</p>
+<p>So, we could also think of this problem in a different light (although it’s the SAME) and get the same result:</p>
 <ol style="list-style-type: decimal">
-<li>We could think of each observed value as an (unfair) coin flip (according to the value of <span class="math inline">\(p\)</span>) and calculate the likelihood of the sequence of flips:</li>
+<li>We could think of each observed value as an (unfair) coin flip (according to the value of <span class="math inline">\(p\)</span>) and calculate the likelihood of the sequence of flips (which is actually what we already did, but this is more of the “traditional” way to think about it):</li>
 </ol>
 <pre class="r"><code># Likelihood of sequence of observed sample
-likelihood &lt;- p^W * (1-p)^(N-W)
+likelihood2 &lt;- p^W * (1-p)^(N-W)
 likelihood</code></pre>
 <pre><code>## [1] 0.0000000000 0.0001029968 0.0019531250 0.0027809143 0.0000000000</code></pre>
 <pre class="r"><code># Compute posterior
-likelihood / sum(likelihood) # Same as before</code></pre>
+likelihood2 / sum(likelihood2) # Same as before</code></pre>
 <pre><code>## [1] 0.00000000 0.02129338 0.40378549 0.57492114 0.00000000</code></pre>
 <ol start="2" style="list-style-type: decimal">
-<li>We could think of it as finding the likelihood of observing the total number of water spins (which is the same as the prior example, except we’re accounting for all of the combinations as well):</li>
+<li>We could also think of this as finding the likelihood of observing the <em>total</em> number of water spins since each flip is <em>independent</em>. This is also the same as before, except we’re accounting for all of the combinations to observe the total number of water flips, not just the particular sequence:</li>
 </ol>
 <pre class="r"><code># Make the normalizing constant
 normalizing_constant &lt;- factorial(N) / (factorial(W)*factorial(N-W))
@@ -281,7 +306,7 @@ P(p|sample)
 \end{split}
 \end{equation}
 \]</span>
-We have a <em>uniform</em> prior on the parameter <span class="math inline">\(p\)</span>, so we can factor out that term:</p>
+Each value of <span class="math inline">\(p\)</span> is equally-likely to occur (<em>uniform prior</em>), so we can factor out that term:</p>
 <p><span class="math display">\[
 \begin{equation}
 \begin{split}
@@ -293,7 +318,79 @@ We have a <em>uniform</em> prior on the parameter <span class="math inline">\(p\
 \end{split}
 \end{equation}
 \]</span>
-As you can see, the combination term also factors out of each term, so when computing the posterior probability, it doesn’t matter if we use the counts, base likelihood, or the probability distribution.</p>
+As you can see, the combination term also factors out, and the basic structure we’re left with is the <em>likelihood</em> piece that was found in <em>all three (3)</em> variations above: <span class="math inline">\(p^W(1-p)^{(N-W)}\)</span>. So when computing the posterior probability, they are relative to only terms dependent on the parameter of interest, so doesn’t matter if we use the counts, base likelihood, or the probability distribution–they are all the SAME. The counting process and the “forking path” approach is simply a means to breakdown the process of what’s happening behind the scenes in the math, so instead of just saying “do this integral” or “compute this product of the likelihood”, you’re picking apart each step of that process to gain intuition about what is happening. I’d imagine this is exactly the point of the Owl reference in the prior lecture.</p>
+</div>
+<div id="updating-the-posterior" class="section level5">
+<h5>Updating the posterior</h5>
+<p>So when we talk “Bayesian updates” or updating the posterior distribution, what does this mean? Since the point of it is to be able to update a model with new information, my gut used to tell me that we were somehow adding our current knowledge about the parameter into the new <em>prior</em> distribution, and then updating the new posterior with an updated prior and only using new data in the likelihood. While in a way this might be the right way to think about it (i.e., if I have a posterior right now, isn’t that the most current knowledge about the parameter, so if I want to collect more data, wouldn’t I want to use knowledge up to this point as the prior instead of reverting back to the original prior and just adding more data to the collective sample?), in these examples we were doing something different: we’re just seeing how the posterior changes as more data is added to the sample (i.e., observed sequence of data points).</p>
+<p>Let’s start with just focusing on the basic example (i.e., 4 sided-globe) for now. We just need to loop through the observed sample, and calculate the posterior probabilities for each value of <span class="math inline">\(p\)</span> as a new observation comes in:</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code># Set the prior probability (uniform over the possibly choices)
+prior &lt;- rep(1 / length(p), length(p))
+
+# Set the current posterior as the prior (before any data collected)
+last_posterior &lt;- prior
+
+# Make result set
+results &lt;- tibble()
+
+# For each value in the observed sample 
+for(i in 1:N) {
+  
+  # 1. Get the sub-sample
+  sub_sample &lt;- observed_sample[1:i]
+  
+  # 2. Compute metrics (the number of water samples, and the total number of spins)
+  W_temp &lt;- sum(sub_sample)
+  N_temp &lt;- length(sub_sample)
+  
+  # 3. Compute the likelihood for each p
+  temp_likelihood &lt;- p^W_temp * (1 - p)^(N_temp - W_temp)
+  
+  # 4. Posterior
+  temp_posterior &lt;- temp_likelihood / sum(temp_likelihood)
+  
+  # 5. Add to results
+  results &lt;-
+    results %&gt;%
+    bind_rows(
+      tibble(
+        sample = i,
+        sequence = paste(sub_sample, collapse = &quot;,&quot;),
+        p,
+        likelihood = temp_likelihood,
+        posterior = temp_posterior,
+        last_posterior
+      )
+    )
+  
+  # Set the new last posterior
+  last_posterior &lt;- temp_posterior
+
+}
+results</code></pre>
+<pre><code>## # A tibble: 45 × 6
+##    sample sequence     p likelihood posterior last_posterior
+##     &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;
+##  1      1 1         0         0           0              0.2
+##  2      1 1         0.25      0.25        0.1            0.2
+##  3      1 1         0.5       0.5         0.2            0.2
+##  4      1 1         0.75      0.75        0.3            0.2
+##  5      1 1         1         1           0.4            0.2
+##  6      2 1,0       0         0           0              0  
+##  7      2 1,0       0.25      0.188       0.3            0.1
+##  8      2 1,0       0.5       0.25        0.4            0.2
+##  9      2 1,0       0.75      0.188       0.3            0.3
+## 10      2 1,0       1         0           0              0.4
+## # … with 35 more rows</code></pre>
 </div>
 </div>
 </div>
@@ -346,18 +443,18 @@ As you can see, the combination term also factors out of each term, so when comp
       replace = TRUE)
   }
 sim_globe()</code></pre>
-<pre><code>## [1] &quot;L&quot; &quot;L&quot; &quot;L&quot; &quot;W&quot; &quot;L&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot; &quot;W&quot;</code></pre>
+<pre><code>## [1] &quot;L&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot;</code></pre>
 <pre class="r"><code>replicate(sim_globe(p =.5, N=9), n=10)</code></pre>
 <pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-##  [1,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [2,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  
-##  [3,] &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  
-##  [4,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [5,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  
-##  [6,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [7,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [8,] &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  
-##  [9,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;</code></pre>
+##  [1,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  
+##  [2,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  
+##  [3,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
+##  [4,] &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
+##  [5,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
+##  [6,] &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  
+##  [7,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
+##  [8,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
+##  [9,] &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;</code></pre>
 <ul>
 <li>Test the intent of the code first</li>
 <li>If our procedure doesn’t work when <em>we know</em> the answer, it certainly won’t when we <em>don’t</em> know the answer</li>
