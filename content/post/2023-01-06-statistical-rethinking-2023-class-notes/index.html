@@ -24,6 +24,16 @@ projects: []
 
 
 <p>This document is intended to be a repository for my (raw, unedited) notes, interpretations, examples, and summaries from the <a href="https://github.com/rmcelreath/stat_rethinking_2023">Statistical Rethinking 2023</a> course (which Richard McElreath has graciously made available for free (!) covering <a href="https://xcelab.net/rm/statistical-rethinking/">his book</a>). I’m not actually enrolled in the course, but just following the lectures and material as they are released on a weekly basis. I have a strong interest in learning and incorporating Bayesian analysis and causal principles into my work, and this seemed like a great opportunity to build a foundation for that.</p>
+<pre class="r"><code># Load some packages
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div id="table-of-contents" class="section level1">
 <h1>Table of Contents</h1>
 <ol style="list-style-type: decimal">
@@ -199,7 +209,7 @@ projects: []
     b -&gt; c
   }
 &quot;, height = 200, width = 350)</code></pre>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
 <div id="htmlwidget-1" style="width:350px;height:200px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\n  digraph graph2 {\n    graph [layout = dot, rankdir = LR]\n    node [style = filled]\n    a [label = \"p\", fillcolor = yellow]\n    b [label = \"N\"]\n    c [label = \"W\"]\n    a -> c\n    b -> c\n  }\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
@@ -248,7 +258,7 @@ cbind(p, ways, posterior_prob)</code></pre>
 ## [5,] 1.00    0     0.00000000</code></pre>
 <p>It looks like <span class="math inline">\(p=0.75\)</span> was the most likely value of those that are possible.</p>
 <p>What is key to note about the posterior probabilities is that they are relative to the total across all values of <span class="math inline">\(p\)</span>. We simply found all of the raw counts associated with each <span class="math inline">\(p\)</span> and then normalized them by the total to get the posterior probability. But this process was <em>exactly</em> the same thing as finding the <em>likelihood</em> of the data:</p>
-<p><span class="math display">\[Likelihood = \prod_{i=1}^NP(X=1|p)\]</span></p>
+<p><span class="math display">\[Likelihood = \prod_{i=1}^NP(X=x|p)\]</span></p>
 <p>where <span class="math inline">\(X\)</span> is the binary indicator from a single globe spin.</p>
 <p>If we just look at all the <em>possible</em> sequences of indicators that could have occurred:</p>
 <pre class="r"><code># Total possible sequences of indicators (each one could be a 1 or a 0)
@@ -293,7 +303,15 @@ dbinom(x = W, size = N, prob = p)</code></pre>
 <pre><code>## [1] 0.000000000 0.008651733 0.164062500 0.233596802 0.000000000</code></pre>
 <p>That is, the probability distribution for the number of water samples is:</p>
 <p><span class="math display">\[W|p \sim Binomial(N, p)\]</span>
-<span class="math display">\[P(W|p) = \frac{N!}{W!(N-W)!}p^W(1-p)^{(N-W)}\]</span></p>
+<span class="math display">\[
+\begin{equation}
+\begin{split}
+P(W|p)
+&amp;= \binom{N}{W}p^W(1-p)^{N-W} \\
+&amp;= \frac{N!}{W!(N-W)!}p^W(1-p)^{(N-W)} \\
+\end{split}
+\end{equation}
+\]</span></p>
 <p>So what is going on here? We are after the distribution of probability weights associated with each possible value of <span class="math inline">\(p\)</span> (which is what the posterior distribution is). In mathematical notation, we’re just applying Bayes’ formula:</p>
 <p><span class="math display">\[
 \begin{equation}
@@ -301,7 +319,7 @@ dbinom(x = W, size = N, prob = p)</code></pre>
 P(p|sample)
 &amp; = \frac{P(p)P(sample|p)}{P(sample)} \\
 &amp; = \frac{P(p)P(W|p)}{P(W)} \\
-&amp; = \frac{P(p)P(W|p)}{P(W \cap p = 0) + P(W \cap p = .25) + ... + P(W \cap p = 1)} \\
+&amp; = \frac{P(p)P(W|p)}{P(W \cap p = 0) + ... + P(W \cap p = 1)} \\
 &amp; = \frac{P(p)P(W|p)}{P(p=0)P(W|p=0) + ... + P(p=1)P(W|p=1)} \\
 \end{split}
 \end{equation}
@@ -312,7 +330,7 @@ Each value of <span class="math inline">\(p\)</span> is equally-likely to occur 
 \begin{split}
 \text{(from previous)}
 &amp; = \frac{P(W|p)}{P(W|p=0) + ... + P(W|p=1)} \\
-(binomials) &amp;= \frac{choose(N,W)p^W(1-p)^{(N-W)}}{choose(N,W)0^W(1-0)^{(N-W)} + ... + choose(N,W)1^W(1-1)^{(N-W)}} \\
+(binomials) &amp;= \frac{\binom{N}{W}p^W(1-p)^{(N-W)}}{\binom{N}{W}0^W(1-0)^{(N-W)} + ... + \binom{N}{W}1^W(1-1)^{(N-W)}} \\
 &amp; = \frac{p^W(1-p)^{(N-W)}}{0^W(1-0)^{(N-W)} + ... + 1^W(1-1)^{(N-W)}} \\
 &amp; = \frac{p^W(1-p)^{(N-W)}}{\text{Normalizing constant}} \\
 \end{split}
@@ -320,19 +338,48 @@ Each value of <span class="math inline">\(p\)</span> is equally-likely to occur 
 \]</span>
 As you can see, the combination term also factors out, and the basic structure we’re left with is the <em>likelihood</em> piece that was found in <em>all three (3)</em> variations above: <span class="math inline">\(p^W(1-p)^{(N-W)}\)</span>. So when computing the posterior probability, they are relative to only terms dependent on the parameter of interest, so doesn’t matter if we use the counts, base likelihood, or the probability distribution–they are all the SAME. The counting process and the “forking path” approach is simply a means to breakdown the process of what’s happening behind the scenes in the math, so instead of just saying “do this integral” or “compute this product of the likelihood”, you’re picking apart each step of that process to gain intuition about what is happening. I’d imagine this is exactly the point of the Owl reference in the prior lecture.</p>
 </div>
+<div id="full-solution-p-is-a-continuous-value" class="section level5">
+<h5>Full solution: <em>p</em> is a continuous value</h5>
+<p>As mentioned before, the actual proportion of water on the globe can be any number between zero and one (<span class="math inline">\(p \in [0,1]\)</span>), meaning that there are “infinite” sides to the globe. The derivation at the end of the previous section illustrates that the posterior distribution for <span class="math inline">\(p\)</span> not restricted to any particular set of values. If we pick up where we left off:</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+P(p|data)
+&amp; = \frac{p^W(1-p)^{(N-W)}}{\text{Normalizing constant}} \\
+\end{split}
+\end{equation}
+\]</span>
+All we would need to do for the continuous version of <span class="math inline">\(p\)</span> to make the posterior a formal probability distribution is to find the normalizing constant such that the integral over all possible values of <span class="math inline">\(p\)</span> equals 1. Formally, with respect to <span class="math inline">\(p\)</span>,</p>
+<p><span class="math display">\[\int_0^1 \frac{p^W(1-p)^{N-W}}{Constant} = 1\]</span>
+This will ensure that the probabilities across all possible values of <span class="math inline">\(p\)</span> sums to one. However, it doesn’t actually matter that we find that constant necessarily, because the posterior probability is just <em>relative</em> to the range of values of <span class="math inline">\(p\)</span>. So all that really matters is:</p>
+<p><span class="math display">\[P(p|data) \propto p^W(1-p)^{N-W}\]</span>
+We can then plug in our data and graph the resulting distribution to make inferences about <span class="math inline">\(p\)</span>.</p>
+<p><span class="math display">\[P(p|data) \propto p^6(1-p)^3\]</span></p>
+<pre class="r"><code>tibble(
+  p = seq(0, 1, .01), # Approximate the range of p values
+  posterior = p^W*(1-p)^(N-W) # Compute the posterior
+) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_line(
+    aes(
+      x = p,
+      y = posterior
+    )
+  ) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>After using our sample of 9, the probability weight for <span class="math inline">\(p\)</span> tends to focus near 0.70. Note that the scale of the y-axis was removed to emphasize that it doesn’t really matter what it is. We would just need to be able to calculate the area under the curve to be able to assign real probabilities to questions like <em>“what is the probability that the proportion of water is less than 0.5?”</em>.</p>
+<p><em>Note: In some cases, if we used used a different priors on <span class="math inline">\(p\)</span> (e.g., Beta), the posterior will turn out to be an identifiable distribution which we know the normalizing constant.</em></p>
+</div>
 <div id="updating-the-posterior" class="section level5">
 <h5>Updating the posterior</h5>
 <p>So when we talk “Bayesian updates” or updating the posterior distribution, what does this mean? Since the point of it is to be able to update a model with new information, my gut used to tell me that we were somehow adding our current knowledge about the parameter into the new <em>prior</em> distribution, and then updating the new posterior with an updated prior and only using new data in the likelihood. While in a way this might be the right way to think about it (i.e., if I have a posterior right now, isn’t that the most current knowledge about the parameter, so if I want to collect more data, wouldn’t I want to use knowledge up to this point as the prior instead of reverting back to the original prior and just adding more data to the collective sample?), in these examples we were doing something different: we’re just seeing how the posterior changes as more data is added to the sample (i.e., observed sequence of data points).</p>
 <p>Let’s start with just focusing on the basic example (i.e., 4 sided-globe) for now. We just need to loop through the observed sample, and calculate the posterior probabilities for each value of <span class="math inline">\(p\)</span> as a new observation comes in:</p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-## ✔ readr   2.1.3      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code># Set the prior probability (uniform over the possibly choices)
 prior &lt;- rep(1 / length(p), length(p))
 
@@ -367,8 +414,8 @@ for(i in 1:N) {
         sequence = paste(sub_sample, collapse = &quot;,&quot;),
         p,
         likelihood = temp_likelihood,
-        posterior = temp_posterior,
-        last_posterior
+        current = temp_posterior,
+        last = last_posterior
       )
     )
   
@@ -376,21 +423,45 @@ for(i in 1:N) {
   last_posterior &lt;- temp_posterior
 
 }
-results</code></pre>
-<pre><code>## # A tibble: 45 × 6
-##    sample sequence     p likelihood posterior last_posterior
-##     &lt;int&gt; &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;
-##  1      1 1         0         0           0              0.2
-##  2      1 1         0.25      0.25        0.1            0.2
-##  3      1 1         0.5       0.5         0.2            0.2
-##  4      1 1         0.75      0.75        0.3            0.2
-##  5      1 1         1         1           0.4            0.2
-##  6      2 1,0       0         0           0              0  
-##  7      2 1,0       0.25      0.188       0.3            0.1
-##  8      2 1,0       0.5       0.25        0.4            0.2
-##  9      2 1,0       0.75      0.188       0.3            0.3
-## 10      2 1,0       1         0           0              0.4
-## # … with 35 more rows</code></pre>
+
+results %&gt;%
+  
+  # Send down the rows
+  pivot_longer(
+    cols = c(last, current)
+  ) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_col(
+    aes(
+      x = p,
+      y = value,
+      fill = name
+    ),
+    color = &quot;black&quot;,
+    alpha = .75,
+    width = .25,
+    position = &quot;identity&quot;
+  ) +
+  facet_wrap(
+    ~paste0(&quot;Spin: &quot;, factor(sample), &quot; \nSample: &quot;, sequence)
+  ) +
+  theme(
+    legend.position = &quot;top&quot;,
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(colour = &quot;gray&quot;)
+  ) +
+  ylab(&quot;Posterior Probability&quot;) +
+  labs(
+    fill = &quot;Posterior&quot;
+  ) +
+  scale_fill_manual(
+    values = c(&quot;blue&quot;, &quot;darkgray&quot;)
+  ) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>The blue bars show the posterior probability for each possible value of <span class="math inline">\(p\)</span> <em>after</em> the newest observation was made, and the gray bars show it <em>before</em> the newest observation was made. This illustrates the incremental impact of adding more data to the sample on the resulting posterior distribution.</p>
+<p>We can apply this same process to the <em>continuous</em> (correct) possible set of values for <span class="math inline">\(p\)</span>.</p>
 </div>
 </div>
 </div>
@@ -443,18 +514,18 @@ results</code></pre>
       replace = TRUE)
   }
 sim_globe()</code></pre>
-<pre><code>## [1] &quot;L&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot;</code></pre>
+<pre><code>## [1] &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot;</code></pre>
 <pre class="r"><code>replicate(sim_globe(p =.5, N=9), n=10)</code></pre>
 <pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-##  [1,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  
-##  [2,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  
-##  [3,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [4,] &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [5,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [6,] &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  
-##  [7,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [8,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [9,] &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;</code></pre>
+##  [1,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  
+##  [2,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  
+##  [3,] &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  
+##  [4,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  
+##  [5,] &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  
+##  [6,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  
+##  [7,] &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
+##  [8,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
+##  [9,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;</code></pre>
 <ul>
 <li>Test the intent of the code first</li>
 <li>If our procedure doesn’t work when <em>we know</em> the answer, it certainly won’t when we <em>don’t</em> know the answer</li>

@@ -19,6 +19,12 @@ projects: []
 
 This document is intended to be a repository for my (raw, unedited) notes, interpretations, examples, and summaries from the [Statistical Rethinking 2023](https://github.com/rmcelreath/stat_rethinking_2023) course (which Richard McElreath has graciously made available for free (!) covering [his book](https://xcelab.net/rm/statistical-rethinking/)). I'm not actually enrolled in the course, but just following the lectures and material as they are released on a weekly basis. I have a strong interest in learning and incorporating Bayesian analysis and causal principles into my work, and this seemed like a great opportunity to build a foundation for that.
 
+```{r}
+# Load some packages
+library(tidyverse)
+```
+
+
 # Table of Contents
 
 1. [Science Before Statistics](#lecture1)
@@ -213,7 +219,7 @@ It looks like $p=0.75$ was the most likely value of those that are possible.
 
 What is key to note about the posterior probabilities is that they are relative to the total across all values of $p$. We simply found all of the raw counts associated with each $p$ and then normalized them by the total to get the posterior probability. But this process was _exactly_ the same thing as finding the _likelihood_ of the data:
 
-$$Likelihood = \prod_{i=1}^NP(X=1|p)$$
+$$Likelihood = \prod_{i=1}^NP(X=x|p)$$
 
 where $X$ is the binary indicator from a single globe spin. 
 
@@ -276,7 +282,15 @@ dbinom(x = W, size = N, prob = p)
 That is, the probability distribution for the number of water samples is:
 
 $$W|p \sim Binomial(N, p)$$
-$$P(W|p) = \frac{N!}{W!(N-W)!}p^W(1-p)^{(N-W)}$$
+$$
+\begin{equation} 
+\begin{split}
+P(W|p) 
+&= \binom{N}{W}p^W(1-p)^{N-W} \\
+&= \frac{N!}{W!(N-W)!}p^W(1-p)^{(N-W)} \\
+\end{split}
+\end{equation}
+$$
 
 So what is going on here? We are after the distribution of probability weights associated with each possible value of $p$ (which is what the posterior distribution is). In mathematical notation, we're just applying Bayes' formula:
 
@@ -286,7 +300,7 @@ $$
 P(p|sample) 
 & = \frac{P(p)P(sample|p)}{P(sample)} \\
 & = \frac{P(p)P(W|p)}{P(W)} \\
-& = \frac{P(p)P(W|p)}{P(W \cap p = 0) + P(W \cap p = .25) + ... + P(W \cap p = 1)} \\
+& = \frac{P(p)P(W|p)}{P(W \cap p = 0) + ... + P(W \cap p = 1)} \\
 & = \frac{P(p)P(W|p)}{P(p=0)P(W|p=0) + ... + P(p=1)P(W|p=1)} \\
 \end{split}
 \end{equation}
@@ -298,7 +312,7 @@ $$
 \begin{split}
 \text{(from previous)}
 & = \frac{P(W|p)}{P(W|p=0) + ... + P(W|p=1)} \\
-(binomials) &= \frac{choose(N,W)p^W(1-p)^{(N-W)}}{choose(N,W)0^W(1-0)^{(N-W)} + ... + choose(N,W)1^W(1-1)^{(N-W)}} \\
+(binomials) &= \frac{\binom{N}{W}p^W(1-p)^{(N-W)}}{\binom{N}{W}0^W(1-0)^{(N-W)} + ... + \binom{N}{W}1^W(1-1)^{(N-W)}} \\
 & = \frac{p^W(1-p)^{(N-W)}}{0^W(1-0)^{(N-W)} + ... + 1^W(1-1)^{(N-W)}} \\
 & = \frac{p^W(1-p)^{(N-W)}}{\text{Normalizing constant}} \\
 \end{split}
@@ -306,6 +320,51 @@ $$
 $$
 As you can see, the combination term also factors out, and the basic structure we're left with is the _likelihood_ piece that was found in _all three (3)_ variations above: $p^W(1-p)^{(N-W)}$. So when computing the posterior probability, they are relative to only terms dependent on the parameter of interest, so doesn't matter if we use the counts, base likelihood, or the probability distribution--they are all the SAME. The counting process and the "forking path" approach is simply a means to breakdown the process of what's happening behind the scenes in the math, so instead of just saying "do this integral" or "compute this product of the likelihood", you're picking apart each step of that process to gain intuition about what is happening. I'd imagine this is exactly the point of the Owl reference in the prior lecture.
 
+##### Full solution: _p_ is a continuous value
+
+As mentioned before, the actual proportion of water on the globe can be any number between zero and one ($p \in [0,1]$), meaning that there are "infinite" sides to the globe. The derivation at the end of the previous section illustrates that the posterior distribution for $p$ not restricted to any particular set of values. If we pick up where we left off:
+
+$$
+\begin{equation} 
+\begin{split}
+P(p|data)
+& = \frac{p^W(1-p)^{(N-W)}}{\text{Normalizing constant}} \\
+\end{split}
+\end{equation}
+$$
+All we would need to do for the continuous version of $p$ to make the posterior a formal probability distribution is to find the normalizing constant such that the integral over all possible values of $p$ equals 1. Formally, with respect to $p$,
+
+$$\int_0^1 \frac{p^W(1-p)^{N-W}}{Constant} = 1$$
+This will ensure that the probabilities across all possible values of $p$ sums to one. However, it doesn't actually matter that we find that constant necessarily, because the posterior probability is just _relative_ to the range of values of $p$. So all that really matters is:
+
+$$P(p|data) \propto p^W(1-p)^{N-W}$$
+We can then plug in our data and graph the resulting distribution to make inferences about $p$. 
+
+$$P(p|data) \propto p^6(1-p)^3$$
+```{r}
+tibble(
+  p = seq(0, 1, .01), # Approximate the range of p values
+  posterior = p^W*(1-p)^(N-W) # Compute the posterior
+) %>%
+  
+  # Make a plot
+  ggplot() +
+  geom_line(
+    aes(
+      x = p,
+      y = posterior
+    )
+  ) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+```
+
+
+After using our sample of `r N`, the probability weight for $p$ tends to focus near 0.70. Note that the scale of the y-axis was removed to emphasize that it doesn't really matter what it is. We would just need to be able to calculate the area under the curve to be able to assign real probabilities to questions like _"what is the probability that the proportion of water is less than 0.5?"_.
+
+_Note: In some cases, if we used used a different priors on $p$ (e.g., Beta), the posterior will turn out to be an identifiable distribution which we know the normalizing constant._
 
 ##### Updating the posterior
 
@@ -314,7 +373,6 @@ So when we talk "Bayesian updates" or updating the posterior distribution, what 
 Let's start with just focusing on the basic example (i.e., 4 sided-globe) for now. We just need to loop through the observed sample, and calculate the posterior probabilities for each value of $p$ as a new observation comes in:
 
 ```{r}
-library(tidyverse)
 
 # Set the prior probability (uniform over the possibly choices)
 prior <- rep(1 / length(p), length(p))
@@ -350,8 +408,8 @@ for(i in 1:N) {
         sequence = paste(sub_sample, collapse = ","),
         p,
         likelihood = temp_likelihood,
-        posterior = temp_posterior,
-        last_posterior
+        current = temp_posterior,
+        last = last_posterior
       )
     )
   
@@ -359,9 +417,48 @@ for(i in 1:N) {
   last_posterior <- temp_posterior
 
 }
-results
+
+results %>%
+  
+  # Send down the rows
+  pivot_longer(
+    cols = c(last, current)
+  ) %>%
+  
+  # Make a plot
+  ggplot() +
+  geom_col(
+    aes(
+      x = p,
+      y = value,
+      fill = name
+    ),
+    color = "black",
+    alpha = .75,
+    width = .25,
+    position = "identity"
+  ) +
+  facet_wrap(
+    ~paste0("Spin: ", factor(sample), " \nSample: ", sequence)
+  ) +
+  theme(
+    legend.position = "top",
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(colour = "gray")
+  ) +
+  ylab("Posterior Probability") +
+  labs(
+    fill = "Posterior"
+  ) +
+  scale_fill_manual(
+    values = c("blue", "darkgray")
+  ) 
+
 ```
 
+The blue bars show the posterior probability for each possible value of $p$ _after_ the newest observation was made, and the gray bars show it _before_ the newest observation was made. This illustrates the incremental impact of adding more data to the sample on the resulting posterior distribution.
+
+We can apply this same process to the _continuous_ (correct) possible set of values for $p$.
 
 ## Homework
 
