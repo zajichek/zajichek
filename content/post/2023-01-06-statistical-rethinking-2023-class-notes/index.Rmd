@@ -361,7 +361,6 @@ tibble(
   )
 ```
 
-
 After using our sample of `r N`, the probability weight for $p$ tends to focus near 0.70. Note that the scale of the y-axis was removed to emphasize that it doesn't really matter what it is. We would just need to be able to calculate the area under the curve to be able to assign real probabilities to questions like _"what is the probability that the proportion of water is less than 0.5?"_.
 
 _Note: In some cases, if we used used a different priors on $p$ (e.g., Beta), the posterior will turn out to be an identifiable distribution which we know the normalizing constant._
@@ -429,7 +428,7 @@ results %>%
   ggplot() +
   geom_col(
     aes(
-      x = p,
+      x = factor(p),
       y = value,
       fill = name
     ),
@@ -446,6 +445,7 @@ results %>%
     panel.background = element_blank(),
     panel.grid.major.y = element_line(colour = "gray")
   ) +
+  xlab("p") +
   ylab("Posterior Probability") +
   labs(
     fill = "Posterior"
@@ -458,10 +458,268 @@ results %>%
 
 The blue bars show the posterior probability for each possible value of $p$ _after_ the newest observation was made, and the gray bars show it _before_ the newest observation was made. This illustrates the incremental impact of adding more data to the sample on the resulting posterior distribution.
 
-We can apply this same process to the _continuous_ (correct) possible set of values for $p$.
+We can apply this same process to the _continuous_ (correct) possible set of values for $p$ (in fact, we'll create the curves by performing the exact same procedure to a larger, discrete set of values but make the display appear continuous):
+
+```{r}
+# Approximate the set of inifinite p-values by a large set of discrete ones
+p_continuous <- seq(0, 1, .01)
+
+# Set the prior probability (uniform over the possibly choices)
+prior <- rep(1 / length(p_continuous), length(p_continuous))
+
+# Set the current posterior as the prior (before any data collected)
+last_posterior <- prior
+
+# Make result set
+results <- tibble()
+
+# For each value in the observed sample 
+for(i in 1:N) {
+  
+  # 1. Get the sub-sample
+  sub_sample <- observed_sample[1:i]
+  
+  # 2. Compute metrics (the number of water samples, and the total number of spins)
+  W_temp <- sum(sub_sample)
+  N_temp <- length(sub_sample)
+  
+  # 3. Compute the likelihood for each p
+  temp_likelihood <- p_continuous^W_temp * (1 - p_continuous)^(N_temp - W_temp)
+  
+  # 4. Posterior
+  temp_posterior <- temp_likelihood / sum(temp_likelihood)
+  
+  # 5. Add to results
+  results <-
+    results %>%
+    bind_rows(
+      tibble(
+        sample = i,
+        sequence = paste(sub_sample, collapse = ","),
+        p_continuous,
+        likelihood = temp_likelihood,
+        current = temp_posterior,
+        last = last_posterior
+      )
+    )
+  
+  # Set the new last posterior
+  last_posterior <- temp_posterior
+  
+}
+
+results %>%
+  
+  # Send down the rows
+  pivot_longer(
+    cols = c(last, current)
+  ) %>%
+  
+  # Make a plot
+  ggplot() +
+  geom_area(
+    aes(
+      x = p_continuous,
+      y = value,
+      fill = name
+    ),
+    color = "black",
+    alpha = .65,
+    position = "identity"
+  ) +
+  facet_wrap(
+    ~paste0("Spin: ", factor(sample), " \nSample: ", sequence)
+  ) +
+  theme(
+    legend.position = "top",
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(colour = "gray"),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  ) +
+  xlab("p") +
+  ylab("Posterior Probability") +
+  labs(
+    fill = "Posterior"
+  ) +
+  scale_fill_manual(
+    values = c("blue", "darkgray")
+  ) 
+```
+
+Again, these curves are actually approximated here. In practice, we would need to calculate the area underneath the curve to get exact answers about probabilities. _Note: We could parameterize the Beta distribution to get the normalizing constant for calculating the actual posterior probabilities that fits this distribution._
 
 ## Homework
 
+1. Suppose the globe tossing data had turned out to be 4 water and 11 land. Construct the posterior distribution.
+
+We'll cheat a little bit and use the approach of using a large, discrete list of possible values for $p$, and plot it as if it is continuous (we could also just use the Beta distribution). With that, all we need to do is change the values of $W$ and $N$ and use the same code as above.
+
+```{r}
+W_new <- 4
+N_new <- 15
+tibble(
+  p = seq(0, 1, .01), # Approximate the range of p values
+  posterior = p^W_new*(1-p)^(N_new-W_new) # Compute the posterior
+) %>%
+  
+  # Make a plot
+  ggplot() +
+  geom_line(
+    aes(
+      x = p,
+      y = posterior
+    )
+  ) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+```
+
+2. Using the posterior distribution from (1), compute the posterior predictive distribution for the next 5 tosses of the same globe. 
+
+Okay here I'll finally acknowledge that the posterior can be written as a [Beta](https://en.wikipedia.org/wiki/Beta_distribution) distribution, which gives us the normalizing constant needed to make it a real probability distribution (i.e., the area sums to 1). It has the following _probability density function (PDF)_:
+
+$$f(x|\alpha, \beta) = \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}x^{\alpha-1}(1-x)^{\beta-1}$$
+where $x \in [0,1]$, $\alpha, \beta > 0$, and $\Gamma(n) = (n-1)!$. If we make the following reparameterizations from our set of variables:
+
+$$p=x$$
+$$W = \alpha - 1$$
+$$N-W = \beta - 1$$
+we get:
+
+$$
+\begin{equation} 
+\begin{split}
+f(p|W,N)
+& = \frac{\Gamma(W+1+N-W+1)}{\Gamma(W+1)\Gamma(N-W+1)}p^W(1-p)^{N-W} \\
+& = \frac{\Gamma(N+2)}{\Gamma(W+1)\Gamma(N-W+1)}p^W(1-p)^{N-W} \\
+& = \frac{(N+1)!}{W!(N-W)!}p^W(1-p)^{N-W} \\
+\end{split}
+\end{equation}
+$$
+
+_Note that since $p$ is continuous, this function represents the probability density at any particular value of $p$. To get any positive probability, we must integrate this function over a range of $p$ values. Hence the $f$ notation._
+
+Let's quickly plug in $W=4$ and $N=15$ to confirm (at least visually) that this function produces (approximately) the same posterior we made to answer the last question (note we'll have to use the parameterization built into `R`. We'll do this by sampling 10000 observations from this distribution:
+
+```{r}
+# Reparameterize
+alpha <- W_new + 1
+beta <- N_new - W_new + 1
+
+# Make a data frame
+tibble(
+  p = seq(0, 1, .01), # Approximate the range of p values (same as before)
+  posterior = dbeta(p, shape1 = alpha, shape2 = beta) # Compute the actual posterior density
+) %>%
+  
+  # Make a plot
+  ggplot() +
+  geom_line(
+    aes(
+      x = p,
+      y = posterior
+    )
+  )
+
+```
+
+From inspection, it appears that they are essentially the same curves. _Note that this time I kept the y-axis labels because this is the density for the actual probability distribution_.
+
+So back to the question: how do we find the posterior predictive distribution for the next 5 globe spins? Well, if the globe is spun 5 more times, then we can get water on 0, 1, 2, 3, 4, or all 5 spins. Our quest is to figure out the likelihood of each of those possible outcomes based on what we currently know about $p$ (i.e., the posterior distribution). To do this, we'll use our posterior distribution to run a simulation of the experiment using the following steps:
+
+i. Select a random value of $p$ from the posterior
+ii. Draw a random $binomial$ realization where $N=5$
+iii. Repeat steps i-ii 10000 times
+iv. Graph the results
+
+```{r}
+# Set some parameters
+set.seed(123)
+n_experiment <- 5 # Number of new spins we're going to conduct
+s <- 10000 # Number of simulations
+
+# 1. Draw random values of p from the posterior
+p_rand <- rbeta(n = s, shape1 = alpha, shape2 = beta) # Same parameters as before
+
+# 2. For each p, run a binomial experiment (represents samples of W)
+w_rand <- rbinom(n = s, size = n_experiment, prob = p_rand)
+
+# Make a data frame
+tibble(
+  w = w_rand
+) %>%
+  
+  # For each w
+  group_by(w) %>%
+  
+  # Compute the total
+  summarise(
+    count = n()
+  ) %>%
+  
+  # Add proportion
+  mutate(
+    proportion = count / sum(count)
+  ) %>%
+  
+  # Make a plot
+  ggplot(
+    aes(
+      x = factor(w)
+    )
+  ) +
+  geom_col(
+    aes(
+      y = proportion
+    )
+  ) +
+  geom_text(
+    aes(
+      y = proportion,
+      label = paste0(round(proportion*100,1), "%")
+    ),
+    vjust = -.1
+  ) +
+  scale_y_continuous(
+    labels = scales::percent
+  ) +
+  xlab("W") +
+  ylab("Probability") +
+  labs(
+    title = paste0("Posterior Predictive Distribution for ", n_experiment, " more spins.")
+  )
+```
+
+3. Use the posterior predictive distribution from (2) to calculate the probability of 3 or more water samples in the next 5 tosses.
+
+Using the posterior predictive distribution above, we can look at the percent of simulations that resulted in 3 or more water samples:
+
+```{r}
+mean(w_rand >= 3)
+```
+
+So there is a `r round(mean(w_rand>=3), 3)` probability of 3 or more water samples in the next 5 tosses. However, this point estimate is not totally sufficient because we haven't reported any uncertainty associated with it. Since we know that $W|p \sim Binomial(n,p)$, the $P(W>=3|p,N)$ is already determined. In this case, we can just calculate it for each random value of $p$ sampled from the posterior:
+
+```{r}
+# Compute the binomial probability
+prob_binom <- 1 - pbinom(q = 2, size = n_experiment, prob = p_rand)
+
+# Make a plot
+ggplot() +
+  geom_density(
+    aes(
+      x = prob_binom
+    )
+  ) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  ) +
+  xlab("P(W>=3|N=5)") 
+```
 
 ## Notes
 

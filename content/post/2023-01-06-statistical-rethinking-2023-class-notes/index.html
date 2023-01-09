@@ -435,7 +435,7 @@ results %&gt;%
   ggplot() +
   geom_col(
     aes(
-      x = p,
+      x = factor(p),
       y = value,
       fill = name
     ),
@@ -452,6 +452,7 @@ results %&gt;%
     panel.background = element_blank(),
     panel.grid.major.y = element_line(colour = &quot;gray&quot;)
   ) +
+  xlab(&quot;p&quot;) +
   ylab(&quot;Posterior Probability&quot;) +
   labs(
     fill = &quot;Posterior&quot;
@@ -461,13 +462,251 @@ results %&gt;%
   ) </code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>The blue bars show the posterior probability for each possible value of <span class="math inline">\(p\)</span> <em>after</em> the newest observation was made, and the gray bars show it <em>before</em> the newest observation was made. This illustrates the incremental impact of adding more data to the sample on the resulting posterior distribution.</p>
-<p>We can apply this same process to the <em>continuous</em> (correct) possible set of values for <span class="math inline">\(p\)</span>.</p>
+<p>We can apply this same process to the <em>continuous</em> (correct) possible set of values for <span class="math inline">\(p\)</span> (in fact, we’ll create the curves by performing the exact same procedure to a larger, discrete set of values but make the display appear continuous):</p>
+<pre class="r"><code># Approximate the set of inifinite p-values by a large set of discrete ones
+p_continuous &lt;- seq(0, 1, .01)
+
+# Set the prior probability (uniform over the possibly choices)
+prior &lt;- rep(1 / length(p_continuous), length(p_continuous))
+
+# Set the current posterior as the prior (before any data collected)
+last_posterior &lt;- prior
+
+# Make result set
+results &lt;- tibble()
+
+# For each value in the observed sample 
+for(i in 1:N) {
+  
+  # 1. Get the sub-sample
+  sub_sample &lt;- observed_sample[1:i]
+  
+  # 2. Compute metrics (the number of water samples, and the total number of spins)
+  W_temp &lt;- sum(sub_sample)
+  N_temp &lt;- length(sub_sample)
+  
+  # 3. Compute the likelihood for each p
+  temp_likelihood &lt;- p_continuous^W_temp * (1 - p_continuous)^(N_temp - W_temp)
+  
+  # 4. Posterior
+  temp_posterior &lt;- temp_likelihood / sum(temp_likelihood)
+  
+  # 5. Add to results
+  results &lt;-
+    results %&gt;%
+    bind_rows(
+      tibble(
+        sample = i,
+        sequence = paste(sub_sample, collapse = &quot;,&quot;),
+        p_continuous,
+        likelihood = temp_likelihood,
+        current = temp_posterior,
+        last = last_posterior
+      )
+    )
+  
+  # Set the new last posterior
+  last_posterior &lt;- temp_posterior
+  
+}
+
+results %&gt;%
+  
+  # Send down the rows
+  pivot_longer(
+    cols = c(last, current)
+  ) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_area(
+    aes(
+      x = p_continuous,
+      y = value,
+      fill = name
+    ),
+    color = &quot;black&quot;,
+    alpha = .65,
+    position = &quot;identity&quot;
+  ) +
+  facet_wrap(
+    ~paste0(&quot;Spin: &quot;, factor(sample), &quot; \nSample: &quot;, sequence)
+  ) +
+  theme(
+    legend.position = &quot;top&quot;,
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(colour = &quot;gray&quot;),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  ) +
+  xlab(&quot;p&quot;) +
+  ylab(&quot;Posterior Probability&quot;) +
+  labs(
+    fill = &quot;Posterior&quot;
+  ) +
+  scale_fill_manual(
+    values = c(&quot;blue&quot;, &quot;darkgray&quot;)
+  ) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Again, these curves are actually approximated here. In practice, we would need to calculate the area underneath the curve to get exact answers about probabilities. <em>Note: We could parameterize the Beta distribution to get the normalizing constant for calculating the actual posterior probabilities that fits this distribution.</em></p>
 </div>
 </div>
 </div>
 </div>
 <div id="homework" class="section level2">
 <h2>Homework</h2>
+<ol style="list-style-type: decimal">
+<li>Suppose the globe tossing data had turned out to be 4 water and 11 land. Construct the posterior distribution.</li>
+</ol>
+<p>We’ll cheat a little bit and use the approach of using a large, discrete list of possible values for <span class="math inline">\(p\)</span>, and plot it as if it is continuous (we could also just use the Beta distribution). With that, all we need to do is change the values of <span class="math inline">\(W\)</span> and <span class="math inline">\(N\)</span> and use the same code as above.</p>
+<pre class="r"><code>W_new &lt;- 4
+N_new &lt;- 15
+tibble(
+  p = seq(0, 1, .01), # Approximate the range of p values
+  posterior = p^W_new*(1-p)^(N_new-W_new) # Compute the posterior
+) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_line(
+    aes(
+      x = p,
+      y = posterior
+    )
+  ) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Using the posterior distribution from (1), compute the posterior predictive distribution for the next 5 tosses of the same globe.</li>
+</ol>
+<p>Okay here I’ll finally acknowledge that the posterior can be written as a <a href="https://en.wikipedia.org/wiki/Beta_distribution">Beta</a> distribution, which gives us the normalizing constant needed to make it a real probability distribution (i.e., the area sums to 1). It has the following <em>probability density function (PDF)</em>:</p>
+<p><span class="math display">\[f(x|\alpha, \beta) = \frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}x^{\alpha-1}(1-x)^{\beta-1}\]</span>
+where <span class="math inline">\(x \in [0,1]\)</span>, <span class="math inline">\(\alpha, \beta &gt; 0\)</span>, and <span class="math inline">\(\Gamma(n) = (n-1)!\)</span>. If we make the following reparameterizations from our set of variables:</p>
+<p><span class="math display">\[p=x\]</span>
+<span class="math display">\[W = \alpha - 1\]</span>
+<span class="math display">\[N-W = \beta - 1\]</span>
+we get:</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+f(p|W,N)
+&amp; = \frac{\Gamma(W+1+N-W+1)}{\Gamma(W+1)\Gamma(N-W+1)}p^W(1-p)^{N-W} \\
+&amp; = \frac{\Gamma(N+2)}{\Gamma(W+1)\Gamma(N-W+1)}p^W(1-p)^{N-W} \\
+&amp; = \frac{(N+1)!}{W!(N-W)!}p^W(1-p)^{N-W} \\
+\end{split}
+\end{equation}
+\]</span></p>
+<p><em>Note that since <span class="math inline">\(p\)</span> is continuous, this function represents the probability density at any particular value of <span class="math inline">\(p\)</span>. To get any positive probability, we must integrate this function over a range of <span class="math inline">\(p\)</span> values. Hence the <span class="math inline">\(f\)</span> notation.</em></p>
+<p>Let’s quickly plug in <span class="math inline">\(W=4\)</span> and <span class="math inline">\(N=15\)</span> to confirm (at least visually) that this function produces (approximately) the same posterior we made to answer the last question (note we’ll have to use the parameterization built into <code>R</code>. We’ll do this by sampling 10000 observations from this distribution:</p>
+<pre class="r"><code># Reparameterize
+alpha &lt;- W_new + 1
+beta &lt;- N_new - W_new + 1
+
+# Make a data frame
+tibble(
+  p = seq(0, 1, .01), # Approximate the range of p values (same as before)
+  posterior = dbeta(p, shape1 = alpha, shape2 = beta) # Compute the actual posterior density
+) %&gt;%
+  
+  # Make a plot
+  ggplot() +
+  geom_line(
+    aes(
+      x = p,
+      y = posterior
+    )
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>From inspection, it appears that they are essentially the same curves. <em>Note that this time I kept the y-axis labels because this is the density for the actual probability distribution</em>.</p>
+<p>So back to the question: how do we find the posterior predictive distribution for the next 5 globe spins? Well, if the globe is spun 5 more times, then we can get water on 0, 1, 2, 3, 4, or all 5 spins. Our quest is to figure out the likelihood of each of those possible outcomes based on what we currently know about <span class="math inline">\(p\)</span> (i.e., the posterior distribution). To do this, we’ll use our posterior distribution to run a simulation of the experiment using the following steps:</p>
+<ol style="list-style-type: lower-roman">
+<li>Select a random value of <span class="math inline">\(p\)</span> from the posterior</li>
+<li>Draw a random <span class="math inline">\(binomial\)</span> realization where <span class="math inline">\(N=5\)</span></li>
+<li>Repeat steps i-ii 10000 times</li>
+<li>Graph the results</li>
+</ol>
+<pre class="r"><code># Set some parameters
+set.seed(123)
+n_experiment &lt;- 5 # Number of new spins we&#39;re going to conduct
+s &lt;- 10000 # Number of simulations
+
+# 1. Draw random values of p from the posterior
+p_rand &lt;- rbeta(n = s, shape1 = alpha, shape2 = beta) # Same parameters as before
+
+# 2. For each p, run a binomial experiment (represents samples of W)
+w_rand &lt;- rbinom(n = s, size = n_experiment, prob = p_rand)
+
+# Make a data frame
+tibble(
+  w = w_rand
+) %&gt;%
+  
+  # For each w
+  group_by(w) %&gt;%
+  
+  # Compute the total
+  summarise(
+    count = n()
+  ) %&gt;%
+  
+  # Add proportion
+  mutate(
+    proportion = count / sum(count)
+  ) %&gt;%
+  
+  # Make a plot
+  ggplot(
+    aes(
+      x = factor(w)
+    )
+  ) +
+  geom_col(
+    aes(
+      y = proportion
+    )
+  ) +
+  geom_text(
+    aes(
+      y = proportion,
+      label = paste0(round(proportion*100,1), &quot;%&quot;)
+    ),
+    vjust = -.1
+  ) +
+  scale_y_continuous(
+    labels = scales::percent
+  ) +
+  xlab(&quot;W&quot;) +
+  ylab(&quot;Probability&quot;) +
+  labs(
+    title = paste0(&quot;Posterior Predictive Distribution for &quot;, n_experiment, &quot; more spins.&quot;)
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Use the posterior predictive distribution from (2) to calculate the probability of 3 or more water samples in the next 5 tosses.</li>
+</ol>
+<p>Using the posterior predictive distribution above, we can look at the percent of simulations that resulted in 3 or more water samples:</p>
+<pre class="r"><code>mean(w_rand &gt;= 3)</code></pre>
+<pre><code>## [1] 0.1771</code></pre>
+<p>So there is a 0.177 probability of 3 or more water samples in the next 5 tosses. However, this point estimate is not totally sufficient because we haven’t reported any uncertainty associated with it. Since we know that <span class="math inline">\(W|p \sim Binomial(n,p)\)</span>, the <span class="math inline">\(P(W&gt;=3|p,N)\)</span> is already determined. In this case, we can just calculate it for each random value of <span class="math inline">\(p\)</span> sampled from the posterior:</p>
+<pre class="r"><code># Compute the binomial probability
+prob_binom &lt;- 1 - pbinom(q = 2, size = n_experiment, prob = p_rand)
+
+# Make a plot
+ggplot() +
+  geom_density(
+    aes(
+      x = prob_binom
+    )
+  ) +
+  theme(
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  ) +
+  xlab(&quot;P(W&gt;=3|N=5)&quot;) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
 <div id="notes-1" class="section level2">
 <h2>Notes</h2>
@@ -514,18 +753,18 @@ results %&gt;%
       replace = TRUE)
   }
 sim_globe()</code></pre>
-<pre><code>## [1] &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot; &quot;W&quot; &quot;W&quot; &quot;L&quot;</code></pre>
+<pre><code>## [1] &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot; &quot;W&quot;</code></pre>
 <pre class="r"><code>replicate(sim_globe(p =.5, N=9), n=10)</code></pre>
 <pre><code>##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
-##  [1,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [2,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [3,] &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [4,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [5,] &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [6,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [7,] &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  
-##  [8,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  
-##  [9,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;</code></pre>
+##  [1,] &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  
+##  [2,] &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  
+##  [3,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  
+##  [4,] &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  
+##  [5,] &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  
+##  [6,] &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  
+##  [7,] &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  
+##  [8,] &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  &quot;W&quot;  
+##  [9,] &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;L&quot;  &quot;W&quot;  &quot;L&quot;  &quot;W&quot;  &quot;W&quot;  &quot;L&quot;</code></pre>
 <ul>
 <li>Test the intent of the code first</li>
 <li>If our procedure doesn’t work when <em>we know</em> the answer, it certainly won’t when we <em>don’t</em> know the answer</li>
