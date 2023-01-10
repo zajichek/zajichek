@@ -19,17 +19,16 @@ projects: []
 
 This document is intended to be a repository for my (raw, unedited) notes, interpretations, examples, and summaries from the [Statistical Rethinking 2023](https://github.com/rmcelreath/stat_rethinking_2023) course (which Richard McElreath has graciously made available for free (!) covering [his book](https://xcelab.net/rm/statistical-rethinking/)). I'm not actually enrolled in the course, but just following the lectures and material as they are released on a weekly basis. I have a strong interest in learning and incorporating Bayesian analysis and causal principles into my work, and this seemed like a great opportunity to build a foundation for that.
 
-```{r}
+```{r setup}
 # Load some packages
 library(tidyverse)
 ```
-
 
 # Table of Contents
 
 1. [Science Before Statistics](#lecture1)
 2. [Garden of Forking Data](#lecture2)
-3. [Basic Regression](#lecture3)
+3. [Geocentric Models](#lecture3)
 4. [Not-so-basic Regression](#lecture4)
 
 # 1. Science Before Statistics {#lecture1}
@@ -318,7 +317,7 @@ $$
 \end{split}
 \end{equation}
 $$
-As you can see, the combination term also factors out, and the basic structure we're left with is the _likelihood_ piece that was found in _all three (3)_ variations above: $p^W(1-p)^{(N-W)}$. So when computing the posterior probability, they are relative to only terms dependent on the parameter of interest, so doesn't matter if we use the counts, base likelihood, or the probability distribution--they are all the SAME. The counting process and the "forking path" approach is simply a means to breakdown the process of what's happening behind the scenes in the math, so instead of just saying "do this integral" or "compute this product of the likelihood", you're picking apart each step of that process to gain intuition about what is happening. I'd imagine this is exactly the point of the Owl reference in the prior lecture.
+As you can see, the combination term also factors out, and the basic structure we're left with is the _likelihood_ piece that was found in _all three (3)_ variations above: $p^W(1-p)^{(N-W)}$. So when computing the posterior probability, they are relative to only terms dependent on the parameter of interest, so doesn't matter if we use the counts, base likelihood, or the probability distribution--they are all the SAME. The counting process and the "forking data" approach is simply a means to breakdown the process of what's happening behind the scenes in the math, so instead of just saying "do this integral" or "compute this product of the likelihood", you're picking apart each step of that process to gain intuition about what is happening. I'd imagine this is exactly the point of the Owl reference in the prior lecture.
 
 ##### Full solution: _p_ is a continuous value
 
@@ -602,7 +601,7 @@ $$
 
 _Note that since $p$ is continuous, this function represents the probability density at any particular value of $p$. To get any positive probability, we must integrate this function over a range of $p$ values. Hence the $f$ notation._
 
-Let's quickly plug in $W=4$ and $N=15$ to confirm (at least visually) that this function produces (approximately) the same posterior we made to answer the last question (note we'll have to use the parameterization built into `R`. We'll do this by sampling 10000 observations from this distribution:
+Let's quickly plug in $W=4$ and $N=15$ to confirm (at least visually) that this function produces the same posterior we made to answer the last question. We'll do this by evaluating the density of the derived Beta distribution at range of possible $p$ values. _Note we'll have to use the parameterizations for the Beta distribution that are built into `R`_.
 
 ```{r}
 # Reparameterize
@@ -693,6 +692,85 @@ tibble(
   )
 ```
 
+Another way to think about what we're doing here is:
+
+i. Find the collection of _density_ values for all $p$ in the posterior distribution
+ii. Find the probability distribution of the possible outcomes from a Binomial distribution where $N=5$ for all possible values of $p$ (i.e., independent of our posterior)
+iii. Take the average probability value for each possible outcome in (ii) over all values of $p$, _weighted_ by the posterior density in (i)
+
+```{r}
+# Make a set of p representive of its domain
+p_alt <- seq(0, 1, .001) # Supposed to represent continuous p
+
+# 1. Posterior density values for each p
+posterior_alt <- dbeta(p_alt, shape1 = alpha, shape2 = beta)
+
+# 2. Probability distribution for each outcome for each p
+possible_outcomes <- 0:n_experiment
+likelihood_alt <- 
+  possible_outcomes %>% 
+  map_df(
+    ~
+      tibble(
+        binomial_probability = dbinom(x = .x, size = n_experiment, prob = p_alt),
+        p = p_alt,
+        outcome = .x
+      )
+  )
+
+# 3. Get the posterior predictive distribution
+posterior_predictive_distribution <-
+  likelihood_alt %>%
+  
+  # Join to attach the posterior density weight to each value of p
+  inner_join(
+    y = 
+      tibble(
+        p = p_alt,
+        posterior_density = posterior_alt
+      ),
+    by = "p"
+  ) %>%
+  
+  # For each possible outcome
+  group_by(outcome) %>%
+  
+  # Compute the weighted-average probability
+  summarise(
+    posterior_probability = sum(binomial_probability * posterior_density) / sum(posterior_density)
+  )
+
+# 4. Make a plot
+posterior_predictive_distribution %>%
+  ggplot(
+    aes(
+      x = factor(outcome)
+    )
+  ) +
+  geom_col(
+    aes(
+      y = posterior_probability
+    )
+  ) +
+  geom_text(
+    aes(
+      y = posterior_probability,
+      label = paste0(round(posterior_probability*100,1), "%")
+    ),
+    vjust = -.1
+  ) +
+  scale_y_continuous(
+    labels = scales::percent
+  ) +
+  xlab("W") +
+  ylab("Probability") +
+  labs(
+    title = paste0("Posterior Predictive Distribution for ", n_experiment, " more spins.")
+  )
+```
+
+The distributions from the two approaches are merely identical (slight differences due to simulation variability and inexact integration).
+
 3. Use the posterior predictive distribution from (2) to calculate the probability of 3 or more water samples in the next 5 tosses.
 
 Using the posterior predictive distribution above, we can look at the percent of simulations that resulted in 3 or more water samples:
@@ -720,6 +798,8 @@ ggplot() +
   ) +
   xlab("P(W>=3|N=5)") 
 ```
+
+This one has been stumping me a bit, and I'm not totally confident this is the correct result. Another way I was thinking about it was similar the alternative in (2), namely that we are finding the $P(W>=3|N=5)$ for each value of $p$, and then weighting that by the posterior density of $p$. However, it seems like we should be sampling from the predictive distribution in (2) somehow, but if we do that it seems like the precision of our estimates would then just be determined by the number of simulations we run, not the data, which also doesn't make sense.
 
 ## Notes
 
@@ -809,15 +889,127 @@ $$p = \frac{(W+L+1)!}{W!L!}p^W(1-p)^L$$
 * _Key point: Samples do not need to be representative of population to provide good estimates, since we can correct them through our causal diagram (modeling the source, sampling process, etc.)_
 * This concept may also arise if, for example, the globe was not spun equally likely for every point to be selected.
 
-# 3. Basic Regression {#lecture3}
+# 3. Geocentric Models {#lecture3}
 
 Week #    Lecture #   Chapter(s)    Week End    Notes Taken
 ------    ---------   ----------    --------    -----------
-2         3           4             1/13/2023   
+2         3           4             1/13/2023   1/10/2023
 
 ## Summary
 
+We don't actually need data to construct a model. Our prior distributions, which account for our baseline knowledge about what reasonable values for unknown parameters may be, can produce estimates on their own. A bare minimum strategy is choose these such that before seeing data, the output of our model produces scientifically reasonable results--there is no reason to allow our model to produce results that we know cannot happen. Then, our data can be introduced to help guide the parameters to an area of focus. In this sense (thinking of the example of points bumping around in parameter space), the data we collect is really just a tool for our model--the model is the central focus, the data just helps the model go to where it needs to go. Also, the idea that there are no correct priors and that priors are just (normalized) posteriors from previous data, make the idea of Bayesian updating very intuitive. 
+
 ## Notes
+
+* Statistical models can attain arbitrarily accurate predictions without having any explanation or accurate structure (i.e., the model is just plain wrong, but happens to produce accurate predictions at the right time)
+  + Example of this is a previous explanation of orbit pattern of Mars: assuming Earth at the center (geocentric), Mars orbits around Earth but also it's own local orbit (epi-cycles). Using this model, they got very accurate predictions, but this mechanism is completely wrong.
+  + Orbits are actually elliptical and around the sun, not Earth
+  + Even though the first one predicts accurately, because the structure/mechanism is wrong, it doesn't extend or generalize to other things. However, the correct mechanism is able to explain orbit patterns of all planets in the solar system.
+* Linear regression is a large class of statistical golems
+  + **Geogentric**: describes associations, makes good predictions; mechanistically always wrong (but useful), very good approximation; meaning doesn't depend on the model, depends on an external causal model. Nothing wrong with it unless you actually believe it is the true mechanism.
+  + **Gaussian**: Abstracts away from detail of general error model; mechanistically silent. General argument about symmetry of error. 
+
+**Gaussian**
+
+* Example: Flip coin, each person take a step to left or right depending on heads/tails, measure distance from center; makes a normal distribution. Why?
+  + There are more ways for a sequence of coin tosses to get you close to the middle than there are to get you to the left or right
+  + Many natural processes attract to this behavior because it is adding together small differences
+* Two arguments:
+  + Generative: summed fluctuations tend towards normal. Ex. growth--added fluctuations over time, same age weight tends to be gaussian
+  + Inferential: estimating mean/variance. Best to use since least informative (maximum entropy)
+* Variable does not need to be normally distributed for normal model to be useful. Machine for estimating mean/variance. Contains the least assumptions. (central limit theorem)
+
+**Skills/Goals for Lecture**
+
+1. Learn a standardized language for representing models (generative and statistical)
+2. Calculate posteriors with multiple unknown parameters
+3. How to construct and understand linear models; how to construct posterior predictions from them
+
+**Reminder of the owl**
+
+1. State a clear question; descriptive, causal, anything; but needs to be clear
+2. Sketch causal assumptions using DAGs; good way for non-theorists to realize they have a lot of subject knowledge and can get it on paper
+3. Define a generative model; generates synthetic observations
+4. Use generative model to build estimator; causal/generative assumptions embedded
+5. Test, analyze
+6. Profit: we realize our model was useful, or terrible; either way we gain something
+
+**Describing models**
+
+1. Lists variables
+2. Define each variable as a deterministic or distributional function of other variables
+
+**Exercise**
+
+1. Goal: Describe the association between adult weight and height
+2. Height causes weight H-->W<---(U) (unobserved influences on body weight)
+3. Generative/scientific model: $W=f(H,U)$, $W=\beta H + U$
+```{r}
+sim_weight <-
+  function(H,b,sd) {
+    U <- rnorm(length(H),0,sd)
+    W<-b*H + U
+    return(W)
+  }
+# Generate height
+H <- runif(200,130,170)
+W <- sim_weight(H, b=.5, sd= 5)
+plot(W~H,col=2, lwd = 3)
+```
+
+$$W_i=\beta H_i + U_i$$
+$$U_i \sim Normal(0,\sigma)$$
+$$H_i \sim Uniform(130, 170)$$
+4. Statistical model (estimator)
+
+* We want to estimate how the average weight changes with height.
+
+$$E(W_i|H_i)=\alpha + \beta H_i$$
+* Posterior distribution
+
+$$P(\alpha, \beta, \sigma|H_i,W_i) = \frac{P(W_i|H_i,\alpha,\beta,\sigma)P(\alpha,\beta,\sigma)}{Z}$$
+  + Gives the posterior probability of a specific regression line
+  + Likelihood: Number of ways we could produce $W_i$, given a line 
+  + Prior: The previous posterior distribution; normalized number of ways previous data could have been produced.
+
+$$W_i \sim Normal(\mu_i, \sigma)$$
+$$\mu_i = \alpha + \beta H_i$$
+
+ + Generally more useful to look at the lines (parameter implications together), instead of individual parameters
+ 
+* Quadratic approximation
+  + Approximate the posterior distribution using a multivariate Gaussian distribution
+  + Use the `quap` function in the `rethinking` package
+
+**Prior Predictive Distribution**
+
+* Should express scientific knowledge, but _softly_
+* We can make the model make predictions without using data
+* Not make ranges that represent the data, but rather just those that make sense based on current knowledge
+* Account for basic reasonable constraints: In general, patients with more weight have more height, and the weight is less than the height, so $\beta$ is probably between $[0,1]$.
+* Use these to define some lines based on the assumptions
+```{r}
+n <- 1000
+a <- rnorm(n,0,10)
+b <- runif(n,0,1)
+plot(NULL,xlim=c(130,170),ylim=c(50,90),xlab="height(cm)",ylab="Weight(kg)")
+for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)
+```
+
+* Some of these are probably not plausible (e.g., high height with low weight). Slopes look good but not intercept
+* We can adjust as needed to create what makes sense
+* There are no correct priors; only scientifically justifiable priors
+
+5. Validate Model
+
+* Bare minimum to test statistical model
+* Not because you wrote it, more so to make sure your model works
+
+6. Analyze data
+
+* Plug in your data set into your process
+* Parameters are not independent, can't interpret as such
+* Push out posterior predictions
 
 # 4. Not-so-basic Regression {#lecture4}
 
@@ -826,5 +1018,7 @@ Week #    Lecture #   Chapter(s)    Week End    Notes Taken
 2         4           4             1/13/2023   
 
 ## Summary
+
+## Homework
 
 ## Notes
