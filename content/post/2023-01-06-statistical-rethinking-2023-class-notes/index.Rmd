@@ -17,7 +17,7 @@ image:
 projects: []
 ---
 
-This document is intended to be a repository for my (raw, unedited) notes, interpretations, examples, and summaries from the [Statistical Rethinking 2023](https://github.com/rmcelreath/stat_rethinking_2023) course (which Richard McElreath has graciously made available for free (!) covering [his book](https://xcelab.net/rm/statistical-rethinking/)). I'm not actually enrolled in the course, but just following the lectures and material as they are released on a weekly basis. I have a strong interest in learning and incorporating Bayesian analysis and causal principles into my work, and this seemed like a great opportunity to build a foundation for that.
+This document is intended to be a repository for my (raw, unedited) notes, interpretations, examples, and summaries from the [Statistical Rethinking 2023](https://github.com/rmcelreath/stat_rethinking_2023) course (which Richard McElreath has graciously made available for free (!) covering [his book](https://xcelab.net/rm/statistical-rethinking/)). I'm not actually enrolled in the course, but just casually following the lectures and material as they are released on a weekly basis. I have a strong interest in learning and incorporating Bayesian analysis and causal principles into my work, and this seemed like a great opportunity to build a foundation for that.
 
 ```{r setup}
 # Load some packages
@@ -29,7 +29,7 @@ library(tidyverse)
 1. [Science Before Statistics](#lecture1)
 2. [Garden of Forking Data](#lecture2)
 3. [Geocentric Models](#lecture3)
-4. [Not-so-basic Regression](#lecture4)
+4. [Categories and Curves](#lecture4)
 
 # 1. Science Before Statistics {#lecture1}
 
@@ -897,7 +897,7 @@ Week #    Lecture #   Chapter(s)    Week End    Notes Taken
 
 ## Summary
 
-We don't actually need data to construct a model. Our prior distributions, which account for our baseline knowledge about what reasonable values for unknown parameters may be, can produce estimates on their own. A bare minimum strategy is choose these such that before seeing data, the output of our model produces scientifically reasonable results--there is no reason to allow our model to produce results that we know cannot happen. Then, our data can be introduced to help guide the parameters to an area of focus. In this sense (thinking of the example of points bumping around in parameter space), the data we collect is really just a tool for our model--the model is the central focus, the data just helps the model go to where it needs to go. Also, the idea that there are no correct priors and that priors are just (normalized) posteriors from previous data, make the idea of Bayesian updating very intuitive. 
+We don't actually need data to construct a model. Our prior distributions, which account for our baseline knowledge about what reasonable values for unknown parameters may be, can produce estimates on their own. A bare minimum strategy is to choose these such that before seeing data, the output of our model produces scientifically reasonable results--there is no reason to allow our model to produce results that we know cannot happen. Then, our data can be introduced to help guide the parameters to an area of focus. In this sense (thinking of the example of points bumping around in parameter space), the data we collect is really just a tool for our model--the model is the central focus, the data just helps the model go to where it needs to go. Also, the idea that there are no correct priors and that priors are just (normalized) posteriors from previous data, make the idea of Bayesian updating very intuitive. It will be interesting to see in coming lectures how we can extend this linear model framework to more "real life" problems with observational data that have potentially tens or hundreds or thousands of potential drivers, and strategies for accounting for the most important ones. Obviously these basic examples are great to build a foundation, but it seems like a huge (sometimes impossible) hurdle to have the time and resources to be able to fully vet out expert-driven causal diagrams and generative models that fully account for all the things, especially in fast-paced environments when everyone is just so busy and there are so many projects to attend to. I'd imagine this is one of the reasons why frequentist analysis persists so much (at least in medical research), because it's the way it's been done and therefore you can get more things done faster, even though in an ideal state a Bayesian approach _is_ the right way to go. Definitely something I've thought about time and time again--how can we balance the rigor and detail needed to construct the appropriate models to achieve better inference while still being efficient with peoples' time? Part of it probably has to do with proving to stakeholders that the inference gained from the "quicker" way is less informative (or just plain wrong) compared to the more involved approach.
 
 ## Notes
 
@@ -942,7 +942,7 @@ We don't actually need data to construct a model. Our prior distributions, which
 **Exercise**
 
 1. Goal: Describe the association between adult weight and height
-2. Height causes weight H-->W<---(U) (unobserved influences on body weight)
+2. Height causes weight H-->W<--(U) (unobserved influences on body weight)
 3. Generative/scientific model: $W=f(H,U)$, $W=\beta H + U$
 ```{r}
 sim_weight <-
@@ -965,17 +965,19 @@ $$H_i \sim Uniform(130, 170)$$
 * We want to estimate how the average weight changes with height.
 
 $$E(W_i|H_i)=\alpha + \beta H_i$$
+
 * Posterior distribution
 
 $$P(\alpha, \beta, \sigma|H_i,W_i) = \frac{P(W_i|H_i,\alpha,\beta,\sigma)P(\alpha,\beta,\sigma)}{Z}$$
-  + Gives the posterior probability of a specific regression line
+
+* Gives the posterior probability of a specific regression line
   + Likelihood: Number of ways we could produce $W_i$, given a line 
   + Prior: The previous posterior distribution; normalized number of ways previous data could have been produced.
 
 $$W_i \sim Normal(\mu_i, \sigma)$$
 $$\mu_i = \alpha + \beta H_i$$
 
- + Generally more useful to look at the lines (parameter implications together), instead of individual parameters
+* Generally more useful to look at the lines (parameter implications together), instead of individual parameters
  
 * Quadratic approximation
   + Approximate the posterior distribution using a multivariate Gaussian distribution
@@ -1011,14 +1013,88 @@ for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)
 * Parameters are not independent, can't interpret as such
 * Push out posterior predictions
 
-# 4. Not-so-basic Regression {#lecture4}
+# 4. Categories and Curves {#lecture4}
 
 Week #    Lecture #   Chapter(s)    Week End    Notes Taken
 ------    ---------   ----------    --------    -----------
-2         4           4             1/13/2023   
+2         4           4             1/13/2023   1/11/2023
 
 ## Summary
+
+The idea of _total_ vs. _direct_ effects is about specifying the statistical model that will allow you to observe the complete effect (i.e., including differences that could be explained by something else in the model) compared to parsing out differences explained by the variable after adjusting for effects explained through other variables. In the lecture example, the total causal effect of sex on weight was determined by using a (Bayesian) intercept-only model, which showed considerable difference is mean weights between male/female. However, when assessing the direct causal effect, a parameter was added to fit separate slopes for male/female in order to block out the effect of sex on weight that is observed through other causes (in this case, height), such that the resulting estimator looked at mean differences in weight _at each height_--the posterior distribution for this difference yielded little to no direct effect, indicating that most of the difference in weight between male/females is due to height differences. Another interesting aspect of this lecture was how to think about which way an arrow should go when drawing the causal diagram. You should think of the interventions we are willing to consider, and which make logical sense. For example, we drew $H \rightarrow W$ because, given a height, it makes sense to employ interventions (such as weight loss program, exercise, etc.) that could presumably impact the resulting weight, but it doesn't make a lot of sense to think of trying to change someone's height given their weight. Also, declaring something as a _cause_ of something, generally you first want to think about whether an intervention can be employed, but if not can still make sense if it is a proxy for something else (e.g., age encapsulates time, among many other things that presumably do cause height). We can use flexible curves to fit things (e.g., splines), but we want to make sure we vet out any erroneous areas where estimates don't make sense, and add necessary restrictions to alleviate. So far, these lectures have given great optimism and excitement for how to approach modeling. I want to be confident in the models I produce, and I think the generative framework is the right approach to be able to believe in the results you are producing. I see so much published research from observational data that declare something statistically significant for a given research hypothesis and say "we adjusted for all these confounders". Even if I feel fine about the math/statistical procedure, I'm always skeptical about the conclusions that are drawn from it, and quite frankly, don't feel like it means much at all for really making a decision--there are just too many limitations about all sorts of things. The generative approach gives the tools and rigor to be much more confident in the results, and if we can be more demanding of that rigor, time and energy, it should yield more benefit in the long run. I'd rather spend more time getting to a confident conclusion than just pumping out results.
 
 ## Homework
 
 ## Notes
+
+* The linear regression can approximate anything, so we need to design it with the causal model in mind
+* Generative models + multiple estimands, we'll have multiple estimands
+* Need post-processing of posterior distribution to gain inference of joint distributino
+* We require categories, splines, etc. to build causal estimators
+* Need to _stratify_ by category to get at the estimands we want (separate lines)
+
+**Example**
+
+* Extend example above to include patient sex, age
+* Need to determine how height, weight, sex are causally related (add to DAG), and statistically related
+* To determine which way the arrows go, think about the interventions you're willing to consider
+* Don't have to draw them, but the implied unobserved causes of each variable are implied
+  + These are ignorable _unless shared_ across variables
+  + Ex. temperature is a cause of sex and weight in some species
+  
+* What is the causal effect of S on W?
+  + Accounts for direct and indirect effect
+  + We can also ask what is the direct causal effect of S on W?
+  + These questions require different models
+  
+* Generally want to assign the same prior for parameters for each category level (below)
+  + Using indexing is advantageous because you have symmetry such that all parameters can get the same prior, they are all interpreted the same within their levels
+  + Using indicators makes parameters relative to other levels, which causes you have to put priors on other parameters because it is an adjustment parameter (one is an average, one is an adjustment to an average)
+
+$$W_i \sim Normal(\mu_i, \sigma) \hskip.1in \mu_i=\alpha_{S[i]}$$
+$$\alpha = [\alpha_1, \alpha_2] \hskip.1in \alpha_j \sim Normal(60,10)$$
+**Total Causal Effect**
+
+* Simulate one data set of all males, another of all females, look at the average difference in weight
+  + This is the actual causal effect
+  + Then you can generate a random data set, run the modeling process, and then ensure that the model provides the expected estimate
+* Look at the posterior distribution of the mean difference, and randomly draw samples from the individual posteriors and compute the differences to answer questions like "what is the probability that a randomly selected male will be heavier than a randomly selected female?"
+* This was basically just an intercept-only model for sex, and the effect due to height would be captured in that difference
+
+**Direct Effect**
+
+* How do we partial out the indirect effect of Height (block it)?
+  + Stratify by height to block the association between S and W that is transmitted through H
+* Difference in intercept, the indirect is slope differences
+* Here, the model allows for separate slopes by sex, so we can tease out the impact of height
+  + Center the height to make the interpretation of the intercept be the average
+  + Makes priors more intuitive, and computation easier
+
+$$W_i \sim Normal(\mu_i, \sigma) \hskip.1in \mu_i=\alpha_{S[i]} + \beta_{S[i]}(H_i-\bar{H})$$
+$$\alpha=[\alpha_1,\alpha_2] \hskip.1in \beta=[\beta_1,\beta_2]$$
+
+* In this case, nearly all the total effect of sex on weight is explained through height (the direct effect (posterior of the difference between weights at each height) is nearly 0 at all heights)
+
+**Curve Fitting**
+
+* We use linear models to do this; i.e., it's not mechanistic, but we use it wisely
+* Strategies
+  + Polynomials: Don't do it; no local smoothing, only global; learn to much from data in regions that lie far away 
+    + It's not worth having a model that looks OK for most of the data that we know is completely erroneous (e.g., parabola at some point shows babies get heavier as their height decreases, which we know is wrong); even though this is a small portation of observations, it's still knowingly wrong, so why use it?
+  + Splines & GAMs: Not as bad as polynomials; add total many locally trained terms
+
+**Splines**
+
+* Flexible curve that will find trends
+* B-splines are linear models containing additive terms with synthetic variables
+  + Think of it as a collection of individual curves (basis functions), but the weight of each basis function is non-zero at only particular areas of x, and spline is the sum of the curves at a particular point
+
+$$\mu_i = \alpha + w_1B_{i,1} + w_2B_{i,2} + ...$$
+* Ideal model for age/height would be to account for what we know about human biology: infant, toddler, adolescent, adult. In the first 3, we expect only upward growth, so we should constrain.
+
+**Full Luxury Bayes**
+
+* Equivalent approach is to use one model for entire causal sample
+* Then run simulations from overall system to get answers to specific queries
+
+
