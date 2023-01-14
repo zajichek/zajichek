@@ -1025,6 +1025,12 @@ The idea of _total_ vs. _direct_ effects is about specifying the statistical mod
 
 ## Homework
 
+1. From the `howell1` dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.
+
+2. Use a linear regression to estimate the **total** causal effect of each year of growth on weight.
+
+3. Now suppose the causal association between age and weight might be different between boys and girls. Use a single linear regression, with a categorical variable for sex, to estimate the total causal effect of age on weight separately for boys and girls. How do boys and girls differ? Provide one or more posterior contrasts as a summary.
+
 ## Notes
 
 * The linear regression can approximate anything, so we need to design it with the causal model in mind

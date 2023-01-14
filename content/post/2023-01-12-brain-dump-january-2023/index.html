@@ -25,6 +25,7 @@ projects: []
 <ul>
 <li><a href="#bernoulli">Deriving a Bernoulli MLE</a></li>
 <li><a href="#splines">Basis Functions &amp; Splines</a></li>
+<li><a href="#effectivedatastory"><em>Effective Data Storytelling</em>: Key Takeaways</a></li>
 </ul>
 </div>
 <div id="bernoulli" class="section level1">
@@ -66,6 +67,7 @@ After some algebra:</p>
 </div>
 <div id="splines" class="section level1">
 <h1>Basis Functions &amp; Splines</h1>
+<p><em>1/13/2023</em></p>
 <p>This one always gets me. I’ve learned and forgot how splines work many times over the years, and when I need to relearn it, I read the <em>Moving Beyond Linearity</em> chapter of <a href="https://www.statlearning.com/">An Introduction to Statistical Learning</a>.</p>
 <p><strong>Basis Functions</strong> are just a general approach for transforming a simple model like:</p>
 <p><span class="math display">\[Y_i = \beta_0 + \beta_1X_i + \epsilon_i\]</span>
@@ -177,4 +179,21 @@ Let’s check out that transformation on our data:</p>
 ## [5,]  1.716660
 ## [6,] 12.882156</code></pre>
 <p>By default, this function uses <code>norm=2</code>, which <em>“normalizes by the square of the spacing between the first and last knots…has the advantage of making all nonlinear terms be on the x-scale”</em>.</p>
+</div>
+<div id="effectivedatastory" class="section level1">
+<h1><em>Effective Data Storytelling</em>: Key Takeaways</h1>
+<p><em>1/14/2023</em></p>
+<p>I’ve been reading through the book <a href="https://www.effectivedatastorytelling.com/"><em>Effective Data Storytelling: How to drive change with data, narrative, and visuals</em></a> by Brent Dykes and just wanted to document some thoughts/takeaways.</p>
+<ol style="list-style-type: decimal">
+<li>Importance of domain knowledge</li>
+</ol>
+<p>One of the biggest (and obvious) takeaways is the importance of domain knowledge is being able to craft an effective data story. You can have all the technical skills in world (e.g., math, statistics, programming, etc.), but if you aren’t able to relay that back to how it can impact things people care about, in simple terms, you’ll have trouble getting buy in. Thus, it is essential to be able to (i) acquire business knowledge and intuition for yourself, and (ii) asking the right questions, and (iii) have subject matter experts (SMEs) who can <em>partner</em> with you to problem solve together. Domain knowledge is also incredibly important <em>in</em> the technical aspects as well (e.g., construction of useful statistical models generally requires assumptions about the context of the problem you are solving).</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Organizational culture and support</li>
+</ol>
+<p>I think in order to put data professionals in a position to be able to craft effective data stories, there needs to be some level of forethought into the data culture and structure of the organization. Just from a logistical perspective, it would be very difficult for someone to be able to take the necessary time and delicacy needed to truly create an effective data story (e.g., using the right data, in the right analysis, with the right communication of results) without the foundational support of data infrastructure, data governance, process/project management, defined roles/responsibilities, overall strategy, etc. These things need to be in place (or at least working towards it) to apply the apprpriate amount of rigor and detail required in an efficient and timely manner.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>Tailor communication of results to your audience</li>
+</ol>
+<p>In my current role, I often build analyses in the form of HTML documents (via <a href="https://rmarkdown.rstudio.com/">R Markdown</a>) where the intention is to lay out a story of the data in a particular order, such the the end-user would read through the document on their own to gain the messages of the analysis with interactive figures and tables (the idea of <em>“scrollytelling”</em>). However, I would often get asked by stakeholders to instead present/explain the material for them instead of them (understandably) reading through the whole thing on their own. So I would attend a meeting, bring up the document, and begin walking them through the document. I quickly found that this didn’t work. The intention of the document was to be read, not presented, and so people would get bogged down/distracted by the narrative in the document while presenting. It just felt uncomfortable. This is <em>exactly</em> something that is talked about in the book of what not to do. So, before sharing with stakeholders or presenting, I started converting the information in the document into a slide deck, pulling out the most useful information that was tailored to the way I would present it. Also, recreating graphs, tables, and/or figures that point out just the most pertinent data, instead of using the exhaustive summaries built in the exploratory analysis. These strategies proved to be much more effective and satisfying both for myself and the stakeholders.</p>
 </div>
