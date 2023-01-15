@@ -1077,7 +1077,73 @@ for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)</code></pre>
 <div id="homework-1" class="section level2">
 <h2>Homework</h2>
 <ol style="list-style-type: decimal">
-<li><p>From the <code>howell1</code> dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.</p></li>
+<li>From the <code>Howell1</code> dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.</li>
+</ol>
+<p>First, we’ll import the dataset directly from the package’s <a href="https://github.com/rmcelreath/rethinking">Github repository</a>:</p>
+<pre class="r"><code>howell1 &lt;-
+  read_delim(
+    file = &quot;https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/Howell1.csv&quot;,
+    delim = &quot;;&quot;
+  ) %&gt;%
+  
+  # Keep those younger than 13
+  filter(age &lt; 13)</code></pre>
+<pre><code>## Rows: 544 Columns: 4
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;;&quot;
+## dbl (4): height, weight, age, male
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>howell1</code></pre>
+<pre><code>## # A tibble: 146 × 4
+##    height weight   age  male
+##     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1  122.    19.6  12       1
+##  2  105.    13.9   8       0
+##  3   86.4   10.5   6.5     0
+##  4  109.    16.0   7       0
+##  5  114.    17.9  11       1
+##  6  122.    20.4   8       1
+##  7  129.    23.4  12       0
+##  8   97.8   13.3   5       0
+##  9  110.    15.4   9       0
+## 10   97.8   12.8   5       0
+## # … with 136 more rows</code></pre>
+<p>Next, we can write the causal diagram as described:</p>
+<pre class="r"><code>DiagrammeR::grViz(&quot;
+  digraph graph2 {
+    graph [layout = dot, rankdir = LR]
+    node [style = filled]
+    a [label = &#39;Age&#39;]
+    b [label = &#39;Height&#39;]
+    c [label = &#39;Weight&#39;]
+    a -&gt; c
+    a -&gt; b
+    b -&gt; c
+  }
+&quot;, height = 200, width = 350)</code></pre>
+<div id="htmlwidget-2" style="width:350px;height:200px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"diagram":"\n  digraph graph2 {\n    graph [layout = dot, rankdir = LR]\n    node [style = filled]\n    a [label = \"Age\"]\n    b [label = \"Height\"]\n    c [label = \"Weight\"]\n    a -> c\n    a -> b\n    b -> c\n  }\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>If we let</p>
+<p><span class="math display">\[A=Age \hskip.1in H=Height \hskip.1in W=Weight\]</span></p>
+<p>Then, we assume that:</p>
+<p><span class="math display">\[H = f(A) \hskip.2in W = f(A,H)\]</span>
+Finally, we can write the generative simulation to produce synthetic data governed by the DAG:</p>
+<pre class="r"><code>n &lt;- 100
+A &lt;- runif(n, 0, 13)
+H &lt;- 10 + 2*A + rnorm(n = n, sd = 5)</code></pre>
+<p>We first generate ages uniformly from 0 to 13, so</p>
+<p><span class="math display">\[A \sim Uniform(0,13)\]</span></p>
+<p>Then, we generate heights from a normal distribution with means that are linearly related to the age.</p>
+<p><span class="math display">\[H \sim Normal(\mu =10 + 2 \times A, \sigma = 3)\]</span>
+Notice the intercept term to ensure a positive height for children who are 0 years old. <em>Note: A distribution like the Gamma may be better here to ensure we don’t get negative heights. For younger ages, I would assume that the distribution of heights has a little right-skew. In any case, we’ll move forward with the Normal distribution here for simplicity sake.</em></p>
+<p>Then we generate the weights as a linear function of the observed age and heights.</p>
+<p><span class="math display">\[W \sim Normal(\mu=\beta_0+\beta_1A+\beta_2H+\beta_3A \times H, \sigma = 5)\]</span>
+We make the assumption that there is a linear relationship between weight with age and height, and that there can be different lines for height and weight for any given age. To do this, we add a multiplicative term (i.e., an interaction).</p>
+<p><em>Note: I cheated a bit in setting the parameter values by looking at the data to get a sense of what a logical set of weights/heights were because I didn’t know what the scales were.</em></p>
+<p>We generate ages uniformly from 0 to 13.</p>
+<ol start="2" style="list-style-type: decimal">
 <li><p>Use a linear regression to estimate the <strong>total</strong> causal effect of each year of growth on weight.</p></li>
 <li><p>Now suppose the causal association between age and weight might be different between boys and girls. Use a single linear regression, with a categorical variable for sex, to estimate the total causal effect of age on weight separately for boys and girls. How do boys and girls differ? Provide one or more posterior contrasts as a summary.</p></li>
 </ol>

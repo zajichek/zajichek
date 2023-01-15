@@ -1025,7 +1025,72 @@ The idea of _total_ vs. _direct_ effects is about specifying the statistical mod
 
 ## Homework
 
-1. From the `howell1` dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.
+1. From the `Howell1` dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.
+
+First, we'll import the dataset directly from the package's [Github repository](https://github.com/rmcelreath/rethinking):
+
+```{r}
+howell1 <-
+  read_delim(
+    file = "https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/Howell1.csv",
+    delim = ";"
+  ) %>%
+  
+  # Keep those younger than 13
+  filter(age < 13)
+howell1
+```
+
+Next, we can write the causal diagram as described:
+
+```{r}
+DiagrammeR::grViz("
+  digraph graph2 {
+    graph [layout = dot, rankdir = LR]
+    node [style = filled]
+    a [label = 'Age']
+    b [label = 'Height']
+    c [label = 'Weight']
+    a -> c
+    a -> b
+    b -> c
+  }
+", height = 200, width = 350)
+```
+
+If we let
+
+$$A=Age \hskip.1in H=Height \hskip.1in W=Weight$$
+
+Then, we assume that:
+
+$$H = f(A) \hskip.2in W = f(A,H)$$
+Finally, we can write the generative simulation to produce synthetic data governed by the DAG:
+
+```{r}
+n <- 100
+A <- runif(n, 0, 13)
+H <- 10 + 2*A + rnorm(n = n, sd = 5)
+```
+
+We first generate ages uniformly from 0 to 13, so
+
+$$A \sim Uniform(0,13)$$
+
+Then, we generate heights from a normal distribution with means that are linearly related to the age.
+
+$$H \sim Normal(\mu =10 + 2 \times A, \sigma = 3)$$
+Notice the intercept term to ensure a positive height for children who are 0 years old. _Note: A distribution like the Gamma may be better here to ensure we don't get negative heights. For younger ages, I would assume that the distribution of heights has a little right-skew. In any case, we'll move forward with the Normal distribution here for simplicity sake._
+
+Then we generate the weights as a linear function of the observed age and heights. 
+
+$$W \sim Normal(\mu=\beta_0+\beta_1A+\beta_2H+\beta_3A \times H, \sigma = 5)$$
+We make the assumption that there is a linear relationship between weight with age and height, and that there can be different lines for height and weight for any given age. To do this, we add a multiplicative term (i.e., an interaction).
+
+_Note: I cheated a bit in setting the parameter values by looking at the data to get a sense of what a logical set of weights/heights were because I didn't know what the scales were._
+
+We generate ages uniformly from 0 to 13.
+
 
 2. Use a linear regression to estimate the **total** causal effect of each year of growth on weight.
 
