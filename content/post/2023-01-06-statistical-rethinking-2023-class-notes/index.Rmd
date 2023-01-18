@@ -30,6 +30,8 @@ library(tidyverse)
 2. [Garden of Forking Data](#lecture2)
 3. [Geocentric Models](#lecture3)
 4. [Categories and Curves](#lecture4)
+5. [Elemental Confounds](#lecture5)
+6. [Even Worse Confounding](#lecture6)
 
 # 1. Science Before Statistics {#lecture1}
 
@@ -1027,7 +1029,7 @@ The idea of _total_ vs. _direct_ effects is about specifying the statistical mod
 
 1. From the `Howell1` dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.
 
-First, we'll import the dataset directly from the package's [Github repository](https://github.com/rmcelreath/rethinking):
+First, we'll import the dataset directly from the package's [Github repository](https://github.com/rmcelreath/rethinking). We will filter to those < 13 years old, and convert height to inches, and weight to lbs:
 
 ```{r}
 howell1 <-
@@ -1037,7 +1039,13 @@ howell1 <-
   ) %>%
   
   # Keep those younger than 13
-  filter(age < 13)
+  filter(age < 13) %>%
+  
+  # Convert the units (more intuitive for me)
+  mutate(
+    height = height / 2.54,
+    weight = weight * 2.205
+  )
 howell1
 ```
 
@@ -1064,13 +1072,26 @@ $$A=Age \hskip.1in H=Height \hskip.1in W=Weight$$
 
 Then, we assume that:
 
-$$H = f(A) \hskip.2in W = f(A,H)$$
+$$H = f_H(A) \hskip.2in W = f_W(A,H)$$
 Finally, we can write the generative simulation to produce synthetic data governed by the DAG:
 
 ```{r}
-n <- 100
-A <- runif(n, 0, 13)
-H <- 10 + 2*A + rnorm(n = n, sd = 5)
+# Simulating synthetic children
+sim_children <-
+  function(N) {
+    
+    # 1. Generate uniform ages
+    A <- runif(N, 0, 13)
+    
+    # 2. Generate heights as a linear combination of age
+    H <- 22 + 2*A + rnorm(N, mean = 0, sd = 1)
+    
+    # 3. Generate weights as a linear combination of age and height
+    W <- .8*H + rnorm(N, mean = 0, sd = .5)
+    
+    # Make a data frame
+    tibble(A, H, W)
+  }
 ```
 
 We first generate ages uniformly from 0 to 13, so
@@ -1079,17 +1100,20 @@ $$A \sim Uniform(0,13)$$
 
 Then, we generate heights from a normal distribution with means that are linearly related to the age.
 
-$$H \sim Normal(\mu =10 + 2 \times A, \sigma = 3)$$
+$$H \sim Normal(\mu =22 + 2 \times A, \sigma = 3)$$
 Notice the intercept term to ensure a positive height for children who are 0 years old. _Note: A distribution like the Gamma may be better here to ensure we don't get negative heights. For younger ages, I would assume that the distribution of heights has a little right-skew. In any case, we'll move forward with the Normal distribution here for simplicity sake._
 
 Then we generate the weights as a linear function of the observed age and heights. 
 
-$$W \sim Normal(\mu=\beta_0+\beta_1A+\beta_2H+\beta_3A \times H, \sigma = 5)$$
-We make the assumption that there is a linear relationship between weight with age and height, and that there can be different lines for height and weight for any given age. To do this, we add a multiplicative term (i.e., an interaction).
+$$W \sim Normal(\mu=.8H, \sigma = .5)$$
+We make the assumption that there is a linear relationship between weight with age and height, and that for any age, the increase in mean weight per inch increase in height is the same. In fact, the effect for age is 0 since it is observed through height.
 
-_Note: I cheated a bit in setting the parameter values by looking at the data to get a sense of what a logical set of weights/heights were because I didn't know what the scales were._
-
-We generate ages uniformly from 0 to 13.
+```{r}
+# Simulate some children
+set.seed(123)
+simmed_children <- sim_children(200)
+plot(simmed_children)
+```
 
 
 2. Use a linear regression to estimate the **total** causal effect of each year of growth on weight.
@@ -1161,6 +1185,7 @@ $$\alpha=[\alpha_1,\alpha_2] \hskip.1in \beta=[\beta_1,\beta_2]$$
   + Think of it as a collection of individual curves (basis functions), but the weight of each basis function is non-zero at only particular areas of x, and spline is the sum of the curves at a particular point
 
 $$\mu_i = \alpha + w_1B_{i,1} + w_2B_{i,2} + ...$$
+
 * Ideal model for age/height would be to account for what we know about human biology: infant, toddler, adolescent, adult. In the first 3, we expect only upward growth, so we should constrain.
 
 **Full Luxury Bayes**
@@ -1168,4 +1193,14 @@ $$\mu_i = \alpha + w_1B_{i,1} + w_2B_{i,2} + ...$$
 * Equivalent approach is to use one model for entire causal sample
 * Then run simulations from overall system to get answers to specific queries
 
+# 5. Elemental Confounds {#lecture5}
 
+Week #    Lecture #   Chapter(s)    Week End    Notes Taken
+------    ---------   ----------    --------    -----------
+3         5           5             1/20/2023   
+
+# 6. Even Worse Confounding {#lecture6}
+
+Week #    Lecture #   Chapter(s)    Week End    Notes Taken
+------    ---------   ----------    --------    -----------
+3         6           6             1/20/2023   

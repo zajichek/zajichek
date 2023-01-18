@@ -41,6 +41,8 @@ library(tidyverse)</code></pre>
 <li><a href="#lecture2">Garden of Forking Data</a></li>
 <li><a href="#lecture3">Geocentric Models</a></li>
 <li><a href="#lecture4">Categories and Curves</a></li>
+<li><a href="#lecture5">Elemental Confounds</a></li>
+<li><a href="#lecture6">Even Worse Confounding</a></li>
 </ol>
 </div>
 <div id="lecture1" class="section level1">
@@ -1079,7 +1081,7 @@ for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)</code></pre>
 <ol style="list-style-type: decimal">
 <li>From the <code>Howell1</code> dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.</li>
 </ol>
-<p>First, we’ll import the dataset directly from the package’s <a href="https://github.com/rmcelreath/rethinking">Github repository</a>:</p>
+<p>First, we’ll import the dataset directly from the package’s <a href="https://github.com/rmcelreath/rethinking">Github repository</a>. We will filter to those &lt; 13 years old, and convert height to inches, and weight to lbs:</p>
 <pre class="r"><code>howell1 &lt;-
   read_delim(
     file = &quot;https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/Howell1.csv&quot;,
@@ -1087,7 +1089,13 @@ for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)</code></pre>
   ) %&gt;%
   
   # Keep those younger than 13
-  filter(age &lt; 13)</code></pre>
+  filter(age &lt; 13) %&gt;%
+  
+  # Convert the units (more intuitive for me)
+  mutate(
+    height = height / 2.54,
+    weight = weight * 2.205
+  )</code></pre>
 <pre><code>## Rows: 544 Columns: 4
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;;&quot;
@@ -1099,16 +1107,16 @@ for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)</code></pre>
 <pre><code>## # A tibble: 146 × 4
 ##    height weight   age  male
 ##     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1  122.    19.6  12       1
-##  2  105.    13.9   8       0
-##  3   86.4   10.5   6.5     0
-##  4  109.    16.0   7       0
-##  5  114.    17.9  11       1
-##  6  122.    20.4   8       1
-##  7  129.    23.4  12       0
-##  8   97.8   13.3   5       0
-##  9  110.    15.4   9       0
-## 10   97.8   12.8   5       0
+##  1   48     43.3  12       1
+##  2   41.5   30.8   8       0
+##  3   34     23.1   6.5     0
+##  4   43     35.3   7       0
+##  5   45     39.4  11       1
+##  6   48     45.0   8       1
+##  7   50.8   51.5  12       0
+##  8   38.5   29.3   5       0
+##  9   43.5   34.0   9       0
+## 10   38.5   28.1   5       0
 ## # … with 136 more rows</code></pre>
 <p>Next, we can write the causal diagram as described:</p>
 <pre class="r"><code>DiagrammeR::grViz(&quot;
@@ -1128,21 +1136,37 @@ for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)</code></pre>
 <p>If we let</p>
 <p><span class="math display">\[A=Age \hskip.1in H=Height \hskip.1in W=Weight\]</span></p>
 <p>Then, we assume that:</p>
-<p><span class="math display">\[H = f(A) \hskip.2in W = f(A,H)\]</span>
+<p><span class="math display">\[H = f_H(A) \hskip.2in W = f_W(A,H)\]</span>
 Finally, we can write the generative simulation to produce synthetic data governed by the DAG:</p>
-<pre class="r"><code>n &lt;- 100
-A &lt;- runif(n, 0, 13)
-H &lt;- 10 + 2*A + rnorm(n = n, sd = 5)</code></pre>
+<pre class="r"><code># Simulating synthetic children
+sim_children &lt;-
+  function(N) {
+    
+    # 1. Generate uniform ages
+    A &lt;- runif(N, 0, 13)
+    
+    # 2. Generate heights as a linear combination of age
+    H &lt;- 22 + 2*A + rnorm(N, mean = 0, sd = 1)
+    
+    # 3. Generate weights as a linear combination of age and height
+    W &lt;- .8*H + rnorm(N, mean = 0, sd = .5)
+    
+    # Make a data frame
+    tibble(A, H, W)
+  }</code></pre>
 <p>We first generate ages uniformly from 0 to 13, so</p>
 <p><span class="math display">\[A \sim Uniform(0,13)\]</span></p>
 <p>Then, we generate heights from a normal distribution with means that are linearly related to the age.</p>
-<p><span class="math display">\[H \sim Normal(\mu =10 + 2 \times A, \sigma = 3)\]</span>
+<p><span class="math display">\[H \sim Normal(\mu =22 + 2 \times A, \sigma = 3)\]</span>
 Notice the intercept term to ensure a positive height for children who are 0 years old. <em>Note: A distribution like the Gamma may be better here to ensure we don’t get negative heights. For younger ages, I would assume that the distribution of heights has a little right-skew. In any case, we’ll move forward with the Normal distribution here for simplicity sake.</em></p>
 <p>Then we generate the weights as a linear function of the observed age and heights.</p>
-<p><span class="math display">\[W \sim Normal(\mu=\beta_0+\beta_1A+\beta_2H+\beta_3A \times H, \sigma = 5)\]</span>
-We make the assumption that there is a linear relationship between weight with age and height, and that there can be different lines for height and weight for any given age. To do this, we add a multiplicative term (i.e., an interaction).</p>
-<p><em>Note: I cheated a bit in setting the parameter values by looking at the data to get a sense of what a logical set of weights/heights were because I didn’t know what the scales were.</em></p>
-<p>We generate ages uniformly from 0 to 13.</p>
+<p><span class="math display">\[W \sim Normal(\mu=.8H, \sigma = .5)\]</span>
+We make the assumption that there is a linear relationship between weight with age and height, and that for any age, the increase in mean weight per inch increase in height is the same. In fact, the effect for age is 0 since it is observed through height.</p>
+<pre class="r"><code># Simulate some children
+set.seed(123)
+simmed_children &lt;- sim_children(200)
+plot(simmed_children)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <ol start="2" style="list-style-type: decimal">
 <li><p>Use a linear regression to estimate the <strong>total</strong> causal effect of each year of growth on weight.</p></li>
 <li><p>Now suppose the causal association between age and weight might be different between boys and girls. Use a single linear regression, with a categorical variable for sex, to estimate the total causal effect of age on weight separately for boys and girls. How do boys and girls differ? Provide one or more posterior contrasts as a summary.</p></li>
@@ -1229,12 +1253,60 @@ We make the assumption that there is a linear relationship between weight with a
 <li>Think of it as a collection of individual curves (basis functions), but the weight of each basis function is non-zero at only particular areas of x, and spline is the sum of the curves at a particular point</li>
 </ul></li>
 </ul>
-<p><span class="math display">\[\mu_i = \alpha + w_1B_{i,1} + w_2B_{i,2} + ...\]</span>
-* Ideal model for age/height would be to account for what we know about human biology: infant, toddler, adolescent, adult. In the first 3, we expect only upward growth, so we should constrain.</p>
+<p><span class="math display">\[\mu_i = \alpha + w_1B_{i,1} + w_2B_{i,2} + ...\]</span></p>
+<ul>
+<li>Ideal model for age/height would be to account for what we know about human biology: infant, toddler, adolescent, adult. In the first 3, we expect only upward growth, so we should constrain.</li>
+</ul>
 <p><strong>Full Luxury Bayes</strong></p>
 <ul>
 <li>Equivalent approach is to use one model for entire causal sample</li>
 <li>Then run simulations from overall system to get answers to specific queries</li>
 </ul>
 </div>
+</div>
+<div id="lecture5" class="section level1">
+<h1>5. Elemental Confounds</h1>
+<table>
+<thead>
+<tr class="header">
+<th>Week #</th>
+<th>Lecture #</th>
+<th>Chapter(s)</th>
+<th>Week End</th>
+<th>Notes Taken</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3</td>
+<td>5</td>
+<td>5</td>
+<td>1/20/2023</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="lecture6" class="section level1">
+<h1>6. Even Worse Confounding</h1>
+<table>
+<thead>
+<tr class="header">
+<th>Week #</th>
+<th>Lecture #</th>
+<th>Chapter(s)</th>
+<th>Week End</th>
+<th>Notes Taken</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3</td>
+<td>6</td>
+<td>6</td>
+<td>1/20/2023</td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </div>
