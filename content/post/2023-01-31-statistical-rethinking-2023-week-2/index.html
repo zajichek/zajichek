@@ -1,0 +1,515 @@
+---
+title: 'Statistical Rethinking 2023: Week 2'
+author: Alex Zajichek
+date: '2023-01-31'
+slug: statistical-rethinking-2023-week-2
+categories: []
+tags: []
+subtitle: 'Chapter 4'
+summary: ''
+authors: []
+lastmod: '2023-01-31T09:38:46-06:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>
+<script src="{{< blogdown/postref >}}index_files/viz/viz.js"></script>
+<link href="{{< blogdown/postref >}}index_files/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="{{< blogdown/postref >}}index_files/grViz-binding/grViz.js"></script>
+
+
+<div id="table-of-contents" class="section level1">
+<h1>Table of Contents</h1>
+<ol start="3" style="list-style-type: decimal">
+<li><a href="#lecture3">Geocentric Models</a></li>
+<li><a href="#lecture4">Categories and Curves</a></li>
+</ol>
+<pre class="r"><code># Load some packages
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
+## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
+## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+## ✔ readr   2.1.3      ✔ forcats 0.5.2 
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div id="lecture3" class="section level1">
+<h1>3. Geocentric Models</h1>
+<table>
+<thead>
+<tr class="header">
+<th>Week #</th>
+<th>Lecture #</th>
+<th>Chapter(s)</th>
+<th>Week End</th>
+<th>Notes Taken</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>1/13/2023</td>
+<td>1/10/2023</td>
+</tr>
+</tbody>
+</table>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<p>We don’t actually need data to construct a model. Our prior distributions, which account for our baseline knowledge about what reasonable values for unknown parameters may be, can produce estimates on their own. A bare minimum strategy is to choose these such that before seeing data, the output of our model produces scientifically reasonable results–there is no reason to allow our model to produce results that we know cannot happen. Then, our data can be introduced to help guide the parameters to an area of focus. In this sense (thinking of the example of points bumping around in parameter space), the data we collect is really just a tool for our model–the model is the central focus, the data just helps the model go to where it needs to go. Also, the idea that there are no correct priors and that priors are just (normalized) posteriors from previous data, make the idea of Bayesian updating very intuitive. It will be interesting to see in coming lectures how we can extend this linear model framework to more “real life” problems with observational data that have potentially tens or hundreds or thousands of potential drivers, and strategies for accounting for the most important ones. Obviously these basic examples are great to build a foundation, but it seems like a huge (sometimes impossible) hurdle to have the time and resources to be able to fully vet out expert-driven causal diagrams and generative models that fully account for all the things, especially in fast-paced environments when everyone is just so busy and there are so many projects to attend to. I’d imagine this is one of the reasons why frequentist analysis persists so much (at least in medical research), because it’s the way it’s been done and therefore you can get more things done faster, even though in an ideal state a Bayesian approach <em>is</em> the right way to go. Definitely something I’ve thought about time and time again–how can we balance the rigor and detail needed to construct the appropriate models to achieve better inference while still being efficient with peoples’ time? Part of it probably has to do with proving to stakeholders that the inference gained from the “quicker” way is less informative (or just plain wrong) compared to the more involved approach.</p>
+</div>
+<div id="notes" class="section level2">
+<h2>Notes</h2>
+<ul>
+<li>Statistical models can attain arbitrarily accurate predictions without having any explanation or accurate structure (i.e., the model is just plain wrong, but happens to produce accurate predictions at the right time)
+<ul>
+<li>Example of this is a previous explanation of orbit pattern of Mars: assuming Earth at the center (geocentric), Mars orbits around Earth but also it’s own local orbit (epi-cycles). Using this model, they got very accurate predictions, but this mechanism is completely wrong.</li>
+<li>Orbits are actually elliptical and around the sun, not Earth</li>
+<li>Even though the first one predicts accurately, because the structure/mechanism is wrong, it doesn’t extend or generalize to other things. However, the correct mechanism is able to explain orbit patterns of all planets in the solar system.</li>
+</ul></li>
+<li>Linear regression is a large class of statistical golems
+<ul>
+<li><strong>Geogentric</strong>: describes associations, makes good predictions; mechanistically always wrong (but useful), very good approximation; meaning doesn’t depend on the model, depends on an external causal model. Nothing wrong with it unless you actually believe it is the true mechanism.</li>
+<li><strong>Gaussian</strong>: Abstracts away from detail of general error model; mechanistically silent. General argument about symmetry of error.</li>
+</ul></li>
+</ul>
+<p><strong>Gaussian</strong></p>
+<ul>
+<li>Example: Flip coin, each person take a step to left or right depending on heads/tails, measure distance from center; makes a normal distribution. Why?
+<ul>
+<li>There are more ways for a sequence of coin tosses to get you close to the middle than there are to get you to the left or right</li>
+<li>Many natural processes attract to this behavior because it is adding together small differences</li>
+</ul></li>
+<li>Two arguments:
+<ul>
+<li>Generative: summed fluctuations tend towards normal. Ex. growth–added fluctuations over time, same age weight tends to be gaussian</li>
+<li>Inferential: estimating mean/variance. Best to use since least informative (maximum entropy)</li>
+</ul></li>
+<li>Variable does not need to be normally distributed for normal model to be useful. Machine for estimating mean/variance. Contains the least assumptions. (central limit theorem)</li>
+</ul>
+<p><strong>Skills/Goals for Lecture</strong></p>
+<ol style="list-style-type: decimal">
+<li>Learn a standardized language for representing models (generative and statistical)</li>
+<li>Calculate posteriors with multiple unknown parameters</li>
+<li>How to construct and understand linear models; how to construct posterior predictions from them</li>
+</ol>
+<p><strong>Reminder of the owl</strong></p>
+<ol style="list-style-type: decimal">
+<li>State a clear question; descriptive, causal, anything; but needs to be clear</li>
+<li>Sketch causal assumptions using DAGs; good way for non-theorists to realize they have a lot of subject knowledge and can get it on paper</li>
+<li>Define a generative model; generates synthetic observations</li>
+<li>Use generative model to build estimator; causal/generative assumptions embedded</li>
+<li>Test, analyze</li>
+<li>Profit: we realize our model was useful, or terrible; either way we gain something</li>
+</ol>
+<p><strong>Describing models</strong></p>
+<ol style="list-style-type: decimal">
+<li>Lists variables</li>
+<li>Define each variable as a deterministic or distributional function of other variables</li>
+</ol>
+<p><strong>Exercise</strong></p>
+<ol style="list-style-type: decimal">
+<li>Goal: Describe the association between adult weight and height</li>
+<li>Height causes weight H–&gt;W&lt;–(U) (unobserved influences on body weight)</li>
+<li>Generative/scientific model: <span class="math inline">\(W=f(H,U)\)</span>, <span class="math inline">\(W=\beta H + U\)</span></li>
+</ol>
+<pre class="r"><code>sim_weight &lt;-
+  function(H,b,sd) {
+    U &lt;- rnorm(length(H),0,sd)
+    W&lt;-b*H + U
+    return(W)
+  }
+# Generate height
+H &lt;- runif(200,130,170)
+W &lt;- sim_weight(H, b=.5, sd= 5)
+plot(W~H,col=2, lwd = 3)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><span class="math display">\[W_i=\beta H_i + U_i\]</span>
+<span class="math display">\[U_i \sim Normal(0,\sigma)\]</span>
+<span class="math display">\[H_i \sim Uniform(130, 170)\]</span>
+4. Statistical model (estimator)</p>
+<ul>
+<li>We want to estimate how the average weight changes with height.</li>
+</ul>
+<p><span class="math display">\[E(W_i|H_i)=\alpha + \beta H_i\]</span></p>
+<ul>
+<li>Posterior distribution</li>
+</ul>
+<p><span class="math display">\[P(\alpha, \beta, \sigma|H_i,W_i) = \frac{P(W_i|H_i,\alpha,\beta,\sigma)P(\alpha,\beta,\sigma)}{Z}\]</span></p>
+<ul>
+<li>Gives the posterior probability of a specific regression line
+<ul>
+<li>Likelihood: Number of ways we could produce <span class="math inline">\(W_i\)</span>, given a line</li>
+<li>Prior: The previous posterior distribution; normalized number of ways previous data could have been produced.</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[W_i \sim Normal(\mu_i, \sigma)\]</span>
+<span class="math display">\[\mu_i = \alpha + \beta H_i\]</span></p>
+<ul>
+<li><p>Generally more useful to look at the lines (parameter implications together), instead of individual parameters</p></li>
+<li><p>Quadratic approximation</p>
+<ul>
+<li>Approximate the posterior distribution using a multivariate Gaussian distribution</li>
+<li>Use the <code>quap</code> function in the <code>rethinking</code> package</li>
+</ul></li>
+</ul>
+<p><strong>Prior Predictive Distribution</strong></p>
+<ul>
+<li>Should express scientific knowledge, but <em>softly</em></li>
+<li>We can make the model make predictions without using data</li>
+<li>Not make ranges that represent the data, but rather just those that make sense based on current knowledge</li>
+<li>Account for basic reasonable constraints: In general, patients with more weight have more height, and the weight is less than the height, so <span class="math inline">\(\beta\)</span> is probably between <span class="math inline">\([0,1]\)</span>.</li>
+<li>Use these to define some lines based on the assumptions</li>
+</ul>
+<pre class="r"><code>n &lt;- 1000
+a &lt;- rnorm(n,0,10)
+b &lt;- runif(n,0,1)
+plot(NULL,xlim=c(130,170),ylim=c(50,90),xlab=&quot;height(cm)&quot;,ylab=&quot;Weight(kg)&quot;)
+for (j in 1:50) abline(a=a[j],b=b[j],lwd=2,col=2)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<ul>
+<li>Some of these are probably not plausible (e.g., high height with low weight). Slopes look good but not intercept</li>
+<li>We can adjust as needed to create what makes sense</li>
+<li>There are no correct priors; only scientifically justifiable priors</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li>Validate Model</li>
+</ol>
+<ul>
+<li>Bare minimum to test statistical model</li>
+<li>Not because you wrote it, more so to make sure your model works</li>
+</ul>
+<ol start="6" style="list-style-type: decimal">
+<li>Analyze data</li>
+</ol>
+<ul>
+<li>Plug in your data set into your process</li>
+<li>Parameters are not independent, can’t interpret as such</li>
+<li>Push out posterior predictions</li>
+</ul>
+</div>
+</div>
+<div id="lecture4" class="section level1">
+<h1>4. Categories and Curves</h1>
+<table>
+<thead>
+<tr class="header">
+<th>Week #</th>
+<th>Lecture #</th>
+<th>Chapter(s)</th>
+<th>Week End</th>
+<th>Notes Taken</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2</td>
+<td>4</td>
+<td>4</td>
+<td>1/13/2023</td>
+<td>1/11/2023</td>
+</tr>
+</tbody>
+</table>
+<div id="summary-1" class="section level2">
+<h2>Summary</h2>
+<p>The idea of <em>total</em> vs. <em>direct</em> effects is about specifying the statistical model that will allow you to observe the complete effect (i.e., including differences that could be explained by something else in the model) compared to parsing out differences explained by the variable after adjusting for effects explained through other variables. In the lecture example, the total causal effect of sex on weight was determined by using a (Bayesian) intercept-only model, which showed considerable difference is mean weights between male/female. However, when assessing the direct causal effect, a parameter was added to fit separate slopes for male/female in order to block out the effect of sex on weight that is observed through other causes (in this case, height), such that the resulting estimator looked at mean differences in weight <em>at each height</em>–the posterior distribution for this difference yielded little to no direct effect, indicating that most of the difference in weight between male/females is due to height differences. Another interesting aspect of this lecture was how to think about which way an arrow should go when drawing the causal diagram. You should think of the interventions we are willing to consider, and which make logical sense. For example, we drew <span class="math inline">\(H \rightarrow W\)</span> because, given a height, it makes sense to employ interventions (such as weight loss program, exercise, etc.) that could presumably impact the resulting weight, but it doesn’t make a lot of sense to think of trying to change someone’s height given their weight. Also, declaring something as a <em>cause</em> of something, generally you first want to think about whether an intervention can be employed, but if not can still make sense if it is a proxy for something else (e.g., age encapsulates time, among many other things that presumably do cause height). We can use flexible curves to fit things (e.g., splines), but we want to make sure we vet out any erroneous areas where estimates don’t make sense, and add necessary restrictions to alleviate. So far, these lectures have given great optimism and excitement for how to approach modeling. I want to be confident in the models I produce, and I think the generative framework is the right approach to be able to believe in the results you are producing. I see so much published research from observational data that declare something statistically significant for a given research hypothesis and say “we adjusted for all these confounders”. Even if I feel fine about the math/statistical procedure, I’m always skeptical about the conclusions that are drawn from it, and quite frankly, don’t feel like it means much at all for really making a decision–there are just too many limitations about all sorts of things. The generative approach gives the tools and rigor to be much more confident in the results, and if we can be more demanding of that rigor, time and energy, it should yield more benefit in the long run. I’d rather spend more time getting to a confident conclusion than just pumping out results.</p>
+<div id="a-check-for-understanding" class="section level3">
+<h3>A check for understanding</h3>
+<p>During (and after) the lecture, it took me a while to gain intuition about what was happening in the generative simulation for the model:</p>
+<pre class="r"><code>DiagrammeR::grViz(&quot;
+  digraph graph2 {
+    graph [layout = dot, rankdir = LR]
+    node [style = filled]
+    a [label = &#39;Sex&#39;]
+    b [label = &#39;Height&#39;]
+    c [label = &#39;Weight&#39;]
+    a -&gt; c
+    a -&gt; b
+    b -&gt; c
+  }
+&quot;, height = 200, width = 350)</code></pre>
+<div id="htmlwidget-1" style="width:350px;height:200px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\n  digraph graph2 {\n    graph [layout = dot, rankdir = LR]\n    node [style = filled]\n    a [label = \"Sex\"]\n    b [label = \"Height\"]\n    c [label = \"Weight\"]\n    a -> c\n    a -> b\n    b -> c\n  }\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>The code was written in the following way:</p>
+<pre class="r"><code># S = 1 female, S = 2 male
+sim_HW &lt;- function(S,b,a) {
+  N &lt;- length(S)
+  H &lt;- ifelse(S==1,150,160) + rnorm(N,0,5)
+  W &lt;- a[S] + b[S]*H + rnorm(N,0,5)
+  data.frame(S,H,W)
+}
+
+# Generate data
+set.seed(123)
+S &lt;- rbinom(100,1,.5) + 1
+dat &lt;- sim_HW(S, b=c(.5,.6), a=c(0,0))
+head(dat)</code></pre>
+<pre><code>##   S        H        W
+## 1 1 151.2666 79.57199
+## 2 2 159.8573 99.75957
+## 3 1 149.7856 76.55384
+## 4 2 166.8430 95.06392
+## 5 2 158.8711 94.72542
+## 6 1 157.5824 77.38920</code></pre>
+<p>First, the indexing used here <code>b[S]</code> was odd because <code>b</code> is a vector of length 2, and <code>S</code> is a vector of length 100. But all it is doing is making a vector of length 100 by looking up the index of <code>b</code> at each spot (since <code>S</code> is either 1 or 2). I didn’t know you could index like that in <code>R</code> but I guess you learn something everyday. Anyway, that was not the real thing that confused me.</p>
+<p>In the lecture, he states that the <code>a</code> term represents the <em>direct</em> effect of sex on weight, and the <code>b</code> term represents the <em>indirect</em> effect (i.e., proportionality/slope for each sex). It’s clear that there are separate lines created for each sex, and you can see the form of an intercept and slope for each one. In my mind, I’m thinking this has to be similar to an interaction in the model, but it wasn’t intuitive to me how this really played out and/or there was something different going on here. After some thought on a notepad, it is exactly what I was thinking–just a linear model with an interaction term between sex and height, though it is reparameterized a little to create the <em>symmetry</em> of effects as discussed in the lecture. Anyway, here is how it translates:</p>
+<p>Currently, we have that the sex indicators are as follows:</p>
+<p><span class="math display">\[S = 1 (female), 2(male)\]</span>
+Then, the effect of height on weight for each sex is as follows:</p>
+<p><span class="math display">\[b=(b_{S_1},b_{S_2}) = (0.5, 0.6)\]</span>
+Finally, the intercept within each line is:</p>
+<p><span class="math display">\[a=(a_{S_1},a_{S_2})=(0,0)\]</span>
+This leads to:</p>
+<p><span class="math display">\[W_{S_1} = a_{S_1} + b_{S_1}H + \epsilon_i = .5H+\epsilon_i\]</span>
+<span class="math display">\[W_{S_2} = a_{S_2} + b_{S_1}H + \epsilon_i = .6H + \epsilon_i\]</span>
+We could think of this as a single model equation with four (4) regression coefficients looking like the following:</p>
+<p><span class="math display">\[W = \beta_1 S_1 + \beta_2 S_2 + \beta_3 H \times S_1 + \beta_4 H \times S_2 + \epsilon_i\]</span>
+where</p>
+<p><span class="math display">\[S_1 = 1 \text{ if female; 0 otherwise}\]</span>
+<span class="math display">\[S_2 = 1 \text{ if male; 0 otherwise}\]</span>
+There is no intercept term in the model. Instead, there are <em>symmetric</em> parameterizations for males and females, instead of making the effects relative to one another (which, as mentioned in the lecture, makes it more intuitive to make priors for). The design matrix for this model would then look something like:</p>
+<pre class="r"><code>tribble(
+  ~S1, ~S2, ~H_S1, ~H_S2, ~W,
+  1, 0, 150, 0, 80,
+  0, 1, 0, 160, 90,
+  0, 1, 0, 140, 70,
+  1, 0, 165, 0, 75
+)</code></pre>
+<pre><code>## # A tibble: 4 × 5
+##      S1    S2  H_S1  H_S2     W
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0   150     0    80
+## 2     0     1     0   160    90
+## 3     0     1     0   140    70
+## 4     1     0   165     0    75</code></pre>
+<p>Basically, every time <code>S1</code> is <code>1</code> (female), then <code>S2</code> is <code>0</code> (male), as well as the corresponding value for <code>H</code>.</p>
+<p><em>I may have to rethink what I just wrote a bit as the the <span class="math inline">\(S_1\)</span> and <span class="math inline">\(S_2\)</span> columns are actually completely redundant, so not sure if this is right yet</em></p>
+<p>So how would we parameterize this in a more classical regression model? If we just rewrite a few things. Let:</p>
+<p><span class="math display">\[S=(0(female), 1(male))\]</span>
+Then we assume the model is:</p>
+<p><span class="math display">\[W = \beta_0+\beta_1 S+\beta_2 H+\beta_3 S\times H + \epsilon_i\]</span>
+If we translate parameter values from the example,</p>
+<p><span class="math display">\[\beta_0 = 0 \hskip.1in \beta_1 = 0\]</span>
+<span class="math display">\[\beta_2 = .5 \hskip.1in \beta_3 = .6-.5 = .1\]</span>
+We then get:</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+W_{S=0(female)}
+&amp;= \beta_0 + \beta_1(0) + \beta_2H+\beta_3 0 \times H + \epsilon_i \\
+&amp;= 0 + 0(0) + .5H + .1(0 \times H) + \epsilon_i \\
+&amp;= 0.5H + \epsilon_i
+\end{split}
+\end{equation}
+\]</span></p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+W_{S=1(male)}
+&amp;= \beta_0 + \beta_1(1) + \beta_2H+\beta_3 1 \times H + \epsilon_i \\
+&amp;= 0 + 0(1) + .5H + .1(1 \times H) + \epsilon_i \\
+&amp;= 0.5H + 0.1H + \epsilon_i \\
+&amp;= 0.6H + \epsilon_i
+\end{split}
+\end{equation}
+\]</span></p>
+<p>This makes it much more clear why the <em>direct</em> effect is zero, since the main effect of sex is zero in this model. We only see an effect from sex through the interaction with height, which is what is known as the <em>indirect</em> effect.</p>
+</div>
+</div>
+<div id="homework" class="section level2">
+<h2>Homework</h2>
+<ol style="list-style-type: decimal">
+<li>From the <code>Howell1</code> dataset, consider only the people younger than 13 years old. Estimate the causal association between age and weight. Assume age influences weight through two paths. First, age influences height, and height influences weight. Second, age directly influences weight through age-related changes in muscle growth and body proportions. Draw the DAG that represents these causal relationships. And then write a generative simulation that takes age as an input and simulates height and weight, obeying the relationships in the DAG.</li>
+</ol>
+<p>First, we’ll import the dataset directly from the package’s <a href="https://github.com/rmcelreath/rethinking">Github repository</a>. We will filter to those &lt; 13 years old, and convert height to inches, and weight to lbs:</p>
+<pre class="r"><code>howell1 &lt;-
+  read_delim(
+    file = &quot;https://raw.githubusercontent.com/rmcelreath/rethinking/master/data/Howell1.csv&quot;,
+    delim = &quot;;&quot;
+  ) %&gt;%
+  
+  # Keep those younger than 13
+  filter(age &lt; 13) %&gt;%
+  
+  # Convert the units (more intuitive for me)
+  mutate(
+    height = height / 2.54,
+    weight = weight * 2.205
+  )</code></pre>
+<pre><code>## Rows: 544 Columns: 4
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;;&quot;
+## dbl (4): height, weight, age, male
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>howell1</code></pre>
+<pre><code>## # A tibble: 146 × 4
+##    height weight   age  male
+##     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1   48     43.3  12       1
+##  2   41.5   30.8   8       0
+##  3   34     23.1   6.5     0
+##  4   43     35.3   7       0
+##  5   45     39.4  11       1
+##  6   48     45.0   8       1
+##  7   50.8   51.5  12       0
+##  8   38.5   29.3   5       0
+##  9   43.5   34.0   9       0
+## 10   38.5   28.1   5       0
+## # … with 136 more rows</code></pre>
+<p>Next, we can write the causal diagram as described:</p>
+<pre class="r"><code>DiagrammeR::grViz(&quot;
+  digraph graph2 {
+    graph [layout = dot, rankdir = LR]
+    node [style = filled]
+    a [label = &#39;Age&#39;]
+    b [label = &#39;Height&#39;]
+    c [label = &#39;Weight&#39;]
+    a -&gt; c
+    a -&gt; b
+    b -&gt; c
+  }
+&quot;, height = 200, width = 350)</code></pre>
+<div id="htmlwidget-2" style="width:350px;height:200px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"diagram":"\n  digraph graph2 {\n    graph [layout = dot, rankdir = LR]\n    node [style = filled]\n    a [label = \"Age\"]\n    b [label = \"Height\"]\n    c [label = \"Weight\"]\n    a -> c\n    a -> b\n    b -> c\n  }\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>If we let</p>
+<p><span class="math display">\[A=Age \hskip.1in H=Height \hskip.1in W=Weight\]</span></p>
+<p>Then, we assume that:</p>
+<p><span class="math display">\[H = f_H(A) \hskip.2in W = f_W(A,H)\]</span>
+Finally, we can write the generative simulation to produce synthetic data governed by the DAG:</p>
+<pre class="r"><code># Simulating synthetic children
+sim_children &lt;-
+  function(N) {
+    
+    # 1. Generate uniform ages
+    A &lt;- runif(N, 0, 13)
+    
+    # 2. Generate heights as a linear combination of age
+    H &lt;- 22 + 2*A + rnorm(N, mean = 0, sd = 1)
+    
+    # 3. Generate weights as a linear combination of age and height
+    W &lt;- .8*H + rnorm(N, mean = 0, sd = .5)
+    
+    # Make a data frame
+    tibble(A, H, W)
+  }</code></pre>
+<p>We first generate ages uniformly from 0 to 13, so</p>
+<p><span class="math display">\[A \sim Uniform(0,13)\]</span></p>
+<p>Then, we generate heights from a normal distribution with means that are linearly related to the age.</p>
+<p><span class="math display">\[H \sim Normal(\mu =22 + 2 \times A, \sigma = 3)\]</span>
+Notice the intercept term to ensure a positive height for children who are 0 years old. <em>Note: A distribution like the Gamma may be better here to ensure we don’t get negative heights. For younger ages, I would assume that the distribution of heights has a little right-skew. In any case, we’ll move forward with the Normal distribution here for simplicity sake.</em></p>
+<p>Then we generate the weights as a linear function of the observed age and heights.</p>
+<p><span class="math display">\[W \sim Normal(\mu=.8H, \sigma = .5)\]</span>
+We make the assumption that there is a linear relationship between weight with age and height, and that for any age, the increase in mean weight per inch increase in height is the same. In fact, the effect for age is 0 since it is observed through height.</p>
+<pre class="r"><code># Simulate some children
+set.seed(123)
+simmed_children &lt;- sim_children(200)
+plot(simmed_children)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Use a linear regression to estimate the <strong>total</strong> causal effect of each year of growth on weight.</p></li>
+<li><p>Now suppose the causal association between age and weight might be different between boys and girls. Use a single linear regression, with a categorical variable for sex, to estimate the total causal effect of age on weight separately for boys and girls. How do boys and girls differ? Provide one or more posterior contrasts as a summary.</p></li>
+</ol>
+</div>
+<div id="notes-1" class="section level2">
+<h2>Notes</h2>
+<ul>
+<li>The linear regression can approximate anything, so we need to design it with the causal model in mind</li>
+<li>Generative models + multiple estimands, we’ll have multiple estimands</li>
+<li>Need post-processing of posterior distribution to gain inference of joint distributino</li>
+<li>We require categories, splines, etc. to build causal estimators</li>
+<li>Need to <em>stratify</em> by category to get at the estimands we want (separate lines)</li>
+</ul>
+<p><strong>Example</strong></p>
+<ul>
+<li>Extend example above to include patient sex, age</li>
+<li>Need to determine how height, weight, sex are causally related (add to DAG), and statistically related</li>
+<li>To determine which way the arrows go, think about the interventions you’re willing to consider</li>
+<li>Don’t have to draw them, but the implied unobserved causes of each variable are implied
+<ul>
+<li>These are ignorable <em>unless shared</em> across variables</li>
+<li>Ex. temperature is a cause of sex and weight in some species</li>
+</ul></li>
+<li>What is the causal effect of S on W?
+<ul>
+<li>Accounts for direct and indirect effect</li>
+<li>We can also ask what is the direct causal effect of S on W?</li>
+<li>These questions require different models</li>
+</ul></li>
+<li>Generally want to assign the same prior for parameters for each category level (below)
+<ul>
+<li>Using indexing is advantageous because you have symmetry such that all parameters can get the same prior, they are all interpreted the same within their levels</li>
+<li>Using indicators makes parameters relative to other levels, which causes you have to put priors on other parameters because it is an adjustment parameter (one is an average, one is an adjustment to an average)</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[W_i \sim Normal(\mu_i, \sigma) \hskip.1in \mu_i=\alpha_{S[i]}\]</span>
+<span class="math display">\[\alpha = [\alpha_1, \alpha_2] \hskip.1in \alpha_j \sim Normal(60,10)\]</span>
+<strong>Total Causal Effect</strong></p>
+<ul>
+<li>Simulate one data set of all males, another of all females, look at the average difference in weight
+<ul>
+<li>This is the actual causal effect</li>
+<li>Then you can generate a random data set, run the modeling process, and then ensure that the model provides the expected estimate</li>
+</ul></li>
+<li>Look at the posterior distribution of the mean difference, and randomly draw samples from the individual posteriors and compute the differences to answer questions like “what is the probability that a randomly selected male will be heavier than a randomly selected female?”</li>
+<li>This was basically just an intercept-only model for sex, and the effect due to height would be captured in that difference</li>
+</ul>
+<p><strong>Direct Effect</strong></p>
+<ul>
+<li>How do we partial out the indirect effect of Height (block it)?
+<ul>
+<li>Stratify by height to block the association between S and W that is transmitted through H</li>
+</ul></li>
+<li>Difference in intercept, the indirect is slope differences</li>
+<li>Here, the model allows for separate slopes by sex, so we can tease out the impact of height
+<ul>
+<li>Center the height to make the interpretation of the intercept be the average</li>
+<li>Makes priors more intuitive, and computation easier</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[W_i \sim Normal(\mu_i, \sigma) \hskip.1in \mu_i=\alpha_{S[i]} + \beta_{S[i]}(H_i-\bar{H})\]</span>
+<span class="math display">\[\alpha=[\alpha_1,\alpha_2] \hskip.1in \beta=[\beta_1,\beta_2]\]</span></p>
+<ul>
+<li>In this case, nearly all the total effect of sex on weight is explained through height (the direct effect (posterior of the difference between weights at each height) is nearly 0 at all heights)</li>
+</ul>
+<p><strong>Curve Fitting</strong></p>
+<ul>
+<li>We use linear models to do this; i.e., it’s not mechanistic, but we use it wisely</li>
+<li>Strategies
+<ul>
+<li>Polynomials: Don’t do it; no local smoothing, only global; learn to much from data in regions that lie far away
+<ul>
+<li>It’s not worth having a model that looks OK for most of the data that we know is completely erroneous (e.g., parabola at some point shows babies get heavier as their height decreases, which we know is wrong); even though this is a small portation of observations, it’s still knowingly wrong, so why use it?</li>
+</ul></li>
+<li>Splines &amp; GAMs: Not as bad as polynomials; add total many locally trained terms</li>
+</ul></li>
+</ul>
+<p><strong>Splines</strong></p>
+<ul>
+<li>Flexible curve that will find trends</li>
+<li>B-splines are linear models containing additive terms with synthetic variables
+<ul>
+<li>Think of it as a collection of individual curves (basis functions), but the weight of each basis function is non-zero at only particular areas of x, and spline is the sum of the curves at a particular point</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[\mu_i = \alpha + w_1B_{i,1} + w_2B_{i,2} + ...\]</span></p>
+<ul>
+<li>Ideal model for age/height would be to account for what we know about human biology: infant, toddler, adolescent, adult. In the first 3, we expect only upward growth, so we should constrain.</li>
+</ul>
+<p><strong>Full Luxury Bayes</strong></p>
+<ul>
+<li>Equivalent approach is to use one model for entire causal sample</li>
+<li>Then run simulations from overall system to get answers to specific queries</li>
+</ul>
+</div>
+</div>
