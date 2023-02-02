@@ -1,0 +1,95 @@
+---
+title: 'Brain Dump: February 2023'
+author: Alex Zajichek
+date: '2023-02-02'
+slug: brain-dump-february-2023
+categories: []
+tags: []
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2023-02-02T11:10:15-06:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+# Table of Contents
+
+* [Nesting with `tidyr`](#nesting)
+
+# Nesting with `tidyr` {#nesting}
+
+_2/2/2023_
+
+I really love the elegance of the `nest` functionality with the `tidyr` package. It really allows you to abstract the meaning of a data frame to not just contain rectangular data with scalars, but rather a generalization that has rectangular data of _objects_. The most intriguing part of it to me is the way we can continue to use typical `join` operations even with complex objects in some of the columns, which makes it so smooth and intuitive to do complex data operations.
+
+For example, lets say we have a dataset.
+
+```{r}
+dat <- cheese::heart_disease
+dat
+```
+
+And we want to compute age percentiles by sex for those who do and don't have heart disease.
+
+```{r}
+# Load packages
+library(tidyverse)
+
+# Nest data frames within sex, heart disease
+nested1 <-
+  dat %>%
+  group_by(Sex, HeartDisease) %>%
+  nest()
+nested1
+```
+
+We can see that there is now a separate dataset available within each combination of sex and heart disease status in the form of a `list` column.
+
+```{r}
+# Get the empirical cumulative density function for age
+nested2 <-
+  nested1 %>%
+  mutate(
+    ecdf_col = data %>% map(~ecdf(.x$Age))
+  )
+nested2
+```
+
+We then apply `list` operations as we normally would. In this case, we use `purrr::map` to create an empirical cumulative density function for age within each group. The result is then just a `list` of `ecdf` functions.
+
+```{r}
+# Make an age grid
+age_grid <-
+  dat %>%
+  select(Sex, HeartDisease) %>%
+  distinct() %>%
+  inner_join(
+    y = tibble(Age = c(40, 50, 60, 70)),
+    by = character()
+  )
+age_grid
+```
+
+We then made an age grid for each sex/heart disease combination to evaluate the percentiles of each age in the respective groups. Now, we can compute the percentiles by joining to get the `ecdf` for the respective group, and plugging in each age into the function.
+
+```{r}
+age_grid %>% 
+  
+  # Join to get the ecdf for the group
+  inner_join(
+    y = nested2 %>% select(-data),
+    by = c("Sex", "HeartDisease")
+  ) %>%
+  
+  # Compute the percentile for the given age
+  mutate(
+    Percentile = map2(.x = ecdf_col, .y = as.list(Age), .f = ~.x(.y)) %>% flatten_dbl()
+  )
+```
+
+We can see, for example, that a 60 year old male is at the $86^{th}$ percentile for those without heart disease, but at the $72^{nd}$ for those who due, suggesting that the age distribution tends to be higher in patients with heart disease.
