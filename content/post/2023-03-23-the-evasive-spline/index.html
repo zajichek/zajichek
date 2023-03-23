@@ -1,14 +1,14 @@
 ---
-title: 'Brain Dump: January 2023'
+title: The Evasive Spline
 author: Alex Zajichek
-date: '2023-01-12'
-slug: brain-dump-january-2023
+date: '2023-03-23'
+slug: the-evasive-spline
 categories: []
 tags: []
-subtitle: ''
-summary: ''
+subtitle: 'Basis Functions & Splines'
+summary: 'I have learned and forgot how splines work over and over again.'
 authors: []
-lastmod: '2023-01-12T10:23:09-06:00'
+lastmod: '2023-03-23T05:51:26-05:00'
 featured: no
 image:
   caption: ''
@@ -19,54 +19,6 @@ projects: []
 
 
 
-<p>Over time, I’ve found myself constantly learning new things or having new ideas, only to later forget them (like a lot of the things I learned in grad school), then trying to relearn the same thing at a later date. So I thought it might be worthwhile to try to create a knowledge base for myself that I add to weekly so that I can refer back when needed to maintain intuition. These might be little programming tricks, math and/or statistics concepts, general thoughts or ideas, etc. We’ll see how this goes…</p>
-<div id="table-of-contents" class="section level1">
-<h1>Table of Contents</h1>
-<ul>
-<li><a href="#bernoulli">Deriving a Bernoulli MLE</a></li>
-<li><a href="#splines">Basis Functions &amp; Splines</a></li>
-<li><a href="#effectivedatastory"><em>Effective Data Storytelling</em>: Key Takeaways</a></li>
-</ul>
-</div>
-<div id="bernoulli" class="section level1">
-<h1>Deriving a Bernoulli MLE</h1>
-<p><em>1/12/2023</em></p>
-<p>I tried to derive the MLE for a set of Bernoulli responses just to see if I could, and got stuck. The <em>probability mass function (PMF)</em> is</p>
-<p><span class="math display">\[P(Y_i = y) = p^y(1-p)^{1-y}\]</span>
-First, we need to define the likelihood function:</p>
-<p><span class="math display">\[L(p) = \prod_{i=1}^nP(Y_i=y)\]</span>
-Then, convert ot a log likelihood:</p>
-<p><span class="math display">\[
-\begin{equation}
-\begin{split}
-log(L(p))
-&amp;= log(\prod_{i=1}^nP(Y_i=y)) \\
-&amp;= \sum_{i=1}^nlog(P(Y_i=y)) \\
-&amp;= \sum_{i=1}^nlog(p^{y_i}(1-p)^{1-y_i}) \\
-&amp;= log(p)\sum_{i=1}^ny_i + log(1-p)(n - \sum_{i=1}^ny_i)
-\end{split}
-\end{equation}
-\]</span>
-Next, we need to differentiate with respect to <span class="math inline">\(p\)</span>.</p>
-<p><span class="math display">\[
-\begin{equation}
-\begin{split}
-\frac{d}{dp}log(L(p))
-&amp;= \frac{d}{dp} log(p)\sum_{i=1}^ny_i + log(1-p)(n - \sum_{i=1}^ny_i) \\
-&amp;= \sum_{i=1}^ny_i \frac{d}{dp} log(p) + (n - \sum_{i=1}^ny_i) \frac{d}{dp} log(1-p) \\
-&amp;= \sum_{i=1}^ny_i \frac{1}{p} + (n - \sum_{i=1}^ny_i) \frac{1}{1-p} \frac{d}{dp} (1-p) \\
-\end{split}
-\end{equation}
-\]</span>
-This is where my problem was. I forgot about the <a href="https://en.wikipedia.org/wiki/Chain_rule">chain rule</a> when taking a derivative, so I wasn’t doing the additional step of taking multiplying by the derivative of <span class="math inline">\(1-p\)</span>, thus things weren’t cancelling appropriately when solving for <span class="math inline">\(p\)</span>. It should reduce to:</p>
-<p><span class="math display">\[\sum_{i=1}^ny_i \frac{1}{p} + (n - \sum_{i=1}^ny_i) \frac{-1}{1-p}\]</span>
-Finally, we just set that equal to zero:</p>
-<p><span class="math display">\[\sum_{i=1}^ny_i \frac{1}{p} + (n - \sum_{i=1}^ny_i) \frac{-1}{1-p} = 0\]</span>
-After some algebra:</p>
-<p><span class="math display">\[\hat{p} = \frac{\sum_{i=1}^ny_i}{n}\]</span></p>
-</div>
-<div id="splines" class="section level1">
-<h1>Basis Functions &amp; Splines</h1>
 <p><em>1/13/2023</em></p>
 <p>This one always gets me. I’ve learned and forgot how splines work many times over the years, and when I need to relearn it, I read the <em>Moving Beyond Linearity</em> chapter of <a href="https://www.statlearning.com/">An Introduction to Statistical Learning</a>.</p>
 <p><strong>Basis Functions</strong> are just a general approach for transforming a simple model like:</p>
@@ -80,7 +32,8 @@ the indicators are <em>basis functions</em> such that:</p>
 or in a polynomial model, the basis functions are <span class="math inline">\(b_j(X_i) = X_i^j\)</span>.</p>
 <p><strong>Knots</strong> are points (cutoffs) along <span class="math inline">\(X_i\)</span> that a <em>local</em> regression starts/ends. For example, we might fit a cubic model (e.g., with parameters <span class="math inline">\(\beta_1, \beta_2, \beta_3\)</span>) where <span class="math inline">\(X_i &lt; C\)</span>, and another model (with a <em>separate</em> set of <span class="math inline">\(\beta_1, \beta_2, \beta_3\)</span>) where <span class="math inline">\(X_i \geq C\)</span>. <span class="math inline">\(C\)</span> is a <em>knot</em>. In this sense, the piecewise regression above was also a polynomial regression with degree 0, and knots at each value of <span class="math inline">\(c_j\)</span>.</p>
 <p>The general problem with an unconstrained polynomial model is that there are no restrictions that force a smooth function across <span class="math inline">\(X\)</span>, so there are discontinuities. Thus, restrictions need to be put in place such as (1) making it continuous at the knot(s), and/or even further, (2) making the first and second derivatives continuous at the knots. These restrictions reduce the complexity of the model (i.e., the number of parameters we estimate).</p>
-<p><strong>Cubic Splines</strong></p>
+<div id="cubic-splines" class="section level1">
+<h1>Cubic Splines</h1>
 <p>A cubic spline with <span class="math inline">\(K\)</span> knots uses <span class="math inline">\(K+4\)</span> parameters. The best way to do this is to use (1) the basis of a cubic polynomial (<span class="math inline">\(x, x^2, x^3\)</span>) and (2) a truncated power basis <em>for each knot</em>:</p>
 <p><span class="math display">\[h(x,\nu) = {(x-\nu)}_+^3\]</span>
 where <span class="math inline">\(\nu\)</span> is the knot location. Thus, a <em>one-knot</em> model looks like:</p>
@@ -179,21 +132,12 @@ Let’s check out that transformation on our data:</p>
 ## [5,]  1.716660
 ## [6,] 12.882156</code></pre>
 <p>By default, this function uses <code>norm=2</code>, which <em>“normalizes by the square of the spacing between the first and last knots…has the advantage of making all nonlinear terms be on the x-scale”</em>.</p>
-</div>
-<div id="effectivedatastory" class="section level1">
-<h1><em>Effective Data Storytelling</em>: Key Takeaways</h1>
-<p><em>1/14/2023</em></p>
-<p>I’ve been reading through the book <a href="https://www.effectivedatastorytelling.com/"><em>Effective Data Storytelling: How to drive change with data, narrative, and visuals</em></a> by Brent Dykes and just wanted to document some thoughts/takeaways.</p>
-<ol style="list-style-type: decimal">
-<li>Importance of domain knowledge</li>
-</ol>
-<p>One of the biggest (and obvious) takeaways is the importance of domain knowledge is being able to craft an effective data story. You can have all the technical skills in world (e.g., math, statistics, programming, etc.), but if you aren’t able to relay that back to how it can impact things people care about, in simple terms, you’ll have trouble getting buy in. Thus, it is essential to be able to (i) acquire business knowledge and intuition for yourself, and (ii) asking the right questions, and (iii) have subject matter experts (SMEs) who can <em>partner</em> with you to problem solve together. Domain knowledge is also incredibly important <em>in</em> the technical aspects as well (e.g., construction of useful statistical models generally requires assumptions about the context of the problem you are solving).</p>
-<ol start="2" style="list-style-type: decimal">
-<li>Organizational culture and support</li>
-</ol>
-<p>I think in order to put data professionals in a position to be able to craft effective data stories, there needs to be some level of forethought into the data culture and structure of the organization. Just from a logistical perspective, it would be very difficult for someone to be able to take the necessary time and delicacy needed to truly create an effective data story (e.g., using the right data, in the right analysis, with the right communication of results) without the foundational support of data infrastructure, data governance, process/project management, defined roles/responsibilities, overall strategy, etc. These things need to be in place (or at least working towards it) to apply the apprpriate amount of rigor and detail required in an efficient and timely manner.</p>
-<ol start="3" style="list-style-type: decimal">
-<li>Tailor communication of results to your audience</li>
-</ol>
-<p>In my current role, I often build analyses in the form of HTML documents (via <a href="https://rmarkdown.rstudio.com/">R Markdown</a>) where the intention is to lay out a story of the data in a particular order, such the the end-user would read through the document on their own to gain the messages of the analysis with interactive figures and tables (the idea of <em>“scrollytelling”</em>). However, I would often get asked by stakeholders to instead present/explain the material for them instead of them (understandably) reading through the whole thing on their own. So I would attend a meeting, bring up the document, and begin walking them through the document. I quickly found that this didn’t work. The intention of the document was to be read, not presented, and so people would get bogged down/distracted by the narrative in the document while presenting. It just felt uncomfortable. This is <em>exactly</em> something that is talked about in the book of what not to do. So, before sharing with stakeholders or presenting, I started converting the information in the document into a slide deck, pulling out the most useful information that was tailored to the way I would present it. Also, recreating graphs, tables, and/or figures that point out just the most pertinent data, instead of using the exhaustive summaries built in the exploratory analysis. These strategies proved to be much more effective and satisfying both for myself and the stakeholders.</p>
+<pre class="r"><code>head(Hmisc::rcspline.eval(x,nk=3, norm = 2))</code></pre>
+<pre><code>##            [,1]
+## [1,] 0.02405534
+## [2,] 0.10816181
+## [3,] 2.14013743
+## [4,] 0.27135366
+## [5,] 0.31547103
+## [6,] 2.36735648</code></pre>
 </div>

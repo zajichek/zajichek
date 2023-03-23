@@ -1,14 +1,14 @@
 ---
-title: 'Brain Dump: February 2023'
+title: Nesting with tidyr
 author: Alex Zajichek
-date: '2023-02-02'
-slug: brain-dump-february-2023
+date: '2023-03-23'
+slug: nesting-with-tidyr
 categories: []
 tags: []
 subtitle: ''
 summary: ''
 authors: []
-lastmod: '2023-02-02T11:10:15-06:00'
+lastmod: '2023-03-23T06:10:16-05:00'
 featured: no
 image:
   caption: ''
@@ -17,15 +17,14 @@ image:
 projects: []
 ---
 
-# Table of Contents
-
-* [Nesting with `tidyr`](#nesting)
-
-# Nesting with `tidyr` {#nesting}
-
 _2/2/2023_
 
-I really love the elegance of the `nest` functionality with the `tidyr` package. It really allows you to abstract the meaning of a data frame to not just contain rectangular data with scalars, but rather a generalization that has rectangular data of _objects_. The most intriguing part of it to me is the way we can continue to use typical `join` operations even with complex objects in some of the columns, which makes it so smooth and intuitive to do complex data operations.
+I really love the elegance of the [`nest`](https://tidyr.tidyverse.org/reference/nest.html) functionality with the [`tidyr`](https://tidyr.tidyverse.org/) package. It really allows you to abstract the meaning of a data frame to not just contain rectangular data with scalars, but rather a generalization that has rectangular data of _objects_. The most intriguing part of it to me is the way we can continue to use typical [`join`](https://dplyr.tidyverse.org/reference/mutate-joins.html) operations even with complex objects in some of the columns, which makes it so smooth and intuitive to do complex data operations.
+
+```{r}
+# Load packages
+library(tidyverse)
+```
 
 For example, lets say we have a dataset.
 
@@ -37,8 +36,6 @@ dat
 And we want to compute age percentiles by sex for those who do and don't have heart disease.
 
 ```{r}
-# Load packages
-library(tidyverse)
 
 # Nest data frames within sex, heart disease
 nested1 <-

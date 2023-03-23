@@ -1,14 +1,14 @@
 ---
-title: 'Brain Dump: February 2023'
+title: Nesting with tidyr
 author: Alex Zajichek
-date: '2023-02-02'
-slug: brain-dump-february-2023
+date: '2023-03-23'
+slug: nesting-with-tidyr
 categories: []
 tags: []
 subtitle: ''
 summary: ''
 authors: []
-lastmod: '2023-02-02T11:10:15-06:00'
+lastmod: '2023-03-23T06:10:16-05:00'
 featured: no
 image:
   caption: ''
@@ -19,16 +19,18 @@ projects: []
 
 
 
-<div id="table-of-contents" class="section level1">
-<h1>Table of Contents</h1>
-<ul>
-<li><a href="#nesting">Nesting with <code>tidyr</code></a></li>
-</ul>
-</div>
-<div id="nesting" class="section level1">
-<h1>Nesting with <code>tidyr</code></h1>
 <p><em>2/2/2023</em></p>
-<p>I really love the elegance of the <code>nest</code> functionality with the <code>tidyr</code> package. It really allows you to abstract the meaning of a data frame to not just contain rectangular data with scalars, but rather a generalization that has rectangular data of <em>objects</em>. The most intriguing part of it to me is the way we can continue to use typical <code>join</code> operations even with complex objects in some of the columns, which makes it so smooth and intuitive to do complex data operations.</p>
+<p>I really love the elegance of the <a href="https://tidyr.tidyverse.org/reference/nest.html"><code>nest</code></a> functionality with the <a href="https://tidyr.tidyverse.org/"><code>tidyr</code></a> package. It really allows you to abstract the meaning of a data frame to not just contain rectangular data with scalars, but rather a generalization that has rectangular data of <em>objects</em>. The most intriguing part of it to me is the way we can continue to use typical <a href="https://dplyr.tidyverse.org/reference/mutate-joins.html"><code>join</code></a> operations even with complex objects in some of the columns, which makes it so smooth and intuitive to do complex data operations.</p>
+<pre class="r"><code># Load packages
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+## ✔ ggplot2 3.4.0     ✔ purrr   1.0.0
+## ✔ tibble  3.1.8     ✔ dplyr   1.1.0
+## ✔ tidyr   1.2.1     ✔ stringr 1.4.1
+## ✔ readr   2.1.3     ✔ forcats 0.5.2
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <p>For example, lets say we have a dataset.</p>
 <pre class="r"><code>dat &lt;- cheese::heart_disease
 dat</code></pre>
@@ -48,16 +50,6 @@ dat</code></pre>
 ## # … with 293 more rows, and abbreviated variable names ¹​Cholesterol,
 ## #   ²​BloodSugar, ³​MaximumHR, ⁴​ExerciseInducedAngina, ⁵​HeartDisease</code></pre>
 <p>And we want to compute age percentiles by sex for those who do and don’t have heart disease.</p>
-<pre class="r"><code># Load packages
-library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-## ✔ readr   2.1.3      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code># Nest data frames within sex, heart disease
 nested1 &lt;-
   dat %&gt;%
@@ -97,8 +89,10 @@ age_grid &lt;-
   inner_join(
     y = tibble(Age = c(40, 50, 60, 70)),
     by = character()
-  )
-age_grid</code></pre>
+  )</code></pre>
+<pre><code>## Warning: Using `by = character()` to perform a cross join was deprecated in dplyr 1.1.0.
+## ℹ Please use `cross_join()` instead.</code></pre>
+<pre class="r"><code>age_grid</code></pre>
 <pre><code>## # A tibble: 16 × 3
 ##    Sex    HeartDisease   Age
 ##    &lt;fct&gt;  &lt;fct&gt;        &lt;dbl&gt;
@@ -151,4 +145,3 @@ age_grid</code></pre>
 ## 15 Female Yes             60 &lt;ecdf&gt;       0.52  
 ## 16 Female Yes             70 &lt;ecdf&gt;       1</code></pre>
 <p>We can see, for example, that a 60 year old male is at the <span class="math inline">\(86^{th}\)</span> percentile for those without heart disease, but at the <span class="math inline">\(72^{nd}\)</span> for those who due, suggesting that the age distribution tends to be higher in patients with heart disease.</p>
-</div>
