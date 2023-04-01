@@ -1,0 +1,34 @@
+---
+title: The overlap weight
+author: Alex Zajichek
+date: '2023-04-01'
+slug: the-overlap-weight
+categories: []
+tags: ['statistics', 'datascience', 'causation', 'rstats']
+subtitle: 'A more inclusive approach to matching'
+summary: ''
+authors: []
+lastmod: '2023-04-01T11:39:12-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+I was recently introduced to a new method in the field of [matching](https://en.wikipedia.org/wiki/Matching_(statistics)) for observational studies called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748). Although I've just started getting into the details, I already see it as superior to [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching), a well-known matching method and what I've typically done in the past, for a few reasons (that I've observed at least):
+
+1. It uses all available information (all observations) instead of arbitrary cutoffs like, for example, 1:5 matching 
+2. It's properties _force_ the standardized differences of all factors included in the propensity score model to be zero across the treatment groups
+3. Each treatment group contributes equally to outcome model when the overlap weights are used regardless of the balance of the two in the original sample
+4. Because of (1), it makes it much more intuitive to explore the impacts of the weighting process on other covariates and the outcome
+
+The _overlap weighting_ process actually starts the same as _PS matching_--by modeling the treatment group as a function of various factors that may be confounding the observed (unadjusted) treatment effect. It's what is done will the scores (probabilities) that differentiate the methods. 
+
+* How to calculate them
+* Intuition about who it focuses on, proportional down weights
+* Show differences in outcome weighted and unweighted
+* Show standarized differences of covariates (some not included in PS model as well) (use plotly)
+* Show ways to assess cumulative contribution of cases and impact on other covariates
+* Assess redundancy

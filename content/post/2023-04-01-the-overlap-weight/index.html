@@ -1,0 +1,37 @@
+---
+title: The overlap weight
+author: Alex Zajichek
+date: '2023-04-01'
+slug: the-overlap-weight
+categories: []
+tags: ['statistics', 'datascience', 'causation', 'rstats']
+subtitle: 'A more inclusive approach to matching'
+summary: ''
+authors: []
+lastmod: '2023-04-01T11:39:12-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p>I was recently introduced to a new method in the field of <a href="https://en.wikipedia.org/wiki/Matching_(statistics)">matching</a> for observational studies called <a href="https://jamanetwork.com/journals/jama/article-abstract/2765748"><em>overlap weighting</em></a>. Although I’ve just started getting into the details, I already see it as superior to <a href="https://en.wikipedia.org/wiki/Propensity_score_matching">propensity score (PS) matching</a>, a well-known matching method and what I’ve typically done in the past, for a few reasons (that I’ve observed at least):</p>
+<ol style="list-style-type: decimal">
+<li>It uses all available information (all observations) instead of arbitrary cutoffs like, for example, 1:5 matching</li>
+<li>It’s properties <em>force</em> the standardized differences of all factors included in the propensity score model to be zero across the treatment groups</li>
+<li>Each treatment group contributes equally to outcome model when the overlap weights are used regardless of the balance of the two in the original sample</li>
+<li>Because of (1), it makes it much more intuitive to explore the impacts of the weighting process on other covariates and the outcome</li>
+</ol>
+<p>The <em>overlap weighting</em> process actually starts the same as <em>PS matching</em>–by modeling the treatment group as a function of various factors that may be confounding the observed (unadjusted) treatment effect. It’s what is done will the scores (probabilities) that differentiate the methods.</p>
+<ul>
+<li>How to calculate them</li>
+<li>Intuition about who it focuses on, proportional down weights</li>
+<li>Show differences in outcome weighted and unweighted</li>
+<li>Show standarized differences of covariates (some not included in PS model as well) (use plotly)</li>
+<li>Show ways to assess cumulative contribution of cases and impact on other covariates</li>
+<li>Assess redundancy</li>
+</ul>
