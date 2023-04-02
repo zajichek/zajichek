@@ -19,14 +19,34 @@ projects: []
 
 
 
-<p>I was recently introduced to a new method in the field of <a href="https://en.wikipedia.org/wiki/Matching_(statistics)">matching</a> for observational studies called <a href="https://jamanetwork.com/journals/jama/article-abstract/2765748"><em>overlap weighting</em></a>. Although I’ve just started getting into the details, I already see it as superior to <a href="https://en.wikipedia.org/wiki/Propensity_score_matching">propensity score (PS) matching</a>, a well-known matching method and what I’ve typically done in the past, for a few reasons (that I’ve observed at least):</p>
+<p>I was recently introduced to a method in the field of <a href="https://en.wikipedia.org/wiki/Matching_(statistics)">matching</a> for observational studies called <a href="https://jamanetwork.com/journals/jama/article-abstract/2765748"><em>overlap weighting</em></a>. Although I’ve just started getting into the details, I already see it as superior to <a href="https://en.wikipedia.org/wiki/Propensity_score_matching">propensity score (PS) matching</a>, a well-known matching method and what I’ve typically done in the past, for a few reasons (that I’ve observed at least):</p>
 <ol style="list-style-type: decimal">
-<li>It uses all available information (all observations) instead of arbitrary cutoffs like, for example, 1:5 matching</li>
-<li>It’s properties <em>force</em> the standardized differences of all factors included in the propensity score model to be zero across the treatment groups</li>
-<li>Each treatment group contributes equally to outcome model when the overlap weights are used regardless of the balance of the two in the original sample</li>
-<li>Because of (1), it makes it much more intuitive to explore the impacts of the weighting process on other covariates and the outcome</li>
+<li>It uses all available information (all observations) instead of arbitrary cutoffs like, for example, 1:5 matching.</li>
+<li>Its properties <em>force</em> the standardized differences of all factors included in the propensity score model to be zero across the treatment groups instead of arbitrarily close.</li>
+<li>Each treatment group contributes equally to the outcome model when the overlap weights are used regardless of the balance of the treatment groups in the original sample.</li>
+<li>Because of (1), it makes it much more intuitive to explore the impacts of the weighting process on other covariates and the outcome.</li>
 </ol>
-<p>The <em>overlap weighting</em> process actually starts the same as <em>PS matching</em>–by modeling the treatment group as a function of various factors that may be confounding the observed (unadjusted) treatment effect. It’s what is done will the scores (probabilities) that differentiate the methods.</p>
+<p>The <em>overlap weighting</em> process actually starts the same as <em>PS matching</em>–by modeling the treatment group as a function of various factors that may be confounding the observed (unadjusted) treatment effect. It’s what is done with the scores (probabilities) that differentiate the methods.</p>
+<div id="how-is-it-defined" class="section level1">
+<h1>How is it defined?</h1>
+<p>It’s actually quite simple. Suppose you have treatments A &amp; B (note this does extend to more treatments as well), and you build a propensity score model (using logistic regression) to estimate the probability that each observation belongs to a particular treatment group given a collection of covariate values (<em>Note: We should strive for selecting covariates that we believe are associated with both the treatment group membership and the outcome of interest</em>):</p>
+<p><span class="math display">\[P(T_i = A|X_i)) \approx \frac{1}{1 + e^{-X_i\hat{\beta}}} = \hat{p_i}\]</span>
+where <span class="math inline">\(\hat{\beta}\)</span> are the estimated regression coefficients and <span class="math inline">\(X_i\)</span>, <span class="math inline">\(T_i\)</span> are the covariate values and treatment group for the <span class="math inline">\(i^{th}\)</span> observation. Then <span class="math inline">\(OW_i\)</span>, the <em>overlap weight</em> for the <span class="math inline">\(i^{th}\)</span> observation, is calculated by:</p>
+<p><span class="math display">\[
+\begin{equation}
+OW_i=
+    \begin{cases}
+        1-\hat{p_i} &amp; \text{if } T_i = A\\
+        \hat{p_i} &amp; \text{if } T_i = B\\
+    \end{cases}
+\end{equation}
+\]</span>
+Now we do end up normalizing these weights so that they sum to one (1) <em>within</em> each treatment group. But here’s some intuition about what’s happening: it shifts the focus of the subsequent outcome model to observations that are most likely in <em>either</em> treatment group (i.e., <span class="math inline">\(P(T_i = A|X_i))\)</span> near 0.5) (technically it focuses <em>most</em> on observations that are “misclassified”, but since these probabilities are derived on the data set in which the model was built, we probably won’t see many of those).</p>
+<p>I think this makes a lot of sense. When we’re trying to evaluate the effectiveness of a treatment, we want to focus most heavily on those who could be candidates for either one, and less so on those who were bound for one of the treatment options (because of their specific characteristics). The beautiful thing here is that we do this without throwing away any information, and proportionately weight each observation just the amount that we should.</p>
+</div>
+<div id="can-i-have-an-example" class="section level1">
+<h1>Can I have an example?</h1>
+<p>Sure!</p>
 <ul>
 <li>How to calculate them</li>
 <li>Intuition about who it focuses on, proportional down weights</li>
@@ -35,3 +55,4 @@ projects: []
 <li>Show ways to assess cumulative contribution of cases and impact on other covariates</li>
 <li>Assess redundancy</li>
 </ul>
+</div>
