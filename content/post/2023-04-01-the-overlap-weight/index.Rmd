@@ -17,7 +17,7 @@ image:
 projects: []
 ---
 
-I was recently introduced to a method in the field of [matching](https://en.wikipedia.org/wiki/Matching_(statistics)) (or _balancing_) for observational studies called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748). Although I've just started getting into the details, I already see it as superior to [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching), a well-known matching method and what I've typically done in the past, for a few reasons (that I've observed at least):
+I was recently introduced to a method in the field of [matching](https://en.wikipedia.org/wiki/Matching_(statistics)) (or _balancing_) for observational studies called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748). Although I've just started getting into the details, I already see it as superior to [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching), a well-known matching method and what I've done in the past, for a few reasons (that I've observed at least):
 
 1. It uses all available information (all observations) instead of arbitrary cutoffs like, for example, 1:5 matching.
 2. Its properties _force_ the standardized differences of all factors included in the propensity score model to be zero across the treatment groups instead of arbitrarily close.
@@ -25,9 +25,16 @@ I was recently introduced to a method in the field of [matching](https://en.wiki
 4. Because of (1), it makes it much more intuitive to explore the impacts of the weighting process on other covariates and the outcome.
 5. It also has [been shown](https://academic.oup.com/aje/article/188/1/250/5090958) to produce more unbiased and efficient estimates than other inclusive weighting approaches like _inverse probability weighting (IPW)_ (regardless if trimming was used). It also has practical benefits over IPW in that weights are bounded between 0 and 1, foregoing the need for (arbitrary) trimming.
 
-The _overlap weighting_ process actually starts the same as _PS matching_--by modeling the treatment group as a function of various factors that may be confounding the observed (unadjusted) treatment effect. It's what is done with the scores (probabilities) that differentiate the methods. 
+The overlap weighting process actually starts the same as PS matching: by modeling the treatment group as a function of various factors that may be confounding the observed (unadjusted) treatment effect. It's what is done with the scores (probabilities) that differentiate the methods. 
 
-# How is it defined?
+# Table of Contents
+
+* [Defining the overlap weight](#definition)
+* [Heart disease example](#example)
+  + [Making an artificial treatment](#artificial)
+  + [Fitting the propensity score model](#modelfit)
+
+# How is it defined? {#definition}
 
 It's actually quite simple. Suppose you have treatments A & B (note this does extend to more treatments as well), and you build a propensity score model (using logistic regression) to estimate the probability that each observation belongs to a particular treatment group given a collection of covariate values (_Note: We should strive for selecting covariates that we believe are associated with both the treatment group membership and the outcome of interest_):
 
@@ -47,21 +54,32 @@ Now we do end up normalizing these weights so that they sum to one (1) _within_ 
 
 I think this makes a lot of sense. When we're trying to evaluate the effectiveness of a treatment, we want to focus most heavily on those who could be candidates for either one, and less so on those who were bound for one of the treatment options (because of their specific characteristics). The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each observation just the amount that we should.
 
-# Can I have an example?
+# Can I have an example? {#example}
 
-Sure. Let's first create a synthetic treatment as example. Using the `cheese::heart_disease` data set, we're going to assume the following:
+Sure. Let's first load some packages to get started.
+
+```{r, message = FALSE}
+library(tidyverse)
+library(plotly)
+```
+
+We're going to be creating an artificial example using the `cheese::heart_disease` data set to estimate the effect of some treatment on the likelihood of heart disease. 
+
+```{r}
+dat <- cheese::heart_disease
+print(dat, n = 5)
+```
+
+## Making an artificial treatment {#artificial}
+
+There is not actually a treatment column in this data set, so we'll make one. Let's assume the following:
 
 $$logit(P(T_i|X_i)) = 0.75Age_{std} + 0.5Male$$
-
 That is, the probability of being _treated_ ($T_i$) is linearly related to the (standardized) age and sex of the patient. Further, older patients and male patients are more likely to be treated. 
 
 ```{r}
-# Load some packages
-library(tidyverse)
-library(plotly)
-
 dat <- 
-  cheese::heart_disease %>%
+  dat %>%
   
   # Add the true propensity score
   mutate(
@@ -69,7 +87,7 @@ dat <-
   ) 
 ```
 
-First lets look at the overall _true_ propensity score distribution.
+Let's look at the _true_ propensity score distribution (note these are never known).
 
 ```{r}
 dat %>%
@@ -83,7 +101,7 @@ dat %>%
   )
 ```
 
-Now, let's generate the treatment indicator for each patient by taking a random draw from a Bernoulli distribution:
+Now, we'll generate the treatment indicator for each patient by taking a random draw from a Bernoulli distribution:
 
 ```{r}
 set.seed(123)
@@ -96,7 +114,7 @@ dat <-
   )
 ```
 
-Of the `r nrow(dat)` patients, `r paste0(sum(dat$Treated), " (", round(mean(dat$Treated) * 100, 1), "%)")` were treated. Let's look at the rate of treatment by age and sex.
+Of the `r nrow(dat)` patients, `r paste0(sum(dat$Treated), " (", round(mean(dat$Treated) * 100, 1), "%)")` were treated. Let's look at the observed rate of treatment by age and sex.
 
 ```{r}
 ggplotly(
@@ -146,13 +164,66 @@ ggplotly(
 
 ```
 
-## 1. Build the propensity score model
+As expected, we see an increasing treatment rate with age, as well as for male patients (this is only expected because we defined it this way; in practice, this graph might give us the evidence to use age and sex in a propensity score model). 
 
+**Important**: _Note that we did not relate the treatment to likelihood of heart disease (our outcome), so there is actually no effect. Any effect we do see is completely explained by confounding due to age and sex._
 
+## Fitting the propensity score model {#modelfit}
 
-## 2. Calculate the overlap weights
+As described [above](#definition), we just need to fit a logistic regression model, regressing the treatment variable on age and sex.
 
-* How to calculate them
+```{r}
+ps_mod <- glm(Treated ~ scale(Age) + Sex, data = dat, family = "binomial")
+summary(ps_mod)
+```
+
+Note that we centered and scaled `Age` which resulted in basically the same model we [specified](#artificial) (which we would hope it does).
+
+## Extracting the overlap weights {#extractingweights}
+
+To get the weights, we have to extract the fitted probabilities of treatment for each observation, and then apply the [formula](#definition). We'll also take one extra step and normalize the weights within each treatment group so they sum to 1.
+
+```{r}
+dat <-
+  dat %>%
+  
+  # Compute the weights
+  mutate(
+    p_hat = predict(ps_mod, type = "response"),
+    OW = 
+      case_when(
+        Treated == 1 ~ 1 - p_hat,
+        TRUE ~ p_hat
+      )
+  ) %>%
+  
+  # Normalize in each group
+  group_by(Treated) %>%
+  mutate(
+    OW_norm = OW / sum(OW)
+  ) %>%
+  ungroup()
+
+dat %>%
+  plot_ly(
+    x = ~OW_norm,
+    y = ~factor(Treated),
+    color = ~factor(Treated),
+    type = "box"
+  )
+```
+
+We can use the `PSweight` package to verify that we computed the weights correctly.
+
+## Estimate treatment effect
+
+* Verify standardized differences are zero (compared to unweighted)
+* Plot the treatment effect before and after weighting.
+
+# Explaining the weights 
+
+The [example](#example) above just gave the steps to run the procedure and get an estimated treatment effect. However, in practice, it is much more complex than this (mostly because we already knew the answer!). There are many ways we can think to summarize the weights as an exploratory step to better understand the impact of the weighting procedure.
+
 * Intuition about who it focuses on, proportional down weights
 * Show differences in outcome weighted and unweighted
 * Show standarized differences of covariates (some not included in PS model as well) (use plotly)
