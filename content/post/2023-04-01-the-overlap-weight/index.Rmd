@@ -5,8 +5,8 @@ date: '2023-04-01'
 slug: the-overlap-weight
 categories: []
 tags: ['statistics', 'datascience', 'causation', 'rstats']
-subtitle: 'A smoother, more inclusive approach to matching'
-summary: ''
+subtitle: 'A smoother, more inclusive approach to balancing'
+summary: "It starts the same as propsensity score matching. It's what is done with the scores that differentiate the methods."
 authors: []
 lastmod: '2023-04-01T11:39:12-05:00'
 featured: no
@@ -17,29 +17,40 @@ image:
 projects: []
 ---
 
-I was recently introduced to a method in the field of [matching](https://en.wikipedia.org/wiki/Matching_(statistics)) (or _balancing_) for observational studies called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748). Although I've just started getting into the details, I already see it as superior to [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching), a well-known matching method and what I've done in the past, for a few reasons (that I've observed at least):
+**_In progress_**
 
-1. It uses all available information (all observations) instead of arbitrary cutoffs like, for example, 1:5 matching.
-2. Its properties _force_ the standardized differences of all factors included in the propensity score model to be zero across the treatment groups instead of arbitrarily close.
-3. Each treatment group contributes equally to the outcome model when the overlap weights are used regardless of the balance of the treatment groups in the original sample.
-4. Because of (1), it makes it much more intuitive to explore the impacts of the weighting process on other covariates and the outcome.
-5. It also has [been shown](https://academic.oup.com/aje/article/188/1/250/5090958) to produce more unbiased and efficient estimates than other inclusive weighting approaches like _inverse probability weighting (IPW)_ (regardless if trimming was used). It also has practical benefits over IPW in that weights are bounded between 0 and 1, foregoing the need for (arbitrary) trimming.
+I was recently introduced to a method called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748) for balancing covariates when estimating treatment effects in observational data. Although I've just started getting into the details, I find it superior to the often-used [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching) for many reasons:
 
-The overlap weighting process actually starts the same as PS matching: by modeling the treatment group as a function of various factors that may be confounding the observed (unadjusted) treatment effect. It's what is done with the scores (probabilities) that differentiate the methods. 
+1. All observations are used instead of arbitrary cutoffs (e.g., 1:5 matching)
+2. It proportionately down-weights the impacts of observations most likely belonging to a certain treatment group
+3. Achieves perfect balance in covariates across treatment groups instead of being arbitrarily close
+4. Treatment groups equally contribute to the (weighted) estimation in the outcome model
+5. The weights themselves can be used to gain insight about the imbalance in the sample and intuition about their impacts on the estimation
+6. Avoids extreme case weights by being bounded between 0 and 1
+7. It has even [been shown](https://academic.oup.com/aje/article/188/1/250/5090958) to produce more unbiased and efficient estimates than other inclusive weighting approaches like [inverse probability weighting (IPW)](https://en.wikipedia.org/wiki/Inverse_probability_weighting)
+
+It actually starts the same as the matching approach by deriving a propensity score. It's what is done with the scores that differentiate the methods. 
 
 # Table of Contents
 
 * [Defining the overlap weight](#definition)
+* [Using the overlap weight](#usage)
 * [Heart disease example](#example)
   + [Making an artificial treatment](#artificial)
   + [Fitting the propensity score model](#modelfit)
+* [Resources](#resources)
 
 # How is it defined? {#definition}
 
-It's actually quite simple. Suppose you have treatments A & B (note this does extend to more treatments as well), and you build a propensity score model (using logistic regression) to estimate the probability that each observation belongs to a particular treatment group given a collection of covariate values (_Note: We should strive for selecting covariates that we believe are associated with both the treatment group membership and the outcome of interest_):
+It's actually quite simple. Suppose you have treatments _A_ & _B_. Then,
 
-$$P(T_i = A|X_i) \approx \frac{1}{1 + e^{-X_i\hat{\beta}}} = \hat{p_i}$$
-where $\hat{\beta}$ are the estimated regression coefficients and $X_i$, $T_i$ are the covariate values and treatment group for the $i^{th}$ observation, respectively. Then $OW_i$, the _overlap weight_ for the $i^{th}$ observation, is calculated by:
+$$P(T_i = A|X_i) = p_i$$
+is the _true_ propensity score of treatment _A_ for observation _i_ given the set of covariates, $X_i$, that contribute to the treatment imbalance.
+
+So you build a model to estimate $p_i$ using the set of treatments that were actually observed. If you use [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression), which is the common approach, then the estimated propensity score $\hat{p_i}$ is
+
+$$p_i \approx \hat{p_i} = \frac{1}{1 + e^{-X_i\hat{\beta}}}$$
+where $\hat{\beta}$ are the estimated regression coefficients. Then the overlap weight, $OW_i$, is calculated by:
 
 $$
 \begin{equation}
@@ -50,11 +61,17 @@ OW_i=
     \end{cases}
 \end{equation}
 $$
-Now we do end up normalizing these weights so that they sum to one (1) _within_ each treatment group. But here's some intuition about what's happening: it shifts the focus of the subsequent outcome model to observations that are most likely in _either_ treatment group (i.e., $P(T_i = A|X_i)$ near 0.5) (technically it focuses _most_ on observations that are "misclassified", but since these probabilities are derived on the data set in which the model was built, we probably won't see many of those). 
+That's it.
 
-I think this makes a lot of sense. When we're trying to evaluate the effectiveness of a treatment, we want to focus most heavily on those who could be candidates for either one, and less so on those who were bound for one of the treatment options (because of their specific characteristics). The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each observation just the amount that we should.
+Now we do end up normalizing these weights so that they sum to one (1) within each treatment group. But the intuition about what is happening is that it shifts the focus of the downstream estimation to observations that are most likely in _either_ treatment group (i.e., $p_i$ near 0.5). 
 
-# Can I have an example? {#example}
+I think this makes a lot of sense. When we're trying to evaluate the effectiveness of a treatment, we want to focus most heavily on those who could be candidates for either one, and less so on those who were bound for one of the treatment options. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each observation just the amount that we should.
+
+# How do I use it? {#usage}
+
+In it's most basic usage (and possibly an oversimplification), you just compute the difference in mean values across treatment groups after weighting them by the overlap weights, and this provides an estimate of the _average treatment effect in the overlap population_ (ATO).
+
+# Example {#example}
 
 Sure. Let's first load some packages to get started.
 
@@ -229,3 +246,25 @@ The [example](#example) above just gave the steps to run the procedure and get a
 * Show standarized differences of covariates (some not included in PS model as well) (use plotly)
 * Show ways to assess cumulative contribution of cases and impact on other covariates
 * Assess redundancy
+
+# Resources {#resources}
+
+The overlap weight is part of a general class of causal methodology/theory for balancing covariates to estimate treatment effects using propensity scores. More broadly, these fall into the [_potential outcomes_](https://en.wikipedia.org/wiki/Rubin_causal_model) framework of causal inference, which I happened to be introduced to by accident while learning about overlap weighting from these resources:
+
+* Original paper for overlap weighting ([link](https://pubmed.ncbi.nlm.nih.gov/30189042/))
+* Paper extending overlap weighting to survival analysis ([link](https://arxiv.org/abs/2108.04394))
+* Example simulation of overlap weighting in the survival setting in SAS ([link](http://www2.stat.duke.edu/~fl35/OW/OW_survival_Demo.sas))
+* R package for implementing overlap weight methods ([link](https://github.com/thuizhou/PSweight))
+* R functions for overlap weighting in the survival setting ([link](https://github.com/chaochengstat/OW_Survival))
+* Author's web page dedicated to overlap weighting ([link](https://www2.stat.duke.edu/~fl35/OW.html))
+
+All of these were super helpful. Understanding the idea of potential outcomes made the math and methodological concepts a lot easier to grasp conceptually and gain intuition. The way I like to think about it is (roughly) in the following order:
+
+1. Each observation has a _true_ propensity score (probability of treatment). The treatment we observe is just a realization of a random draw from that [Bernoulli](https://en.wikipedia.org/wiki/Bernoulli_distribution) distribution (or [Multinomial](https://en.wikipedia.org/wiki/Multinomial_distribution) distribution if there are more treatments). We must estimate this from the treatment we observe. 
+2. Since there is a true propensity score, there is also a _true_ overlap weight (for each treatment option) that balances the observations back with the population. We must also estimate this from the data.
+3. The outcome we observe is conditional on the observed treatment. So there exists some true function (e.g., linear predictor) relating the observation to the outcome under the treatment we observed.
+4. However, this also all exists for the treatment(s) we did _NOT_ observe. So there are analogous functions relating the observation to the outcome under the alternate treatment scenarios.
+5. If we could observe the outcome for all treatments, we could just compute the mean differences in the outcome across the treatment groups and that would be the causal treatment effect. I imagine a stacked data set where there is a row for each observation under each treatment, it's just that the the outcome value (and other data) for the treatments that weren't observed are missing, and our goal is to estimate what the mean differences in the outcomes would have been had that data not been missing. Thus we must use what we have to approximate that.
+
+
+
