@@ -1,12 +1,8 @@
-# Navigation Links
-#   To link a homepage widget, specify the URL as a hash `#` followed by the filename of the
-#     desired widget in your `content/home/` folder.
-#   The weight parameter defines the order that the links will appear in.
-
+# Navigation links
 main:
   - name: Articles
-    url: 'post/'
-    weight: 10
+    url: 'post/' # Links to /content/post
+    weight: 10 # Order of the weight determines order in navigation pane
   - name: Projects
     url: "project/"
     weight: 20
@@ -17,5 +13,5 @@ main:
     url: "about/"
     weight: 40
   - name: Contact
-    url: '#contact'
+    url: '#contact' # Links to the widget found in /content/home
     weight: 50

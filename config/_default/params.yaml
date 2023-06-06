@@ -1,33 +1,29 @@
-# SITE SETUP
+# Site setup
 # Guide: https://wowchemy.com/docs/getting-started/
 # Documentation: https://wowchemy.com/docs/
 # This file is formatted using YAML syntax - learn more at https://learnxinyminutes.com/docs/yaml/
 
 # Appearance
-
-theme: custom_site_theme
+theme: custom_site_theme # References custom color theme set in /data/themes/custom_site_theme.toml
 day_night: true
-font: custom_site_font
+font: custom_site_font # References custom color theme set in /data/fonts/custom_site_font.toml
 font_size: M
 
-# SEO
+# SEO (https://wowchemy.com/docs/hugo-tutorials/seo/)
+site_type: 'LocalBusiness' # https://wowchemy.com/docs/hugo-tutorials/seo/#improve-your-search-engine-and-social-network-previews
+local_business_type: 'ProfessionalService' # https://schema.org/LocalBusiness#subtypes
+org_name: 'Zajichek Stats'
+description: 'Data science and statistical consulting in Central Wisconsin and beyond'
 
-site_type: Person
-local_business_type: ''
-org_name: ''
-description: 'statistical consulting'
-
-# Contact (edit or remove options as required)
-
+# Contact (displays under the Contact widget on the homepage)
 email: alexzajichek@gmail.com
 contact_links:
   - icon: linkedin
     icon_pack: fab
-    name: Message me
+    name: Connect with me
     link: https://www.linkedin.com/in/alexzajichek/
 
 # Site header
-
 main_menu:
   enable: true
   align: l
@@ -38,13 +34,11 @@ main_menu:
   highlight_active_link: true
 
 # Localization
-
 date_format: 'Jan 2, 2006'
 time_format: '3:04 PM'
 address_format: en-us
 
 # Site features
-
 highlight: true
 highlight_languages:
   - r
@@ -120,7 +114,7 @@ map:
 marketing:
   google_analytics: 'G-9MW3W3RQD9'
   google_tag_manager: ''
-  google_site_verification: ''
+  google_site_verification: 'google-site-verification=swB5KftNWOteNmev6cHNOMSYTs5qxZVhaplckD0GMKI' # https://search.google.com/search-console/welcome
   baidu_site_verification: ''
   baidu_tongji: ''
 cms:
