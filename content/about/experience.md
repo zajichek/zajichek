@@ -22,7 +22,15 @@ date_format: Jan 2006
 #   Leave `date_end` empty if it's your current employer.
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
-  - title: Data Scientist
+  - title: Research Data Scientist II
+    company: Cleveland Clinic
+    company_url: https://my.clevelandclinic.org/
+    company_logo: ccf
+    location: Wausau, Wisconsin
+    date_start: '2023-02-01'
+    date_end: ''
+    
+  - title: Data Scientist (part-time)
     company: Aspirus Health
     company_url: https://www.aspirus.org/
     company_logo: aspirus
