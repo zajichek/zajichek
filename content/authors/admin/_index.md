@@ -19,11 +19,10 @@ social:
   link: https://www.researchgate.net/search/publication?q=zajichek
   
 interests:
-- Understanding organizational strategy, outcomes and decision-making processes/workflows
-- Translating real-world problems to actionable data science solutions
-- Developing tangible data products and data science pipelines
-- Leveraging expert knowledge through causal inference and Bayesian statistics
-- Software development, version control, documentation, and transparency
+- R package and application development
+- Data and predictive modeling pipelines
+- Causal inference + Bayesian statistics
+- Version control, documentation, and project management
 
 education:
   courses:
@@ -38,4 +37,4 @@ highlight_name: false
 superuser: true
 ---
 
-I'm a statistician and data scientist in Central Wisconsin. I have a passion for building data science solutions that are useful, practical, and make people's lives easier. I love learning about the problems that businesses and organizational stakeholders face, including all of the nuances, translating them into technical requirements, and then executing to build tangible, measurable data products. I'm a heavy [R](https://www.r-project.org/)-user and an advocate for open-source tools for data science as they promote collaboration, transparency, flexibility, and they're free.
+I'm a statistician and data scientist in Central Wisconsin. A heavy [R](https://www.r-project.org/)-user and advocate for open-source development, I enjoy building tools and data products that can help facilitate the decision-making process. I love learning about the problems that businesses and organizational stakeholders face, translating those into technical requirements, and developing a practical data science solution. I'm always open to collaboration and discussion, so feel free to [reach out](/#contact)!

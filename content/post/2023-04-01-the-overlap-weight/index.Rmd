@@ -19,15 +19,15 @@ projects: []
 
 **_In progress_**
 
-I was recently introduced to a method called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748) for balancing covariates when estimating treatment effects in observational data. Although I've just started getting into the details, I find it superior to the often-used [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching) for many reasons:
+I was recently introduced to a method called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748). It is part of a family of methods for balancing covariates when estimating treatment effects in observational studies. Although I've just started getting into the details, I find it much more elegant than [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching) (which I've [used in the past](https://jamanetwork.com/journals/jama/fullarticle/2749478)) for many reasons:
 
-1. All observations are used instead of arbitrary cutoffs (e.g., 1:5 matching)
-2. It proportionately down-weights the impacts of observations most likely belonging to a certain treatment group
+1. All subjects are used instead of arbitrary cutoffs (e.g., 1:5 matching)
+2. It proportionately down-weights the impacts of subjects most likely belonging to a certain treatment group
 3. Achieves perfect balance in covariates across treatment groups instead of being arbitrarily close
 4. Treatment groups equally contribute to the (weighted) estimation in the outcome model
 5. The weights themselves can be used to gain insight about the imbalance in the sample and intuition about their impacts on the estimation
 6. Avoids extreme case weights by being bounded between 0 and 1
-7. It has even [been shown](https://academic.oup.com/aje/article/188/1/250/5090958) to produce more unbiased and efficient estimates than other inclusive weighting approaches like [inverse probability weighting (IPW)](https://en.wikipedia.org/wiki/Inverse_probability_weighting)
+7. It has [been shown](https://academic.oup.com/aje/article/188/1/250/5090958) to produce more unbiased and efficient estimates than other inclusive weighting approaches like [inverse probability weighting (IPW)](https://en.wikipedia.org/wiki/Inverse_probability_weighting)
 
 It actually starts the same as the matching approach by deriving a propensity score. It's what is done with the scores that differentiate the methods. 
 
@@ -45,31 +45,37 @@ It actually starts the same as the matching approach by deriving a propensity sc
 It's actually quite simple. Suppose you have treatments _A_ & _B_. Then,
 
 $$P(T_i = A|X_i) = p_i$$
-is the _true_ propensity score of treatment _A_ for observation _i_ given the set of covariates, $X_i$, that contribute to the treatment imbalance.
+is the _true_ propensity score, or probability, for subject _i_ getting treatment _A_, given their specific set of characteristics, $X_i$, that contribute to the treatment imbalance.
 
 So you build a model to estimate $p_i$ using the set of treatments that were actually observed. If you use [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression), which is the common approach, then the estimated propensity score $\hat{p_i}$ is
 
 $$p_i \approx \hat{p_i} = \frac{1}{1 + e^{-X_i\hat{\beta}}}$$
-where $\hat{\beta}$ are the estimated regression coefficients. Then the overlap weight, $OW_i$, is calculated by:
+where $\hat{\beta}$ are the estimated regression coefficients. Then the (estimated) overlap weight, $\hat{OW_i}$, is calculated by:
 
 $$
 \begin{equation}
-OW_i=
+\hat{OW_i}=
     \begin{cases}
         1-\hat{p_i} & \text{if } T_i = A\\
         \hat{p_i} & \text{if } T_i = B\\
     \end{cases}
 \end{equation}
 $$
-That's it.
+That's it. We just assign the probability that each subject _did not_ receive their respective treatment.
 
-Now we do end up normalizing these weights so that they sum to one (1) within each treatment group. But the intuition about what is happening is that it shifts the focus of the downstream estimation to observations that are most likely in _either_ treatment group (i.e., $p_i$ near 0.5). 
+Now we do end up normalizing these weights so they sum to one within each treatment group. But the intuition about what's happening is that the focus of the downstream estimation is shifted to subjects that are most likely in _either_ treatment group (i.e., $\hat{p_i}$ near 0.5). 
 
-I think this makes a lot of sense. When we're trying to evaluate the effectiveness of a treatment, we want to focus most heavily on those who could be candidates for either one, and less so on those who were bound for one of the treatment options. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each observation just the amount that we should.
+This makes a lot of sense. When we're comparing treatments, we should focus most heavily on subjects that could be candidates for either one, and less so on subjects that were bound for one of the treatment options. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.
 
 # How do I use it? {#usage}
 
-In it's most basic usage (and possibly an oversimplification), you just compute the difference in mean values across treatment groups after weighting them by the overlap weights, and this provides an estimate of the _average treatment effect in the overlap population_ (ATO).
+In it's most basic usage, the treatment effect is estimated as the difference in average outcome values across treatment groups after subjects are weighted by their overlap weight.
+
+$$\hat{Effect} = \frac{\sum_{i=1}^{N_A}\hat{OW_{A_i}} \times Y_{A_i}}{\sum_{i=1}^{N_A}\hat{OW_{A_i}}} - \frac{\sum_{i=1}^{N_B}\hat{OW_{B_i}} \times Y_{B_i}}{\sum_{i=1}^{N_B}\hat{OW_{B_i}}}$$
+
+where $N$ is the sample size, $Y$ is the outcome value, and subscripts $A$ and $B$ indicate the set of subjects in the respective treatment groups.
+
+and this provides an estimate of the _average treatment effect in the overlap population_ (ATO).
 
 # Example {#example}
 
