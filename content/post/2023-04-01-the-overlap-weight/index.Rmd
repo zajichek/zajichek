@@ -73,9 +73,9 @@ In it's most basic usage, the treatment effect is estimated as the difference in
 
 $$\hat{Effect} = \frac{\sum_{i=1}^{N_A}\hat{OW_{A_i}} \times Y_{A_i}}{\sum_{i=1}^{N_A}\hat{OW_{A_i}}} - \frac{\sum_{i=1}^{N_B}\hat{OW_{B_i}} \times Y_{B_i}}{\sum_{i=1}^{N_B}\hat{OW_{B_i}}}$$
 
-where $N$ is the sample size, $Y$ is the outcome value, and subscripts $A$ and $B$ indicate the set of subjects in the respective treatment groups.
+where $N$ is the sample size, $Y$ is the outcome value, and subscripts $A$ and $B$ indicate the set of subjects in the respective treatment groups. 
 
-and this provides an estimate of the _average treatment effect in the overlap population_ (ATO).
+This estimator is referred to as the _average treatment effect in the overlap population (ATO)_ (see [paper](https://pubmed.ncbi.nlm.nih.gov/30189042/) for details). It's described this way because the contribution in the weighted-average comes most prominently from subjects whose overlap weight, $\hat{OW_i}$, is closest to 0.5 (i.e., the probability of receiving the opposite treatment). Hence, these are subjects who have the most overlap in characteristics with the opposing treatment group.
 
 # Example {#example}
 
