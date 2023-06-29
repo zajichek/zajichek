@@ -1,0 +1,287 @@
+---
+title: Removing higher-order aggregation text in {reactable}
+author: Alex Zajichek
+date: '2023-06-29'
+slug: quickly-removing-higher-order-aggregation-text-in-reactable
+categories: []
+tags: ['rstats', 'javascript']
+subtitle: 'A quick & dirty workaround'
+summary: ''
+authors: []
+lastmod: '2023-06-29T07:15:36-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/core-js/shim.min.js"></script>
+<script src="{{< blogdown/postref >}}index_files/react/react.min.js"></script>
+<script src="{{< blogdown/postref >}}index_files/react/react-dom.min.js"></script>
+<script src="{{< blogdown/postref >}}index_files/reactwidget/react-tools.js"></script>
+<script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>
+<link href="{{< blogdown/postref >}}index_files/reactable/reactable.css" rel="stylesheet" />
+<script src="{{< blogdown/postref >}}index_files/reactable-binding/reactable.js"></script>
+
+
+<p>Often when I’m building a <a href="https://glin.github.io/reactable/"><code>reactable</code></a> I have potentially many aggregation levels but only want to display data in a lower subset of those. Here is a quick way to eliminate text using cell styling.</p>
+<p>First let’s load some packages and look at an example data set.</p>
+<pre class="r"><code>library(tidyverse)
+library(reactable)
+dat &lt;- cheese::heart_disease
+dat</code></pre>
+<pre><code>## # A tibble: 303 × 9
+##      Age Sex    ChestPain           BP Cholest…¹ Blood…² Maxim…³ Exerc…⁴ Heart…⁵
+##    &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;            &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;     &lt;dbl&gt; &lt;fct&gt;   &lt;fct&gt;  
+##  1    63 Male   Typical angina     145       233 TRUE        150 No      No     
+##  2    67 Male   Asymptomatic       160       286 FALSE       108 Yes     Yes    
+##  3    67 Male   Asymptomatic       120       229 FALSE       129 Yes     Yes    
+##  4    37 Male   Non-anginal pain   130       250 FALSE       187 No      No     
+##  5    41 Female Atypical angina    130       204 FALSE       172 No      No     
+##  6    56 Male   Atypical angina    120       236 FALSE       178 No      No     
+##  7    62 Female Asymptomatic       140       268 FALSE       160 No      Yes    
+##  8    57 Female Asymptomatic       120       354 FALSE       163 Yes     No     
+##  9    63 Male   Asymptomatic       130       254 FALSE       147 No      Yes    
+## 10    53 Male   Asymptomatic       140       203 TRUE        155 Yes     Yes    
+## # … with 293 more rows, and abbreviated variable names ¹​Cholesterol,
+## #   ²​BloodSugar, ³​MaximumHR, ⁴​ExerciseInducedAngina, ⁵​HeartDisease</code></pre>
+<p>Suppose we are interested in these outcomes:</p>
+<ol style="list-style-type: decimal">
+<li>The rate of heart disease</li>
+<li>The rate of patients with a maximum heart rate &gt; 150</li>
+</ol>
+<p>And we want to summarize those, along with a few other patient characteristics, within a handful of important clinical factors. We might pivot our data into a long format to start:</p>
+<pre class="r"><code>pivot_dat &lt;-
+  dat |&gt; 
+  
+  # Convert to character types
+  mutate(
+    across(
+      c(ChestPain, ExerciseInducedAngina, BloodSugar),
+      as.character
+    ),
+    MaximumHR =
+      case_when(
+        MaximumHR &gt; 150 ~ &quot;Yes&quot;,
+        TRUE ~ &quot;No&quot;
+      )
+  ) |&gt;
+  
+  # Send &quot;important clinical factors&quot; down the rows
+  pivot_longer(
+    cols = c(ChestPain, ExerciseInducedAngina, BloodSugar),
+    names_to = &quot;ClinicalFactor&quot;,
+    values_to = &quot;Level&quot;
+  ) |&gt; 
+  
+  # Send outcomes down the rows
+  pivot_longer(
+    cols = c(HeartDisease, MaximumHR),
+    names_to = &quot;Outcome&quot;,
+    values_to = &quot;HasOutcome&quot;
+  )
+pivot_dat</code></pre>
+<pre><code>## # A tibble: 1,818 × 8
+##      Age Sex      BP Cholesterol ClinicalFactor        Level     Outcome HasOu…¹
+##    &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;                 &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;  
+##  1    63 Male    145         233 ChestPain             Typical … HeartD… No     
+##  2    63 Male    145         233 ChestPain             Typical … Maximu… No     
+##  3    63 Male    145         233 ExerciseInducedAngina No        HeartD… No     
+##  4    63 Male    145         233 ExerciseInducedAngina No        Maximu… No     
+##  5    63 Male    145         233 BloodSugar            TRUE      HeartD… No     
+##  6    63 Male    145         233 BloodSugar            TRUE      Maximu… No     
+##  7    67 Male    160         286 ChestPain             Asymptom… HeartD… Yes    
+##  8    67 Male    160         286 ChestPain             Asymptom… Maximu… No     
+##  9    67 Male    160         286 ExerciseInducedAngina Yes       HeartD… Yes    
+## 10    67 Male    160         286 ExerciseInducedAngina Yes       Maximu… No     
+## # … with 1,808 more rows, and abbreviated variable name ¹​HasOutcome</code></pre>
+<p>We can then calculate some summary statistics. Our full patient population is replicated for each <code>ClinicalFactor</code> and <code>Outcome</code>, so we should account for that.</p>
+<pre class="r"><code>summary_dat &lt;-
+  pivot_dat |&gt; 
+  
+  # Summarize characteristics
+  summarize(
+    Patients = n(),
+    OutcomeRate = mean(HasOutcome == &quot;Yes&quot;),
+    Age = mean(Age),
+    Female = mean(Sex == &quot;Female&quot;),
+    .by = 
+      c(
+        ClinicalFactor,
+        Level,
+        Outcome,
+        HasOutcome
+      )
+  ) |&gt; 
+  
+  # Add counts within groups
+  mutate(
+    PercentOfPatients = Patients / sum(Patients),
+    .by = c(ClinicalFactor, Outcome)
+  ) |&gt; 
+  
+  # Make clean levels/labels
+  mutate(
+    ClinicalFactor = 
+      case_when(
+        ClinicalFactor == &quot;BloodSugar&quot; ~ &quot;Blood sugar &gt; 120 mg/dl?&quot;,
+        ClinicalFactor == &quot;ChestPain&quot; ~ &quot;Chest pain type&quot;,
+        ClinicalFactor == &quot;ExerciseInducedAngina&quot; ~ &quot;Exercise-induced angina?&quot;
+      ),
+    Level = 
+      case_when(
+        Level == &quot;TRUE&quot; ~ &quot;Yes&quot;,
+        Level == &quot;FALSE&quot; ~ &quot;No&quot;,
+        TRUE ~ Level
+      ),
+    Outcome = 
+      case_when(
+        Outcome == &quot;HeartDisease&quot; ~ &quot;Heart disease&quot;,
+        Outcome == &quot;MaximumHR&quot; ~ &quot;Maximum HR &gt; 150&quot;
+      )
+  ) |&gt;
+  
+  # Rearrange
+  relocate(PercentOfPatients, .after = Patients) |&gt;
+  relocate(Outcome, .before = everything()) |&gt;
+  arrange(
+    Outcome,
+    ClinicalFactor,
+    Level,
+    HasOutcome
+  )
+summary_dat</code></pre>
+<pre><code>## # A tibble: 32 × 9
+##    Outcome       ClinicalFa…¹ Level HasOu…² Patie…³ Perce…⁴ Outco…⁵   Age Female
+##    &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Heart disease Blood sugar… No    No          141  0.465        0  52   0.468 
+##  2 Heart disease Blood sugar… No    Yes         117  0.386        1  56.4 0.162 
+##  3 Heart disease Blood sugar… Yes   No           23  0.0759       0  56.2 0.261 
+##  4 Heart disease Blood sugar… Yes   Yes          22  0.0726       1  57.9 0.273 
+##  5 Heart disease Chest pain … Asym… No           39  0.129        0  54.1 0.462 
+##  6 Heart disease Chest pain … Asym… Yes         105  0.347        1  56.3 0.210 
+##  7 Heart disease Chest pain … Atyp… No           41  0.135        0  50.0 0.390 
+##  8 Heart disease Chest pain … Atyp… Yes           9  0.0297       1  57.4 0.222 
+##  9 Heart disease Chest pain … Non-… No           68  0.224        0  52.4 0.5   
+## 10 Heart disease Chest pain … Non-… Yes          18  0.0594       1  58.5 0.0556
+## # … with 22 more rows, and abbreviated variable names ¹​ClinicalFactor,
+## #   ²​HasOutcome, ³​Patients, ⁴​PercentOfPatients, ⁵​OutcomeRate</code></pre>
+<p>Now we’re ready to build the table (note the use of the <a href="https://github.com/zajichek/zildge/blob/main/R/rectbl_agg_wtd.R"><code>zildge::rectbl_agg_wtd()</code></a> function to compute the weighted average, see <a href="https://www.zajichekstats.com/post/reactable-javascript/">my other post</a> for more information about this).</p>
+<pre class="r"><code>reactable(
+  data = summary_dat,
+  groupBy = c(&quot;Outcome&quot;, &quot;ClinicalFactor&quot;, &quot;Level&quot;),
+  columns = 
+    list(
+      ClinicalFactor = colDef(name = &quot;Clinical factor&quot;),
+      HasOutcome = colDef(name = &quot;Has Outcome?&quot;),
+      Patients = colDef(name = &quot;Count&quot;, aggregate = &quot;sum&quot;, align = &quot;center&quot;),
+      PercentOfPatients = colDef(name = &quot;Percent&quot;, aggregate = &quot;sum&quot;, align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE)),
+      OutcomeRate = colDef(name = &quot;Outcome rate (%)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE)),
+      Age = colDef(name = &quot;Avg. age (years)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2)),
+      Female = colDef(name = &quot;Female (%)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE))
+    ),
+  columnGroups = 
+    list(
+      colGroup(
+        name = &quot;Patients&quot;,
+        columns = c(&quot;Patients&quot;, &quot;PercentOfPatients&quot;)
+      )
+    ),
+  striped = TRUE,
+  highlight = TRUE,
+  bordered = TRUE,
+  resizable = TRUE,
+  theme = reactablefmtr::sandstone()
+) |&gt;
+  reactablefmtr::add_source(&quot;Use arrows to expand table&quot;, font_size = 12, font_style = &quot;italic&quot;)</code></pre>
+<div id="htmlwidget-1" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Outcome":["Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150"],"ClinicalFactor":["Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?"],"Level":["No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes","No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes"],"HasOutcome":["No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes"],"Patients":[141,117,23,22,39,105,41,9,68,18,16,7,141,63,23,76,117,141,22,23,92,52,9,41,29,57,9,14,66,138,73,26],"PercentOfPatients":[0.465346534653465,0.386138613861386,0.0759075907590759,0.0726072607260726,0.128712871287129,0.346534653465347,0.135313531353135,0.0297029702970297,0.224422442244224,0.0594059405940594,0.0528052805280528,0.0231023102310231,0.465346534653465,0.207920792079208,0.0759075907590759,0.250825082508251,0.386138613861386,0.465346534653465,0.0726072607260726,0.0759075907590759,0.303630363036304,0.171617161716172,0.0297029702970297,0.135313531353135,0.0957095709570957,0.188118811881188,0.0297029702970297,0.0462046204620462,0.217821782178218,0.455445544554455,0.240924092409241,0.0858085808580858],"OutcomeRate":[0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],"Age":[52,56.3931623931624,56.1739130434783,57.8636363636364,54.0769230769231,56.3333333333333,50.0243902439024,57.4444444444444,52.4264705882353,58.5,56.1875,55.1428571428571,52.4184397163121,57.0952380952381,53.6086956521739,56.2368421052632,57.0769230769231,51.4326241134752,58.6363636363636,55.4347826086956,56.6086956521739,54.1538461538462,59.4444444444444,49.5853658536585,58.2068965517241,51.4035087719298,59.6666666666667,53.4285714285714,58.2121212121212,51.7826086956522,56.5205479452055,53.1153846153846],"Female":[0.468085106382979,0.162393162393162,0.260869565217391,0.272727272727273,0.461538461538462,0.20952380952381,0.390243902439024,0.222222222222222,0.5,0.0555555555555556,0.25,0,0.453900709219858,0.174603174603175,0.347826086956522,0.184210526315789,0.256410256410256,0.390070921985816,0.272727272727273,0.260869565217391,0.228260869565217,0.365384615384615,0.222222222222222,0.390243902439024,0.413793103448276,0.403508771929825,0.111111111111111,0.214285714285714,0.363636363636364,0.369565217391304,0.164383561643836,0.384615384615385]},"columns":[{"id":"Outcome","name":"Outcome","type":"character"},{"id":"ClinicalFactor","name":"Clinical factor","type":"character"},{"id":"Level","name":"Level","type":"character"},{"id":"HasOutcome","name":"Has Outcome?","type":"character"},{"id":"Patients","name":"Count","type":"numeric","aggregate":"sum","align":"center"},{"id":"PercentOfPatients","name":"Percent","type":"numeric","aggregate":"sum","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center"},{"id":"OutcomeRate","name":"Outcome rate (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center"},{"id":"Age","name":"Avg. age (years)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2},"aggregated":{"digits":2}},"align":"center"},{"id":"Female","name":"Female (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center"}],"columnGroups":[{"name":"Patients","columns":["Patients","PercentOfPatients"]}],"groupBy":["Outcome","ClinicalFactor","Level"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"c12689269c1e419783d332983d8fb3c2"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.6.aggregate","tag.attribs.columns.7.aggregate","tag.attribs.columns.8.aggregate"],"jsHooks":[]}</script>
+<p><br></p>
+<p>There are a few problems with this table:</p>
+<ol style="list-style-type: decimal">
+<li>The redundancy of the top-level (and second-level) summary statistics is unappealing</li>
+<li>The top-level aggregation is just flat-out wrong because we’ve duplicated counts over the data set</li>
+</ol>
+<p>Maybe <em>1</em> is not a huge deal, but I’ve probably already established somewhere that there are 303 patients in the data set and the overall rate of heart disease is 45.9%. You still may choose to keep it as-is in this case as it’s not totally harmful. However, <em>2</em> needs to be addressed as the data is misleading and not really interpretable. <strong>So how can we remove the results from (at least) the top-level while maintaining the lower-level aggregation?</strong></p>
+<p>We can define an <code>R</code> function that provides JavaScript <a href="https://glin.github.io/reactable/articles/conditional-styling.html">custom styling</a> to a cell.</p>
+<pre class="r"><code>remove_text &lt;-
+  function(col, threshold) {
+    JS(
+      paste0(
+        &quot;function(rowInfo) {
+          if(rowInfo.row[&#39;&quot;, col, &quot;&#39;] &gt; &quot;, threshold, &quot;) {
+            return {fontSize:0}
+          }
+        }&quot;
+      )
+    )
+  }</code></pre>
+<p>All this function does is reduce the font size to zero for any cell where the value of <code>col</code> in the respective row is greater than <code>threshold</code>. Thus, since we are over-counting the number of patients in the top-level, we can just apply this function to rows in which the count exceeds 303, which is the patient count in our data set. We provide this function to the <code>style</code> argument of <code>colDef()</code>.</p>
+<pre class="r"><code>reactable(
+  data = summary_dat,
+  groupBy = c(&quot;Outcome&quot;, &quot;ClinicalFactor&quot;, &quot;Level&quot;),
+  columns = 
+    list(
+      ClinicalFactor = colDef(name = &quot;Clinical factor&quot;),
+      HasOutcome = colDef(name = &quot;Has Outcome?&quot;),
+      Patients = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat)), name = &quot;Count&quot;, aggregate = &quot;sum&quot;, align = &quot;center&quot;),
+      PercentOfPatients = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat)), name = &quot;Percent&quot;, aggregate = &quot;sum&quot;, align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE)),
+      OutcomeRate = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat)), name = &quot;Outcome rate (%)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE)),
+      Age = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat)), name = &quot;Avg. age (years)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2)),
+      Female = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat)), name = &quot;Female (%)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE))
+    ),
+  columnGroups = 
+    list(
+      colGroup(
+        name = &quot;Patients&quot;,
+        columns = c(&quot;Patients&quot;, &quot;PercentOfPatients&quot;)
+      )
+    ),
+  striped = TRUE,
+  highlight = TRUE,
+  bordered = TRUE,
+  resizable = TRUE,
+  theme = reactablefmtr::sandstone()
+) |&gt;
+  reactablefmtr::add_source(&quot;Use arrows to expand table&quot;, font_size = 12, font_style = &quot;italic&quot;)</code></pre>
+<div id="htmlwidget-2" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Outcome":["Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150"],"ClinicalFactor":["Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?"],"Level":["No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes","No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes"],"HasOutcome":["No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes"],"Patients":[141,117,23,22,39,105,41,9,68,18,16,7,141,63,23,76,117,141,22,23,92,52,9,41,29,57,9,14,66,138,73,26],"PercentOfPatients":[0.465346534653465,0.386138613861386,0.0759075907590759,0.0726072607260726,0.128712871287129,0.346534653465347,0.135313531353135,0.0297029702970297,0.224422442244224,0.0594059405940594,0.0528052805280528,0.0231023102310231,0.465346534653465,0.207920792079208,0.0759075907590759,0.250825082508251,0.386138613861386,0.465346534653465,0.0726072607260726,0.0759075907590759,0.303630363036304,0.171617161716172,0.0297029702970297,0.135313531353135,0.0957095709570957,0.188118811881188,0.0297029702970297,0.0462046204620462,0.217821782178218,0.455445544554455,0.240924092409241,0.0858085808580858],"OutcomeRate":[0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],"Age":[52,56.3931623931624,56.1739130434783,57.8636363636364,54.0769230769231,56.3333333333333,50.0243902439024,57.4444444444444,52.4264705882353,58.5,56.1875,55.1428571428571,52.4184397163121,57.0952380952381,53.6086956521739,56.2368421052632,57.0769230769231,51.4326241134752,58.6363636363636,55.4347826086956,56.6086956521739,54.1538461538462,59.4444444444444,49.5853658536585,58.2068965517241,51.4035087719298,59.6666666666667,53.4285714285714,58.2121212121212,51.7826086956522,56.5205479452055,53.1153846153846],"Female":[0.468085106382979,0.162393162393162,0.260869565217391,0.272727272727273,0.461538461538462,0.20952380952381,0.390243902439024,0.222222222222222,0.5,0.0555555555555556,0.25,0,0.453900709219858,0.174603174603175,0.347826086956522,0.184210526315789,0.256410256410256,0.390070921985816,0.272727272727273,0.260869565217391,0.228260869565217,0.365384615384615,0.222222222222222,0.390243902439024,0.413793103448276,0.403508771929825,0.111111111111111,0.214285714285714,0.363636363636364,0.369565217391304,0.164383561643836,0.384615384615385]},"columns":[{"id":"Outcome","name":"Outcome","type":"character"},{"id":"ClinicalFactor","name":"Clinical factor","type":"character"},{"id":"Level","name":"Level","type":"character"},{"id":"HasOutcome","name":"Has Outcome?","type":"character"},{"id":"Patients","name":"Count","type":"numeric","aggregate":"sum","align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"PercentOfPatients","name":"Percent","type":"numeric","aggregate":"sum","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"OutcomeRate","name":"Outcome rate (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Age","name":"Avg. age (years)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2},"aggregated":{"digits":2}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Female","name":"Female (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"}],"columnGroups":[{"name":"Patients","columns":["Patients","PercentOfPatients"]}],"groupBy":["Outcome","ClinicalFactor","Level"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"edf7478aaef4de899096f5154e62a4e6"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.4.style","tag.attribs.columns.5.style","tag.attribs.columns.6.aggregate","tag.attribs.columns.6.style","tag.attribs.columns.7.aggregate","tag.attribs.columns.7.style","tag.attribs.columns.8.aggregate","tag.attribs.columns.8.style"],"jsHooks":[]}</script>
+<p><br></p>
+<p>If we want to remove text from the second level of aggregation, we can just adjust the <code>threshold</code>.</p>
+<pre class="r"><code>reactable(
+  data = summary_dat,
+  groupBy = c(&quot;Outcome&quot;, &quot;ClinicalFactor&quot;, &quot;Level&quot;),
+  columns = 
+    list(
+      ClinicalFactor = colDef(name = &quot;Clinical factor&quot;),
+      HasOutcome = colDef(name = &quot;Has Outcome?&quot;),
+      Patients = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat) - 1), name = &quot;Count&quot;, aggregate = &quot;sum&quot;, align = &quot;center&quot;),
+      PercentOfPatients = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat) - 1), name = &quot;Percent&quot;, aggregate = &quot;sum&quot;, align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE)),
+      OutcomeRate = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat) - 1), name = &quot;Outcome rate (%)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE)),
+      Age = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat) - 1), name = &quot;Avg. age (years)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2)),
+      Female = colDef(style = remove_text(&quot;Patients&quot;, nrow(dat) - 1), name = &quot;Female (%)&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients&quot;), align = &quot;center&quot;, format = colFormat(digits = 2, percent = TRUE))
+    ),
+  columnGroups = 
+    list(
+      colGroup(
+        name = &quot;Patients&quot;,
+        columns = c(&quot;Patients&quot;, &quot;PercentOfPatients&quot;)
+      )
+    ),
+  striped = TRUE,
+  highlight = TRUE,
+  bordered = TRUE,
+  resizable = TRUE,
+  theme = reactablefmtr::sandstone()
+) |&gt;
+  reactablefmtr::add_source(&quot;Use arrows to expand table&quot;, font_size = 12, font_style = &quot;italic&quot;)</code></pre>
+<div id="htmlwidget-3" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Outcome":["Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150"],"ClinicalFactor":["Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?"],"Level":["No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes","No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes"],"HasOutcome":["No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes"],"Patients":[141,117,23,22,39,105,41,9,68,18,16,7,141,63,23,76,117,141,22,23,92,52,9,41,29,57,9,14,66,138,73,26],"PercentOfPatients":[0.465346534653465,0.386138613861386,0.0759075907590759,0.0726072607260726,0.128712871287129,0.346534653465347,0.135313531353135,0.0297029702970297,0.224422442244224,0.0594059405940594,0.0528052805280528,0.0231023102310231,0.465346534653465,0.207920792079208,0.0759075907590759,0.250825082508251,0.386138613861386,0.465346534653465,0.0726072607260726,0.0759075907590759,0.303630363036304,0.171617161716172,0.0297029702970297,0.135313531353135,0.0957095709570957,0.188118811881188,0.0297029702970297,0.0462046204620462,0.217821782178218,0.455445544554455,0.240924092409241,0.0858085808580858],"OutcomeRate":[0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],"Age":[52,56.3931623931624,56.1739130434783,57.8636363636364,54.0769230769231,56.3333333333333,50.0243902439024,57.4444444444444,52.4264705882353,58.5,56.1875,55.1428571428571,52.4184397163121,57.0952380952381,53.6086956521739,56.2368421052632,57.0769230769231,51.4326241134752,58.6363636363636,55.4347826086956,56.6086956521739,54.1538461538462,59.4444444444444,49.5853658536585,58.2068965517241,51.4035087719298,59.6666666666667,53.4285714285714,58.2121212121212,51.7826086956522,56.5205479452055,53.1153846153846],"Female":[0.468085106382979,0.162393162393162,0.260869565217391,0.272727272727273,0.461538461538462,0.20952380952381,0.390243902439024,0.222222222222222,0.5,0.0555555555555556,0.25,0,0.453900709219858,0.174603174603175,0.347826086956522,0.184210526315789,0.256410256410256,0.390070921985816,0.272727272727273,0.260869565217391,0.228260869565217,0.365384615384615,0.222222222222222,0.390243902439024,0.413793103448276,0.403508771929825,0.111111111111111,0.214285714285714,0.363636363636364,0.369565217391304,0.164383561643836,0.384615384615385]},"columns":[{"id":"Outcome","name":"Outcome","type":"character"},{"id":"ClinicalFactor","name":"Clinical factor","type":"character"},{"id":"Level","name":"Level","type":"character"},{"id":"HasOutcome","name":"Has Outcome?","type":"character"},{"id":"Patients","name":"Count","type":"numeric","aggregate":"sum","align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"PercentOfPatients","name":"Percent","type":"numeric","aggregate":"sum","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"OutcomeRate","name":"Outcome rate (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Age","name":"Avg. age (years)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2},"aggregated":{"digits":2}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Female","name":"Female (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"}],"columnGroups":[{"name":"Patients","columns":["Patients","PercentOfPatients"]}],"groupBy":["Outcome","ClinicalFactor","Level"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"5d25476238b69669768efc4e544b1ea3"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.4.style","tag.attribs.columns.5.style","tag.attribs.columns.6.aggregate","tag.attribs.columns.6.style","tag.attribs.columns.7.aggregate","tag.attribs.columns.7.style","tag.attribs.columns.8.aggregate","tag.attribs.columns.8.style"],"jsHooks":[]}</script>
+<p><br></p>
+<p>And that’s it.</p>
+<p>I’ll acknowledge that I didn’t exhaust all options for this task and that there are <em>definitely</em> better ways to do this with more directed intention by accessing various properties of the table. Obviously this only works if you have a column in the table that only increases during the aggregation and does so to predictable amounts. But it did the trick here.</p>

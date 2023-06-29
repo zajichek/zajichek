@@ -1,0 +1,259 @@
+---
+title: Removing higher-order aggregation text in {reactable}
+author: Alex Zajichek
+date: '2023-06-29'
+slug: quickly-removing-higher-order-aggregation-text-in-reactable
+categories: []
+tags: ['rstats', 'javascript']
+subtitle: 'A quick & dirty workaround'
+summary: ''
+authors: []
+lastmod: '2023-06-29T07:15:36-05:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+Often when I'm building a [`reactable`](https://glin.github.io/reactable/) I have potentially many aggregation levels but only want to display data in a lower subset of those. Here is a quick way to eliminate text using cell styling. 
+
+First let's load some packages and look at an example data set.
+
+```{r, warning = FALSE, message = FALSE}
+library(tidyverse)
+library(reactable)
+dat <- cheese::heart_disease
+dat
+```
+
+Suppose we are interested in these outcomes: 
+
+1. The rate of heart disease
+2. The rate of patients with a maximum heart rate > 150 
+
+And we want to summarize those, along with a few other patient characteristics, within a handful of important clinical factors. We might pivot our data into a long format to start:
+
+```{r}
+pivot_dat <-
+  dat |> 
+  
+  # Convert to character types
+  mutate(
+    across(
+      c(ChestPain, ExerciseInducedAngina, BloodSugar),
+      as.character
+    ),
+    MaximumHR =
+      case_when(
+        MaximumHR > 150 ~ "Yes",
+        TRUE ~ "No"
+      )
+  ) |>
+  
+  # Send "important clinical factors" down the rows
+  pivot_longer(
+    cols = c(ChestPain, ExerciseInducedAngina, BloodSugar),
+    names_to = "ClinicalFactor",
+    values_to = "Level"
+  ) |> 
+  
+  # Send outcomes down the rows
+  pivot_longer(
+    cols = c(HeartDisease, MaximumHR),
+    names_to = "Outcome",
+    values_to = "HasOutcome"
+  )
+pivot_dat
+```
+
+We can then calculate some summary statistics. Our full patient population is replicated for each `ClinicalFactor` and `Outcome`, so we should account for that.
+
+```{r}
+summary_dat <-
+  pivot_dat |> 
+  
+  # Summarize characteristics
+  summarize(
+    Patients = n(),
+    OutcomeRate = mean(HasOutcome == "Yes"),
+    Age = mean(Age),
+    Female = mean(Sex == "Female"),
+    .by = 
+      c(
+        ClinicalFactor,
+        Level,
+        Outcome,
+        HasOutcome
+      )
+  ) |> 
+  
+  # Add counts within groups
+  mutate(
+    PercentOfPatients = Patients / sum(Patients),
+    .by = c(ClinicalFactor, Outcome)
+  ) |> 
+  
+  # Make clean levels/labels
+  mutate(
+    ClinicalFactor = 
+      case_when(
+        ClinicalFactor == "BloodSugar" ~ "Blood sugar > 120 mg/dl?",
+        ClinicalFactor == "ChestPain" ~ "Chest pain type",
+        ClinicalFactor == "ExerciseInducedAngina" ~ "Exercise-induced angina?"
+      ),
+    Level = 
+      case_when(
+        Level == "TRUE" ~ "Yes",
+        Level == "FALSE" ~ "No",
+        TRUE ~ Level
+      ),
+    Outcome = 
+      case_when(
+        Outcome == "HeartDisease" ~ "Heart disease",
+        Outcome == "MaximumHR" ~ "Maximum HR > 150"
+      )
+  ) |>
+  
+  # Rearrange
+  relocate(PercentOfPatients, .after = Patients) |>
+  relocate(Outcome, .before = everything()) |>
+  arrange(
+    Outcome,
+    ClinicalFactor,
+    Level,
+    HasOutcome
+  )
+summary_dat
+```
+
+Now we're ready to build the table (note the use of the [`zildge::rectbl_agg_wtd()`](https://github.com/zajichek/zildge/blob/main/R/rectbl_agg_wtd.R) function to compute the weighted average, see [my other post](https://www.zajichekstats.com/post/reactable-javascript/) for more information about this).
+
+```{r}
+reactable(
+  data = summary_dat,
+  groupBy = c("Outcome", "ClinicalFactor", "Level"),
+  columns = 
+    list(
+      ClinicalFactor = colDef(name = "Clinical factor"),
+      HasOutcome = colDef(name = "Has Outcome?"),
+      Patients = colDef(name = "Count", aggregate = "sum", align = "center"),
+      PercentOfPatients = colDef(name = "Percent", aggregate = "sum", align = "center", format = colFormat(digits = 2, percent = TRUE)),
+      OutcomeRate = colDef(name = "Outcome rate (%)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2, percent = TRUE)),
+      Age = colDef(name = "Avg. age (years)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2)),
+      Female = colDef(name = "Female (%)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2, percent = TRUE))
+    ),
+  columnGroups = 
+    list(
+      colGroup(
+        name = "Patients",
+        columns = c("Patients", "PercentOfPatients")
+      )
+    ),
+  striped = TRUE,
+  highlight = TRUE,
+  bordered = TRUE,
+  resizable = TRUE,
+  theme = reactablefmtr::sandstone()
+) |>
+  reactablefmtr::add_source("Use arrows to expand table", font_size = 12, font_style = "italic")
+```
+
+<br>
+
+There are a few problems with this table:
+
+1. The redundancy of the top-level (and second-level) summary statistics is unappealing
+2. The top-level aggregation is just flat-out wrong because we've duplicated counts over the data set
+
+Maybe _1_ is not a huge deal, but I've probably already established somewhere that there are `r nrow(dat)` patients in the data set and the overall rate of heart disease is `r round(100*mean(dat$HeartDisease == "Yes"),1)`%. You still may choose to keep it as-is in this case as it's not totally harmful. However, _2_ needs to be addressed as the data is misleading and not really interpretable. __So how can we remove the results from (at least) the top-level while maintaining the lower-level aggregation?__
+
+We can define an `R` function that provides JavaScript [custom styling](https://glin.github.io/reactable/articles/conditional-styling.html) to a cell.
+
+```{r}
+remove_text <-
+  function(col, threshold) {
+    JS(
+      paste0(
+        "function(rowInfo) {
+          if(rowInfo.row['", col, "'] > ", threshold, ") {
+            return {fontSize:0}
+          }
+        }"
+      )
+    )
+  }
+```
+
+All this function does is reduce the font size to zero for any cell where the value of `col` in the respective row is greater than `threshold`. Thus, since we are over-counting the number of patients in the top-level, we can just apply this function to rows in which the count exceeds `r nrow(dat)`, which is the patient count in our data set. We provide this function to the `style` argument of `colDef()`.
+
+```{r}
+reactable(
+  data = summary_dat,
+  groupBy = c("Outcome", "ClinicalFactor", "Level"),
+  columns = 
+    list(
+      ClinicalFactor = colDef(name = "Clinical factor"),
+      HasOutcome = colDef(name = "Has Outcome?"),
+      Patients = colDef(style = remove_text("Patients", nrow(dat)), name = "Count", aggregate = "sum", align = "center"),
+      PercentOfPatients = colDef(style = remove_text("Patients", nrow(dat)), name = "Percent", aggregate = "sum", align = "center", format = colFormat(digits = 2, percent = TRUE)),
+      OutcomeRate = colDef(style = remove_text("Patients", nrow(dat)), name = "Outcome rate (%)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2, percent = TRUE)),
+      Age = colDef(style = remove_text("Patients", nrow(dat)), name = "Avg. age (years)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2)),
+      Female = colDef(style = remove_text("Patients", nrow(dat)), name = "Female (%)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2, percent = TRUE))
+    ),
+  columnGroups = 
+    list(
+      colGroup(
+        name = "Patients",
+        columns = c("Patients", "PercentOfPatients")
+      )
+    ),
+  striped = TRUE,
+  highlight = TRUE,
+  bordered = TRUE,
+  resizable = TRUE,
+  theme = reactablefmtr::sandstone()
+) |>
+  reactablefmtr::add_source("Use arrows to expand table", font_size = 12, font_style = "italic")
+```
+
+<br>
+
+If we want to remove text from the second level of aggregation, we can just adjust the `threshold`.
+
+```{r}
+reactable(
+  data = summary_dat,
+  groupBy = c("Outcome", "ClinicalFactor", "Level"),
+  columns = 
+    list(
+      ClinicalFactor = colDef(name = "Clinical factor"),
+      HasOutcome = colDef(name = "Has Outcome?"),
+      Patients = colDef(style = remove_text("Patients", nrow(dat) - 1), name = "Count", aggregate = "sum", align = "center"),
+      PercentOfPatients = colDef(style = remove_text("Patients", nrow(dat) - 1), name = "Percent", aggregate = "sum", align = "center", format = colFormat(digits = 2, percent = TRUE)),
+      OutcomeRate = colDef(style = remove_text("Patients", nrow(dat) - 1), name = "Outcome rate (%)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2, percent = TRUE)),
+      Age = colDef(style = remove_text("Patients", nrow(dat) - 1), name = "Avg. age (years)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2)),
+      Female = colDef(style = remove_text("Patients", nrow(dat) - 1), name = "Female (%)", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 2, percent = TRUE))
+    ),
+  columnGroups = 
+    list(
+      colGroup(
+        name = "Patients",
+        columns = c("Patients", "PercentOfPatients")
+      )
+    ),
+  striped = TRUE,
+  highlight = TRUE,
+  bordered = TRUE,
+  resizable = TRUE,
+  theme = reactablefmtr::sandstone()
+) |>
+  reactablefmtr::add_source("Use arrows to expand table", font_size = 12, font_style = "italic")
+```
+
+<br>
+
+And that's it.
+
+I'll acknowledge that I didn't exhaust all options for this task and that there are _definitely_ better ways to do this with more directed intention by accessing various properties of the table. Obviously this only works if you have a column in the table that only increases during the aggregation and does so to predictable amounts. But it did the trick here.
