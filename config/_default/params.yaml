@@ -6,8 +6,8 @@
 # Appearance
 theme: custom_site_theme # References custom color theme set in /data/themes/custom_site_theme.toml
 day_night: true
-font: custom_site_font # References custom color theme set in /data/fonts/custom_site_font.toml
-font_size: M
+font: mrrobot # Can reference custom font set in /data/fonts/custom_site_font.toml via 'custom_site_font'
+font_size: S
 
 # SEO (https://wowchemy.com/docs/hugo-tutorials/seo/)
 site_type: 'LocalBusiness' # https://wowchemy.com/docs/hugo-tutorials/seo/#improve-your-search-engine-and-social-network-previews
