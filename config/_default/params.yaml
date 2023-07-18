@@ -14,6 +14,7 @@ site_type: 'LocalBusiness' # https://wowchemy.com/docs/hugo-tutorials/seo/#impro
 local_business_type: 'ProfessionalService' # https://schema.org/LocalBusiness#subtypes
 org_name: 'Zajichek Stats'
 description: 'Data science and statistical consulting in Central Wisconsin and beyond'
+twitter: 'zajichekstats'
 
 # Contact (displays under the Contact widget on the homepage)
 email: alexzajichek@gmail.com
