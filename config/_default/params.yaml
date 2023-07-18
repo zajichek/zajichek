@@ -117,6 +117,7 @@ marketing:
   google_site_verification: '' # https://search.google.com/search-console/welcome
   baidu_site_verification: ''
   baidu_tongji: ''
+  google_adsense: 'ca-pub-1923124754848646'
 cms:
   branch: master
   local_backend: false
