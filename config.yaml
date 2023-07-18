@@ -6,7 +6,7 @@ theme: "starter-hugo-academic"
 
 title: Zajichek Stats # Website name
 baseurl: 'https://zajichek.netlify.app/' # Website URL
-copyright: '' # Footer text, e.g. '© {year} Me'
+copyright: '© 2023 Zajichek Stats'
 
 ############################
 ## LANGUAGE
@@ -25,7 +25,7 @@ module:
   imports:
     - path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy-cms
     - path: github.com/wowchemy/wowchemy-hugo-modules/wowchemy
-
+  
 ############################
 ## ADVANCED
 ############################
