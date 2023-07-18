@@ -96,7 +96,7 @@ comments:
     publication: true
     event: true
   disqus:
-    shortname: ''
+    shortname: 'https-www-zajichekstats-com'
     show_count: true
   commento:
     url: ''
