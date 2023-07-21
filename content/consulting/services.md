@@ -13,7 +13,7 @@ weight: 20
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
-title: Statistical and Data Science Consulting
+title: Data Science and Statistical Consulting
 subtitle: How can I help?
 
 feature:
@@ -26,7 +26,7 @@ feature:
   icon: chart-bar
   icon_pack: fas
 - name: Results and Presentation
-  description: Display results on custom reports or web applications
+  description: Web applications and automated reporting
   icon: laptop-code
   icon_pack: fas
 ---
