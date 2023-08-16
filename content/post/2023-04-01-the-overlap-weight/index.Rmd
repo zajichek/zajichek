@@ -1,12 +1,12 @@
 ---
-title: The overlap weight
+title: The overlap weight in survival analysis
 author: Alex Zajichek
 date: '2023-04-01'
 slug: the-overlap-weight
 categories: []
-tags: ['statistics', 'datascience', 'causation', 'rstats']
-subtitle: 'A smoother, more inclusive approach to balancing'
-summary: "It starts the same as propsensity score matching. It's what is done with the scores that differentiate the methods."
+tags: ['statistics', 'datascience', 'causation', 'rstats', 'survival analysis']
+subtitle: "A simulation review"
+summary: "The goal is to estimate what the outcome difference would be had the counterfactual also been observed."
 authors: []
 lastmod: '2023-04-01T11:39:12-05:00'
 featured: no
@@ -17,9 +17,135 @@ image:
 projects: []
 ---
 
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
 **_In progress_**
 
-I was recently introduced to a method called [_overlap weighting_](https://jamanetwork.com/journals/jama/article-abstract/2765748). It is part of a family of methods for balancing covariates when estimating treatment effects in observational studies. Although I've just started getting into the details, I find it much more elegant than [propensity score (PS) matching](https://en.wikipedia.org/wiki/Propensity_score_matching) (which I've [used in the past](https://jamanetwork.com/journals/jama/fullarticle/2749478)) for many reasons:
+I was recently introduced to [overlap weighting](https://jamanetwork.com/journals/jama/article-abstract/2765748), which is part of a general family of methods for balancing covariates when estimating treatment effects with observational data. Specifically, it focuses on the [_clinical equipoise_](https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022); that is, the patients in which the treatment decision is most uncertain. I find it more elegant than [matching](https://en.wikipedia.org/wiki/Propensity_score_matching) (which I've [used in the past](https://jamanetwork.com/journals/jama/fullarticle/2749478)), and figured a useful way to better understand the approach is to deconstruct, interpret, and translate a [SAS simulation](http://www2.stat.duke.edu/~fl35/OW/OW_survival_Demo.sas) in the context of survival analysis implemented by the [original authors](https://pubmed.ncbi.nlm.nih.gov/30189042/). All code is written in (and translated to) [`R`](https://www.r-project.org/). We'll start by loading some packages.
+
+```{r}
+library(tidyverse)
+library(survival)
+```
+
+# Table of Contents
+
+* [Setting up the potential outcomes](#potentialoutcomes)
+  + [Simulate some patients](#simulatepatients)
+  + [Define the treatment propensity](#treatmentpropensity)
+  + [Generate the treatment assignment](#treatmentassignment)
+  + [Compute the (true) overlap weight](#trueoverlapweight)
+
+# Setting up the potential outcomes {#potentialoutcomes}
+
+The theoretical underpinnings of [overlap weighting](https://pubmed.ncbi.nlm.nih.gov/30189042/) live in the context of the [potential outcomes](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5841618/#:~:text=The%20potential%20outcomes%20framework%20provides%20a%20way%20to%20quantify%20causal,exposure%20or%20intervention%20under%20consideration.) paradigm of [causal inference](https://www.sciencedirect.com/topics/social-sciences/causal-inference). Basically, we wonder what _would have_ happened had we been able to observe each patient under both treatments (known as the [counterfactual](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/1471-2288-5-28)). If we knew the outcomes from the two worlds, the causal treatment effect would simply be the average difference across all patients. The problem of course is that in reality the outcome can only be observed for the treatment in which the patient was assigned (or chose), and so our goal is to work with the "incomplete" information that we do have to try to estimate what the outcome difference would have been had the counterfactual been observed as well.
+
+## Simulate some patients {#simulatepatients}
+
+The first thing we need to do is generate some (fake) patients to facilitate the simulation. Here we'll focus on age, sex, and income as patient-identifying characteristics.
+
+```{r}
+# Set the sample size
+n <- 10000
+
+# Set the seed
+set.seed(123)
+
+# Build the population
+population <-
+  tibble(
+    age = rnorm(n, mean = 50, sd = 10),
+    zage = (age - 50) / 10,
+    male = rbinom(n, size = 1, prob = 0.6),
+    income = rnorm(n, mean = 50, sd = 10),
+    zincome = (income - 50) / 10
+  )
+population
+```
+
+We've generated a sample of `r paste(n)` patients. We'll assume `age` is measured in years, `income` in thousands of dollars (\$), and `male` is 1 for _Male_ and 0 for _Female_. The columns `zage` and `zincome` are just [standardized](https://statisticsbyjim.com/glossary/standardization/#:~:text=In%20statistics%2C%20standardization%20is%20the,standard%20deviation%20for%20a%20variable.) versions of the originals to avoid scaling nuances (we'll refer to these as $age_z$ and $income_z$).
+
+## Define the treatment propensity {#treatmentpropensity}
+
+Here's where the important theory starts to creep in (already). We assume that there is a _true_ propensity score, say $p_i^A$, that is the _true_ probability that patient _i_ receives treatment _A_ given their specific characteristics (and let's assume there are possible treatments _A_ & _B_). Further, we assume (some transformation of) this probability is some linear combination of all the characteristics that confound the crude treatment effect on the outcome. In this simulation, we'll assume the [logit](https://en.wikipedia.org/wiki/Logistic_regression) model:
+
+$$log(\frac{p_i^A}{1 - p_i^A}) = -0.4 + 0.405*age_z - 0.223*male - 0.693*income_z$$
+
+So let's add this _true_ propensity score to the `population` data set:
+
+```{r}
+population <-
+  population |>
+  
+  # Add the true propensity score (unknown quantity)
+  mutate(
+    log_odds_pA = -0.4 + log(1.5)*zage + log(0.8)*male + log(.50)*zincome,
+    pA = 1 / (1 + exp(-log_odds_pA))
+  )
+population
+```
+
+Obviously in practice we don't know what $p_i^A$ is, so it must be _estimated_ from the treatment assignments we observe in the data. Additionally, we aren't strictly required to assume the [logit](https://en.wikipedia.org/wiki/Logistic_regression) model, but when we use it to estimate the propensity score for [overlap weighting](https://pubmed.ncbi.nlm.nih.gov/30189042/), it has the advantageous property of perfect balance. That is, the weighted-mean differences for all covariates included in the logistic regression model will be zero across the treatment groups.
+
+## Generate the treatment assignment {#treatmentassignment}
+
+The treatment assignment is one of the _known_ quantities we would observe in a real life sample, and that is what would be used as the dependent variable for _estimating_ propensity scores. However, since we are running a simulation, we need to generate the treatment assignments from the governing distribution. We assume that the observed treatment for patient _i_ is the result of an (unfair) coin flip that has a probability equal to the [true propensity score](#treatmentpropensity). In math notation,
+
+$$A_i \sim Bernoulli(p_i^A)$$
+
+where $A_i$ is the indicator of treatment A. Let's add a _realized_ treatment assignment to the `population`:
+
+```{r}
+population <-
+  population |>
+  
+  # Add the realized treatment assignment (known quantity)
+  mutate(
+    A = rbinom(n, size = 1, prob = pA),
+  )
+population
+```
+
+In this case, `A=1` represents treatment _A_ and `A=0` represents treatment _B_. Again, this is the actual treatment we would observe the patient receiving in a sample.
+
+## Compute the (true) overlap weight {#trueoverlapweight}
+
+First we need to define what the overlap weight is, and it's actually quite simple: we just assign the patient the probability they _did not_ receive the treatment we observed. 
+
+$$
+\begin{equation}
+OW_i=
+    \begin{cases}
+        1-p_i^A & \text{if } A_i=1\\
+        p_i^A & \text{if } A_i=0\\
+    \end{cases}
+\end{equation}
+$$
+
+Notice the notation. Since it depends on the [true propensity score](#treatmentpropensity), the overlap weight is another _unknown_ quantity that is estimated from the data. It also depends on the [realized treatment assignment](#treatmentassignment), so the collection of weights across patients differ depending on the observed treatment distribution. We can add these weights to the `population` data set:
+
+```{r}
+population <-
+  population |>
+  
+  # Add the true overlap weight for the realized treatment (unknown quantity)
+  mutate(
+    OW = A * (1-pA) + (1-A) * pA
+  )
+population
+```
+
+In a real analysis, these weights are what we are ultimately after in order to estimate the average _causal_ treatment effect on the outcome of interest while balancing differences in patient characteristics across the groups (i.e., removing the confounding factors).
+
+### Target population
+
+Now we do end up normalizing these weights so they sum to one within each treatment group. But the intuition about what's happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in _either_ treatment group (i.e., $p_i^A$ near 0.5). This is known as the [_clinical equipoise_](https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022), and the resulting treatment effect is interpreted as the _average treatment effect in the overlap population_.
+
+This makes a lot of sense. When we're comparing treatments, we should focus most heavily on patients that could be candidates for either, and less so on patients that were bound for one. Thus, we up-weight patients who have the most overlap in characteristics with the opposing treatment group. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.
+
+# Summary 
 
 1. All subjects are used instead of arbitrary cutoffs (e.g., 1:5 matching)
 2. It proportionately down-weights the impacts of subjects most likely belonging to a certain treatment group
@@ -29,90 +155,7 @@ I was recently introduced to a method called [_overlap weighting_](https://jaman
 6. Avoids extreme case weights by being bounded between 0 and 1
 7. It has [been shown](https://academic.oup.com/aje/article/188/1/250/5090958) to produce more unbiased and efficient estimates than other inclusive weighting approaches like [inverse probability weighting (IPW)](https://en.wikipedia.org/wiki/Inverse_probability_weighting)
 
-It actually starts the same as the matching approach by deriving a propensity score. It's what is done with the scores that differentiate the methods. 
-
-# Table of Contents
-
-* [Defining the overlap weight](#definition)
-* [Using the overlap weight](#usage)
-* [Heart disease example](#example)
-  + [Making an artificial treatment](#artificial)
-  + [Fitting the propensity score model](#modelfit)
-* [Resources](#resources)
-
-# How is it defined? {#definition}
-
-It's actually quite simple. Suppose you have treatments _A_ & _B_. Then,
-
-$$P(T_i = A|X_i) = p_i$$
-is the _true_ propensity score, or probability, for subject _i_ getting treatment _A_, given their specific set of characteristics, $X_i$, that contribute to the treatment imbalance.
-
-So you build a model to estimate $p_i$ using the set of treatments that were actually observed. If you use [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression), which is the common approach, then the estimated propensity score $\hat{p_i}$ is
-
-$$p_i \approx \hat{p_i} = \frac{1}{1 + e^{-X_i\hat{\beta}}}$$
-where $\hat{\beta}$ are the estimated regression coefficients. Then the (estimated) overlap weight, $\hat{OW_i}$, is calculated by:
-
-$$
-\begin{equation}
-\hat{OW_i}=
-    \begin{cases}
-        1-\hat{p_i} & \text{if } T_i = A\\
-        \hat{p_i} & \text{if } T_i = B\\
-    \end{cases}
-\end{equation}
-$$
-That's it. We just assign the probability that each subject _did not_ receive their respective treatment.
-
-Now we do end up normalizing these weights so they sum to one within each treatment group. But the intuition about what's happening is that the focus of the downstream estimation is shifted to subjects that are most likely in _either_ treatment group (i.e., $\hat{p_i}$ near 0.5). 
-
-This makes a lot of sense. When we're comparing treatments, we should focus most heavily on subjects that could be candidates for either one, and less so on subjects that were bound for one of the treatment options. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.
-
-# How do I use it? {#usage}
-
-In it's most basic usage, the treatment effect is estimated as the difference in average outcome values across treatment groups after subjects are weighted by their overlap weight.
-
-$$\hat{Effect} = \frac{\sum_{i=1}^{N_A}\hat{OW_{A_i}} \times Y_{A_i}}{\sum_{i=1}^{N_A}\hat{OW_{A_i}}} - \frac{\sum_{i=1}^{N_B}\hat{OW_{B_i}} \times Y_{B_i}}{\sum_{i=1}^{N_B}\hat{OW_{B_i}}}$$
-
-where $N$ is the sample size, $Y$ is the outcome value, and subscripts $A$ and $B$ indicate the set of subjects in the respective treatment groups. 
-
-This estimator is referred to as the _average treatment effect in the overlap population (ATO)_ (see [paper](https://pubmed.ncbi.nlm.nih.gov/30189042/) for details). It's described this way because the contribution in the weighted-average comes most prominently from subjects whose overlap weight, $\hat{OW_i}$, is closest to 0.5 (i.e., the probability of receiving the opposite treatment). Hence, these are subjects who have the most overlap in characteristics with the opposing treatment group.
-
-# Example {#example}
-
-Sure. Let's first load some packages to get started.
-
-```{r, message = FALSE}
-library(tidyverse)
-library(plotly)
-```
-
-We're going to be creating an artificial example using the `cheese::heart_disease` data set to estimate the effect of some treatment on the likelihood of heart disease. 
-
-```{r}
-dat <- cheese::heart_disease
-print(dat, n = 5)
-```
-
-## Making an artificial treatment {#artificial}
-
-There is not actually a treatment column in this data set, so we'll make one. Let's assume the following:
-
-$$logit(P(T_i|X_i)) = 0.75Age_{std} + 0.5Male$$
-That is, the probability of being _treated_ ($T_i$) is linearly related to the (standardized) age and sex of the patient. Further, older patients and male patients are more likely to be treated. 
-
-```{r}
-dat <- 
-  dat %>%
-  
-  # Add the true propensity score
-  mutate(
-    PS = 1 / (1 + exp(-(.75 * ((Age - mean(Age))/sd(Age)) + .5 * (Sex == "Male"))))
-  ) 
-```
-
-Let's look at the _true_ propensity score distribution (note these are never known).
-
-```{r}
+```{r, eval = FALSE}
 dat %>%
   plot_ly(
     x = ~PS,
@@ -124,22 +167,7 @@ dat %>%
   )
 ```
 
-Now, we'll generate the treatment indicator for each patient by taking a random draw from a Bernoulli distribution:
-
-```{r}
-set.seed(123)
-dat <- 
-  dat %>%
-  
-  # Assign treatment
-  mutate(
-    Treated = rbinom(n = nrow(dat), size = 1, prob = PS)
-  )
-```
-
-Of the `r nrow(dat)` patients, `r paste0(sum(dat$Treated), " (", round(mean(dat$Treated) * 100, 1), "%)")` were treated. Let's look at the observed rate of treatment by age and sex.
-
-```{r}
+```{r, eval = FALSE}
 ggplotly(
   dat %>%
     
@@ -187,46 +215,7 @@ ggplotly(
 
 ```
 
-As expected, we see an increasing treatment rate with age, as well as for male patients (this is only expected because we defined it this way; in practice, this graph might give us the evidence to use age and sex in a propensity score model). 
-
-**Important**: _Note that we did not relate the treatment to likelihood of heart disease (our outcome), so there is actually no effect. Any effect we do see is completely explained by confounding due to age and sex._
-
-## Fitting the propensity score model {#modelfit}
-
-As described [above](#definition), we just need to fit a logistic regression model, regressing the treatment variable on age and sex.
-
-```{r}
-ps_mod <- glm(Treated ~ scale(Age) + Sex, data = dat, family = "binomial")
-summary(ps_mod)
-```
-
-Note that we centered and scaled `Age` which resulted in basically the same model we [specified](#artificial) (which we would hope it does).
-
-## Extracting the overlap weights {#extractingweights}
-
-To get the weights, we have to extract the fitted probabilities of treatment for each observation, and then apply the [formula](#definition). We'll also take one extra step and normalize the weights within each treatment group so they sum to 1.
-
-```{r}
-dat <-
-  dat %>%
-  
-  # Compute the weights
-  mutate(
-    p_hat = predict(ps_mod, type = "response"),
-    OW = 
-      case_when(
-        Treated == 1 ~ 1 - p_hat,
-        TRUE ~ p_hat
-      )
-  ) %>%
-  
-  # Normalize in each group
-  group_by(Treated) %>%
-  mutate(
-    OW_norm = OW / sum(OW)
-  ) %>%
-  ungroup()
-
+```{r, eval = FALSE}
 dat %>%
   plot_ly(
     x = ~OW_norm,
@@ -235,23 +224,6 @@ dat %>%
     type = "box"
   )
 ```
-
-We can use the `PSweight` package to verify that we computed the weights correctly.
-
-## Estimate treatment effect
-
-* Verify standardized differences are zero (compared to unweighted)
-* Plot the treatment effect before and after weighting.
-
-# Explaining the weights 
-
-The [example](#example) above just gave the steps to run the procedure and get an estimated treatment effect. However, in practice, it is much more complex than this (mostly because we already knew the answer!). There are many ways we can think to summarize the weights as an exploratory step to better understand the impact of the weighting procedure.
-
-* Intuition about who it focuses on, proportional down weights
-* Show differences in outcome weighted and unweighted
-* Show standarized differences of covariates (some not included in PS model as well) (use plotly)
-* Show ways to assess cumulative contribution of cases and impact on other covariates
-* Assess redundancy
 
 # Resources {#resources}
 

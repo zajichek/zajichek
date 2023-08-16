@@ -1,12 +1,12 @@
 ---
-title: The overlap weight
+title: The overlap weight in survival analysis
 author: Alex Zajichek
 date: '2023-04-01'
 slug: the-overlap-weight
 categories: []
-tags: ['statistics', 'datascience', 'causation', 'rstats']
-subtitle: 'A smoother, more inclusive approach to balancing'
-summary: "It starts the same as propsensity score matching. It's what is done with the scores that differentiate the methods."
+tags: ['statistics', 'datascience', 'causation', 'rstats', 'survival analysis']
+subtitle: "A simulation review"
+summary: "The goal is to estimate what the outcome difference would be had the counterfactual also been observed."
 authors: []
 lastmod: '2023-04-01T11:39:12-05:00'
 featured: no
@@ -17,18 +17,166 @@ image:
 projects: []
 ---
 
-<script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>
-<script src="{{< blogdown/postref >}}index_files/plotly-binding/plotly.js"></script>
-<script src="{{< blogdown/postref >}}index_files/typedarray/typedarray.min.js"></script>
-<script src="{{< blogdown/postref >}}index_files/jquery/jquery.min.js"></script>
-<link href="{{< blogdown/postref >}}index_files/crosstalk/css/crosstalk.min.css" rel="stylesheet" />
-<script src="{{< blogdown/postref >}}index_files/crosstalk/js/crosstalk.min.js"></script>
-<link href="{{< blogdown/postref >}}index_files/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="{{< blogdown/postref >}}index_files/plotly-main/plotly-latest.min.js"></script>
 
 
 <p><strong><em>In progress</em></strong></p>
-<p>I was recently introduced to a method called <a href="https://jamanetwork.com/journals/jama/article-abstract/2765748"><em>overlap weighting</em></a>. It is part of a family of methods for balancing covariates when estimating treatment effects in observational studies. Although I’ve just started getting into the details, I find it much more elegant than <a href="https://en.wikipedia.org/wiki/Propensity_score_matching">propensity score (PS) matching</a> (which I’ve <a href="https://jamanetwork.com/journals/jama/fullarticle/2749478">used in the past</a>) for many reasons:</p>
+<p>I was recently introduced to <a href="https://jamanetwork.com/journals/jama/article-abstract/2765748">overlap weighting</a>, which is part of a general family of methods for balancing covariates when estimating treatment effects with observational data. Specifically, it focuses on the <a href="https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022"><em>clinical equipoise</em></a>; that is, the patients in which the treatment decision is most uncertain. I find it more elegant than <a href="https://en.wikipedia.org/wiki/Propensity_score_matching">matching</a> (which I’ve <a href="https://jamanetwork.com/journals/jama/fullarticle/2749478">used in the past</a>), and figured a useful way to better understand the approach is to deconstruct, interpret, and translate a <a href="http://www2.stat.duke.edu/~fl35/OW/OW_survival_Demo.sas">SAS simulation</a> in the context of survival analysis implemented by the <a href="https://pubmed.ncbi.nlm.nih.gov/30189042/">original authors</a>. All code is written in (and translated to) <a href="https://www.r-project.org/"><code>R</code></a>. We’ll start by loading some packages.</p>
+<pre class="r"><code>library(tidyverse)
+library(survival)</code></pre>
+<div id="table-of-contents" class="section level1">
+<h1>Table of Contents</h1>
+<ul>
+<li><a href="#potentialoutcomes">Setting up the potential outcomes</a>
+<ul>
+<li><a href="#simulatepatients">Simulate some patients</a></li>
+<li><a href="#treatmentpropensity">Define the treatment propensity</a></li>
+<li><a href="#treatmentassignment">Generate the treatment assignment</a></li>
+<li><a href="#trueoverlapweight">Compute the (true) overlap weight</a></li>
+</ul></li>
+</ul>
+</div>
+<div id="potentialoutcomes" class="section level1">
+<h1>Setting up the potential outcomes</h1>
+<p>The theoretical underpinnings of <a href="https://pubmed.ncbi.nlm.nih.gov/30189042/">overlap weighting</a> live in the context of the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5841618/#:~:text=The%20potential%20outcomes%20framework%20provides%20a%20way%20to%20quantify%20causal,exposure%20or%20intervention%20under%20consideration.">potential outcomes</a> paradigm of <a href="https://www.sciencedirect.com/topics/social-sciences/causal-inference">causal inference</a>. Basically, we wonder what <em>would have</em> happened had we been able to observe each patient under both treatments (known as the <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/1471-2288-5-28">counterfactual</a>). If we knew the outcomes from the two worlds, the causal treatment effect would simply be the average difference across all patients. The problem of course is that in reality the outcome can only be observed for the treatment in which the patient was assigned (or chose), and so our goal is to work with the “incomplete” information that we do have to try to estimate what the outcome difference would have been had the counterfactual been observed as well.</p>
+<div id="simulatepatients" class="section level2">
+<h2>Simulate some patients</h2>
+<p>The first thing we need to do is generate some (fake) patients to facilitate the simulation. Here we’ll focus on age, sex, and income as patient-identifying characteristics.</p>
+<pre class="r"><code># Set the sample size
+n &lt;- 10000
+
+# Set the seed
+set.seed(123)
+
+# Build the population
+population &lt;-
+  tibble(
+    age = rnorm(n, mean = 50, sd = 10),
+    zage = (age - 50) / 10,
+    male = rbinom(n, size = 1, prob = 0.6),
+    income = rnorm(n, mean = 50, sd = 10),
+    zincome = (income - 50) / 10
+  )
+population</code></pre>
+<pre><code>## # A tibble: 10,000 × 5
+##      age    zage  male income zincome
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1  44.4 -0.560      0   36.5  -1.35 
+##  2  47.7 -0.230      1   44.2  -0.579
+##  3  65.6  1.56       1   41.4  -0.861
+##  4  50.7  0.0705     1   59.7   0.973
+##  5  51.3  0.129      0   56.2   0.619
+##  6  67.2  1.72       1   63.9   1.39 
+##  7  54.6  0.461      1   35.1  -1.49 
+##  8  37.3 -1.27       1   56.4   0.639
+##  9  43.1 -0.687      1   53.7   0.375
+## 10  45.5 -0.446      1   53.7   0.370
+## # … with 9,990 more rows</code></pre>
+<p>We’ve generated a sample of 10000 patients. We’ll assume <code>age</code> is measured in years, <code>income</code> in thousands of dollars ($), and <code>male</code> is 1 for <em>Male</em> and 0 for <em>Female</em>. The columns <code>zage</code> and <code>zincome</code> are just <a href="https://statisticsbyjim.com/glossary/standardization/#:~:text=In%20statistics%2C%20standardization%20is%20the,standard%20deviation%20for%20a%20variable.">standardized</a> versions of the originals to avoid scaling nuances (we’ll refer to these as <span class="math inline">\(age_z\)</span> and <span class="math inline">\(income_z\)</span>).</p>
+</div>
+<div id="treatmentpropensity" class="section level2">
+<h2>Define the treatment propensity</h2>
+<p>Here’s where the important theory starts to creep in (already). We assume that there is a <em>true</em> propensity score, say <span class="math inline">\(p_i^A\)</span>, that is the <em>true</em> probability that patient <em>i</em> receives treatment <em>A</em> given their specific characteristics (and let’s assume there are possible treatments <em>A</em> &amp; <em>B</em>). Further, we assume (some transformation of) this probability is some linear combination of all the characteristics that confound the crude treatment effect on the outcome. In this simulation, we’ll assume the <a href="https://en.wikipedia.org/wiki/Logistic_regression">logit</a> model:</p>
+<p><span class="math display">\[log(\frac{p_i^A}{1 - p_i^A}) = -0.4 + 0.405*age_z - 0.223*male - 0.693*income_z\]</span></p>
+<p>So let’s add this <em>true</em> propensity score to the <code>population</code> data set:</p>
+<pre class="r"><code>population &lt;-
+  population |&gt;
+  
+  # Add the true propensity score (unknown quantity)
+  mutate(
+    log_odds_pA = -0.4 + log(1.5)*zage + log(0.8)*male + log(.50)*zincome,
+    pA = 1 / (1 + exp(-log_odds_pA))
+  )
+population</code></pre>
+<pre><code>## # A tibble: 10,000 × 7
+##      age    zage  male income zincome log_odds_pA    pA
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt;
+##  1  44.4 -0.560      0   36.5  -1.35        0.311 0.577
+##  2  47.7 -0.230      1   44.2  -0.579      -0.315 0.422
+##  3  65.6  1.56       1   41.4  -0.861       0.606 0.647
+##  4  50.7  0.0705     1   59.7   0.973      -1.27  0.219
+##  5  51.3  0.129      0   56.2   0.619      -0.777 0.315
+##  6  67.2  1.72       1   63.9   1.39       -0.888 0.292
+##  7  54.6  0.461      1   35.1  -1.49        0.595 0.644
+##  8  37.3 -1.27       1   56.4   0.639      -1.58  0.171
+##  9  43.1 -0.687      1   53.7   0.375      -1.16  0.238
+## 10  45.5 -0.446      1   53.7   0.370      -1.06  0.257
+## # … with 9,990 more rows</code></pre>
+<p>Obviously in practice we don’t know what <span class="math inline">\(p_i^A\)</span> is, so it must be <em>estimated</em> from the treatment assignments we observe in the data. Additionally, we aren’t strictly required to assume the <a href="https://en.wikipedia.org/wiki/Logistic_regression">logit</a> model, but when we use it to estimate the propensity score for <a href="https://pubmed.ncbi.nlm.nih.gov/30189042/">overlap weighting</a>, it has the advantageous property of perfect balance. That is, the weighted-mean differences for all covariates included in the logistic regression model will be zero across the treatment groups.</p>
+</div>
+<div id="treatmentassignment" class="section level2">
+<h2>Generate the treatment assignment</h2>
+<p>The treatment assignment is one of the <em>known</em> quantities we would observe in a real life sample, and that is what would be used as the dependent variable for <em>estimating</em> propensity scores. However, since we are running a simulation, we need to generate the treatment assignments from the governing distribution. We assume that the observed treatment for patient <em>i</em> is the result of an (unfair) coin flip that has a probability equal to the <a href="#treatmentpropensity">true propensity score</a>. In math notation,</p>
+<p><span class="math display">\[A_i \sim Bernoulli(p_i^A)\]</span></p>
+<p>where <span class="math inline">\(A_i\)</span> is the indicator of treatment A. Let’s add a <em>realized</em> treatment assignment to the <code>population</code>:</p>
+<pre class="r"><code>population &lt;-
+  population |&gt;
+  
+  # Add the realized treatment assignment (known quantity)
+  mutate(
+    A = rbinom(n, size = 1, prob = pA),
+  )
+population</code></pre>
+<pre><code>## # A tibble: 10,000 × 8
+##      age    zage  male income zincome log_odds_pA    pA     A
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+##  1  44.4 -0.560      0   36.5  -1.35        0.311 0.577     1
+##  2  47.7 -0.230      1   44.2  -0.579      -0.315 0.422     0
+##  3  65.6  1.56       1   41.4  -0.861       0.606 0.647     1
+##  4  50.7  0.0705     1   59.7   0.973      -1.27  0.219     0
+##  5  51.3  0.129      0   56.2   0.619      -0.777 0.315     1
+##  6  67.2  1.72       1   63.9   1.39       -0.888 0.292     1
+##  7  54.6  0.461      1   35.1  -1.49        0.595 0.644     0
+##  8  37.3 -1.27       1   56.4   0.639      -1.58  0.171     0
+##  9  43.1 -0.687      1   53.7   0.375      -1.16  0.238     0
+## 10  45.5 -0.446      1   53.7   0.370      -1.06  0.257     0
+## # … with 9,990 more rows</code></pre>
+<p>In this case, <code>A=1</code> represents treatment <em>A</em> and <code>A=0</code> represents treatment <em>B</em>. Again, this is the actual treatment we would observe the patient receiving in a sample.</p>
+</div>
+<div id="trueoverlapweight" class="section level2">
+<h2>Compute the (true) overlap weight</h2>
+<p>First we need to define what the overlap weight is, and it’s actually quite simple: we just assign the patient the probability they <em>did not</em> receive the treatment we observed.</p>
+<p><span class="math display">\[
+\begin{equation}
+OW_i=
+    \begin{cases}
+        1-p_i^A &amp; \text{if } A_i=1\\
+        p_i^A &amp; \text{if } A_i=0\\
+    \end{cases}
+\end{equation}
+\]</span></p>
+<p>Notice the notation. Since it depends on the <a href="#treatmentpropensity">true propensity score</a>, the overlap weight is another <em>unknown</em> quantity that is estimated from the data. It also depends on the <a href="#treatmentassignment">realized treatment assignment</a>, so the collection of weights across patients differ depending on the observed treatment distribution. We can add these weights to the <code>population</code> data set:</p>
+<pre class="r"><code>population &lt;-
+  population |&gt;
+  
+  # Add the true overlap weight for the realized treatment (unknown quantity)
+  mutate(
+    OW = A * (1-pA) + (1-A) * pA
+  )
+population</code></pre>
+<pre><code>## # A tibble: 10,000 × 9
+##      age    zage  male income zincome log_odds_pA    pA     A    OW
+##    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;   &lt;dbl&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;
+##  1  44.4 -0.560      0   36.5  -1.35        0.311 0.577     1 0.423
+##  2  47.7 -0.230      1   44.2  -0.579      -0.315 0.422     0 0.422
+##  3  65.6  1.56       1   41.4  -0.861       0.606 0.647     1 0.353
+##  4  50.7  0.0705     1   59.7   0.973      -1.27  0.219     0 0.219
+##  5  51.3  0.129      0   56.2   0.619      -0.777 0.315     1 0.685
+##  6  67.2  1.72       1   63.9   1.39       -0.888 0.292     1 0.708
+##  7  54.6  0.461      1   35.1  -1.49        0.595 0.644     0 0.644
+##  8  37.3 -1.27       1   56.4   0.639      -1.58  0.171     0 0.171
+##  9  43.1 -0.687      1   53.7   0.375      -1.16  0.238     0 0.238
+## 10  45.5 -0.446      1   53.7   0.370      -1.06  0.257     0 0.257
+## # … with 9,990 more rows</code></pre>
+<p>In a real analysis, these weights are what we are ultimately after in order to estimate the average <em>causal</em> treatment effect on the outcome of interest while balancing differences in patient characteristics across the groups (i.e., removing the confounding factors).</p>
+<div id="target-population" class="section level3">
+<h3>Target population</h3>
+<p>Now we do end up normalizing these weights so they sum to one within each treatment group. But the intuition about what’s happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in <em>either</em> treatment group (i.e., <span class="math inline">\(p_i^A\)</span> near 0.5). This is known as the <a href="https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022"><em>clinical equipoise</em></a>, and the resulting treatment effect is interpreted as the <em>average treatment effect in the overlap population</em>.</p>
+<p>This makes a lot of sense. When we’re comparing treatments, we should focus most heavily on patients that could be candidates for either, and less so on patients that were bound for one. Thus, we up-weight patients who have the most overlap in characteristics with the opposing treatment group. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.</p>
+</div>
+</div>
+</div>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
 <ol style="list-style-type: decimal">
 <li>All subjects are used instead of arbitrary cutoffs (e.g., 1:5 matching)</li>
 <li>It proportionately down-weights the impacts of subjects most likely belonging to a certain treatment group</li>
@@ -38,79 +186,6 @@ projects: []
 <li>Avoids extreme case weights by being bounded between 0 and 1</li>
 <li>It has <a href="https://academic.oup.com/aje/article/188/1/250/5090958">been shown</a> to produce more unbiased and efficient estimates than other inclusive weighting approaches like <a href="https://en.wikipedia.org/wiki/Inverse_probability_weighting">inverse probability weighting (IPW)</a></li>
 </ol>
-<p>It actually starts the same as the matching approach by deriving a propensity score. It’s what is done with the scores that differentiate the methods.</p>
-<div id="table-of-contents" class="section level1">
-<h1>Table of Contents</h1>
-<ul>
-<li><a href="#definition">Defining the overlap weight</a></li>
-<li><a href="#usage">Using the overlap weight</a></li>
-<li><a href="#example">Heart disease example</a>
-<ul>
-<li><a href="#artificial">Making an artificial treatment</a></li>
-<li><a href="#modelfit">Fitting the propensity score model</a></li>
-</ul></li>
-<li><a href="#resources">Resources</a></li>
-</ul>
-</div>
-<div id="definition" class="section level1">
-<h1>How is it defined?</h1>
-<p>It’s actually quite simple. Suppose you have treatments <em>A</em> &amp; <em>B</em>. Then,</p>
-<p><span class="math display">\[P(T_i = A|X_i) = p_i\]</span>
-is the <em>true</em> propensity score, or probability, for subject <em>i</em> getting treatment <em>A</em>, given their specific set of characteristics, <span class="math inline">\(X_i\)</span>, that contribute to the treatment imbalance.</p>
-<p>So you build a model to estimate <span class="math inline">\(p_i\)</span> using the set of treatments that were actually observed. If you use <a href="https://en.wikipedia.org/wiki/Logistic_regression">logistic regression</a>, which is the common approach, then the estimated propensity score <span class="math inline">\(\hat{p_i}\)</span> is</p>
-<p><span class="math display">\[p_i \approx \hat{p_i} = \frac{1}{1 + e^{-X_i\hat{\beta}}}\]</span>
-where <span class="math inline">\(\hat{\beta}\)</span> are the estimated regression coefficients. Then the (estimated) overlap weight, <span class="math inline">\(\hat{OW_i}\)</span>, is calculated by:</p>
-<p><span class="math display">\[
-\begin{equation}
-\hat{OW_i}=
-    \begin{cases}
-        1-\hat{p_i} &amp; \text{if } T_i = A\\
-        \hat{p_i} &amp; \text{if } T_i = B\\
-    \end{cases}
-\end{equation}
-\]</span>
-That’s it. We just assign the probability that each subject <em>did not</em> receive their respective treatment.</p>
-<p>Now we do end up normalizing these weights so they sum to one within each treatment group. But the intuition about what’s happening is that the focus of the downstream estimation is shifted to subjects that are most likely in <em>either</em> treatment group (i.e., <span class="math inline">\(\hat{p_i}\)</span> near 0.5).</p>
-<p>This makes a lot of sense. When we’re comparing treatments, we should focus most heavily on subjects that could be candidates for either one, and less so on subjects that were bound for one of the treatment options. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.</p>
-</div>
-<div id="usage" class="section level1">
-<h1>How do I use it?</h1>
-<p>In it’s most basic usage, the treatment effect is estimated as the difference in average outcome values across treatment groups after subjects are weighted by their overlap weight.</p>
-<p><span class="math display">\[\hat{Effect} = \frac{\sum_{i=1}^{N_A}\hat{OW_{A_i}} \times Y_{A_i}}{\sum_{i=1}^{N_A}\hat{OW_{A_i}}} - \frac{\sum_{i=1}^{N_B}\hat{OW_{B_i}} \times Y_{B_i}}{\sum_{i=1}^{N_B}\hat{OW_{B_i}}}\]</span></p>
-<p>where <span class="math inline">\(N\)</span> is the sample size, <span class="math inline">\(Y\)</span> is the outcome value, and subscripts <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> indicate the set of subjects in the respective treatment groups.</p>
-<p>and this provides an estimate of the <em>average treatment effect in the overlap population</em> (ATO).</p>
-</div>
-<div id="example" class="section level1">
-<h1>Example</h1>
-<p>Sure. Let’s first load some packages to get started.</p>
-<pre class="r"><code>library(tidyverse)
-library(plotly)</code></pre>
-<p>We’re going to be creating an artificial example using the <code>cheese::heart_disease</code> data set to estimate the effect of some treatment on the likelihood of heart disease.</p>
-<pre class="r"><code>dat &lt;- cheese::heart_disease
-print(dat, n = 5)</code></pre>
-<pre><code>## # A tibble: 303 × 9
-##     Age Sex    ChestPain           BP Choleste…¹ Blood…² Maxim…³ Exerc…⁴ Heart…⁵
-##   &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;            &lt;dbl&gt;      &lt;dbl&gt; &lt;lgl&gt;     &lt;dbl&gt; &lt;fct&gt;   &lt;fct&gt;  
-## 1    63 Male   Typical angina     145        233 TRUE        150 No      No     
-## 2    67 Male   Asymptomatic       160        286 FALSE       108 Yes     Yes    
-## 3    67 Male   Asymptomatic       120        229 FALSE       129 Yes     Yes    
-## 4    37 Male   Non-anginal pain   130        250 FALSE       187 No      No     
-## 5    41 Female Atypical angina    130        204 FALSE       172 No      No     
-## # … with 298 more rows, and abbreviated variable names ¹​Cholesterol,
-## #   ²​BloodSugar, ³​MaximumHR, ⁴​ExerciseInducedAngina, ⁵​HeartDisease</code></pre>
-<div id="artificial" class="section level2">
-<h2>Making an artificial treatment</h2>
-<p>There is not actually a treatment column in this data set, so we’ll make one. Let’s assume the following:</p>
-<p><span class="math display">\[logit(P(T_i|X_i)) = 0.75Age_{std} + 0.5Male\]</span>
-That is, the probability of being <em>treated</em> (<span class="math inline">\(T_i\)</span>) is linearly related to the (standardized) age and sex of the patient. Further, older patients and male patients are more likely to be treated.</p>
-<pre class="r"><code>dat &lt;- 
-  dat %&gt;%
-  
-  # Add the true propensity score
-  mutate(
-    PS = 1 / (1 + exp(-(.75 * ((Age - mean(Age))/sd(Age)) + .5 * (Sex == &quot;Male&quot;))))
-  ) </code></pre>
-<p>Let’s look at the <em>true</em> propensity score distribution (note these are never known).</p>
 <pre class="r"><code>dat %&gt;%
   plot_ly(
     x = ~PS,
@@ -120,18 +195,6 @@ That is, the probability of being <em>treated</em> (<span class="math inline">\(
     xaxis = list(title = &quot;True Propensity Score (PS)&quot;, tickformat = &quot;2%&quot;),
     yaxis = list(title = &quot;Patients&quot;)
   )</code></pre>
-<div id="htmlwidget-1" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1">{"x":{"visdat":{"1b902d75c061":["function () ","plotlyVisDat"]},"cur_data":"1b902d75c061","attrs":{"1b902d75c061":{"x":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"histogram"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"True Propensity Score (PS)","tickformat":"2%"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Patients"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[0.770364359631493,0.823795524051423,0.823795524051423,0.279482678662,0.246917293432171,0.652383238080084,0.651898061282358,0.552928075143194,0.770364359631493,0.594018030932883,0.670955196826942,0.532337688917272,0.652383238080084,0.409461733601653,0.573861593007813,0.670955196826942,0.49142997224931,0.613862587117283,0.369518392328375,0.512170947887757,0.784713096571341,0.573338496999314,0.689007920302571,0.689007920302571,0.723409840321588,0.408944683966175,0.573338496999314,0.722981702440214,0.389558632128273,0.332233949444466,0.769985793610694,0.723409840321588,0.784713096571341,0.70650344997063,0.409461733601653,0.370016799924178,0.389558632128273,0.670955196826942,0.633335882718861,0.739701169150525,0.706059775851641,0.332233949444466,0.798055421386148,0.70650344997063,0.632839083015439,0.689007920302571,0.553456705183428,0.532870096838967,0.706059775851641,0.594018030932883,0.246917293432171,0.798399885078115,0.409461733601653,0.409461733601653,0.723409840321588,0.613862587117283,0.532870096838967,0.350891773876053,0.613862587117283,0.553456705183428,0.429141949592691,0.331759633741377,0.689007920302571,0.490895457861402,0.613862587117283,0.723409840321588,0.723409840321588,0.613862587117283,0.70650344997063,0.450107285869159,0.706059775851641,0.823795524051423,0.755357435666517,0.798399885078115,0.409461733601653,0.706059775851641,0.723409840321588,0.429141949592691,0.49142997224931,0.689007920302571,0.42966597202442,0.470185643027067,0.314088163398748,0.835518462005383,0.573861593007813,0.409461733601653,0.470718457162363,0.470185643027067,0.470185643027067,0.429141949592691,0.811425642404402,0.651898061282358,0.755357435666517,0.296047496506071,0.670482848552301,0.573861593007813,0.70650344997063,0.613355510273774,0.573861593007813,0.49142997224931,0.42966597202442,0.232194729716581,0.552928075143194,0.798055421386148,0.512170947887757,0.613862587117283,0.70650344997063,0.670955196826942,0.739701169150525,0.314088163398748,0.632839083015439,0.652383238080084,0.573861593007813,0.279052202106184,0.651898061282358,0.350891773876053,0.689007920302571,0.166174889491516,0.770364359631493,0.798399885078115,0.49142997224931,0.670482848552301,0.553456705183428,0.633335882718861,0.798399885078115,0.31362758647169,0.532337688917272,0.613862587117283,0.409461733601653,0.651898061282358,0.613862587117283,0.553456705183428,0.166471444665653,0.553456705183428,0.279052202106184,0.511636569526832,0.857075301063222,0.755357435666517,0.247315202903325,0.553456705183428,0.70650344997063,0.70650344997063,0.573861593007813,0.784713096571341,0.689007920302571,0.470718457162363,0.670955196826942,0.350891773876053,0.42966597202442,0.613355510273774,0.573861593007813,0.262668512394506,0.739289160646041,0.633335882718861,0.784713096571341,0.857075301063222,0.553456705183428,0.689007920302571,0.723409840321588,0.835518462005383,0.450107285869159,0.914670684573403,0.490895457861402,0.573338496999314,0.49142997224931,0.670955196826942,0.573861593007813,0.490895457861402,0.247315202903325,0.31362758647169,0.857075301063222,0.594018030932883,0.593502150961137,0.651898061282358,0.784713096571341,0.670955196826942,0.573861593007813,0.652383238080084,0.389558632128273,0.594018030932883,0.49142997224931,0.532337688917272,0.370016799924178,0.70650344997063,0.613355510273774,0.670482848552301,0.370016799924178,0.811425642404402,0.613862587117283,0.846606694824675,0.532870096838967,0.553456705183428,0.389558632128273,0.651898061282358,0.754961999181645,0.823795524051423,0.846606694824675,0.31362758647169,0.408944683966175,0.70650344997063,0.408944683966175,0.688549457511965,0.670955196826942,0.688549457511965,0.389558632128273,0.42966597202442,0.689007920302571,0.532870096838967,0.633335882718861,0.651898061282358,0.190459205727706,0.296493408535217,0.350891773876053,0.722981702440214,0.573861593007813,0.652383238080084,0.331759633741377,0.331759633741377,0.688549457511965,0.70650344997063,0.246917293432171,0.490895457861402,0.217367225755322,0.594018030932883,0.670482848552301,0.154993678674541,0.470718457162363,0.739289160646041,0.613862587117283,0.811425642404402,0.449577984976474,0.511636569526832,0.512170947887757,0.835224331600778,0.490895457861402,0.613862587117283,0.652383238080084,0.450107285869159,0.389050157629421,0.370016799924178,0.350891773876053,0.246917293432171,0.389050157629421,0.739701169150525,0.613355510273774,0.823795524051423,0.689007920302571,0.470718457162363,0.573861593007813,0.755357435666517,0.670955196826942,0.689007920302571,0.784713096571341,0.429141949592691,0.389558632128273,0.262668512394506,0.739289160646041,0.856813112939884,0.857075301063222,0.670955196826942,0.296047496506071,0.573338496999314,0.613355510273774,0.409461733601653,0.739701169150525,0.370016799924178,0.573861593007813,0.70650344997063,0.332233949444466,0.370016799924178,0.739701169150525,0.811425642404402,0.450107285869159,0.798055421386148,0.70650344997063,0.784713096571341,0.722981702440214,0.217367225755322,0.670955196826942,0.573338496999314,0.670955196826942,0.470718457162363,0.511636569526832,0.247315202903325,0.739701169150525,0.689007920302571,0.573338496999314,0.689007920302571,0.652383238080084,0.652383238080084,0.823795524051423,0.511636569526832,0.409461733601653,0.770364359631493,0.670482848552301,0.350891773876053,0.70650344997063,0.552928075143194,0.42966597202442,0.835518462005383,0.670955196826942,0.552928075143194,0.296493408535217],"type":"histogram","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<p>Now, we’ll generate the treatment indicator for each patient by taking a random draw from a Bernoulli distribution:</p>
-<pre class="r"><code>set.seed(123)
-dat &lt;- 
-  dat %&gt;%
-  
-  # Assign treatment
-  mutate(
-    Treated = rbinom(n = nrow(dat), size = 1, prob = PS)
-  )</code></pre>
-<p>Of the 303 patients, 175 (57.8%) were treated. Let’s look at the observed rate of treatment by age and sex.</p>
 <pre class="r"><code>ggplotly(
   dat %&gt;%
     
@@ -176,97 +239,13 @@ dat &lt;-
     ylab(&quot;Percent Treated (%)&quot;),
   tooltip = &quot;text&quot;
 )</code></pre>
-<div id="htmlwidget-2" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2">{"x":{"data":[{"x":[1,2,3,4,5],"y":[0.333333333333333,0.411764705882353,0.636363636363636,0.466666666666667,0.68],"text":["Patients: 18<br>Treated: 6<br>Percent Treated: 33.3%","Patients: 17<br>Treated: 7<br>Percent Treated: 41.2%","Patients: 22<br>Treated: 14<br>Percent Treated: 63.6%","Patients: 15<br>Treated: 7<br>Percent Treated: 46.7%","Patients: 25<br>Treated: 17<br>Percent Treated: 68%"],"type":"scatter","mode":"markers+lines","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"Female","legendgroup":"Female","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","line":{"width":1.88976377952756,"color":"rgba(248,118,109,1)","dash":"solid"},"frame":null},{"x":[1,2,3,4,5],"y":[0.311111111111111,0.595744680851064,0.653061224489796,0.633333333333333,0.885714285714286],"text":["Patients: 45<br>Treated: 14<br>Percent Treated: 31.1%","Patients: 47<br>Treated: 28<br>Percent Treated: 59.6%","Patients: 49<br>Treated: 32<br>Percent Treated: 65.3%","Patients: 30<br>Treated: 19<br>Percent Treated: 63.3%","Patients: 35<br>Treated: 31<br>Percent Treated: 88.6%"],"type":"scatter","mode":"markers+lines","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","opacity":1,"size":5.66929133858268,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(0,191,196,1)"}},"hoveron":"points","name":"Male","legendgroup":"Male","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","line":{"width":1.88976377952756,"color":"rgba(0,191,196,1)","dash":"solid"},"frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,5.6],"tickmode":"array","ticktext":["[29,46)","[46,54)","[54,59)","[59,63)","[63,77]"],"tickvals":[1,2,3,4,5],"categoryorder":"array","categoryarray":["[29,46)","[46,54)","[54,59)","[59,63)","[63,77]"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"Age","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.282380952380952,0.914444444444444],"tickmode":"array","ticktext":["30%","40%","50%","60%","70%","80%","90%"],"tickvals":[0.3,0.4,0.5,0.6,0.7,0.8,0.9],"categoryorder":"array","categoryarray":["30%","40%","50%","60%","70%","80%","90%"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Percent Treated (%)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"Sex","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1b90720b1715":{"x":{},"y":{},"colour":{},"text":{},"type":"scatter"},"1b9036189e31":{"x":{},"y":{},"colour":{},"text":{}}},"cur_data":"1b90720b1715","visdat":{"1b90720b1715":["function (y) ","x"],"1b9036189e31":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<p>As expected, we see an increasing treatment rate with age, as well as for male patients (this is only expected because we defined it this way; in practice, this graph might give us the evidence to use age and sex in a propensity score model).</p>
-<p><strong>Important</strong>: <em>Note that we did not relate the treatment to likelihood of heart disease (our outcome), so there is actually no effect. Any effect we do see is completely explained by confounding due to age and sex.</em></p>
-</div>
-<div id="modelfit" class="section level2">
-<h2>Fitting the propensity score model</h2>
-<p>As described <a href="#definition">above</a>, we just need to fit a logistic regression model, regressing the treatment variable on age and sex.</p>
-<pre class="r"><code>ps_mod &lt;- glm(Treated ~ scale(Age) + Sex, data = dat, family = &quot;binomial&quot;)
-summary(ps_mod)</code></pre>
-<pre><code>## 
-## Call:
-## glm(formula = Treated ~ scale(Age) + Sex, family = &quot;binomial&quot;, 
-##     data = dat)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -1.9569  -1.0562   0.6597   0.9673   1.9153  
-## 
-## Coefficients:
-##              Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept) -0.001903   0.218624  -0.009   0.9931    
-## scale(Age)   0.771038   0.135698   5.682 1.33e-08 ***
-## SexMale      0.515147   0.268698   1.917   0.0552 .  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 412.73  on 302  degrees of freedom
-## Residual deviance: 373.79  on 300  degrees of freedom
-## AIC: 379.79
-## 
-## Number of Fisher Scoring iterations: 4</code></pre>
-<p>Note that we centered and scaled <code>Age</code> which resulted in basically the same model we <a href="#artificial">specified</a> (which we would hope it does).</p>
-</div>
-<div id="extractingweights" class="section level2">
-<h2>Extracting the overlap weights</h2>
-<p>To get the weights, we have to extract the fitted probabilities of treatment for each observation, and then apply the <a href="#definition">formula</a>. We’ll also take one extra step and normalize the weights within each treatment group so they sum to 1.</p>
-<pre class="r"><code>dat &lt;-
-  dat %&gt;%
-  
-  # Compute the weights
-  mutate(
-    p_hat = predict(ps_mod, type = &quot;response&quot;),
-    OW = 
-      case_when(
-        Treated == 1 ~ 1 - p_hat,
-        TRUE ~ p_hat
-      )
-  ) %&gt;%
-  
-  # Normalize in each group
-  group_by(Treated) %&gt;%
-  mutate(
-    OW_norm = OW / sum(OW)
-  ) %&gt;%
-  ungroup()
-
-dat %&gt;%
+<pre class="r"><code>dat %&gt;%
   plot_ly(
     x = ~OW_norm,
     y = ~factor(Treated),
     color = ~factor(Treated),
     type = &quot;box&quot;
   )</code></pre>
-<pre><code>## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): minimal value for n is 3, returning requested palette with 3 different levels
-
-## Warning in RColorBrewer::brewer.pal(N, &quot;Set2&quot;): minimal value for n is 3, returning requested palette with 3 different levels</code></pre>
-<div id="htmlwidget-3" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3">{"x":{"visdat":{"1b9030e1a6d":["function () ","plotlyVisDat"]},"cur_data":"1b9030e1a6d","attrs":{"1b9030e1a6d":{"x":{},"y":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"box"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"OW_norm"},"yaxis":{"domain":[0,1],"automargin":true,"title":"factor(Treated)","type":"category","categoryorder":"array","categoryarray":["0","1"]},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"fillcolor":"rgba(102,194,165,0.5)","x":[0.00854139717012359,0.0104110270424465,0.0101183569783923,0.0062725665588455,0.0104110270424465,0.00757093811406164,0.00563728654471382,0.00789972494263915,0.0121915030428131,0.00886472811864584,0.0106950838805586,0.00595784707268974,0.00505349286434982,0.0119594817159768,0.0112350163146475,0.0109699161539755,0.0062725665588455,0.00564916603859024,0.00505349286434982,0.00919628330606766,0.00371302304494393,0.0062725665588455,0.00951012829866379,0.00504221955562502,0.00755814357010722,0.00951012829866379,0.0112350163146475,0.00951012829866379,0.0109699161539755,0.00691606481110786,0.0109593982252437,0.0062725665588455,0.00757093811406164,0.00659232780277975,0.00476805540887716,0.0062725665588455,0.00657980062441351,0.0101068010278037,0.0044811924467635,0.0109699161539755,0.00348684807422069,0.0123957695031988,0.00951012829866379,0.0109699161539755,0.00476805540887716,0.0098059393650034,0.0101068010278037,0.00534743935796059,0.0062725665588455,0.0101068010278037,0.00951012829866379,0.0085540450774025,0.00247007419610218,0.0085540450774025,0.00421493662744833,0.00788693310752358,0.0117345048048341,0.0106950838805586,0.00724265576167283,0.00534743935796059,0.00659232780277975,0.00949802242790228,0.00887723687688843,0.00395877527130201,0.0085540450774025,0.00691606481110786,0.00757093811406164,0.00887723687688843,0.00755814357010722,0.0037223905477432,0.00475712663979625,0.00918395606588795,0.0101068010278037,0.00564916603859024,0.00951012829866379,0.0131471949268253,0.0117251855123495,0.00475712663979625,0.00626021608595525,0.00626021608595525,0.0106841967474842,0.00595784707268974,0.00283710527602738,0.00449175434763085,0.00534743935796059,0.0101183569783923,0.00504221955562502,0.00504221955562502,0.0106841967474842,0.0109699161539755,0.00371302304494393,0.00325352232716256,0.00919628330606766,0.00229171987438495,0.00724265576167283,0.00951012829866379,0.0126054193660335,0.00789972494263915,0.00755814357010722,0.00594571347575244,0.00534743935796059,0.00371302304494393,0.00594571347575244,0.00887723687688843,0.00657980062441351,0.00595784707268974,0.0104110270424465,0.00886472811864584,0.00949802242790228,0.00564916603859024,0.00505349286434982,0.00564916603859024,0.0114899802256138,0.00691606481110786,0.0109699161539755,0.011224885401803,0.00325352232716256,0.00886472811864584,0.0104110270424465,0.00724265576167283,0.0037223905477432,0.0101183569783923,0.0062725665588455,0.0119683839513531,0.0103997925627788,0.0109699161539755,0.00659232780277975,0.0104110270424465],"y":["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"],"type":"box","orientation":"h","name":"0","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"fillcolor":"rgba(141,160,203,0.5)","x":[0.00345122333189841,0.00262322603689299,0.00262322603689299,0.0111944939044541,0.0117065842383069,0.00530125030485912,0.00531280625544769,0.00345122333189841,0.00622332397718364,0.00720452799055184,0.00654237040636284,0.00590947898458754,0.0047245234026928,0.00418459096860396,0.00915939119729579,0.00655487916460543,0.00419472188144853,0.00322810424043845,0.00946176021056128,0.00500858024080487,0.00560182027347321,0.00392962705763772,0.00446020905800773,0.00302383778005277,0.004449691129276,0.00561366791824795,0.0047245234026928,0.00686556220584874,0.00719178527110348,0.00446020905800773,0.0030157749765602,0.00914704072440555,0.00418459096860396,0.00590947898458754,0.00719178527110348,0.0100721679252904,0.00686556220584874,0.00883980665883756,0.0047245234026928,0.00418459096860396,0.00262322603689299,0.00368510247841742,0.0030157749765602,0.00446020905800773,0.00418459096860396,0.00883980665883756,0.0047245234026928,0.00818970232824815,0.0024427111765997,0.00654237040636284,0.0081769515215783,0.00818970232824815,0.00818970232824815,0.00281418791721808,0.00368510247841742,0.00501981472047264,0.00654237040636284,0.00592158485534905,0.00654237040636284,0.00784866916918952,0.00882727948047132,0.00687821011312765,0.00751988234061204,0.00500858024080487,0.00392962705763772,0.00530125030485912,0.00654237040636284,0.0112046706558025,0.0047245234026928,0.0129564127391964,0.00345122333189841,0.0030157749765602,0.00784866916918952,0.00501981472047264,0.00686556220584874,0.00560182027347321,0.0030157749765602,0.0106624806434547,0.00720452799055184,0.00590947898458754,0.00211205393379166,0.0116972167355076,0.00686556220584874,0.004449691129276,0.004449691129276,0.00654237040636284,0.00322810424043845,0.00500858024080487,0.00393935713596962,0.00560182027347321,0.00322810424043845,0.00211205393379166,0.0047245234026928,0.00418459096860396,0.0024427111765997,0.00123873647682416,0.00786146371314394,0.00655487916460543,0.00500858024080487,0.00211205393379166,0.00622332397718364,0.00322810424043845,0.00500858024080487,0.00654237040636284,0.00530125030485912,0.00946176021056128,0.00622332397718364,0.00784866916918952,0.00720452799055184,0.00977044124466075,0.004449691129276,0.00592158485534905,0.00501981472047264,0.00281418791721808,0.00719178527110348,0.00686556220584874,0.00946176021056128,0.00531280625544769,0.00262322603689299,0.0022724123564264,0.004449691129276,0.00500858024080487,0.00473541053576722,0.00882727948047132,0.0047245234026928,0.00719178527110348,0.00560182027347321,0.00531280625544769,0.00419472188144853,0.00654237040636284,0.00786146371314394,0.00501981472047264,0.00393935713596962,0.00851620372834762,0.0075326741757276,0.00244954443509495,0.00590947898458754,0.00530125030485912,0.00850354247214324,0.00977044124466075,0.00392962705763772,0.00592158485534905,0.00262322603689299,0.0047245234026928,0.0081769515215783,0.00368510247841742,0.00500858024080487,0.0047245234026928,0.00322810424043845,0.0114608320119488,0.00393935713596962,0.00211811318670278,0.00211205393379166,0.0109384148364874,0.00914704072440555,0.00392962705763772,0.00654237040636284,0.004449691129276,0.00281418791721808,0.00302383778005277,0.00322810424043845,0.00500858024080487,0.0075326741757276,0.00392962705763772,0.0047245234026928,0.00655487916460543,0.0047245234026928,0.00530125030485912,0.00262322603689299,0.0075326741757276,0.0100721679252904,0.00687821011312765,0.0024427111765997,0.00687821011312765,0.01092785293562],"y":["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"],"type":"box","orientation":"h","name":"1","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
-<p>We can use the <code>PSweight</code> package to verify that we computed the weights correctly.</p>
-</div>
-<div id="estimate-treatment-effect" class="section level2">
-<h2>Estimate treatment effect</h2>
-<ul>
-<li>Verify standardized differences are zero (compared to unweighted)</li>
-<li>Plot the treatment effect before and after weighting.</li>
-</ul>
-</div>
-</div>
-<div id="explaining-the-weights" class="section level1">
-<h1>Explaining the weights</h1>
-<p>The <a href="#example">example</a> above just gave the steps to run the procedure and get an estimated treatment effect. However, in practice, it is much more complex than this (mostly because we already knew the answer!). There are many ways we can think to summarize the weights as an exploratory step to better understand the impact of the weighting procedure.</p>
-<ul>
-<li>Intuition about who it focuses on, proportional down weights</li>
-<li>Show differences in outcome weighted and unweighted</li>
-<li>Show standarized differences of covariates (some not included in PS model as well) (use plotly)</li>
-<li>Show ways to assess cumulative contribution of cases and impact on other covariates</li>
-<li>Assess redundancy</li>
-</ul>
 </div>
 <div id="resources" class="section level1">
 <h1>Resources</h1>
