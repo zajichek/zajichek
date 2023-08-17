@@ -5,9 +5,8 @@ author: Alex Zajichek
 date: '2022-06-18'
 slug: filterable-maps
 categories: []
-tags: ['rstats', 'html', 'healthcare']
+tags: ['rstats', 'javascript', 'healthcare']
 authors: []
-lastmod: '2022-06-18T07:49:36-05:00'
 featured: no
 image:
   caption: ''
@@ -61,7 +60,7 @@ unlink(temp_file)
 ## ii. Hospital Information
 
 # Set path to file (from CMS)
-hosp_file <- "https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1657310748/Hospital_General_Information.csv"
+hosp_file <- "https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1689206722/Hospital_General_Information.csv"
 
 # Import the file
 hosp_info <-
@@ -477,7 +476,7 @@ We need some identifying information for the hospitals such as name and zip code
 ```{r, eval = FALSE}
 
 # Set path to file (from CMS)
-hosp_file <- "https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1641873938/Hospital_General_Information.csv"
+hosp_file <- "https://data.cms.gov/provider-data/sites/default/files/resources/092256becd267d9eeccf73bf7d16c46b_1689206722/Hospital_General_Information.csv"
 
 # Import the file
 hosp_info <-

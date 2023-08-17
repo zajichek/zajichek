@@ -8,7 +8,6 @@ categories: []
 tags: ['rstats', 'javascript']
 summary: ''
 authors: []
-lastmod: '2022-07-31T09:20:22-05:00'
 featured: no
 image:
   caption: ''
@@ -35,8 +34,8 @@ In my [last post](https://www.zajichekstats.com/post/filterable-maps/) we demons
 Let's start with loading some packages.
 
 ```{r}
-require(reactable)
-require(tidyverse)
+library(reactable)
+library(tidyverse)
 ```
 
 ## Make a summary dataset {#summarydata}
@@ -47,7 +46,7 @@ First we'll need to create a data frame with group-level summary statistics that
 # Import dataset
 readmission_rates <-
   read_csv(
-    file = "https://data.cms.gov/provider-data/sites/default/files/resources/37e3c1486ad47b7a0eb471ecf3f7e428_1657310806/Unplanned_Hospital_Visits-Hospital.csv",
+    file = "https://data.cms.gov/provider-data/sites/default/files/resources/37e3c1486ad47b7a0eb471ecf3f7e428_1689206737/Unplanned_Hospital_Visits-Hospital.csv",
     na = c("", " ", "NA", "N/A", "Not Available")
   ) %>%
   
@@ -172,7 +171,7 @@ Suppose we would like to differentiate readmission rates in our table that are a
 ```{r}
 national_rate <-
   read_csv(
-    file = "https://data.cms.gov/provider-data/sites/default/files/resources/6a36e0b7e124bc6f9afd036021cce397_1657310809/Unplanned_Hospital_Visits-National.csv",
+    file = "https://data.cms.gov/provider-data/sites/default/files/resources/6a36e0b7e124bc6f9afd036021cce397_1689206738/Unplanned_Hospital_Visits-National.csv",
     na = c("Not Available", "Not Applicable")
   ) %>%
   

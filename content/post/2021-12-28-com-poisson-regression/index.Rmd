@@ -5,10 +5,9 @@ author: Alex Zajichek
 date: '2021-12-28'
 slug: com-poisson-regression
 categories: []
-tags: ['statistics', 'rstats', 'healthcare']
+tags: ['statistics', 'rstats']
 summary: ''
 authors: []
-lastmod: '2021-12-28T06:53:32-06:00'
 featured: no
 image:
   caption: ''
@@ -35,7 +34,6 @@ Long story short, we didn't end up using the COM-Poisson model for the [anchor p
   + [Simulation: Power of Equidispersion Test](#compowersim)
 * [Conclusion](#conclusion)
 * [Code Appendix](#codeappendix)
-
 
 # A Review of Poisson Regression {#reviewofpoisson}
 

@@ -8,7 +8,6 @@ tags: ['causal inference']
 subtitle: ''
 summary: ''
 authors: []
-lastmod: '2021-07-15T17:26:27-05:00'
 featured: no
 image:
   caption: ''

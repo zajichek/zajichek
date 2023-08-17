@@ -8,7 +8,6 @@ tags: ['statistics']
 subtitle: 'Trying to remember calculus'
 summary: 'I tried to derive the MLE for a set of Bernoulli responses just to see if I still could, and got stuck.'
 authors: []
-lastmod: '2023-03-23T05:46:30-05:00'
 featured: no
 image:
   caption: ''

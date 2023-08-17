@@ -5,10 +5,9 @@ author: Alex Zajichek
 date: '2021-12-28'
 slug: com-poisson-regression
 categories: []
-tags: ['statistics', 'rstats', 'healthcare']
+tags: ['statistics', 'rstats']
 summary: ''
 authors: []
-lastmod: '2021-12-28T06:53:32-06:00'
 featured: no
 image:
   caption: ''
@@ -17,7 +16,6 @@ image:
 projects: []
 ---
 
-<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 <script src="{{< blogdown/postref >}}index_files/kePrint/kePrint.js"></script>
 <link href="{{< blogdown/postref >}}index_files/lightable/lightable.css" rel="stylesheet" />
 
@@ -352,6 +350,9 @@ list(
     bootstrap_options = c(&quot;striped&quot;, &quot;responsive&quot;)
   ) %&gt;%
   kableExtra::add_header_above(c(&quot;&quot;, &quot;Time of day&quot; = 2))</code></pre>
+<pre><code>## Warning: `cross_df()` was deprecated in purrr 1.0.0.
+## ℹ Please use `tidyr::expand_grid()` instead.
+## ℹ See &lt;https://github.com/tidyverse/purrr/issues/768&gt;.</code></pre>
 <table class="table table-striped table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 <span id="tab:unnamed-chunk-8">Table 1: </span>Expected ED patient volume
@@ -650,6 +651,7 @@ question2_updated</code></pre>
 require(COMPoissonReg)</code></pre>
 <pre><code>## Loading required package: COMPoissonReg</code></pre>
 <pre><code>## Loading required package: Rcpp</code></pre>
+<pre><code>## Loading required package: numDeriv</code></pre>
 <div id="compoissondistribution" class="section level2">
 <h2>The COM-Poisson Distribution</h2>
 <p>If the PMF for a non-negative, integer-valued <span class="math inline">\(Y\)</span> is:</p>
@@ -922,6 +924,8 @@ compoisson_sim1 &lt;-
   labs(
     x = expression(lambda)
   )</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>When <span class="math inline">\(\nu=0.5\)</span> (overdispersed), the counts become large quickly with an increasing <span class="math inline">\(\lambda\)</span>. As the data becomes more underdispersed (<span class="math inline">\(\nu &gt; 1\)</span>), the variance increases at a slower rate as <span class="math inline">\(\lambda\)</span> increases, relative to the mean.</p>
 <p>So how does this translate to a regression model?</p>
@@ -954,21 +958,21 @@ The basic structure models the <span class="math inline">\(\lambda\)</span> para
 
 compoisson_model1</code></pre>
 <pre><code>## CMP coefficients
-##               Estimate     SE  z.value   p.value
-## X:(Intercept)   2.8472 0.1551  18.3534 3.101e-75
-## X:WeekendTRUE  -0.4231 0.0324 -13.0517 6.211e-39
-## X:PMTRUE        0.0180 0.0195   0.9235    0.3557
-## S:(Intercept)   0.0217 0.0537   0.4050    0.6855
+##               Estimate     SE  z-value   p-value
+## X:(Intercept)   2.8470 0.1531  18.5957 3.481e-77
+## X:WeekendTRUE  -0.4230 0.0323 -13.1174 2.619e-39
+## X:PMTRUE        0.0180 0.0195   0.9251    0.3549
+## S:(Intercept)   0.0217 0.0529   0.4096    0.6821
 ## --
 ## Transformed intercept-only parameters
 ##    Estimate     SE
-## nu    1.022 0.0548
+## nu   1.0219 0.0541
 ## --
 ## Chi-squared test for equidispersion
-## X^2 = 0.1614, df = 1, p-value = 6.8787e-01
+## X^2 = 0.1614, df = 1, p-value = 6.8788e-01
 ## --
-## Elapsed Sec: 3.32   Sample size: 730   SEs via Hessian
-## LogLik: -2000.6310   AIC: 4009.2620   BIC: 4027.6342   
+## Elapsed: 1.95 sec   Sample size: 730   formula interface
+## LogLik: -2000.6310   AIC: 4009.2620   BIC: 4027.6341   
 ## Optimization Method: L-BFGS-B   Converged status: 0
 ## Message: CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH</code></pre>
 <p>We see some familiar results. Namely, the parameter estimates and p-values are pretty similar to the standard Poisson model <a href="#modelformulation">above</a>. However, there is additional output–this is where the dispersion comes in. When we fit the model, the function also estimated the value of the <span class="math inline">\(\nu\)</span> parameter, which in this case was 1.022 (it was expected to be near 1, given that our data was generated from a standard Poisson distribution). The <code>X</code> components make up the regression equation for <span class="math inline">\(\lambda\)</span>, and the <code>S</code> components make up the regression equation for <span class="math inline">\(\nu\)</span>. We just need to evaluate those equations on an observation’s covariate values, and we’ll have its estimated conditional COM-Poisson distribution.</p>
@@ -980,10 +984,13 @@ compoisson_model1</code></pre>
 <p>It tests for evidence that the data is <em>not</em> equidispersed, but does not specify its direction. Therefore, if <span class="math inline">\(H_0\)</span> is rejected, it is up to us to garner from the model output whether there is over or under dispersion. Here is the output when performing this test on our model:</p>
 <pre class="r"><code>equitest(compoisson_model1)</code></pre>
 <pre><code>## $teststat
-## [1] 0.1614062
+## [1] 0.1613952
 ## 
 ## $pvalue
-## [1] 0.6878651</code></pre>
+## [1] 0.6878752
+## 
+## $df
+## [1] 1</code></pre>
 <p>As expected, the p-value of 0.6879 does not indicate that over or under dispersion was detected.</p>
 </div>
 <div id="stratifieddispersion" class="section level2">
@@ -1002,17 +1009,17 @@ compoisson_model1</code></pre>
   )
 compoisson_model2</code></pre>
 <pre><code>## CMP coefficients
-##               Estimate     SE  z.value   p.value
-## X:(Intercept)   2.8561 0.1553  18.3941 1.466e-75
-## X:WeekendTRUE  -0.4231 0.0324 -13.0519 6.197e-39
-## S:(Intercept)   0.0249 0.0538   0.4640    0.6427
-## S:PMTRUE       -0.0064 0.0069  -0.9312    0.3518
+##               Estimate     SE  z-value   p-value
+## X:(Intercept)   2.8562 0.1532  18.6442 1.407e-77
+## X:WeekendTRUE  -0.4231 0.0322 -13.1194 2.549e-39
+## S:(Intercept)   0.0250 0.0530   0.4708    0.6378
+## S:PMTRUE       -0.0064 0.0069  -0.9317    0.3515
 ## --
 ## Chi-squared test for equidispersion
-## X^2 = 1.0118, df = 1, p-value = 3.1446e-01
+## X^2 = 1.0119, df = 2, p-value = 6.0295e-01
 ## --
-## Elapsed Sec: 3.51   Sample size: 730   SEs via Hessian
-## LogLik: -2000.6243   AIC: 4009.2487   BIC: 4027.6209   
+## Elapsed: 2.42 sec   Sample size: 730   formula interface
+## LogLik: -2000.6243   AIC: 4009.2487   BIC: 4027.6208   
 ## Optimization Method: L-BFGS-B   Converged status: 0
 ## Message: CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH</code></pre>
 <p>We can see that there are now two parameters associated with the <code>S</code> component of the model. We can simply evaluate and exponentiate those terms to get the <span class="math inline">\(\nu\)</span> estimates for each group:</p>
@@ -1029,8 +1036,8 @@ nu_estimates &lt;- exp(nu_log_estimates)
 rownames(nu_estimates) &lt;- names(compoisson_model2$gamma)
 nu_estimates</code></pre>
 <pre><code>##                   [,1]
-## S:(Intercept) 1.025254
-## S:PMTRUE      1.018668</code></pre>
+## S:(Intercept) 1.025285
+## S:PMTRUE      1.018696</code></pre>
 <p>Again, both groups’ data were knowingly generated from a standard Poisson distribution here, so we expected the conditional estimates to be near 1 as well. Nevertheless, it illustrates the power and flexibility of this framework.</p>
 </div>
 <div id="comfittedvalues" class="section level2">
@@ -1100,6 +1107,8 @@ nu_estimates</code></pre>
   scale_color_manual(
     values = c(&quot;black&quot;, &quot;red&quot;)
   )</code></pre>
+<pre><code>## Warning: Using `by = character()` to perform a cross join was deprecated in dplyr 1.1.0.
+## ℹ Please use `cross_join()` instead.</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <p>The median values seem to have a relatively similar behavior to the simulated means.</p>
 <p>So, to obtain <em>predicted</em> values with our model object (we’ll use the <a href="#compoissonregressionmodel">first model we made</a>), we have to:</p>
@@ -1111,12 +1120,12 @@ lambda_hat &lt;- exp(compoisson_model1$X %*% as.matrix(compoisson_model1$beta))
 nu_hat &lt;- exp(compoisson_model1$S %*% as.matrix(compoisson_model1$gamma))
 head(data.frame(lambda_hat, nu_hat))</code></pre>
 <pre><code>##   lambda_hat   nu_hat
-## 1   17.23881 1.021967
-## 2   17.55188 1.021967
-## 3   17.23881 1.021967
-## 4   17.55188 1.021967
-## 5   17.23881 1.021967
-## 6   17.55188 1.021967</code></pre>
+## 1   17.23626 1.021921
+## 2   17.54978 1.021921
+## 3   17.23626 1.021921
+## 4   17.54978 1.021921
+## 5   17.23626 1.021921
+## 6   17.54978 1.021921</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Plug the estimates into the inverse CDF at the 50th percentile</li>
 </ol>

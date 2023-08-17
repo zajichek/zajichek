@@ -8,7 +8,6 @@ tags: ['bayesian statistics', 'causal inference']
 subtitle: 'Weeks 1 & 2'
 summary: ''
 authors: []
-lastmod: '2023-03-23T05:36:32-05:00'
 featured: no
 image:
   caption: ''
