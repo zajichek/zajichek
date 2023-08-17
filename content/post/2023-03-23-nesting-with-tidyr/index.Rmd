@@ -1,10 +1,10 @@
 ---
 title: Nesting with tidyr
 author: Alex Zajichek
-date: '2023-03-23'
+date: '2023-02-02'
 slug: nesting-with-tidyr
 categories: []
-tags: []
+tags: ['rstats']
 subtitle: ''
 summary: ''
 authors: []
@@ -16,8 +16,6 @@ image:
   preview_only: no
 projects: []
 ---
-
-_2/2/2023_
 
 I really love the elegance of the [`nest`](https://tidyr.tidyverse.org/reference/nest.html) functionality with the [`tidyr`](https://tidyr.tidyverse.org/) package. It really allows you to abstract the meaning of a data frame to not just contain rectangular data with scalars, but rather a generalization that has rectangular data of _objects_. The most intriguing part of it to me is the way we can continue to use typical [`join`](https://dplyr.tidyverse.org/reference/mutate-joins.html) operations even with complex objects in some of the columns, which makes it so smooth and intuitive to do complex data operations.
 

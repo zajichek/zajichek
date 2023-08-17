@@ -1,10 +1,10 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-04-01'
+date: '2023-08-17'
 slug: the-overlap-weight
 categories: []
-tags: ['statistics', 'datascience', 'causation', 'rstats', 'survival analysis']
+tags: ['causal inference', 'survival analysis', 'rstats']
 subtitle: "A simulation review"
 summary: "The goal is to estimate what the outcome difference would be had the counterfactual also been observed."
 authors: []
@@ -37,6 +37,7 @@ library(survival)
   + [Define the treatment propensity](#treatmentpropensity)
   + [Generate the treatment assignment](#treatmentassignment)
   + [Compute the (true) overlap weight](#trueoverlapweight)
+  + [Set the treatment effect](#treatmenteffect)
 
 # Setting up the potential outcomes {#potentialoutcomes}
 
@@ -112,7 +113,7 @@ In this case, `A=1` represents treatment _A_ and `A=0` represents treatment _B_.
 
 ## Compute the (true) overlap weight {#trueoverlapweight}
 
-First we need to define what the overlap weight is, and it's actually quite simple: we just assign the patient the probability they _did not_ receive the treatment we observed. 
+We need to define what the overlap weight is, and it's actually quite simple: just assign the patient the probability they _did not_ receive their observed treatment. 
 
 $$
 \begin{equation}
@@ -141,9 +142,11 @@ In a real analysis, these weights are what we are ultimately after in order to e
 
 ### Target population
 
-Now we do end up normalizing these weights so they sum to one within each treatment group. But the intuition about what's happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in _either_ treatment group (i.e., $p_i^A$ near 0.5). This is known as the [_clinical equipoise_](https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022), and the resulting treatment effect is interpreted as the _average treatment effect in the overlap population_.
+Now we do end up normalizing the weights so they sum to one within each treatment group. But the intuition about what's happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in _either_ treatment group (i.e., $p_i^A$ near 0.5). This is known as the [_clinical equipoise_](https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022), and the resulting treatment effect is interpreted as the _average treatment effect in the overlap population_.
 
 This makes a lot of sense. When we're comparing treatments, we should focus most heavily on patients that could be candidates for either, and less so on patients that were bound for one. Thus, we up-weight patients who have the most overlap in characteristics with the opposing treatment group. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.
+
+## Set the treatment effect {#treatmenteffect}
 
 # Summary 
 

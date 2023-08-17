@@ -1,9 +1,9 @@
 ---
 title: Some Takeaways from Effective Data Storytelling
 author: Alex Zajichek
-date: '2023-03-23'
+date: '2023-01-14'
 slug: some-takeaways-from-effective-data-storytelling
-categories: []
+categories: ['communication']
 tags: []
 subtitle: ''
 summary: ''
@@ -16,8 +16,6 @@ image:
   preview_only: no
 projects: []
 ---
-
-_1/14/2023_
 
 I've been reading through the book [_Effective Data Storytelling: How to drive change with data, narrative, and visuals_](https://www.effectivedatastorytelling.com/) by Brent Dykes and just wanted to document some thoughts/takeaways.
 

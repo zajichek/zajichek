@@ -4,7 +4,7 @@ author: Alex Zajichek
 date: '2021-07-15'
 slug: a-look-at-collider-bias
 categories: []
-tags: ['statistics', 'datascience', 'causation', 'healthcare']
+tags: ['causal inference']
 subtitle: ''
 summary: ''
 authors: []

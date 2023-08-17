@@ -37,4 +37,4 @@ highlight_name: false
 superuser: true
 ---
 
-I'm a statistician and data scientist in Central Wisconsin. A heavy [R](https://www.r-project.org/)-user and advocate for open-source development, I enjoy building tools and data products that can help facilitate the decision-making process. I love learning about the problems that businesses and organizational stakeholders face, translating those into technical requirements, and developing a practical data science solution. I'm always open to collaboration and discussion, so feel free to [reach out](/#contact)!
+I'm a statistician and data scientist in Central Wisconsin. A heavy [R](https://www.r-project.org/)-user and advocate for open-source development, I enjoy building tools and data products that can help facilitate the decision-making process. I love learning about the problems that businesses and organizational stakeholders face, translating those into technical requirements, and developing a practical data science solution that promotes action. I'm always open to collaboration and discussion, so feel free to [reach out](/#contact)!

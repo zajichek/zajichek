@@ -4,7 +4,7 @@ author: Alex Zajichek
 date: '2021-07-15'
 slug: a-look-at-collider-bias
 categories: []
-tags: ['statistics', 'datascience', 'causation', 'healthcare']
+tags: ['causal inference']
 subtitle: ''
 summary: ''
 authors: []
@@ -17,7 +17,6 @@ image:
 projects: []
 ---
 
-<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 <script src="{{< blogdown/postref >}}index_files/htmlwidgets/htmlwidgets.js"></script>
 <script src="{{< blogdown/postref >}}index_files/viz/viz.js"></script>
 <link href="{{< blogdown/postref >}}index_files/DiagrammeR-styles/styles.css" rel="stylesheet" />
@@ -30,7 +29,7 @@ projects: []
 <div id="what-is-collider-bias" class="section level1">
 <h1>What is collider bias?</h1>
 <p>In causal inference, the relationships between a network of events are represented in <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7064555/"><em>causal diagrams</em></a>. In the causal diagram below, event <strong>A</strong> causes event <strong>B</strong> which causes event <strong>C</strong>. Here the term “event” refers to a random variable.</p>
-<div class="figure"><span id="fig:unnamed-chunk-1"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
 <div id="htmlwidget-1" style="width:250px;height:100px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\n  digraph graph2 {\n  \n  graph [layout = dot, rankdir = LR]\n  \n  node [shape = oval]\n  a [label = \"A\"]\n  c [label = \"C\"]\n  b [label = \"B\"]\n  \n  a -> b -> c\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
@@ -38,7 +37,7 @@ Figure 1: Not a collider
 </p>
 </div>
 <p>The direction in which arrows point into the events (forming a <em>junction</em>) have major implications as to how the model behaves. One junction in particular, which is the focus of this article, is called a <a href="https://catalogofbias.org/biases/collider-bias/"><em>collider</em></a>. This is shown in the causal diagram below.</p>
-<div class="figure"><span id="fig:unnamed-chunk-2"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
 <div id="htmlwidget-2" style="width:250px;height:100px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-2">{"x":{"diagram":"\n  digraph graph2 {\n  \n  graph [layout = dot, rankdir = LR]\n  \n  node [shape = oval]\n  a [label = \"A\"]\n  c [label = \"C\"]\n  b [label = \"B\"]\n  \n  a -> c\n  b -> c\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
@@ -167,7 +166,7 @@ Tails
 <p><span class="math display">\[P(\text{Coin 1 = Heads | Coin 2 = Heads}) = \frac{2403}{2403 + 2499} \approx 0.49\]</span></p>
 <p><span class="math display">\[P(\text{Coin 1 = Heads | Coin 2 = Tails}) = \frac{2540}{2540 + 0} = 1\]</span></p>
 <p>These results suggest that the coins are not independent. When coin 2 is heads, coin 1 is fair. When coin 2 is tails, coin 1 is certain to be heads. However, we flipped the coins independently so we know there is not a relationship between them. This is an example of collider bias. Here is the causal diagram for this model:</p>
-<div class="figure"><span id="fig:unnamed-chunk-4"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
 <div id="htmlwidget-3" style="width:250px;height:100px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-3">{"x":{"diagram":"\n  digraph graph2 {\n  \n  graph [layout = dot, rankdir = LR]\n  \n  node [shape = oval]\n  a [label = \"Coin 1\"]\n  c [label = \"Keep trial result\"]\n  b [label = \"Coin 2\"]\n  \n  a -> c\n  b -> c\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
@@ -304,7 +303,7 @@ Non-severe
 <p>In probability notation:</p>
 <p><span class="math display">\[P(J|N) = 0.85 \hskip{.25in} P(J|\bar{N} \cap S) = 0.50 \hskip{.25in} P(J|\bar{N} \cap \bar{S}) = 0.10\]</span>
 Even though every patient had the same opportunity to enroll in the trial, our realized sample became much more heavily weighted toward those living near the trial center, and much less weighted toward those living far from the trial center without severe disease. Thus, it conditioned on the patients that enrolled. As a result, a correlation between disease severity and the distance from the trial center was induced that isn’t there in the general population. The figure below displays the causal diagram for this relationship.</p>
-<div class="figure"><span id="fig:unnamed-chunk-9"></span>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
 <div id="htmlwidget-4" style="width:250px;height:100px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-4">{"x":{"diagram":"\n  digraph graph2 {\n  \n  graph [layout = dot, rankdir = LR]\n  \n  node [shape = oval]\n  a [label = \"Distance from center\"]\n  c [label = \"Decision to join trial\"]\n  b [label = \"Disease severity\"]\n  \n  a -> c\n  b -> c\n  }\n  ","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
