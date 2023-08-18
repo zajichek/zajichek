@@ -1,7 +1,7 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-08-17'
+date: '2023-08-18'
 slug: the-overlap-weight
 categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
@@ -32,6 +32,7 @@ library(survival)</code></pre>
 <li><a href="#treatmentassignment">Generate the treatment assignment</a></li>
 <li><a href="#trueoverlapweight">Compute the (true) overlap weight</a></li>
 <li><a href="#treatmenteffect">Set the treatment effect</a></li>
+<li><a href="#observedoutcome">Generate the observed outcome</a></li>
 </ul></li>
 </ul>
 </div>
@@ -75,8 +76,8 @@ population</code></pre>
 </div>
 <div id="treatmentpropensity" class="section level2">
 <h2>Define the treatment propensity</h2>
-<p>Here’s where the important theory starts to creep in (already). We assume that there is a <em>true</em> propensity score, say <span class="math inline">\(p_i^A\)</span>, that is the <em>true</em> probability that patient <em>i</em> receives treatment <em>A</em> given their specific characteristics (and let’s assume there are possible treatments <em>A</em> &amp; <em>B</em>). Further, we assume (some transformation of) this probability is some linear combination of all the characteristics that confound the crude treatment effect on the outcome. In this simulation, we’ll assume the <a href="https://en.wikipedia.org/wiki/Logistic_regression">logit</a> model:</p>
-<p><span class="math display">\[log(\frac{p_i^A}{1 - p_i^A}) = -0.4 + 0.405*age_z - 0.223*male - 0.693*income_z\]</span></p>
+<p>Here’s where the important theory starts to creep in (already). We assume that there is a <em>true</em> propensity score, say <span class="math inline">\(p_i^A\)</span>, that is the <em>true</em> probability that patient <em>i</em> receives treatment <em>A</em> given their specific characteristics (and let’s assume there are possible treatments <em>A</em> &amp; <em>B</em>). Further, we assume (some transformation of) this probability is a linear combination of all the characteristics that confound the crude treatment effect on the outcome. In this simulation, we’ll assume the <a href="https://en.wikipedia.org/wiki/Logistic_regression">logit</a> model:</p>
+<p><span class="math display">\[log(\frac{p_i^A}{1 - p_i^A}) = 0.405*age_z - 0.223*male - 0.693*income_z - 0.4\]</span></p>
 <p>So let’s add this <em>true</em> propensity score to the <code>population</code> data set:</p>
 <pre class="r"><code>population &lt;-
   population |&gt;
@@ -105,7 +106,7 @@ population</code></pre>
 </div>
 <div id="treatmentassignment" class="section level2">
 <h2>Generate the treatment assignment</h2>
-<p>The treatment assignment is one of the <em>known</em> quantities we would observe in a real life sample, and that is what would be used as the dependent variable for <em>estimating</em> propensity scores. However, since we are running a simulation, we need to generate the treatment assignments from the governing distribution. We assume that the observed treatment for patient <em>i</em> is the result of an (unfair) coin flip that has a probability equal to the <a href="#treatmentpropensity">true propensity score</a>. In math notation,</p>
+<p>The treatment assignment is one of the <em>known</em> quantities we would observe in a real life sample, and that is what would be used as the dependent variable for <em>estimating</em> propensity scores. However, since we are running a simulation, we need to generate the treatment assignments from the governing distribution. We assume that the observed treatment for patient <em>i</em> is the result of an (unfair) coin flip that has a probability equal to the <a href="#treatmentpropensity">true propensity score</a>. In statistical notation,</p>
 <p><span class="math display">\[A_i \sim Bernoulli(p_i^A)\]</span></p>
 <p>where <span class="math inline">\(A_i\)</span> is the indicator of treatment A. Let’s add a <em>realized</em> treatment assignment to the <code>population</code>:</p>
 <pre class="r"><code>population &lt;-
@@ -176,6 +177,32 @@ population</code></pre>
 </div>
 <div id="treatmenteffect" class="section level2">
 <h2>Set the treatment effect</h2>
+<p>We’ve <a href="#treatmentassignment">generated the treatments</a> and established how they are <a href="#treatmentpropensity">related to patient characteristics</a>, but haven’t talked about the outcome in which we’re ultimately interested in estimating the treatment effect for. Since we’re focusing on <a href="https://www.publichealth.columbia.edu/research/population-health-methods/time-event-data-analysis">time-to-event</a> outcomes, we’ll stay in that context, but the general idea is that we assume there <em>exists</em> a realization of what a patient’s outcome would have been under each treatment scenario. Then if we compare the difference of those outcomes across all patients, the average difference must be caused by the treatment.</p>
+<div id="the-event-times" class="section level3">
+<h3>The event times</h3>
+<p>In this simulation, we’ll generate event times from a <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> distribution. Starting at treatment initiation, this might be the time until cancer recurrence, hospitalization, or something else; we’re just looking to see how long it takes for some event to occur. The <a href="">PDF</a> for this distribution looks like this:</p>
+<p><span class="math display">\[f(t) = \frac{\alpha}{\sigma}\left(\frac{x}{\sigma}\right)^{\alpha-1}e^{-\left(\frac{t}{\sigma}\right)^\alpha}\]</span></p>
+<p>where <span class="math inline">\(t\)</span> is the event time, <span class="math inline">\(\alpha\)</span> is the <em>shape</em> parameter, and <span class="math inline">\(\sigma\)</span> is the <em>scale</em> parameter. In our example, we will say that:</p>
+<p><span class="math display">\[T_i^A \sim Weibull(\alpha, \sigma_i^A)\]</span>
+<span class="math display">\[T_i^B \sim Weibull(\alpha, \sigma_i^B)\]</span>
+where <span class="math inline">\(T_i^A\)</span> and <span class="math inline">\(T_i^B\)</span> are the event times under treatments <em>A</em> and <em>B</em>, respectively. That is, the event times for each patient under each treatment follow a <a href="">Weibull</a> distribution with a common <em>shape</em> parameter (in this case, across both treatments), but a <em>scale</em> parameter that depends on the patient’s specific characteristics and differs by treatment, which captures the treatment effect.</p>
+</div>
+<div id="relating" class="section level3">
+<h3>Relating</h3>
+<ul>
+<li>Using Weibull model for outcome</li>
+<li>Assume the linear predictors; determines treatment effect</li>
+<li>Parameterization (SAS code vs. R); write out PDF linking linear predictor</li>
+<li>How we interpret the effect mathematically</li>
+</ul>
+</div>
+</div>
+<div id="observedoutcome" class="section level2">
+<h2>Generate the observed outcome</h2>
+<ul>
+<li>Outcome observed depends on what treatment was received</li>
+<li>Also depends on whether or not the patient was followed long enough to see the outcome happen (so may be censored)</li>
+</ul>
 </div>
 </div>
 <div id="summary" class="section level1">
