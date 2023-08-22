@@ -1,7 +1,7 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-08-18'
+date: '2023-08-22'
 slug: the-overlap-weight
 categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
@@ -27,6 +27,7 @@ I was recently introduced to [overlap weighting](https://jamanetwork.com/journal
 ```{r}
 library(tidyverse)
 library(survival)
+library(reactable)
 ```
 
 # Table of Contents
@@ -37,7 +38,7 @@ library(survival)
   + [Generate the treatment assignment](#treatmentassignment)
   + [Compute the (true) overlap weight](#trueoverlapweight)
   + [Set the treatment effect](#treatmenteffect)
-  + [Generate the observed outcome](#observedoutcome)
+  + [Assign the observed outcome](#observedoutcome)
 
 # Setting up the potential outcomes {#potentialoutcomes}
 
@@ -72,7 +73,7 @@ We've generated a sample of `r paste(n)` patients. We'll assume `age` is measure
 
 Here's where the important theory starts to creep in (already). We assume that there is a _true_ propensity score, say $p_i^A$, that is the _true_ probability that patient _i_ receives treatment _A_ given their specific characteristics (and let's assume there are possible treatments _A_ & _B_). Further, we assume (some transformation of) this probability is a linear combination of all the characteristics that confound the crude treatment effect on the outcome. In this simulation, we'll assume the [logit](https://en.wikipedia.org/wiki/Logistic_regression) model:
 
-$$log(\frac{p_i^A}{1 - p_i^A}) = 0.405*age_z - 0.223*male - 0.693*income_z - 0.4$$
+$$log(\frac{p_i^A}{1 - p_i^A}) = 0.41 \times age_z - 0.22 \times male - 0.69 \times income_z - 0.40$$
 
 So let's add this _true_ propensity score to the `population` data set:
 
@@ -150,29 +151,171 @@ This makes a lot of sense. When we're comparing treatments, we should focus most
 
 We've [generated the treatments](#treatmentassignment) and established how they are [related to patient characteristics](#treatmentpropensity), but haven't talked about the outcome in which we're ultimately interested in estimating the treatment effect for. Since we're focusing on [time-to-event](https://www.publichealth.columbia.edu/research/population-health-methods/time-event-data-analysis) outcomes, we'll stay in that context, but the general idea is that we assume there _exists_ a realization of what a patient's outcome would have been under each treatment scenario. Then if we compare the difference of those outcomes across all patients, the average difference must be caused by the treatment.
 
-### The event times
+### Defining the event times
 
-In this simulation, we'll generate event times from a [Weibull](https://en.wikipedia.org/wiki/Weibull_distribution) distribution. Starting at treatment initiation, this might be the time until cancer recurrence, hospitalization, or something else; we're just looking to see how long it takes for some event to occur. The [PDF]() for this distribution looks like this:
+In this simulation, we'll generate event times from a [Weibull](https://en.wikipedia.org/wiki/Weibull_distribution) distribution. Starting at treatment initiation, this might be the time until cancer recurrence, hospitalization, or something else; we're just looking to see how long it takes for some event to occur. The [PDF](https://en.wikipedia.org/wiki/Probability_density_function) for this distribution looks like this:
 
-$$f(t) = \frac{\alpha}{\sigma}\left(\frac{x}{\sigma}\right)^{\alpha-1}e^{-\left(\frac{t}{\sigma}\right)^\alpha}$$
+$$f(t) = \frac{\alpha}{\sigma}\left(\frac{t}{\sigma}\right)^{\alpha-1}e^{-\left(\frac{t}{\sigma}\right)^\alpha}$$
 
 where $t$ is the event time, $\alpha$ is the _shape_ parameter, and $\sigma$ is the _scale_ parameter. In our example, we will say that:
 
 $$T_i^A \sim Weibull(\alpha, \sigma_i^A)$$
 $$T_i^B \sim Weibull(\alpha, \sigma_i^B)$$
-where $T_i^A$ and $T_i^B$ are the event times under treatments _A_ and _B_, respectively. That is, the event times for each patient under each treatment follow a [Weibull]() distribution with a common _shape_ parameter (in this case, across both treatments), but a _scale_ parameter that depends on the patient's specific characteristics and differs by treatment, which captures the treatment effect.
+where $T_i^A$ and $T_i^B$ are the event times under treatments _A_ and _B_, respectively. That is, the event times for each patient under each treatment follow a [Weibull]() distribution with a common _shape_ parameter (in this case, across both treatments), but a _scale_ parameter that depends on the patient's specific characteristics and differs by treatment, which captures the treatment effect. Specifically,
 
-### Relating 
+$$\alpha = 1$$
+$$\lambda = 4055.56$$
 
-* Using Weibull model for outcome 
-* Assume the linear predictors; determines treatment effect
-* Parameterization (SAS code vs. R); write out PDF linking linear predictor
-* How we interpret the effect mathematically
+$$\phi_i = 1.10 \times age_z - 0.22 \times male - 0.36 \times income_z$$
+$$\sigma_i^A = \lambda \times e^{-(\phi_i - 0.36)}$$
+$$\sigma_i^B = \lambda \times e^{-\phi_i}$$
 
-## Generate the observed outcome {#observedoutcome}
+Basically, the $\phi_i$ term does the baseline adjustment on the outcome risk for the patient's specific characteristics, and the treatment effect is simply a fixed, additive deviation from that for all patients. The $\lambda$ term is the [baseline hazard function](https://www.linkedin.com/advice/0/how-do-you-interpret-hazard-ratio-baseline-function), providing the _scale_ parameter when all covariate values are zero (for treatment _B_), which in this case is constant over time. 
 
-* Outcome observed depends on what treatment was received
-* Also depends on whether or not the patient was followed long enough to see the outcome happen (so may be censored)
+### Sampling the event times {#samplingeventtimes}
+
+It's not immediately clear how to _interpret_ the treatment effect we set (i.e., _-0.36_) in a meaningful way since complexities arise once these parameters are plugged back into the [PDF](https://en.wikipedia.org/wiki/Probability_density_function), but we can do some simple visualization to gain intuition. First, we need to actually sample the times for our `population` (_note that it was confirmed that SAS and R have the same parameterizations_):
+
+```{r}
+population <-
+  population |>
+  
+  # Sample outcome event times under each treatment (counterfactual)
+  mutate(
+    
+    # Baseline hazard (constant over time)
+    lambda = 1*365/0.09,
+    
+    # Define TRUE Weibull linear predictor
+    phi = log(3) * zage + log(0.8) * male + log(.70) * zincome,
+    sigma_A = lambda * exp(-(phi + log(0.70))),
+    sigma_B = lambda * exp(-phi),
+    
+    # Generate REALIZED survival times under each treatment scenario (same parameterizations in SAS)
+    t_A = rweibull(n, shape = 1, scale = sigma_A),
+    t_B = rweibull(n, shape = 1, scale = sigma_B), 
+  )
+population |> select(lambda, phi, sigma_A, sigma_B, t_A, t_B)
+```
+
+Now we can make some density plots comparing the event time distributions across treatments (we'll use _log_ scaling for visual appeal):
+
+```{r}
+population |>
+  
+  # Send down the rows
+  pivot_longer(
+    cols = starts_with("t_"),
+    names_to = "Treatment",
+    values_to = "EventTime",
+    names_prefix = "t_"
+  ) |> 
+  
+  # Make a plot
+  ggplot() + 
+  geom_density(
+    aes(
+      x = log(EventTime),
+      fill = Treatment
+    ),
+    alpha = .75
+  ) + 
+  scale_x_continuous(labels = function(x) round(exp(x))) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    legend.position = "top"
+  ) +
+  xlab("Event Time")
+```
+
+Notice the shift to the right in the distribution for treatment _A_. This is the treatment effect. In the hypothetical world where all patients received treatment _A_, the event times happened _later_ than in the world where all patients received treatment _B_ (and all event times were observed), indicating, on average, a benefit to treatment _A_.  
+
+## Assign the observed outcome {#observedoutcome}
+
+The final step for simulation setup is to assign the event time as we might observe in a real data set. The event times generated in the [previous section](#samplingeventtimes) capture both treatment scenarios for all patients, but in reality we would only (potentially) observe the event time for the [treatment the patient received](#treatmentassignment). Additionally, we likely (or definitely) won't be following all patients long enough to observe all events occur, meaning some patients will be [censored](https://en.wikipedia.org/wiki/Survival_analysis#:~:text=Censoring%20%2F%20Censored%20observation%3A%20Censoring%20occurs,after%20the%20time%20of%20censoring.). Let's add the observed outcomes to the `population`:
+
+```{r}
+population <-
+  population |> 
+  
+  # Add the observed outcome
+  mutate(
+    
+    # The ACTUAL event time outcome depends on the treatment ACTUALLY observed for the patient
+    actual_event_time = t_B * (1 - A) + t_A * A,
+    
+    # Generate a REALIZED censoring time (completely random)
+    censor_time = 500 + 500 * runif(n),
+    
+    # Calculate the OBSERVED time in the data set (known quantity)
+    time = pmin(actual_event_time, censor_time), # They either had the event, or were censored first
+    
+    # Calculate the event status (TRUE if event observed, FALSE if censored)
+    status = as.numeric(actual_event_time < censor_time)
+  )
+population |> select(actual_event_time, censor_time, time, status)
+```
+
+Our final simulated data set has the following _observed_ outcome summaries:
+
+```{r}
+population |>
+  
+  # Compute summary metrics
+  summarize(
+    Patients = n(),
+    Time = mean(time),
+    .by = c(A, status)
+  ) |> 
+  
+  # Add shares within treatment
+  mutate(
+    Percent = Patients / sum(Patients),
+    .by = A
+  ) |>
+  
+  # Clean/rearrange
+  transmute(
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      ),
+    Status = 
+      case_when(
+        status == 1 ~ "Event",
+        TRUE ~ "Censored"
+      ),
+    Patients,
+    Percent,
+    Time
+  ) |>
+  arrange(Treatment, desc(Status)) |>
+  
+  # Make a table
+  reactable(
+    groupBy = "Treatment",
+    columns = 
+      list(
+        Patients = colDef(aggregate = "sum", align = "center"),
+        Percent = colDef(name = "Percent of patients in treatment group (%)", aggregate = "sum", align = "center", format = colFormat(digits = 1, percent = TRUE)),
+        Time = colDef(name = "Avg. time to outcome", aggregate = zildge::rectbl_agg_wtd("Patients"), align = "center", format = colFormat(digits = 1))
+      ),
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    resizable = TRUE,
+    theme = reactablefmtr::sandstone()
+  ) |>
+  reactablefmtr::add_source("Use arrows to expand table", font_size = 12, font_style = "italic")
+```
+
+<br>
+
+We don't know how much of these differences (or lack thereof) are explained by the treatment. The goal is to use this _known_ information (along with [patient characteristics](#simulatepatients)) to estimate the causal treatment effect that is baked into all of the _unknown_ quantities we have here that would be unavailable to us in a real life analysis.
 
 # Summary 
 
