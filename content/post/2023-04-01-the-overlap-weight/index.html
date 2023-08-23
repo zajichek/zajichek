@@ -1,7 +1,7 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-08-22'
+date: '2023-08-23'
 slug: the-overlap-weight
 categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
@@ -41,6 +41,10 @@ library(reactable)</code></pre>
 <li><a href="#trueoverlapweight">Compute the (true) overlap weight</a></li>
 <li><a href="#treatmenteffect">Set the treatment effect</a></li>
 <li><a href="#observedoutcome">Assign the observed outcome</a></li>
+</ul></li>
+<li><a href="#estimatingweights">Estimating the weights</a>
+<ul>
+<li><a href="#modelpropensityscores">Model the propensity scores</a></li>
 </ul></li>
 </ul>
 </div>
@@ -360,7 +364,175 @@ population |&gt; select(actual_event_time, censor_time, time, status)</code></pr
 <p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Treatment":["A","A","B","B"],"Status":["Event","Censored","Event","Censored"],"Patients":[836,3046,1137,4981],"Percent":[0.215352910870685,0.784647089129315,0.185845047401111,0.814154952598888],"Time":[345.503703338068,745.228837321148,343.475165801799,746.272923924016]},"columns":[{"id":"Treatment","name":"Treatment","type":"character"},{"id":"Status","name":"Status","type":"character"},{"id":"Patients","name":"Patients","type":"numeric","aggregate":"sum","align":"center"},{"id":"Percent","name":"Percent of patients in treatment group (%)","type":"numeric","aggregate":"sum","format":{"cell":{"digits":1,"percent":true},"aggregated":{"digits":1,"percent":true}},"align":"center"},{"id":"Time","name":"Avg. time to outcome","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":1},"aggregated":{"digits":1}},"align":"center"}],"groupBy":["Treatment"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"c7e4627927bc259cbc5e7bcd101044f6"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.4.aggregate"],"jsHooks":[]}</script>
 <p><br></p>
-<p>We don’t know how much of these differences (or lack thereof) are explained by the treatment. The goal is to use this <em>known</em> information (along with <a href="#simulatepatients">patient characteristics</a>) to estimate the causal treatment effect that is baked into all of the <em>unknown</em> quantities we have here that would be unavailable to us in a real life analysis.</p>
+<p>We don’t know how much of these differences (or lack thereof) are explained by the treatment. The goal is to use this <em>known</em> information (along with <a href="#simulatepatients">patient characteristics</a>) to estimate the causal treatment effect that is baked into all of the <em>unknown</em> quantities we have here that would be unavailable to us in a real-life analysis.</p>
+</div>
+</div>
+<div id="estimatingweights" class="section level1">
+<h1>Estimating the weights</h1>
+<p>Now that our <a href="#potentialoutcomes">simulation is set</a>, we can start using the observed data (i.e., known quantities) to estimate the case-weights needed for treatment effect estimation. This is the process we’d go through in a real-life analysis, but here we have the benefit of knowing the truth, so we can see how close our estimations are to reality.</p>
+<p>The intention of these weights is to <em>adjust</em> the observed sample to create a <em>pseudo-population</em> such that the patient characteristics that we believe are confounding the treatment effect are corrected for, or <em>balanced</em>, across the treatment groups. The term “pseudo” here is a little misleading. It’s simply referring to the fact that each patient will not contribute the same weight in estimating the treatment effect. In fact, the patients with the most <em>overlap</em> in characteristics across the treatment groups will contribute the most, with patients being proportionately down-weighted the less overlap they have. This is done to tease out portion of the outcome differences that is explained by the treatment, namely, the causal treatment effect.</p>
+<div id="modelpropensityscores" class="section level2">
+<h2>Model the propensity scores</h2>
+<p>We’ve <a href="#trueoverlapweight">established</a> that the overlap weights are quantities that need to be estimated from the data. In order to calculate those weights, we first need to estimate the propensity scores. We know what the <a href="#treatmentpropensity">true model</a> is, but let’s assume we are only working with observable data:</p>
+<pre class="r"><code>population |&gt; select(zage, male, zincome, A, time, status)</code></pre>
+<pre><code>## # A tibble: 10,000 × 6
+##       zage  male zincome     A  time status
+##      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;
+##  1 -0.560      0  -1.35      1  843.      0
+##  2 -0.230      1  -0.579     0  814.      0
+##  3  1.56       1  -0.861     1  488.      1
+##  4  0.0705     1   0.973     0  255.      1
+##  5  0.129      0   0.619     1  653.      0
+##  6  1.72       1   1.39      1  890.      0
+##  7  0.461      1  -1.49      0  737.      0
+##  8 -1.27       1   0.639     0  703.      0
+##  9 -0.687      1   0.375     0  952.      0
+## 10 -0.446      1   0.370     0  526.      0
+## # … with 9,990 more rows</code></pre>
+<p>Our goal is to obtain patient-specific probabilities of receiving treatment <em>A</em>. We’ll estimate this with a <a href="https://en.wikipedia.org/wiki/Logistic_regression">logistic regression</a> model, but we’ll allow for some flexibility in the shape of the relationships between the continuous variables (age and income) and the outcome with the use of <a href="https://www.nature.com/articles/s41409-019-0679-x">restricted cubic splines</a> (see my <a href="https://www.zajichekstats.com/post/the-evasive-spline/">other post</a> for another explanation):</p>
+<pre class="r"><code># Fit the propensity score model
+ps_mod &lt;-
+  glm(
+    formula = A ~ rms::rcs(zage, 3) + rms::rcs(zincome, 3) + factor(male),
+    data = population,
+    family = &quot;binomial&quot;
+  )
+summary(ps_mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = A ~ rms::rcs(zage, 3) + rms::rcs(zincome, 3) + 
+##     factor(male), family = &quot;binomial&quot;, data = population)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.0098  -0.9636  -0.6644   1.1489   2.3504  
+## 
+## Coefficients:
+##                              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                  -0.30027    0.06527  -4.600 4.22e-06 ***
+## rms::rcs(zage, 3)zage         0.40206    0.05099   7.885 3.16e-15 ***
+## rms::rcs(zage, 3)zage&#39;       -0.07337    0.05813  -1.262    0.207    
+## rms::rcs(zincome, 3)zincome  -0.63792    0.04950 -12.888  &lt; 2e-16 ***
+## rms::rcs(zincome, 3)zincome&#39; -0.04020    0.06434  -0.625    0.532    
+## factor(male)1                -0.25432    0.04415  -5.760 8.41e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 13359  on 9999  degrees of freedom
+## Residual deviance: 12193  on 9994  degrees of freedom
+## AIC: 12205
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>The model seems to indicate that the non-linear terms for age and income don’t particularly matter (which <a href="#treatmentpropensity">is expected</a>), but we’ll leave it as-is. Next, let’s attach the <em>estimated</em> propensity scores to the <code>population</code>:</p>
+<pre class="r"><code>population &lt;-
+  population |&gt;
+  
+  # Add the estimated propensity score
+  mutate(
+    pA_hat = predict(ps_mod, type = &quot;response&quot;) # P(A = 1 | X)
+  )</code></pre>
+<p>We can take a look at the estimated propensity score distribution across the treatment groups (we’ll also overlay the <em>true</em> distributions for comparison):</p>
+<pre class="r"><code>population |&gt;
+  
+  # Send PS scores down the rows
+  pivot_longer(
+    cols = c(pA, pA_hat),
+    names_to = &quot;Type&quot;,
+    values_to = &quot;Score&quot;
+  ) |&gt;
+
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ &quot;A&quot;,
+        TRUE ~ &quot;B&quot;
+      ),
+    Type = 
+      case_when(
+        Type == &quot;pA&quot; ~ &quot;True&quot;,
+        TRUE ~ &quot;Estimated&quot;
+      )
+  ) |&gt;
+  
+  # Make a plot
+  ggplot() + 
+  geom_density(
+    aes(
+      x = Score,
+      fill = Treatment,
+      linetype = Type
+    ),
+    alpha = .40
+  ) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    legend.position = &quot;top&quot;
+  ) +
+  xlab(&quot;P(A=1|X)&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>The model does a great job at estimating the true propensity scores. In a real analysis we probably wouldn’t be this close since we likely wouldn’t have only and all true confounders accounted for.</p>
+<div id="visualizing-propensity-score-effects" class="section level3">
+<h3>Visualizing propensity score effects</h3>
+<p>In the same vein, we can explore the modeled relationships between each patient characteristic and the propensity scores.</p>
+<pre class="r"><code>population |&gt;
+  
+  # Send PS scores down the rows
+  pivot_longer(
+    cols = c(pA, pA_hat),
+    names_to = &quot;Type&quot;,
+    values_to = &quot;Score&quot;
+  ) |&gt;
+
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ &quot;A&quot;,
+        TRUE ~ &quot;B&quot;
+      ),
+    Type = 
+      case_when(
+        Type == &quot;pA&quot; ~ &quot;True&quot;,
+        TRUE ~ &quot;Estimated&quot;
+      )
+  ) |&gt;
+  
+  # Send covariates down the rows
+  pivot_longer(
+    cols = c(zage, zincome),
+    names_prefix = &quot;^z&quot;
+  ) |&gt;
+  
+  # Make a plot
+  ggplot() + 
+  geom_smooth(
+    aes(
+      x = value,
+      y = Score,
+      color = Treatment,
+      fill = Treatment,
+      linetype = Type
+    ),
+    alpha = .25
+  ) +
+  facet_wrap(~name) +
+  scale_y_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = &quot;gray&quot;),
+    legend.position = &quot;top&quot;
+  ) +
+  xlab(&quot;Z-Score&quot;) +
+  ylab(&quot;P(A=1|X)&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
 </div>
 </div>
 <div id="summary" class="section level1">

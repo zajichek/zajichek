@@ -1,7 +1,7 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-08-22'
+date: '2023-08-23'
 slug: the-overlap-weight
 categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
@@ -39,6 +39,8 @@ library(reactable)
   + [Compute the (true) overlap weight](#trueoverlapweight)
   + [Set the treatment effect](#treatmenteffect)
   + [Assign the observed outcome](#observedoutcome)
+* [Estimating the weights](#estimatingweights)
+  + [Model the propensity scores](#modelpropensityscores)
 
 # Setting up the potential outcomes {#potentialoutcomes}
 
@@ -315,9 +317,155 @@ population |>
 
 <br>
 
-We don't know how much of these differences (or lack thereof) are explained by the treatment. The goal is to use this _known_ information (along with [patient characteristics](#simulatepatients)) to estimate the causal treatment effect that is baked into all of the _unknown_ quantities we have here that would be unavailable to us in a real life analysis.
+We don't know how much of these differences (or lack thereof) are explained by the treatment. The goal is to use this _known_ information (along with [patient characteristics](#simulatepatients)) to estimate the causal treatment effect that is baked into all of the _unknown_ quantities we have here that would be unavailable to us in a real-life analysis.
+
+# Estimating the weights {#estimatingweights}
+
+Now that our [simulation is set](#potentialoutcomes), we can start using the observed data (i.e., known quantities) to estimate the case-weights needed for treatment effect estimation. This is the process we'd go through in a real-life analysis, but here we have the benefit of knowing the truth, so we can see how close our estimations are to reality. 
+
+The intention of these weights is to _adjust_ the observed sample to create a _pseudo-population_ such that the patient characteristics that we believe are confounding the treatment effect are corrected for, or _balanced_, across the treatment groups. The term "pseudo" here is a little misleading. It's simply referring to the fact that each patient will not contribute the same weight in estimating the treatment effect. In fact, the patients with the most _overlap_ in characteristics across the treatment groups will contribute the most, with patients being proportionately down-weighted the less overlap they have. This is done to tease out portion of the outcome differences that is explained by the treatment, namely, the causal treatment effect. 
+
+## Model the propensity scores {#modelpropensityscores}
+
+We've [established](#trueoverlapweight) that the overlap weights are quantities that need to be estimated from the data. In order to calculate those weights, we first need to estimate the propensity scores. We know what the [true model](#treatmentpropensity) is, but let's assume we are only working with observable data:
+
+```{r}
+population |> select(zage, male, zincome, A, time, status)
+```
+
+Our goal is to obtain patient-specific probabilities of receiving treatment _A_. We'll estimate this with a [logistic regression](https://en.wikipedia.org/wiki/Logistic_regression) model, but we'll allow for some flexibility in the shape of the relationships between the continuous variables (age and income) and the outcome with the use of [restricted cubic splines](https://www.nature.com/articles/s41409-019-0679-x) (see my [other post](https://www.zajichekstats.com/post/the-evasive-spline/) for another explanation):
+
+```{r}
+# Fit the propensity score model
+ps_mod <-
+  glm(
+    formula = A ~ rms::rcs(zage, 3) + rms::rcs(zincome, 3) + factor(male),
+    data = population,
+    family = "binomial"
+  )
+summary(ps_mod)
+```
+
+The model seems to indicate that the non-linear terms for age and income don't particularly matter (which [is expected](#treatmentpropensity)), but we'll leave it as-is. Next, let's attach the _estimated_ propensity scores to the `population`:
+
+```{r}
+population <-
+  population |>
+  
+  # Add the estimated propensity score
+  mutate(
+    pA_hat = predict(ps_mod, type = "response") # P(A = 1 | X)
+  )
+```
+
+We can take a look at the estimated propensity score distribution across the treatment groups (we'll also overlay the _true_ distributions for comparison):
+
+```{r}
+population |>
+  
+  # Send PS scores down the rows
+  pivot_longer(
+    cols = c(pA, pA_hat),
+    names_to = "Type",
+    values_to = "Score"
+  ) |>
+
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      ),
+    Type = 
+      case_when(
+        Type == "pA" ~ "True",
+        TRUE ~ "Estimated"
+      )
+  ) |>
+  
+  # Make a plot
+  ggplot() + 
+  geom_density(
+    aes(
+      x = Score,
+      fill = Treatment,
+      linetype = Type
+    ),
+    alpha = .40
+  ) +
+  scale_x_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    legend.position = "top"
+  ) +
+  xlab("P(A=1|X)")
+```
+
+The model does a great job at estimating the true propensity scores. In a real analysis we probably wouldn't be this close since we likely wouldn't have only and all true confounders accounted for.
+
+### Visualizing propensity score effects
+
+In the same vein, we can explore the modeled relationships between each patient characteristic and the propensity scores. 
+
+```{r}
+population |>
+  
+  # Send PS scores down the rows
+  pivot_longer(
+    cols = c(pA, pA_hat),
+    names_to = "Type",
+    values_to = "Score"
+  ) |>
+
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      ),
+    Type = 
+      case_when(
+        Type == "pA" ~ "True",
+        TRUE ~ "Estimated"
+      )
+  ) |>
+  
+  # Send covariates down the rows
+  pivot_longer(
+    cols = c(zage, zincome),
+    names_prefix = "^z"
+  ) |>
+  
+  # Make a plot
+  ggplot() + 
+  geom_smooth(
+    aes(
+      x = value,
+      y = Score,
+      color = Treatment,
+      fill = Treatment,
+      linetype = Type
+    ),
+    alpha = .25
+  ) +
+  facet_wrap(~name) +
+  scale_y_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "gray"),
+    legend.position = "top"
+  ) +
+  xlab("Z-Score") +
+  ylab("P(A=1|X)")
+```
 
 # Summary 
+
 
 1. All subjects are used instead of arbitrary cutoffs (e.g., 1:5 matching)
 2. It proportionately down-weights the impacts of subjects most likely belonging to a certain treatment group
