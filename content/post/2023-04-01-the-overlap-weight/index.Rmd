@@ -1,7 +1,7 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-08-23'
+date: '2023-08-25'
 slug: the-overlap-weight
 categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
@@ -41,6 +41,7 @@ library(reactable)
   + [Assign the observed outcome](#observedoutcome)
 * [Estimating the weights](#estimatingweights)
   + [Model the propensity scores](#modelpropensityscores)
+  + [Calculate the (estimated) overlap weight](#estimatedoverlapweight)
 
 # Setting up the potential outcomes {#potentialoutcomes}
 
@@ -143,9 +144,9 @@ population
 
 In a real analysis, these weights are what we are ultimately after in order to estimate the average _causal_ treatment effect on the outcome of interest while balancing differences in patient characteristics across the groups (i.e., removing the confounding factors).
 
-### Target population
+### Target population {#targetpopulation}
 
-Now we do end up normalizing the weights so they sum to one within each treatment group. But the intuition about what's happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in _either_ treatment group (i.e., $p_i^A$ near 0.5). This is known as the [_clinical equipoise_](https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022), and the resulting treatment effect is interpreted as the _average treatment effect in the overlap population_.
+Now we do end up normalizing the weights so they sum to one within each treatment group. But the intuition about what's happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in _either_ treatment group. This is known as the [_clinical equipoise_](https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022), and the resulting treatment effect is interpreted as the _average treatment effect in the overlap population_.
 
 This makes a lot of sense. When we're comparing treatments, we should focus most heavily on patients that could be candidates for either, and less so on patients that were bound for one. Thus, we up-weight patients who have the most overlap in characteristics with the opposing treatment group. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.
 
@@ -317,13 +318,82 @@ population |>
 
 <br>
 
-We don't know how much of these differences (or lack thereof) are explained by the treatment. The goal is to use this _known_ information (along with [patient characteristics](#simulatepatients)) to estimate the causal treatment effect that is baked into all of the _unknown_ quantities we have here that would be unavailable to us in a real-life analysis.
+```{r}
+population |>
+  
+  # Nest by treatment
+  group_by(A) |>
+  nest() |>
+  
+  # Esimtate survival curves for each treatment
+  mutate(
+    Surv = 
+      data |>
+      map(
+        function(.trt) {
+          
+          # Fit the model
+          mod <- survfit(Surv(time, status) ~ 1, data = .trt)
+          
+          # Extract the elements
+          tibble(
+            Time = mod$time,
+            Survival = mod$surv,
+            Lower = mod$lower,
+            Upper = mod$upper
+          )
+          
+        }
+      )
+  ) |> 
+  
+  # Unnest the curves
+  select(-data) |>
+  unnest(cols = Surv) |>
+  ungroup() |>
+
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      )
+  ) |>
+  
+  # Make a plot
+  ggplot(
+    aes(
+      x = Time,
+      y = Survival
+    )
+  ) + 
+  geom_line(aes(color = Treatment)) +
+  geom_ribbon(
+    aes(
+      ymin = Lower,
+      ymax = Upper,
+      fill = Treatment
+    ),
+    alpha = .25
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = "gray"),
+    legend.position = "top"
+  ) +
+  xlab("Time since treatment") +
+  ylab("Survival Probability")
+```
+
+We don't know how much of these differences are explained by the treatment. And actually, the crude survival suggests a possible benefit to treatment _B_, even though we know there is a [benefit to treatment _A_](#treatmenteffect). The goal is to use this _known_ information (along with [patient characteristics](#simulatepatients)) to estimate the causal treatment effect that is baked into all of the _unknown_ quantities we have here that would be unavailable to us in a real-life analysis.
 
 # Estimating the weights {#estimatingweights}
 
 Now that our [simulation is set](#potentialoutcomes), we can start using the observed data (i.e., known quantities) to estimate the case-weights needed for treatment effect estimation. This is the process we'd go through in a real-life analysis, but here we have the benefit of knowing the truth, so we can see how close our estimations are to reality. 
 
-The intention of these weights is to _adjust_ the observed sample to create a _pseudo-population_ such that the patient characteristics that we believe are confounding the treatment effect are corrected for, or _balanced_, across the treatment groups. The term "pseudo" here is a little misleading. It's simply referring to the fact that each patient will not contribute the same weight in estimating the treatment effect. In fact, the patients with the most _overlap_ in characteristics across the treatment groups will contribute the most, with patients being proportionately down-weighted the less overlap they have. This is done to tease out portion of the outcome differences that is explained by the treatment, namely, the causal treatment effect. 
+The intention of these weights is to _adjust_ the observed sample to create a _pseudo-population_ such that the patient characteristics that we believe are confounding the treatment effect are corrected for, or _balanced_, across the treatment groups. The term "pseudo" here is a little misleading. It's simply referring to the fact that each patient will not contribute the same weight in estimating the treatment effect. In fact, the patients with the most _overlap_ in characteristics across the treatment groups will contribute the most, with patients being proportionately down-weighted the less overlap they have (I'd argue this is the same thing that is done in [matching](https://en.wikipedia.org/wiki/Propensity_score_matching), it's just that the weights for patients are either exactly _1_ or _0_). This is done to tease out the portion of the outcome differences that is explained by the treatment, namely, the causal treatment effect. 
 
 ## Model the propensity scores {#modelpropensityscores}
 
@@ -412,7 +482,8 @@ The model does a great job at estimating the true propensity scores. In a real a
 In the same vein, we can explore the modeled relationships between each patient characteristic and the propensity scores. 
 
 ```{r}
-population |>
+plots <-
+  population |>
   
   # Send PS scores down the rows
   pivot_longer(
@@ -420,7 +491,7 @@ population |>
     names_to = "Type",
     values_to = "Score"
   ) |>
-
+  
   # Clean labels
   mutate(
     Treatment = 
@@ -437,35 +508,465 @@ population |>
   
   # Send covariates down the rows
   pivot_longer(
-    cols = c(zage, zincome),
+    cols = c(zage, zincome, male),
     names_prefix = "^z"
+  ) |>
+  
+  # Make groups
+  mutate(
+    Group = 
+      case_when(
+        name == "male" ~ "categorical",
+        TRUE ~ "continuous"
+      )
+  ) |>
+  
+  # Make a nested frame
+  group_by(Group) |>
+  nest() |>
+  
+  # Make plot depending on type
+  mutate(
+    plot = 
+      data |>
+      map(
+        function(.group) {
+          
+          # Check condition
+          if(n_distinct(.group$value) == 2) {
+            
+            .group |>
+              summarize(
+                Rate = mean(Score),
+                .by = c(Treatment, Type, name, value)
+              ) |>
+              mutate(
+                Sex = 
+                  case_when(
+                    value == 1 ~ "Male",
+                    TRUE ~ "Female"
+                  ),
+                name = "Sex"
+              ) |>
+              ggplot() +
+              geom_point(
+                aes(
+                  x = Sex,
+                  y = Rate,
+                  color = Treatment,
+                  shape = Type,
+                  group = Type
+                )
+              ) +
+              geom_line(
+                aes(
+                  x = Sex,
+                  y = Rate,
+                  color = Treatment,
+                  linetype = Type,
+                  group = interaction(Type, Treatment)
+                )
+              ) +
+              facet_wrap(~name) +
+              coord_flip() +
+              scale_y_continuous(labels = scales::percent) +
+              theme(
+                panel.background = element_blank(),
+                panel.grid.major.x = element_line(color = "gray"),
+                legend.position = "top",
+                axis.title.y = element_blank()
+              ) +
+              ylab("P(A=1|X)")
+            
+          } else {
+            
+            .group |> 
+              ggplot() + 
+              geom_smooth(
+                aes(
+                  x = value,
+                  y = Score,
+                  color = Treatment,
+                  fill = Treatment,
+                  linetype = Type
+                ),
+                alpha = .25
+              ) +
+              facet_wrap(~name) +
+              scale_y_continuous(labels = scales::percent) +
+              theme(
+                panel.background = element_blank(),
+                panel.grid.major.y = element_line(color = "gray"),
+                legend.position = "top"
+              ) +
+              xlab("Z-Score") +
+              ylab("P(A=1|X)")
+          }
+          
+        } 
+      )
+  ) 
+
+gridExtra::grid.arrange(plots$plot[[1]], plots$plot[[2]])
+```
+
+As known from the [true model](#treatmentpropensity), patients who received treatment _A_ tend to be older, female patients with lower income. We can also see slight miscalibration in the estimates for patients who are older in that the model tends to _underestimate_ the true propensity score in these patients.
+
+## Calculate the (estimated) overlap weight {#estimatedoverlapweight}
+
+We've already [defined](#trueoverlapweight) how to calculate the overlap weights. The only difference here is that we'll do it from the [_estimated_](#modelpropensityscores) propensity scores instead of the [true](#treatmentpropensity) ones. First, we'll apply the formula to add the estimated weights to the `population`:
+
+```{r}
+population <-
+  population |>
+  
+  # Add the estimated overlap weight for the realized treatment (known quantity)
+  mutate(
+    OW_hat = A * (1-pA_hat) + (1-A) * pA_hat
+  )
+```
+
+As we've [mentioned earlier](#targetpopulation), we will then _normalize_ the weights _within_ each treatment group so they have the same cumulative contribution for estimating the treatment effect in the outcome model.
+
+```{r}
+population <- 
+  population |>
+  
+  # Add the normalized weights (adding true and estimated)
+  mutate(
+    OW_norm = OW / sum(OW),
+    OW_hat_norm = OW_hat / sum(OW_hat),
+    .by = A
+  )
+population |> select(A, pA, pA_hat, OW, OW_norm, OW_hat, OW_hat_norm)
+```
+
+To get a sense of the impact of these weights, let's first look at their distributions (again, adding the [true](#trueoverlapweight) weights for comparison):
+
+```{r}
+population |>
+  
+  # Send overlap weight down the rows
+  pivot_longer(
+    cols = c(OW_norm, OW_hat_norm),
+    names_to = "Type",
+    values_to = "Weight"
+  ) |>
+  
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      ),
+    Type = 
+      case_when(
+        Type == "OW_norm" ~ "True",
+        TRUE ~ "Estimated"
+      )
   ) |>
   
   # Make a plot
   ggplot() + 
-  geom_smooth(
+  geom_density(
     aes(
-      x = value,
-      y = Score,
-      color = Treatment,
+      x = Weight,
       fill = Treatment,
       linetype = Type
     ),
-    alpha = .25
+    alpha = .40
   ) +
-  facet_wrap(~name) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    legend.position = "top"
+  ) +
+  xlab("Normalized Overlap Weight")
+```
+
+The distribution shift has to do with the sampled treatment distribution. Even though both groups will contribute equally to the outcome model in aggregate, only `r paste0(round(mean(population$A)*100, 1), "%")` of patients have treatment _A_ so at an individual level will contribute more on average.
+
+We can also look at the accumulation of patients (i.e., when all patients contribute equally) as a function of the cumulative overlap weight in each group. This allows us to understand how much (or little) the treatment effect estimation will be dominated by a smaller concentration of patients.
+
+```{r}
+population |>
+  
+  # Send overlap weight down the rows
+  pivot_longer(
+    cols = c(OW_norm, OW_hat_norm),
+    names_to = "Type",
+    values_to = "Weight"
+  ) |>
+  
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      ),
+    Type = 
+      case_when(
+        Type == "OW_norm" ~ "True",
+        TRUE ~ "Estimated"
+      ),
+    NullWeight = 1
+  ) |> 
+  
+  # Rearrange
+  arrange(Treatment, Type, Weight) |>
+  
+  # Compute the cumulative weight
+  mutate(
+    Weight = cumsum(Weight) / sum(Weight),
+    NullWeight = cumsum(NullWeight) / sum(NullWeight),
+    .by = c(Treatment, Type)
+  ) |> 
+  
+  # Make a plot
+  ggplot() + 
+  geom_line(
+    aes(
+      x = Weight,
+      y = NullWeight,
+      color = Treatment,
+      linetype = Type
+    ),
+    linewidth = 1
+  ) +
+  scale_x_continuous(labels = scales::percent) +
   scale_y_continuous(labels = scales::percent) +
   theme(
     panel.background = element_blank(),
+    panel.grid.major.x = element_line(color = "gray"),
     panel.grid.major.y = element_line(color = "gray"),
     legend.position = "top"
   ) +
-  xlab("Z-Score") +
-  ylab("P(A=1|X)")
+  xlab("Cumulative percent of overlap weight (%)") +
+  ylab("Cumulative percent of patients (%)") 
 ```
 
-# Summary 
+We can see that for treatment _B_, about 40% of the outcome model weight will be accounted for by only 25% of patients.
 
+### Weighted-mean differences
+
+It was [previously mentioned](#treatmentpropensity) that the overlap weight methodology leads to perfect balance among the covariates used in the propensity score model. We can verify by looking at the group means for [each model factor](#modelpropensityscores) before and after weighting.
+
+```{r}
+population |> 
+  
+  # Add uniform weights
+  add_column(NullWeight = 1) |>
+  
+  # Send weights down the rows
+  pivot_longer(
+    cols = c(NullWeight, OW_hat_norm),
+    names_to = "Type",
+    values_to = "Weight"
+  ) |> 
+  
+  # Send factors down the rows
+  pivot_longer(
+    cols = c(age, income, male),
+    names_to = "Factor",
+    values_to = "Value"
+  ) |> 
+  
+  # For each 
+  summarize(
+    Patients = n(),
+    Mean = sum(Weight * Value) / sum(Weight),
+    .by = c(Factor, Type, A)
+  ) |>
+  
+  # Clean up
+  transmute(
+    Factor = 
+      case_when(
+        Factor == "age" ~ "Age (years)",
+        Factor == "income" ~ "Income ($)",
+        Factor == "male" ~ "Male (%)"
+      ),
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      ),
+    Type,
+    Patients,
+    Mean = 
+      case_when(
+        Factor == "Male (%)" ~ 100 * Mean,
+        TRUE ~ Mean
+      )
+  ) |>
+  
+  # Send over the columns
+  pivot_wider(
+    names_from = Type,
+    values_from = c(Patients, Mean)
+  ) |> 
+  
+  # Rearrange
+  arrange(Factor, Treatment) |>
+  select(Factor, Treatment, ends_with("NullWeight"), Mean_OW_hat_norm) |> 
+  
+  # Make a table
+  reactable(
+    groupBy = "Factor",
+    columns = 
+      list(
+        Patients_NullWeight = colDef(name = "Patients", aggregate = "sum", align = "center"),
+        Mean_NullWeight = colDef(name = "Before Weighting", aggregate = zildge::rectbl_agg_wtd("Patients_NullWeight"), align = "center", format = colFormat(digits = 1)),
+        Mean_OW_hat_norm = colDef(name = "After Weighting", aggregate = zildge::rectbl_agg_wtd("Patients_NullWeight"), align = "center", format = colFormat(digits = 1))
+      ),
+    columnGroups = 
+      list(
+        colGroup(
+          name = "Mean Value",
+          columns = c("Mean_NullWeight", "Mean_OW_hat_norm")
+        )
+      ),
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    resizable = TRUE,
+    theme = reactablefmtr::sandstone()
+  ) |>
+  reactablefmtr::add_source("Use arrows to expand table", font_size = 12, font_style = "italic")
+```
+
+### Confounder weight shifts
+
+Similar to looking at weight attributions [as a whole](#estimatedoverlapweight), we can explore weight shifts within subgroups of patient characteristics. This helps build intuition about which patients the subsequent treatment effect estimates will focus on most (and least). 
+
+```{r}
+population |> 
+  
+  # Add uniform weights
+  add_column(NullWeight = 1) |>
+  
+  # Convert to quntiles
+  mutate(
+    across(
+      c(age, income),
+      \(x) Hmisc::cut2(x, g = 10)
+    ),
+    Age = age,
+    Income = income,
+    Sex = 
+      case_when(
+        male == 1 ~ "Male",
+        TRUE ~ "Female"
+      ),
+    Treatment = 
+      case_when(
+        A == 1 ~ "A",
+        TRUE ~ "B"
+      )
+  ) |> 
+  
+  # Send weights down the rows
+  pivot_longer(
+    cols = c(NullWeight, OW_hat_norm),
+    names_to = "Type",
+    values_to = "Weight"
+  ) |>
+  
+  # Send factors down the rows
+  pivot_longer(
+    cols = c(Age, Income, Sex),
+    names_to = "Factor",
+    values_to = "Level"
+  ) |> 
+  
+  # Compute total weights
+  summarize(
+    Weight = sum(Weight),
+    .by = c(Factor, Level, Type, Treatment)
+  ) |>
+  
+  # Find percent of weight
+  mutate(
+    Weight = Weight / sum(Weight),
+    .by = c(Factor, Type, Treatment)
+  ) |>
+  
+  # Send over columns
+  pivot_wider(
+    names_from = Type,
+    values_from = Weight
+  ) |>
+  
+  # Clean up
+  mutate(
+    Level = factor(Level) |> fct_rev(),
+    Factor = 
+      case_when(
+        Factor == "Age" ~ "Age (years)",
+        Factor == "Income" ~ "Income ($)",
+        TRUE ~ Factor
+      )
+  ) |>
+  
+  # Make a plot
+  ggplot() +
+  geom_col(
+    aes(
+      x = Level,
+      y = NullWeight,
+      fill = Treatment
+    ),
+    color = "black",
+    linewidth = .75,
+    alpha = .40,
+    position = "dodge"
+  ) + 
+  geom_point(
+    aes(
+      x = Level,
+      y = OW_hat_norm,
+      color = Treatment,
+      shape = Treatment
+    ),
+    position = position_dodge(width = 1),
+    size = 3
+  ) +
+  geom_line(
+    aes(
+      x = Level,
+      y = OW_hat_norm,
+      color = Treatment,
+      group = Treatment
+    ),
+    position = position_dodge(width = 1),
+    linewidth = .5
+  ) +
+  facet_wrap(~Factor, scales = "free") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.x = element_line(color = "gray"),
+    legend.position = "top"
+  ) +
+  xlab("Level") +
+  ylab("Share of weight within group (%)") +
+  labs(
+    fill = "Before Weighting",
+    shape = "After Weighting",
+    color = "After Weighting"
+  )
+```
+
+We can see the balancing take place. After overlap weighting, the contribution to treatment effect estimation is reduced in older patients with lower income for treatment _A_, and vice-versa for treatment _B_, with some levels in the middle having increased weight for _both_ treatments. This is where the most overlap is between the groups.
+
+It is also useful to look at these plots for factors that were _not_ included in the propensity score model. We may find drastic weight shifts in these factors which might indicate significant co-variation among factors already accounted for.
+
+# Summary 
 
 1. All subjects are used instead of arbitrary cutoffs (e.g., 1:5 matching)
 2. It proportionately down-weights the impacts of subjects most likely belonging to a certain treatment group

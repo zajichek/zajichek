@@ -1,7 +1,7 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-08-23'
+date: '2023-08-25'
 slug: the-overlap-weight
 categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
@@ -45,6 +45,7 @@ library(reactable)</code></pre>
 <li><a href="#estimatingweights">Estimating the weights</a>
 <ul>
 <li><a href="#modelpropensityscores">Model the propensity scores</a></li>
+<li><a href="#estimatedoverlapweight">Calculate the (estimated) overlap weight</a></li>
 </ul></li>
 </ul>
 </div>
@@ -181,9 +182,9 @@ population</code></pre>
 ## 10  45.5 -0.446      1   53.7   0.370      -1.06  0.257     0 0.257
 ## # … with 9,990 more rows</code></pre>
 <p>In a real analysis, these weights are what we are ultimately after in order to estimate the average <em>causal</em> treatment effect on the outcome of interest while balancing differences in patient characteristics across the groups (i.e., removing the confounding factors).</p>
-<div id="target-population" class="section level3">
+<div id="targetpopulation" class="section level3">
 <h3>Target population</h3>
-<p>Now we do end up normalizing the weights so they sum to one within each treatment group. But the intuition about what’s happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in <em>either</em> treatment group (i.e., <span class="math inline">\(p_i^A\)</span> near 0.5). This is known as the <a href="https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022"><em>clinical equipoise</em></a>, and the resulting treatment effect is interpreted as the <em>average treatment effect in the overlap population</em>.</p>
+<p>Now we do end up normalizing the weights so they sum to one within each treatment group. But the intuition about what’s happening is that the focus of the treatment effect estimation is shifted to patients that are most likely in <em>either</em> treatment group. This is known as the <a href="https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022"><em>clinical equipoise</em></a>, and the resulting treatment effect is interpreted as the <em>average treatment effect in the overlap population</em>.</p>
 <p>This makes a lot of sense. When we’re comparing treatments, we should focus most heavily on patients that could be candidates for either, and less so on patients that were bound for one. Thus, we up-weight patients who have the most overlap in characteristics with the opposing treatment group. The beautiful thing here is that we do this without throwing away any information; smoothly and proportionately weighting each subject just the amount that we should.</p>
 </div>
 </div>
@@ -364,13 +365,80 @@ population |&gt; select(actual_event_time, censor_time, time, status)</code></pr
 <p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Treatment":["A","A","B","B"],"Status":["Event","Censored","Event","Censored"],"Patients":[836,3046,1137,4981],"Percent":[0.215352910870685,0.784647089129315,0.185845047401111,0.814154952598888],"Time":[345.503703338068,745.228837321148,343.475165801799,746.272923924016]},"columns":[{"id":"Treatment","name":"Treatment","type":"character"},{"id":"Status","name":"Status","type":"character"},{"id":"Patients","name":"Patients","type":"numeric","aggregate":"sum","align":"center"},{"id":"Percent","name":"Percent of patients in treatment group (%)","type":"numeric","aggregate":"sum","format":{"cell":{"digits":1,"percent":true},"aggregated":{"digits":1,"percent":true}},"align":"center"},{"id":"Time","name":"Avg. time to outcome","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":1},"aggregated":{"digits":1}},"align":"center"}],"groupBy":["Treatment"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"c7e4627927bc259cbc5e7bcd101044f6"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.4.aggregate"],"jsHooks":[]}</script>
 <p><br></p>
-<p>We don’t know how much of these differences (or lack thereof) are explained by the treatment. The goal is to use this <em>known</em> information (along with <a href="#simulatepatients">patient characteristics</a>) to estimate the causal treatment effect that is baked into all of the <em>unknown</em> quantities we have here that would be unavailable to us in a real-life analysis.</p>
+<pre class="r"><code>population |&gt;
+  
+  # Nest by treatment
+  group_by(A) |&gt;
+  nest() |&gt;
+  
+  # Esimtate survival curves for each treatment
+  mutate(
+    Surv = 
+      data |&gt;
+      map(
+        function(.trt) {
+          
+          # Fit the model
+          mod &lt;- survfit(Surv(time, status) ~ 1, data = .trt)
+          
+          # Extract the elements
+          tibble(
+            Time = mod$time,
+            Survival = mod$surv,
+            Lower = mod$lower,
+            Upper = mod$upper
+          )
+          
+        }
+      )
+  ) |&gt; 
+  
+  # Unnest the curves
+  select(-data) |&gt;
+  unnest(cols = Surv) |&gt;
+  ungroup() |&gt;
+
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ &quot;A&quot;,
+        TRUE ~ &quot;B&quot;
+      )
+  ) |&gt;
+  
+  # Make a plot
+  ggplot(
+    aes(
+      x = Time,
+      y = Survival
+    )
+  ) + 
+  geom_line(aes(color = Treatment)) +
+  geom_ribbon(
+    aes(
+      ymin = Lower,
+      ymax = Upper,
+      fill = Treatment
+    ),
+    alpha = .25
+  ) +
+  scale_y_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.y = element_line(color = &quot;gray&quot;),
+    legend.position = &quot;top&quot;
+  ) +
+  xlab(&quot;Time since treatment&quot;) +
+  ylab(&quot;Survival Probability&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We don’t know how much of these differences are explained by the treatment. And actually, the crude survival suggests a possible benefit to treatment <em>B</em>, even though we know there is a <a href="#treatmenteffect">benefit to treatment <em>A</em></a>. The goal is to use this <em>known</em> information (along with <a href="#simulatepatients">patient characteristics</a>) to estimate the causal treatment effect that is baked into all of the <em>unknown</em> quantities we have here that would be unavailable to us in a real-life analysis.</p>
 </div>
 </div>
 <div id="estimatingweights" class="section level1">
 <h1>Estimating the weights</h1>
 <p>Now that our <a href="#potentialoutcomes">simulation is set</a>, we can start using the observed data (i.e., known quantities) to estimate the case-weights needed for treatment effect estimation. This is the process we’d go through in a real-life analysis, but here we have the benefit of knowing the truth, so we can see how close our estimations are to reality.</p>
-<p>The intention of these weights is to <em>adjust</em> the observed sample to create a <em>pseudo-population</em> such that the patient characteristics that we believe are confounding the treatment effect are corrected for, or <em>balanced</em>, across the treatment groups. The term “pseudo” here is a little misleading. It’s simply referring to the fact that each patient will not contribute the same weight in estimating the treatment effect. In fact, the patients with the most <em>overlap</em> in characteristics across the treatment groups will contribute the most, with patients being proportionately down-weighted the less overlap they have. This is done to tease out portion of the outcome differences that is explained by the treatment, namely, the causal treatment effect.</p>
+<p>The intention of these weights is to <em>adjust</em> the observed sample to create a <em>pseudo-population</em> such that the patient characteristics that we believe are confounding the treatment effect are corrected for, or <em>balanced</em>, across the treatment groups. The term “pseudo” here is a little misleading. It’s simply referring to the fact that each patient will not contribute the same weight in estimating the treatment effect. In fact, the patients with the most <em>overlap</em> in characteristics across the treatment groups will contribute the most, with patients being proportionately down-weighted the less overlap they have (I’d argue this is the same thing that is done in <a href="https://en.wikipedia.org/wiki/Propensity_score_matching">matching</a>, it’s just that the weights for patients are either exactly <em>1</em> or <em>0</em>). This is done to tease out the portion of the outcome differences that is explained by the treatment, namely, the causal treatment effect.</p>
 <div id="modelpropensityscores" class="section level2">
 <h2>Model the propensity scores</h2>
 <p>We’ve <a href="#trueoverlapweight">established</a> that the overlap weights are quantities that need to be estimated from the data. In order to calculate those weights, we first need to estimate the propensity scores. We know what the <a href="#treatmentpropensity">true model</a> is, but let’s assume we are only working with observable data:</p>
@@ -476,12 +544,13 @@ summary(ps_mod)</code></pre>
     legend.position = &quot;top&quot;
   ) +
   xlab(&quot;P(A=1|X)&quot;)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>The model does a great job at estimating the true propensity scores. In a real analysis we probably wouldn’t be this close since we likely wouldn’t have only and all true confounders accounted for.</p>
 <div id="visualizing-propensity-score-effects" class="section level3">
 <h3>Visualizing propensity score effects</h3>
 <p>In the same vein, we can explore the modeled relationships between each patient characteristic and the propensity scores.</p>
-<pre class="r"><code>population |&gt;
+<pre class="r"><code>plots &lt;-
+  population |&gt;
   
   # Send PS scores down the rows
   pivot_longer(
@@ -489,7 +558,7 @@ summary(ps_mod)</code></pre>
     names_to = &quot;Type&quot;,
     values_to = &quot;Score&quot;
   ) |&gt;
-
+  
   # Clean labels
   mutate(
     Treatment = 
@@ -506,32 +575,457 @@ summary(ps_mod)</code></pre>
   
   # Send covariates down the rows
   pivot_longer(
-    cols = c(zage, zincome),
+    cols = c(zage, zincome, male),
     names_prefix = &quot;^z&quot;
+  ) |&gt;
+  
+  # Make groups
+  mutate(
+    Group = 
+      case_when(
+        name == &quot;male&quot; ~ &quot;categorical&quot;,
+        TRUE ~ &quot;continuous&quot;
+      )
+  ) |&gt;
+  
+  # Make a nested frame
+  group_by(Group) |&gt;
+  nest() |&gt;
+  
+  # Make plot depending on type
+  mutate(
+    plot = 
+      data |&gt;
+      map(
+        function(.group) {
+          
+          # Check condition
+          if(n_distinct(.group$value) == 2) {
+            
+            .group |&gt;
+              summarize(
+                Rate = mean(Score),
+                .by = c(Treatment, Type, name, value)
+              ) |&gt;
+              mutate(
+                Sex = 
+                  case_when(
+                    value == 1 ~ &quot;Male&quot;,
+                    TRUE ~ &quot;Female&quot;
+                  ),
+                name = &quot;Sex&quot;
+              ) |&gt;
+              ggplot() +
+              geom_point(
+                aes(
+                  x = Sex,
+                  y = Rate,
+                  color = Treatment,
+                  shape = Type,
+                  group = Type
+                )
+              ) +
+              geom_line(
+                aes(
+                  x = Sex,
+                  y = Rate,
+                  color = Treatment,
+                  linetype = Type,
+                  group = interaction(Type, Treatment)
+                )
+              ) +
+              facet_wrap(~name) +
+              coord_flip() +
+              scale_y_continuous(labels = scales::percent) +
+              theme(
+                panel.background = element_blank(),
+                panel.grid.major.x = element_line(color = &quot;gray&quot;),
+                legend.position = &quot;top&quot;,
+                axis.title.y = element_blank()
+              ) +
+              ylab(&quot;P(A=1|X)&quot;)
+            
+          } else {
+            
+            .group |&gt; 
+              ggplot() + 
+              geom_smooth(
+                aes(
+                  x = value,
+                  y = Score,
+                  color = Treatment,
+                  fill = Treatment,
+                  linetype = Type
+                ),
+                alpha = .25
+              ) +
+              facet_wrap(~name) +
+              scale_y_continuous(labels = scales::percent) +
+              theme(
+                panel.background = element_blank(),
+                panel.grid.major.y = element_line(color = &quot;gray&quot;),
+                legend.position = &quot;top&quot;
+              ) +
+              xlab(&quot;Z-Score&quot;) +
+              ylab(&quot;P(A=1|X)&quot;)
+          }
+          
+        } 
+      )
+  ) 
+
+gridExtra::grid.arrange(plots$plot[[1]], plots$plot[[2]])</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>As known from the <a href="#treatmentpropensity">true model</a>, patients who received treatment <em>A</em> tend to be older, female patients with lower income. We can also see slight miscalibration in the estimates for patients who are older in that the model tends to <em>underestimate</em> the true propensity score in these patients.</p>
+</div>
+</div>
+<div id="estimatedoverlapweight" class="section level2">
+<h2>Calculate the (estimated) overlap weight</h2>
+<p>We’ve already <a href="#trueoverlapweight">defined</a> how to calculate the overlap weights. The only difference here is that we’ll do it from the <a href="#modelpropensityscores"><em>estimated</em></a> propensity scores instead of the <a href="#treatmentpropensity">true</a> ones. First, we’ll apply the formula to add the estimated weights to the <code>population</code>:</p>
+<pre class="r"><code>population &lt;-
+  population |&gt;
+  
+  # Add the estimated overlap weight for the realized treatment (known quantity)
+  mutate(
+    OW_hat = A * (1-pA_hat) + (1-A) * pA_hat
+  )</code></pre>
+<p>As we’ve <a href="#targetpopulation">mentioned earlier</a>, we will then <em>normalize</em> the weights <em>within</em> each treatment group so they have the same cumulative contribution for estimating the treatment effect in the outcome model.</p>
+<pre class="r"><code>population &lt;- 
+  population |&gt;
+  
+  # Add the normalized weights (adding true and estimated)
+  mutate(
+    OW_norm = OW / sum(OW),
+    OW_hat_norm = OW_hat / sum(OW_hat),
+    .by = A
+  )
+population |&gt; select(A, pA, pA_hat, OW, OW_norm, OW_hat, OW_hat_norm)</code></pre>
+<pre><code>## # A tibble: 10,000 × 7
+##        A    pA pA_hat    OW   OW_norm OW_hat OW_hat_norm
+##    &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;       &lt;dbl&gt;
+##  1     1 0.577  0.583 0.423 0.000202   0.417   0.000198 
+##  2     0 0.422  0.427 0.422 0.000201   0.427   0.000202 
+##  3     1 0.647  0.610 0.353 0.000168   0.390   0.000185 
+##  4     0 0.219  0.226 0.219 0.000105   0.226   0.000107 
+##  5     1 0.315  0.329 0.685 0.000327   0.671   0.000318 
+##  6     1 0.292  0.265 0.708 0.000338   0.735   0.000348 
+##  7     0 0.644  0.628 0.644 0.000307   0.628   0.000297 
+##  8     0 0.171  0.181 0.171 0.0000814  0.181   0.0000856
+##  9     0 0.238  0.250 0.238 0.000114   0.250   0.000118 
+## 10     0 0.257  0.268 0.257 0.000123   0.268   0.000127 
+## # … with 9,990 more rows</code></pre>
+<p>To get a sense of the impact of these weights, let’s first look at their distributions (again, adding the <a href="#trueoverlapweight">true</a> weights for comparison):</p>
+<pre class="r"><code>population |&gt;
+  
+  # Send overlap weight down the rows
+  pivot_longer(
+    cols = c(OW_norm, OW_hat_norm),
+    names_to = &quot;Type&quot;,
+    values_to = &quot;Weight&quot;
+  ) |&gt;
+  
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ &quot;A&quot;,
+        TRUE ~ &quot;B&quot;
+      ),
+    Type = 
+      case_when(
+        Type == &quot;OW_norm&quot; ~ &quot;True&quot;,
+        TRUE ~ &quot;Estimated&quot;
+      )
   ) |&gt;
   
   # Make a plot
   ggplot() + 
-  geom_smooth(
+  geom_density(
     aes(
-      x = value,
-      y = Score,
-      color = Treatment,
+      x = Weight,
       fill = Treatment,
       linetype = Type
     ),
-    alpha = .25
+    alpha = .40
   ) +
-  facet_wrap(~name) +
+  theme(
+    panel.background = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.title.y = element_blank(),
+    legend.position = &quot;top&quot;
+  ) +
+  xlab(&quot;Normalized Overlap Weight&quot;)</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>The distribution shift has to do with the sampled treatment distribution. Even though both groups will contribute equally to the outcome model in aggregate, only 38.8% of patients have treatment <em>A</em> so at an individual level will contribute more on average.</p>
+<p>We can also look at the accumulation of patients (i.e., when all patients contribute equally) as a function of the cumulative overlap weight in each group. This allows us to understand how much (or little) the treatment effect estimation will be dominated by a smaller concentration of patients.</p>
+<pre class="r"><code>population |&gt;
+  
+  # Send overlap weight down the rows
+  pivot_longer(
+    cols = c(OW_norm, OW_hat_norm),
+    names_to = &quot;Type&quot;,
+    values_to = &quot;Weight&quot;
+  ) |&gt;
+  
+  # Clean labels
+  mutate(
+    Treatment = 
+      case_when(
+        A == 1 ~ &quot;A&quot;,
+        TRUE ~ &quot;B&quot;
+      ),
+    Type = 
+      case_when(
+        Type == &quot;OW_norm&quot; ~ &quot;True&quot;,
+        TRUE ~ &quot;Estimated&quot;
+      ),
+    NullWeight = 1
+  ) |&gt; 
+  
+  # Rearrange
+  arrange(Treatment, Type, Weight) |&gt;
+  
+  # Compute the cumulative weight
+  mutate(
+    Weight = cumsum(Weight) / sum(Weight),
+    NullWeight = cumsum(NullWeight) / sum(NullWeight),
+    .by = c(Treatment, Type)
+  ) |&gt; 
+  
+  # Make a plot
+  ggplot() + 
+  geom_line(
+    aes(
+      x = Weight,
+      y = NullWeight,
+      color = Treatment,
+      linetype = Type
+    ),
+    linewidth = 1
+  ) +
+  scale_x_continuous(labels = scales::percent) +
   scale_y_continuous(labels = scales::percent) +
   theme(
     panel.background = element_blank(),
+    panel.grid.major.x = element_line(color = &quot;gray&quot;),
     panel.grid.major.y = element_line(color = &quot;gray&quot;),
     legend.position = &quot;top&quot;
   ) +
-  xlab(&quot;Z-Score&quot;) +
-  ylab(&quot;P(A=1|X)&quot;)</code></pre>
-<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+  xlab(&quot;Cumulative percent of overlap weight (%)&quot;) +
+  ylab(&quot;Cumulative percent of patients (%)&quot;) </code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>We can see that for treatment <em>B</em>, about 40% of the outcome model weight will be accounted for by only 25% of patients.</p>
+<div id="weighted-mean-differences" class="section level3">
+<h3>Weighted-mean differences</h3>
+<p>It was <a href="#treatmentpropensity">previously mentioned</a> that the overlap weight methodology leads to perfect balance among the covariates used in the propensity score model. We can verify by looking at the group means for <a href="#modelpropensityscores">each model factor</a> before and after weighting.</p>
+<pre class="r"><code>population |&gt; 
+  
+  # Add uniform weights
+  add_column(NullWeight = 1) |&gt;
+  
+  # Send weights down the rows
+  pivot_longer(
+    cols = c(NullWeight, OW_hat_norm),
+    names_to = &quot;Type&quot;,
+    values_to = &quot;Weight&quot;
+  ) |&gt; 
+  
+  # Send factors down the rows
+  pivot_longer(
+    cols = c(age, income, male),
+    names_to = &quot;Factor&quot;,
+    values_to = &quot;Value&quot;
+  ) |&gt; 
+  
+  # For each 
+  summarize(
+    Patients = n(),
+    Mean = sum(Weight * Value) / sum(Weight),
+    .by = c(Factor, Type, A)
+  ) |&gt;
+  
+  # Clean up
+  transmute(
+    Factor = 
+      case_when(
+        Factor == &quot;age&quot; ~ &quot;Age (years)&quot;,
+        Factor == &quot;income&quot; ~ &quot;Income ($)&quot;,
+        Factor == &quot;male&quot; ~ &quot;Male (%)&quot;
+      ),
+    Treatment = 
+      case_when(
+        A == 1 ~ &quot;A&quot;,
+        TRUE ~ &quot;B&quot;
+      ),
+    Type,
+    Patients,
+    Mean = 
+      case_when(
+        Factor == &quot;Male (%)&quot; ~ 100 * Mean,
+        TRUE ~ Mean
+      )
+  ) |&gt;
+  
+  # Send over the columns
+  pivot_wider(
+    names_from = Type,
+    values_from = c(Patients, Mean)
+  ) |&gt; 
+  
+  # Rearrange
+  arrange(Factor, Treatment) |&gt;
+  select(Factor, Treatment, ends_with(&quot;NullWeight&quot;), Mean_OW_hat_norm) |&gt; 
+  
+  # Make a table
+  reactable(
+    groupBy = &quot;Factor&quot;,
+    columns = 
+      list(
+        Patients_NullWeight = colDef(name = &quot;Patients&quot;, aggregate = &quot;sum&quot;, align = &quot;center&quot;),
+        Mean_NullWeight = colDef(name = &quot;Before Weighting&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients_NullWeight&quot;), align = &quot;center&quot;, format = colFormat(digits = 1)),
+        Mean_OW_hat_norm = colDef(name = &quot;After Weighting&quot;, aggregate = zildge::rectbl_agg_wtd(&quot;Patients_NullWeight&quot;), align = &quot;center&quot;, format = colFormat(digits = 1))
+      ),
+    columnGroups = 
+      list(
+        colGroup(
+          name = &quot;Mean Value&quot;,
+          columns = c(&quot;Mean_NullWeight&quot;, &quot;Mean_OW_hat_norm&quot;)
+        )
+      ),
+    striped = TRUE,
+    highlight = TRUE,
+    bordered = TRUE,
+    resizable = TRUE,
+    theme = reactablefmtr::sandstone()
+  ) |&gt;
+  reactablefmtr::add_source(&quot;Use arrows to expand table&quot;, font_size = 12, font_style = &quot;italic&quot;)</code></pre>
+<div id="htmlwidget-2" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Factor":["Age (years)","Age (years)","Income ($)","Income ($)","Male (%)","Male (%)"],"Treatment":["A","B","A","B","A","B"],"Patients_NullWeight":[3882,6118,3882,6118,3882,6118],"Mean_NullWeight":[51.8724351584409,48.7731344443606,46.1525421379549,52.1470439747779,55.7444616177228,61.7522066034652],"Mean_OW_hat_norm":[50.690947042348,50.6909470423471,48.480546358988,48.4805463589894,58.1435359891369,58.1435359891386]},"columns":[{"id":"Factor","name":"Factor","type":"character"},{"id":"Treatment","name":"Treatment","type":"character"},{"id":"Patients_NullWeight","name":"Patients","type":"numeric","aggregate":"sum","align":"center"},{"id":"Mean_NullWeight","name":"Before Weighting","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients_NullWeight'] * values[index]\n                denominator += row['Patients_NullWeight']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":1},"aggregated":{"digits":1}},"align":"center"},{"id":"Mean_OW_hat_norm","name":"After Weighting","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients_NullWeight'] * values[index]\n                denominator += row['Patients_NullWeight']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":1},"aggregated":{"digits":1}},"align":"center"}],"columnGroups":[{"name":"Mean Value","columns":["Mean_NullWeight","Mean_OW_hat_norm"]}],"groupBy":["Factor"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"d59eb5927b49690a0e75cffae96dbc04"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate","tag.attribs.columns.4.aggregate"],"jsHooks":[]}</script>
+</div>
+<div id="confounder-weight-shifts" class="section level3">
+<h3>Confounder weight shifts</h3>
+<p>Similar to looking at weight attributions <a href="#estimatedoverlapweight">as a whole</a>, we can explore weight shifts within subgroups of patient characteristics. This helps build intuition about which patients the subsequent treatment effect estimates will focus on most (and least).</p>
+<pre class="r"><code>population |&gt; 
+  
+  # Add uniform weights
+  add_column(NullWeight = 1) |&gt;
+  
+  # Convert to quntiles
+  mutate(
+    across(
+      c(age, income),
+      \(x) Hmisc::cut2(x, g = 10)
+    ),
+    Age = age,
+    Income = income,
+    Sex = 
+      case_when(
+        male == 1 ~ &quot;Male&quot;,
+        TRUE ~ &quot;Female&quot;
+      ),
+    Treatment = 
+      case_when(
+        A == 1 ~ &quot;A&quot;,
+        TRUE ~ &quot;B&quot;
+      )
+  ) |&gt; 
+  
+  # Send weights down the rows
+  pivot_longer(
+    cols = c(NullWeight, OW_hat_norm),
+    names_to = &quot;Type&quot;,
+    values_to = &quot;Weight&quot;
+  ) |&gt;
+  
+  # Send factors down the rows
+  pivot_longer(
+    cols = c(Age, Income, Sex),
+    names_to = &quot;Factor&quot;,
+    values_to = &quot;Level&quot;
+  ) |&gt; 
+  
+  # Compute total weights
+  summarize(
+    Weight = sum(Weight),
+    .by = c(Factor, Level, Type, Treatment)
+  ) |&gt;
+  
+  # Find percent of weight
+  mutate(
+    Weight = Weight / sum(Weight),
+    .by = c(Factor, Type, Treatment)
+  ) |&gt;
+  
+  # Send over columns
+  pivot_wider(
+    names_from = Type,
+    values_from = Weight
+  ) |&gt;
+  
+  # Clean up
+  mutate(
+    Level = factor(Level) |&gt; fct_rev(),
+    Factor = 
+      case_when(
+        Factor == &quot;Age&quot; ~ &quot;Age (years)&quot;,
+        Factor == &quot;Income&quot; ~ &quot;Income ($)&quot;,
+        TRUE ~ Factor
+      )
+  ) |&gt;
+  
+  # Make a plot
+  ggplot() +
+  geom_col(
+    aes(
+      x = Level,
+      y = NullWeight,
+      fill = Treatment
+    ),
+    color = &quot;black&quot;,
+    linewidth = .75,
+    alpha = .40,
+    position = &quot;dodge&quot;
+  ) + 
+  geom_point(
+    aes(
+      x = Level,
+      y = OW_hat_norm,
+      color = Treatment,
+      shape = Treatment
+    ),
+    position = position_dodge(width = 1),
+    size = 3
+  ) +
+  geom_line(
+    aes(
+      x = Level,
+      y = OW_hat_norm,
+      color = Treatment,
+      group = Treatment
+    ),
+    position = position_dodge(width = 1),
+    linewidth = .5
+  ) +
+  facet_wrap(~Factor, scales = &quot;free&quot;) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent) +
+  theme(
+    panel.background = element_blank(),
+    panel.grid.major.x = element_line(color = &quot;gray&quot;),
+    legend.position = &quot;top&quot;
+  ) +
+  xlab(&quot;Level&quot;) +
+  ylab(&quot;Share of weight within group (%)&quot;) +
+  labs(
+    fill = &quot;Before Weighting&quot;,
+    shape = &quot;After Weighting&quot;,
+    color = &quot;After Weighting&quot;
+  )</code></pre>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>We can see the balancing take place. After overlap weighting, the contribution to treatment effect estimation is reduced in older patients with lower income for treatment <em>A</em>, and vice-versa for treatment <em>B</em>, with some levels in the middle having increased weight for <em>both</em> treatments. This is where the most overlap is between the groups.</p>
+<p>It is also useful to look at these plots for factors that were <em>not</em> included in the propensity score model. We may find drastic weight shifts in these factors which might indicate significant co-variation among factors already accounted for.</p>
 </div>
 </div>
 </div>
