@@ -1,7 +1,7 @@
 ---
 title: The overlap weight in survival analysis
 author: Alex Zajichek
-date: '2023-08-25'
+date: '2023-10-02'
 slug: the-overlap-weight
 categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
@@ -25,7 +25,6 @@ projects: []
 <script src="{{< blogdown/postref >}}index_files/reactable-binding/reactable.js"></script>
 
 
-<p><strong><em>In progress</em></strong></p>
 <p>I was recently introduced to <a href="https://jamanetwork.com/journals/jama/article-abstract/2765748">overlap weighting</a>, which is part of a general family of methods for balancing covariates when estimating treatment effects with observational data. Specifically, it focuses on the <a href="https://www.sciencedirect.com/topics/medicine-and-dentistry/clinical-equipoise#:~:text=Clinical%20equipoise%20is%20defined%20as,Seminars%20in%20Vascular%20Surgery%2C%202022"><em>clinical equipoise</em></a>; that is, the patients in which the treatment decision is most uncertain. I find it more elegant than <a href="https://en.wikipedia.org/wiki/Propensity_score_matching">matching</a> (which I’ve <a href="https://jamanetwork.com/journals/jama/fullarticle/2749478">used in the past</a>), and figured a useful way to better understand the approach is to deconstruct, interpret, and translate a <a href="http://www2.stat.duke.edu/~fl35/OW/OW_survival_Demo.sas">SAS simulation</a> in the context of survival analysis implemented by the <a href="https://pubmed.ncbi.nlm.nih.gov/30189042/">original authors</a>. All code is written in (and translated to) <a href="https://www.r-project.org/"><code>R</code></a>. We’ll start by loading some packages.</p>
 <pre class="r"><code>library(tidyverse)
 library(survival)
@@ -46,6 +45,11 @@ library(reactable)</code></pre>
 <ul>
 <li><a href="#modelpropensityscores">Model the propensity scores</a></li>
 <li><a href="#estimatedoverlapweight">Calculate the (estimated) overlap weight</a></li>
+</ul></li>
+<li><a href="#estimatingtreatmenteffect">Estimating the treatment effect</a>
+<ul>
+<li><a href="#truehazardratio">A look at the true hazard ratio</a></li>
+<li><a href="#estimatedhazardratio">The final estimate</a></li>
 </ul></li>
 </ul>
 </div>
@@ -193,22 +197,42 @@ population</code></pre>
 <p>We’ve <a href="#treatmentassignment">generated the treatments</a> and established how they are <a href="#treatmentpropensity">related to patient characteristics</a>, but haven’t talked about the outcome in which we’re ultimately interested in estimating the treatment effect for. Since we’re focusing on <a href="https://www.publichealth.columbia.edu/research/population-health-methods/time-event-data-analysis">time-to-event</a> outcomes, we’ll stay in that context, but the general idea is that we assume there <em>exists</em> a realization of what a patient’s outcome would have been under each treatment scenario. Then if we compare the difference of those outcomes across all patients, the average difference must be caused by the treatment.</p>
 <div id="defining-the-event-times" class="section level3">
 <h3>Defining the event times</h3>
-<p>In this simulation, we’ll generate event times from a <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> distribution. Starting at treatment initiation, this might be the time until cancer recurrence, hospitalization, or something else; we’re just looking to see how long it takes for some event to occur. The <a href="https://en.wikipedia.org/wiki/Probability_density_function">PDF</a> for this distribution looks like this:</p>
+<p>In this simulation, we’ll generate event times from a <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> distribution. Starting at treatment initiation, this might be the time until cancer recurrence, hospitalization, or something else; we’re just looking to see how long it takes for some event to occur. The <a href="https://en.wikipedia.org/wiki/Probability_density_function">PDF</a> for this distribution looks <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Weibull.html">like this</a>:</p>
 <p><span class="math display">\[f(t) = \frac{\alpha}{\sigma}\left(\frac{t}{\sigma}\right)^{\alpha-1}e^{-\left(\frac{t}{\sigma}\right)^\alpha}\]</span></p>
 <p>where <span class="math inline">\(t\)</span> is the event time, <span class="math inline">\(\alpha\)</span> is the <em>shape</em> parameter, and <span class="math inline">\(\sigma\)</span> is the <em>scale</em> parameter. In our example, we will say that:</p>
 <p><span class="math display">\[T_i^A \sim Weibull(\alpha, \sigma_i^A)\]</span>
 <span class="math display">\[T_i^B \sim Weibull(\alpha, \sigma_i^B)\]</span>
-where <span class="math inline">\(T_i^A\)</span> and <span class="math inline">\(T_i^B\)</span> are the event times under treatments <em>A</em> and <em>B</em>, respectively. That is, the event times for each patient under each treatment follow a <a href="">Weibull</a> distribution with a common <em>shape</em> parameter (in this case, across both treatments), but a <em>scale</em> parameter that depends on the patient’s specific characteristics and differs by treatment, which captures the treatment effect. Specifically,</p>
+where <span class="math inline">\(T_i^A\)</span> and <span class="math inline">\(T_i^B\)</span> are the event times under treatments <em>A</em> and <em>B</em>, respectively. That is, the event times for each patient under each treatment follow a <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> distribution with a common <em>shape</em> parameter (in this case, across both treatments), but a <em>scale</em> parameter that depends on the patient’s specific characteristics (in <em>log-linear</em> form) and differs by treatment, which captures the treatment effect. Specifically,</p>
 <p><span class="math display">\[\alpha = 1\]</span>
-<span class="math display">\[\lambda = 4055.56\]</span></p>
-<p><span class="math display">\[\phi_i = 1.10 \times age_z - 0.22 \times male - 0.36 \times income_z\]</span>
 <span class="math display">\[\sigma_i^A = \lambda \times e^{-(\phi_i - 0.36)}\]</span>
-<span class="math display">\[\sigma_i^B = \lambda \times e^{-\phi_i}\]</span></p>
+<span class="math display">\[\sigma_i^B = \lambda \times e^{-\phi_i}\]</span>
+<span class="math display">\[\phi_i = 1.10 \times age_z - 0.22 \times male - 0.36 \times income_z\]</span>
+<span class="math display">\[\lambda = 4055.56\]</span></p>
 <p>Basically, the <span class="math inline">\(\phi_i\)</span> term does the baseline adjustment on the outcome risk for the patient’s specific characteristics, and the treatment effect is simply a fixed, additive deviation from that for all patients. The <span class="math inline">\(\lambda\)</span> term is the <a href="https://www.linkedin.com/advice/0/how-do-you-interpret-hazard-ratio-baseline-function">baseline hazard function</a>, providing the <em>scale</em> parameter when all covariate values are zero (for treatment <em>B</em>), which in this case is constant over time.</p>
+<div id="interpretingtreatmenteffect" class="section level4">
+<h4>Interpreting the treatment effect</h4>
+<p>When setting <span class="math inline">\(\alpha=1\)</span>, the mean of a <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> distribution is equal to its scale parameter. That is,</p>
+<p><span class="math display">\[E[T_i^A] = \sigma_i^A\]</span>
+<span class="math display">\[E[T_i^B] = \sigma_i^B\]</span>
+This gives us a very nice interpretation of the treatment effect. If we compare them <em>relatively</em>, we get:</p>
+<p><span class="math display">\[
+\begin{equation}
+\begin{split}
+\frac{E[T_i^A]}{E[T_i^B]} &amp; = \frac{\sigma_i^A}{\sigma_i^B} \\
+&amp; = \frac{\lambda \times e^{-(\phi_i - 0.36)}}{\lambda \times e^{-\phi_i}} \\
+&amp; = \frac{e^{-(\phi_i - 0.36)}}{e^{-\phi_i}} \\
+&amp; = \frac{e^{0.36}e^{-\phi_i}}{e^{-\phi_i}} \\
+&amp; = e^{0.36} \\
+&amp; \approx 1.43
+\end{split}
+\end{equation}
+\]</span></p>
+<p>So we can say that the <em>time to event for patients on treatment A is 1.43 times, or 43%, longer on average than those on treatment B, given a fixed age, sex, and income</em>. That is, treatment A is “better” than treatment B.</p>
+</div>
 </div>
 <div id="samplingeventtimes" class="section level3">
 <h3>Sampling the event times</h3>
-<p>It’s not immediately clear how to <em>interpret</em> the treatment effect we set (i.e., <em>-0.36</em>) in a meaningful way since complexities arise once these parameters are plugged back into the <a href="https://en.wikipedia.org/wiki/Probability_density_function">PDF</a>, but we can do some simple visualization to gain intuition. First, we need to actually sample the times for our <code>population</code> (<em>note that it was confirmed that SAS and R have the same parameterizations</em>):</p>
+<p>Next, we need to actually sample the times for our <code>population</code> (<em>note that it was confirmed that SAS and R have the same parameterizations</em>):</p>
 <pre class="r"><code>population &lt;-
   population |&gt;
   
@@ -272,7 +296,7 @@ population |&gt; select(lambda, phi, sigma_A, sigma_B, t_A, t_B)</code></pre>
   ) +
   xlab(&quot;Event Time&quot;)</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>Notice the shift to the right in the distribution for treatment <em>A</em>. This is the treatment effect. In the hypothetical world where all patients received treatment <em>A</em>, the event times happened <em>later</em> than in the world where all patients received treatment <em>B</em> (and all event times were observed), indicating, on average, a benefit to treatment <em>A</em>.</p>
+<p>Notice the shift to the right in the distribution for treatment <em>A</em>. This is the treatment effect. In the hypothetical world where all patients received treatment <em>A</em>, the event times happened <em>later</em> than in the world where all patients received treatment <em>B</em> (and all event times were observed), indicating, on average, a “benefit” to treatment <em>A</em>, which was expected from our <a href="#interpretingtreatmenteffect">prior calculation</a>.</p>
 </div>
 </div>
 <div id="observedoutcome" class="section level2">
@@ -365,6 +389,7 @@ population |&gt; select(actual_event_time, censor_time, time, status)</code></pr
 <p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
 <script type="application/json" data-for="htmlwidget-1">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Treatment":["A","A","B","B"],"Status":["Event","Censored","Event","Censored"],"Patients":[836,3046,1137,4981],"Percent":[0.215352910870685,0.784647089129315,0.185845047401111,0.814154952598888],"Time":[345.503703338068,745.228837321148,343.475165801799,746.272923924016]},"columns":[{"id":"Treatment","name":"Treatment","type":"character"},{"id":"Status","name":"Status","type":"character"},{"id":"Patients","name":"Patients","type":"numeric","aggregate":"sum","align":"center"},{"id":"Percent","name":"Percent of patients in treatment group (%)","type":"numeric","aggregate":"sum","format":{"cell":{"digits":1,"percent":true},"aggregated":{"digits":1,"percent":true}},"align":"center"},{"id":"Time","name":"Avg. time to outcome","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":1},"aggregated":{"digits":1}},"align":"center"}],"groupBy":["Treatment"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"c7e4627927bc259cbc5e7bcd101044f6"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.4.aggregate"],"jsHooks":[]}</script>
 <p><br></p>
+<p>We can also look at the survival curves.</p>
 <pre class="r"><code>population |&gt;
   
   # Nest by treatment
@@ -432,7 +457,7 @@ population |&gt; select(actual_event_time, censor_time, time, status)</code></pr
   xlab(&quot;Time since treatment&quot;) +
   ylab(&quot;Survival Probability&quot;)</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>We don’t know how much of these differences are explained by the treatment. And actually, the crude survival suggests a possible benefit to treatment <em>B</em>, even though we know there is a <a href="#treatmenteffect">benefit to treatment <em>A</em></a>. The goal is to use this <em>known</em> information (along with <a href="#simulatepatients">patient characteristics</a>) to estimate the causal treatment effect that is baked into all of the <em>unknown</em> quantities we have here that would be unavailable to us in a real-life analysis.</p>
+<p>If we weren’t doing a simulation, we wouldn’t know how much of these differences are explained by the treatment. And actually, these crude survival curves suggest longer survival from treatment <em>B</em>, even though we know the <a href="#treatmenteffect">opposite is true</a>. The goal is to use this <em>known</em> information (along with <a href="#simulatepatients">patient characteristics</a>) to estimate the causal treatment effect that is baked into all of the <em>unknown</em> quantities we have here that would be unavailable to us in a real-life analysis.</p>
 </div>
 </div>
 <div id="estimatingweights" class="section level1">
@@ -676,7 +701,7 @@ summary(ps_mod)</code></pre>
 
 gridExtra::grid.arrange(plots$plot[[1]], plots$plot[[2]])</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>As known from the <a href="#treatmentpropensity">true model</a>, patients who received treatment <em>A</em> tend to be older, female patients with lower income. We can also see slight miscalibration in the estimates for patients who are older in that the model tends to <em>underestimate</em> the true propensity score in these patients.</p>
+<p>As known from the <a href="#treatmentpropensity">true model</a>, patients who received treatment <em>A</em> tend to be older, female patients with lower income. We can also see slight miscalibration in the estimates for patients who are older in that the model tends to <em>underestimate</em> the true propensity score in these patients. We see similar miscalibration for sex.</p>
 </div>
 </div>
 <div id="estimatedoverlapweight" class="section level2">
@@ -757,8 +782,10 @@ population |&gt; select(A, pA, pA_hat, OW, OW_norm, OW_hat, OW_hat_norm)</code><
   ) +
   xlab(&quot;Normalized Overlap Weight&quot;)</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-<p>The distribution shift has to do with the sampled treatment distribution. Even though both groups will contribute equally to the outcome model in aggregate, only 38.8% of patients have treatment <em>A</em> so at an individual level will contribute more on average.</p>
-<p>We can also look at the accumulation of patients (i.e., when all patients contribute equally) as a function of the cumulative overlap weight in each group. This allows us to understand how much (or little) the treatment effect estimation will be dominated by a smaller concentration of patients.</p>
+<p>In aggregate, the groups will have equal weight. The distribution shift has to do with the sampled treatment distribution. Only 38.8% of patients have treatment <em>A</em> so at an individual level each patient will contribute more on average.</p>
+<div id="cumulative-patient-contribution" class="section level3">
+<h3>Cumulative patient contribution</h3>
+<p>We can also look at the accumulation of <em>patients</em> (i.e., when each patient contributes equally) as a function of the cumulative <em>overlap weight</em> in each group. This allows us to understand how much (or little) the treatment effect estimation will be dominated by smaller concentrations of patients.</p>
 <pre class="r"><code>population |&gt;
   
   # Send overlap weight down the rows
@@ -815,7 +842,8 @@ population |&gt; select(A, pA, pA_hat, OW, OW_norm, OW_hat, OW_hat_norm)</code><
   xlab(&quot;Cumulative percent of overlap weight (%)&quot;) +
   ylab(&quot;Cumulative percent of patients (%)&quot;) </code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
-<p>We can see that for treatment <em>B</em>, about 40% of the outcome model weight will be accounted for by only 25% of patients.</p>
+<p>We can see that for treatment <em>B</em>, about 40% of the outcome model weight will be accounted for by only 25% of patients. The weights for treatment <em>A</em> are slightly more evenly spread across the patients.</p>
+</div>
 <div id="weighted-mean-differences" class="section level3">
 <h3>Weighted-mean differences</h3>
 <p>It was <a href="#treatmentpropensity">previously mentioned</a> that the overlap weight methodology leads to perfect balance among the covariates used in the propensity score model. We can verify by looking at the group means for <a href="#modelpropensityscores">each model factor</a> before and after weighting.</p>
@@ -903,6 +931,7 @@ population |&gt; select(A, pA, pA_hat, OW, OW_norm, OW_hat, OW_hat_norm)</code><
 <div id="htmlwidget-2" class="reactable html-widget" style="width:auto;height:auto;"></div>
 <p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
 <script type="application/json" data-for="htmlwidget-2">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Factor":["Age (years)","Age (years)","Income ($)","Income ($)","Male (%)","Male (%)"],"Treatment":["A","B","A","B","A","B"],"Patients_NullWeight":[3882,6118,3882,6118,3882,6118],"Mean_NullWeight":[51.8724351584409,48.7731344443606,46.1525421379549,52.1470439747779,55.7444616177228,61.7522066034652],"Mean_OW_hat_norm":[50.690947042348,50.6909470423471,48.480546358988,48.4805463589894,58.1435359891369,58.1435359891386]},"columns":[{"id":"Factor","name":"Factor","type":"character"},{"id":"Treatment","name":"Treatment","type":"character"},{"id":"Patients_NullWeight","name":"Patients","type":"numeric","aggregate":"sum","align":"center"},{"id":"Mean_NullWeight","name":"Before Weighting","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients_NullWeight'] * values[index]\n                denominator += row['Patients_NullWeight']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":1},"aggregated":{"digits":1}},"align":"center"},{"id":"Mean_OW_hat_norm","name":"After Weighting","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients_NullWeight'] * values[index]\n                denominator += row['Patients_NullWeight']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":1},"aggregated":{"digits":1}},"align":"center"}],"columnGroups":[{"name":"Mean Value","columns":["Mean_NullWeight","Mean_OW_hat_norm"]}],"groupBy":["Factor"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"d59eb5927b49690a0e75cffae96dbc04"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.3.aggregate","tag.attribs.columns.4.aggregate"],"jsHooks":[]}</script>
+<p>We can see that, overall, the weighted sample is <em>slightly</em> older and female with lower income.</p>
 </div>
 <div id="confounder-weight-shifts" class="section level3">
 <h3>Confounder weight shifts</h3>
@@ -1025,85 +1054,81 @@ population |&gt; select(A, pA, pA_hat, OW, OW_norm, OW_hat, OW_hat_norm)</code><
   )</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>We can see the balancing take place. After overlap weighting, the contribution to treatment effect estimation is reduced in older patients with lower income for treatment <em>A</em>, and vice-versa for treatment <em>B</em>, with some levels in the middle having increased weight for <em>both</em> treatments. This is where the most overlap is between the groups.</p>
-<p>It is also useful to look at these plots for factors that were <em>not</em> included in the propensity score model. We may find drastic weight shifts in these factors which might indicate significant co-variation among factors already accounted for.</p>
+<p>It is also useful to look at these plots for factors that were <em>not</em> included in the propensity score model. We may find drastic weight shifts which might indicate significant co-variation among factors already accounted for.</p>
 </div>
 </div>
 </div>
-<div id="summary" class="section level1">
-<h1>Summary</h1>
-<ol style="list-style-type: decimal">
-<li>All subjects are used instead of arbitrary cutoffs (e.g., 1:5 matching)</li>
-<li>It proportionately down-weights the impacts of subjects most likely belonging to a certain treatment group</li>
-<li>Achieves perfect balance in covariates across treatment groups instead of being arbitrarily close</li>
-<li>Treatment groups equally contribute to the (weighted) estimation in the outcome model</li>
-<li>The weights themselves can be used to gain insight about the imbalance in the sample and intuition about their impacts on the estimation</li>
-<li>Avoids extreme case weights by being bounded between 0 and 1</li>
-<li>It has <a href="https://academic.oup.com/aje/article/188/1/250/5090958">been shown</a> to produce more unbiased and efficient estimates than other inclusive weighting approaches like <a href="https://en.wikipedia.org/wiki/Inverse_probability_weighting">inverse probability weighting (IPW)</a></li>
-</ol>
-<pre class="r"><code>dat %&gt;%
-  plot_ly(
-    x = ~PS,
-    type = &quot;histogram&quot;
-  ) %&gt;%
-  layout(
-    xaxis = list(title = &quot;True Propensity Score (PS)&quot;, tickformat = &quot;2%&quot;),
-    yaxis = list(title = &quot;Patients&quot;)
-  )</code></pre>
-<pre class="r"><code>ggplotly(
-  dat %&gt;%
-    
-    # Make age groups
-    mutate(
-      Age = Hmisc::cut2(Age, g = 5)
-    ) %&gt;%
-    
-    # For each group
-    group_by(Age, Sex) %&gt;%
-    
-    # Compute the rate
-    summarise(
-      Patients = n(),
-      Treated = sum(Treated),
-      .groups = &quot;drop&quot;
-    ) %&gt;%
-    
-    # Make the proportion
-    mutate(
-      Rate = Treated / Patients
-    ) %&gt;%
-    
-    # Make a plot
-    ggplot(
-      aes(
-        x = Age,
-        y = Rate,
-        color = Sex,
-        group = Sex,
-        text = 
-          paste0(
-            &quot;Patients: &quot;, Patients,
-            &quot;&lt;br&gt;Treated: &quot;, Treated,
-            &quot;&lt;br&gt;Percent Treated: &quot;, round(Rate * 100, 1), &quot;%&quot;
-          )
-      )
-    ) +
-    geom_point() +
-    geom_line() +
-    scale_y_continuous(labels = scales::percent) +
-    ylab(&quot;Percent Treated (%)&quot;),
-  tooltip = &quot;text&quot;
-)</code></pre>
-<pre class="r"><code>dat %&gt;%
-  plot_ly(
-    x = ~OW_norm,
-    y = ~factor(Treated),
-    color = ~factor(Treated),
-    type = &quot;box&quot;
-  )</code></pre>
+<div id="estimatingtreatmenteffect" class="section level1">
+<h1>Estimating the treatment effect</h1>
+<p>We’re now ready to estimate the causal treatment effect. Although we <a href="#treatmenteffect">generated our data</a> from a <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> distribution, we will use a <a href="https://en.wikipedia.org/wiki/Proportional_hazards_model">Cox proportional-hazards model</a> for estimation, which is a <em>semi-parametric</em> method, and tends to be the default choice for modeling survival data, especially in healthcare.</p>
+<div id="truehazardratio" class="section level2">
+<h2>A look at the true hazard ratio</h2>
+<p>The treatment effect will be quantified by a <a href="https://en.wikipedia.org/wiki/Hazard_ratio"><em>hazard ratio</em></a>, which is an estimate of the ratio of instantaneous event rates between the treatment groups (this is what is done in <a href="https://www2.stat.duke.edu/~fl35/OW/OW_survival_Demo.sas">the original simulation</a>). This measure is different than the effect we <a href="#interpretingtreatmenteffect">interpreted</a> from the true data-generating process, so, although we won’t expect them to provide the same numerical result, we should still get a similar conclusion, in that treatment <em>A</em> is superior to treatment <em>B</em>.</p>
+<p>To start, we can compute the actual hazard ratio had we been able to observe each potential outcome (i.e., the counterfactual). To do this, we need to transform our data such that we have two rows of data per patient–one for each treatment. Then, we fit the Cox model, using the <em>true</em> overlap weights as case weights.</p>
+<pre class="r"><code># Fit the model
+true_hr_mod &lt;-
+  coxph(
+    formula = Surv(time, status) ~ factor(A),
+    data = 
+      population |&gt;
+      
+      # Keep columns needed
+      select(
+        OW_norm, # True (normalized) overlap weight (could use un-normalized version here)
+        t_A, # True event time under treatment A
+        t_B, # True event time under treatment B
+        censor_time # When the patient was censored
+      ) |&gt;
+      
+      # Send true event times down the rows
+      pivot_longer(
+        cols = c(t_A, t_B),
+        names_to = &quot;A&quot;,
+        values_to = &quot;time&quot;
+      ) |&gt;
+      
+      # Check if censored first
+      mutate(
+        A = case_when(A == &quot;t_A&quot; ~ 1, TRUE ~ 0), # Replace with our notation
+        time = pmin(time, censor_time),
+        status = as.numeric(time &lt; censor_time)
+      ),
+    weights = OW_norm
+  )
+
+# Extract the result
+true_hr &lt;- exp(true_hr_mod$coefficients)[[1]]
+true_hr</code></pre>
+<pre><code>## [1] 0.7284168</code></pre>
+<p>If we could compare the worlds in which we observe all patients under each treatment, the hazard ratio is 0.73, suggesting that the instantaneous event rate is 27% lower with treatment <em>A</em> than with treatment <em>B</em>. This aligns with what we’ve established as the <a href="#interpretingtreatmenteffect">true effect</a>. Our hope is that the estimate from the observable data (in the <a href="#estimatedhazardratio">next section</a>) will contain this value within some margin of sampling error.</p>
+</div>
+<div id="estimatedhazardratio" class="section level2">
+<h2>Our estimate of the treatment effect</h2>
+<p>Finally, we can obtain our estimate of the treatment effect using only the observable quantities we have in our data set, which is what we would have in a real-life analysis. Similar to the <a href="#id_#truehazardratio">previous section</a>, we are just fitting a Cox model with the treatment as a covariate. Except this time we only observe one outcome per patient as a result of the treatment they <a href="#treatmentassignment">actually received</a>, and use the <a href="#estimatedoverlapweight"><em>estimated</em> overlap weight</a> to balance the confounding factors (age, sex, and income). We will also use <a href="https://rdrr.io/cran/survival/man/coxph.html">robust</a> standard error estimates.</p>
+<pre class="r"><code># Fit the model
+estimated_hr_mod &lt;-
+  coxph(
+    formula = Surv(time, status) ~ factor(A),
+    data = population,
+    weights = OW_hat_norm,
+    robust = TRUE
+  )
+
+# Extract the result
+estimated_hr &lt;- exp(estimated_hr_mod$coefficients)[[1]]
+estimated_hr</code></pre>
+<pre><code>## [1] 0.7423806</code></pre>
+<pre class="r"><code># Extract the confidence interval
+estimated_hr_ci &lt;- exp(confint(estimated_hr_mod))
+estimated_hr_ci</code></pre>
+<pre><code>##                2.5 %    97.5 %
+## factor(A)1 0.6756889 0.8156548</code></pre>
+<p>Our estimate for the hazard ratio is 0.74, with a 95% confidence interval ranging from 0.68 to 0.82, suggesting that the instantaneous event rate for treatment <em>A</em> is between 18% and 32% lower compared to treatment <em>B</em> (note that this captures the <a href="#truehazardratio">true hazard ratio</a>). Under the assumption that we’ve correctly specified all confounding factors (which <a href="#treatmentpropensity">we did</a>), we can interpret this as the <em>causal</em> treatment effect, and, assuming the magnitude of improvement is of practical importance (when considering things like cost, resources, clinical outcomes, etc.), we can reliably conclude that there is a benefit to treatment <em>A</em> over treatment <em>B</em>, on average.</p>
+</div>
 </div>
 <div id="resources" class="section level1">
 <h1>Resources</h1>
-<p>The overlap weight is part of a general class of causal methodology/theory for balancing covariates to estimate treatment effects using propensity scores. More broadly, these fall into the <a href="https://en.wikipedia.org/wiki/Rubin_causal_model"><em>potential outcomes</em></a> framework of causal inference, which I happened to be introduced to by accident while learning about overlap weighting from these resources:</p>
+<p>Some additional resources I’ve come across while learning the methodology:</p>
 <ul>
 <li>Original paper for overlap weighting (<a href="https://pubmed.ncbi.nlm.nih.gov/30189042/">link</a>)</li>
 <li>Paper extending overlap weighting to survival analysis (<a href="https://arxiv.org/abs/2108.04394">link</a>)</li>
@@ -1112,12 +1137,4 @@ population |&gt; select(A, pA, pA_hat, OW, OW_norm, OW_hat, OW_hat_norm)</code><
 <li>R functions for overlap weighting in the survival setting (<a href="https://github.com/chaochengstat/OW_Survival">link</a>)</li>
 <li>Author’s web page dedicated to overlap weighting (<a href="https://www2.stat.duke.edu/~fl35/OW.html">link</a>)</li>
 </ul>
-<p>All of these were super helpful. Understanding the idea of potential outcomes made the math and methodological concepts a lot easier to grasp conceptually and gain intuition. The way I like to think about it is (roughly) in the following order:</p>
-<ol style="list-style-type: decimal">
-<li>Each observation has a <em>true</em> propensity score (probability of treatment). The treatment we observe is just a realization of a random draw from that <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution">Bernoulli</a> distribution (or <a href="https://en.wikipedia.org/wiki/Multinomial_distribution">Multinomial</a> distribution if there are more treatments). We must estimate this from the treatment we observe.</li>
-<li>Since there is a true propensity score, there is also a <em>true</em> overlap weight (for each treatment option) that balances the observations back with the population. We must also estimate this from the data.</li>
-<li>The outcome we observe is conditional on the observed treatment. So there exists some true function (e.g., linear predictor) relating the observation to the outcome under the treatment we observed.</li>
-<li>However, this also all exists for the treatment(s) we did <em>NOT</em> observe. So there are analogous functions relating the observation to the outcome under the alternate treatment scenarios.</li>
-<li>If we could observe the outcome for all treatments, we could just compute the mean differences in the outcome across the treatment groups and that would be the causal treatment effect. I imagine a stacked data set where there is a row for each observation under each treatment, it’s just that the the outcome value (and other data) for the treatments that weren’t observed are missing, and our goal is to estimate what the mean differences in the outcomes would have been had that data not been missing. Thus we must use what we have to approximate that.</li>
-</ol>
 </div>
