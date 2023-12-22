@@ -222,7 +222,7 @@ These are my favorite quotes and passages from [the book](https://press.umich.ed
 <br><br>
 * _"It's embedded like a tax code in the bureaucracy of science."_ (chapter 11, page 124)
 <br><br>
-* _"...why actually replicate when the logic of Fisherian procedures gives you a virtual replication without the bother and expense? Why not go ahead and us the alloys F1 and F2 in airplanes? After all, p<.05."_ (chapter 11, page 127)
+* _"...why actually replicate when the logic of Fisherian procedures gives you a virtual replication without the bother and expense? Why not go ahead and use the alloys F1 and F2 in airplanes? After all, p<.05."_ (chapter 11, page 127)
 <br><br>
 * _"In denying the plurality of overlapping hypotheses, the Fisherian tester asks very little of the data. She sees the world through the lens of one hypothesis--the null."_ (chapter 12, page 133)
 <br><br>
