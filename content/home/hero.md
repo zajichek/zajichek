@@ -22,4 +22,4 @@ design:
     padding: ["20px", "0", "20px", "0"]
 ---
 
-Need help answering questions with your data?
+Want to collaborate?

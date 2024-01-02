@@ -13,20 +13,17 @@ weight: 20
 # - Add/remove as many `feature` blocks below as you like.
 # - For available icons, see: https://wowchemy.com/docs/page-builder/#icons
 
-title: Data Science and Statistical Consulting
+title: Statistical & Data Science Consulting
 subtitle: How can I help?
 
 feature:
-- name: Data Wrangling
-  description: Model and clean your data into a usable format
-  icon: hat-cowboy
-  icon_pack: fas
-- name: Statistical Analysis
-  description: Conduct analysis to gain insights and answer key questions
+- name: Modeling, analysis & visualization
   icon: chart-bar
   icon_pack: fas
-- name: Results and Presentation
-  description: Web applications and automated reporting
+- name: Application, package & code development
   icon: laptop-code
+  icon_pack: fas
+- name: Technical writing, review & interpretation
+  icon: book-open
   icon_pack: fas
 ---
