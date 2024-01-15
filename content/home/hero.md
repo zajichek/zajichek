@@ -2,9 +2,9 @@
 widget: hero
 headless: true
 weight: 10
-title: Data Science Consulting
+title: Statistical & Data Science Consulting
 cta:
-  label: '**Click to learn more**'
+  label: '**Click for more info**'
   url: consulting/
 cta_alt:
   label: "Reach out"
@@ -22,4 +22,4 @@ design:
     padding: ["20px", "0", "20px", "0"]
 ---
 
-Want to collaborate?
+Let's build something!

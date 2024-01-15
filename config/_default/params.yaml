@@ -5,7 +5,7 @@
 
 # Appearance
 theme: custom_site_theme # References custom color theme set in /data/themes/custom_site_theme.toml
-day_night: true
+day_night: false
 font: mrrobot # Can reference custom font set in /data/fonts/custom_site_font.toml via 'custom_site_font'
 font_size: S
 
@@ -30,7 +30,7 @@ main_menu:
   align: l
   show_logo: true
   show_language: false
-  show_day_night: true
+  show_day_night: false
   show_search: true
   highlight_active_link: true
 

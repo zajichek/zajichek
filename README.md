@@ -1,4 +1,4 @@
-Data scientist in Central Wisconsin interested in building low-cost data tools, software, and applications grounded in statistical methods to enhance decision-making processes and workflows for small to midsize businesses and organizations. Visit my website at [https://www.zajichekstats.com/](https://www.zajichekstats.com/).
+Statistician/data scientist in Central Wisconsin interested in practical problem solving through statistical analysis, software development, and common sense; open source, science and research; and seeing a thriving analytics community in the area. Visit my website: [https://www.zajichekstats.com/](https://www.zajichekstats.com/).
 
 <br>
 

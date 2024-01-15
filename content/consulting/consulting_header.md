@@ -1,6 +1,6 @@
 ---
 widget: blank
-headless: false
+headless: true
 weight: 10
 design:
   columns: '1'

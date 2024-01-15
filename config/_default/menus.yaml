@@ -1,14 +1,14 @@
 # Navigation links
 main:
-  - name: Articles
+  - name: Blog
     url: 'post/' # Links to /content/post
-    weight: 10 # Order of the weight determines order in navigation pane
-  - name: Projects
+    weight: 20 # Order of the weight determines order in navigation pane
+  - name: R Packages
     url: "project/"
-    weight: 20
+    weight: 30
   - name: Consulting
     url: "consulting/"
-    weight: 30
+    weight: 10
   - name: About
     url: "about/"
     weight: 40
