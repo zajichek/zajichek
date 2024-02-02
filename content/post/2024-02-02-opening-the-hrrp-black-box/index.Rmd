@@ -1,0 +1,18 @@
+---
+draft: true
+title: Opening the HRRP black box
+subtitle: Ways to play the game
+author: Alex Zajichek
+date: '2024-02-02'
+slug: opening-the-hrrp-black-box
+categories: []
+tags: ['healthcare', 'statistics']
+summary: 'Hospitals know they need to beat their expected readmission rate to stay out of penalty, but can we look deeper than that?'
+authors: []
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---

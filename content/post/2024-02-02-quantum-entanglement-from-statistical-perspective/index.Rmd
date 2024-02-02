@@ -1,0 +1,28 @@
+---
+draft: true
+title: Quantum entanglement from a statistician's perspective
+subtitle: I'm a total beginner, but this stuff is interesting
+author: Alex Zajichek
+date: '2024-02-02'
+slug: quantum-entanglement-from-statistical-perspective
+categories: []
+tags: ['quantum', 'probability']
+summary: 'The way in which qubits become entangled seems suspiciously related to statistical independence and mutual exclusivity.'
+authors: []
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+Relatively recently, [Cleveland Clinic](https://my.clevelandclinic.org/) unveiled their [quantum computer](https://newsroom.clevelandclinic.org/2023/03/20/cleveland-clinic-and-ibm-unveil-first-quantum-computer-dedicated-to-healthcare-research/), so I've been attempting to learn about it...from the very beginning.
+
+* Give info about IBM module that I'm doing
+* Talk about while learning about quantum entanglement, it seemed to be suspiciously related to statistical independence and mutual exclusivity
+* Remind of independence of events and mutually exclusivity (just do two events)
+* Give limited but sufficient background/intro of quantum ideas
+* Key areas of probability reside in:
+  + Sampling: We repeat noisy quantum computations many times to see what the _ideal_ result should be (most likely). If we only measured a single run on a quantum machine, we don't know if the result is a theoretically-correct measurement, or an actual errant measurement due to noisy systems. So by repeating the quantum computation many times we get a probability distribution of the _actual_ measurements. More noisy systems might put more weight on theoretically-incorrect (impossible) measurements, less noisy systems might have these measurements occur in small proportions or not at all, in which it is clear what the right result is.
+  + Theory: Transformations (i.e., gates) of qubit states produces inherently-probabilistic measurements. In these cases, the _ideal_ result (i.e., no noise at all) is still probabilistic because of the quantum mechanics. Like an H-gate, which causes the measurement of the qubit to be observed at either state with equal probability, so it's a coin flip what you get each time. This is where superposition and probability amplitudes come into play, as probabilities not only have magnitude but direction as well (known as interference), which causes magnitudes to cancel out.

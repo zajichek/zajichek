@@ -7,7 +7,7 @@ date: '2024-02-01'
 slug: on-the-creation-of-classical-statistics
 categories: []
 tags: ['statistics', 'history']
-summary: 'I used to have a cynical view of Fisher, but now I realize he was probably just too smart for his own good.'
+summary: 'I used to have a cynical view of Fisher, but now I realize he was probably just misunderstood.'
 authors: []
 featured: no
 image:
