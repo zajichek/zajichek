@@ -1,13 +1,14 @@
 ---
 draft: true
-title: Opening the HRRP black box
-subtitle: Ways to play the game
+title: Inside the hospital readmissions (HRRP) black box
+subtitle: Analytic strategies to play the game
 author: Alex Zajichek
 date: '2024-02-02'
 slug: opening-the-hrrp-black-box
 categories: []
 tags: ['healthcare', 'statistics']
 summary: 'Hospitals know they need to beat their expected readmission rate to stay out of penalty, but can we look deeper than that?'
+description: 'Hospitals know they need to beat their expected readmission rate to stay out of penalty, but can we look deeper than that?'
 authors: []
 featured: no
 image:
@@ -16,3 +17,8 @@ image:
   preview_only: no
 projects: []
 ---
+
+In my experience, when hospitals strategize on how to stay out of payment penalty in CMS' Hospital Readmission Reduction Program (HRRP), there is a lack of depth, rigor, and attention paid to the entire analytic workflow. That is, understanding _precisely_ how we get from individual patient to penalty. I think this precision is in order, and can bode for not only building an intuitive understanding and tight reconciliation of program monitoring, but also open untapped opportunities to impact program results. 
+
+The key is to effectively track, monitor, and view what we know in a deterministic fashion--once that is exhausted and optimized, introduce uncertainty to help guide future decisions. 
+* Are you making use of all the information that is known at a particular point in time? This is just a data problem.

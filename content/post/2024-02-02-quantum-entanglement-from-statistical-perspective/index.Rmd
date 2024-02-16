@@ -7,6 +7,7 @@ slug: quantum-entanglement-from-statistical-perspective
 categories: []
 tags: ['quantum', 'probability']
 summary: 'The way in which qubits become entangled seems suspiciously related to statistical independence.'
+description: 'The way in which qubits become entangled seems suspiciously related to statistical independence.'
 authors: []
 featured: no
 image:
@@ -103,4 +104,4 @@ and therefore are not independent. Once we know (measure) one qubit, we automati
 
 Now I don't know if/how this might change once you start introducing more qubits or allow for the full range of [phase](https://github.com/Qiskit/textbook/blob/main/notebooks/intro/what-is-quantum.ipynb), but to keep things intuitive, my working definition of quantum entanglement is:
 
-**_Does the probability of a qubit being measured to particular state depend on the state of another qubit? If yes, they are entangled; otherwise, they are not._**
+**_Does the probability of a qubit being measured to a particular state depend on the state of another qubit? If yes, they are entangled; otherwise, they are not._**

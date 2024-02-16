@@ -7,6 +7,7 @@ categories: []
 tags: ['causal inference', 'survival analysis', 'rstats']
 subtitle: "A simulation review"
 summary: "The goal is to estimate what the outcome difference would be had the counterfactual also been observed."
+description: "The goal is to estimate what the outcome difference would be had the counterfactual also been observed."
 authors: []
 featured: no
 image:
