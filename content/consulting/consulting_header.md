@@ -11,4 +11,5 @@ design:
     image_position: left
     image_size: contain
     text_color_light: false
+description: "Statistical and data science consulting in Central Wisconsin"
 ---

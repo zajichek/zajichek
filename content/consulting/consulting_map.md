@@ -9,4 +9,5 @@ design:
     image_darken: 1
     image_parallax: true
     image_size: cover
+description: "Statistical and data science consulting in Central Wisconsin"
 ---
