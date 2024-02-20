@@ -13,8 +13,8 @@ design:
 
 <h3 style="text-align: center; font-family: Lucida Console, monospace;"><strong>statistical analysis, modeling & prediction</strong></h3>
 
-* <strong>Scope, plan, and design analysis</strong> to answer your key questions utilizing current or future data.
+* <strong>Design, scope and plan analysis</strong> to answer key questions utilizing current or future data.
 
-* <strong>Design, develop and deploy predictive models</strong> tailored to your decision-making processes, and determine optimal strategies for integration into workflows for practical usage.
+* <strong>Develop and deploy predictive models</strong> tailored to decision-making processes and workflows.
 
-* <strong>Methodologies used</strong>: regression modeling, machine learning, propensity scores, survival analysis, time series and longitudinal analysis, spatial data analysis, text analytics and natural language processing (NLP), simulation and resampling techniques, clustering and dimension reduction, Bayesian statistics.
+* <strong>Methodologies and frameworks</strong>: regression modeling (GLM), machine learning, survival analysis, time series and longitudinal analysis, spatial data analysis, text analytics and natural language processing (NLP), simulation and resampling techniques, clustering and dimension reduction, Bayesian analysis, propensity scores, estimating equations, mixed models, hypothesis testing, experimentation and study design

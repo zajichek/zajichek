@@ -13,5 +13,5 @@ design:
 <h3 style="text-align: center; font-family: Lucida Console, monospace;"><strong>technical writing & review</strong></h3>
 
 * <strong>Write ups</strong> of analysis plans, technical documentation, reports, and manuscripts.
-* <strong>Review and interpretation</strong> of publications, articles, books and research.
-* <strong>Evaluation and translation</strong> of statistical methodology for regulatory and standardized scoring programs.
+* <strong>Review</strong> of publications, articles, books and research.
+* <strong>Translation</strong> of statistical methodology for regulatory and standardization programs.

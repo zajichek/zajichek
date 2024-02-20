@@ -15,7 +15,7 @@ description: "Statistical and data science consulting in Central Wisconsin"
 
 <img align="right" width="20%" height="20%" src="/media/consulting_intro.png" hspace = "10%"/>
 
-<h2 style="text-align: center; font-family: Lucida Console, monospace;"><strong>Your Community Data Scientist</strong></h2>
+<h2 style="text-align: center; font-family: Lucida Console, monospace;"><strong>Your Local Statistician</strong></h2>
 
 Aimed at providing statistical and data science support to businesses, organizations, researchers, students and community members in Central Wisconsin and beyond.
 

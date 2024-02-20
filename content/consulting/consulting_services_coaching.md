@@ -12,6 +12,5 @@ design:
 
 <h3 style="text-align: center; font-family: Lucida Console, monospace;"><strong>1:1 coaching & solution development</strong></h3>
 
-* <strong>Work with your team</strong> in devising solutions, debugging, code/methodology review, upskilling and accelerating progress of statistical and analytical projects.
-* <strong>Resource for problem-solving</strong> and overcoming technical obstacles while you maintain ownership of solutions and foster transferable skills
-* Got a topic for a <strong>group training or workshop</strong>? [Let's chat!](#/contact).
+* <strong>Work together</strong> to devise solutions, debug, review code/methodology, and accelerate progress of statistical and analytical projects.
+* Got a topic for a <strong>group training or workshop</strong>? [Let's chat!](/#contact)
