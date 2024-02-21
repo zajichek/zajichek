@@ -24,6 +24,8 @@ Aimed at providing statistical and data science support to businesses, organizat
 * Technical writing & review
 * 1:1 coaching & solution development
 
+Specializing in biostatistics, provider analytics, clinical outcomes, and healthcare data science.
+
 <br>
 
 <p style="text-align: center; font-family: Monaco, monospace; font-size: 18px;"><em>Have a project you'd like to discuss?</em> <br> <span style = "font-size: 14px;"> <a href = "/#contact">Tell me about it </a></span></p>
