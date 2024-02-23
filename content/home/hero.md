@@ -2,7 +2,7 @@
 widget: hero
 headless: true
 weight: 10
-title: Statistical & Data Science Consulting
+title: Biostatistical Consulting
 cta:
   label: '**Click for more info**'
   url: consulting/
@@ -22,4 +22,4 @@ design:
     padding: ["20px", "0", "20px", "0"]
 ---
 
-Let's build something!
+Need help analyzing your healthcare data?

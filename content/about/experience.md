@@ -30,13 +30,13 @@ experience:
     date_start: '2023-02-01'
     date_end: ''
     
-  - title: Data Scientist (part-time)
+  - title: Data Scientist
     company: Aspirus Health
     company_url: https://www.aspirus.org/
     company_logo: aspirus
     location: Wausau, Wisconsin
     date_start: '2020-11-02'
-    date_end: ''
+    date_end: '2023-01-31'
     
   - title: Advanced Analytics Modeler
     company: Sentry Insurance

@@ -15,16 +15,16 @@ description: "Statistical and data science consulting in Central Wisconsin"
 
 <img align="right" width="20%" height="20%" src="/media/consulting_intro.png" hspace = "10%"/>
 
-<h2 style="text-align: center; font-family: Lucida Console, monospace;"><strong>Your Local Statistician</strong></h2>
+<h2 style="text-align: center; font-family: Lucida Console, monospace;"><strong>Your Local Biostatistician</strong></h2>
 
-Aimed at providing statistical and data science support to businesses, organizations, researchers, students and community members in Central Wisconsin and beyond.
+Aimed at providing statistics, data science, and analytics support to healthcare organizations, businesses, researchers, students and programs in Central Wisconsin and beyond.
 
 * Statistical analysis, modeling & prediction
 * Application & code development
 * Technical writing & review
 * 1:1 coaching & solution development
 
-Specializing in biostatistics, provider analytics, clinical outcomes, and healthcare data science.
+Specializing in biostatistical analysis, health outcomes research, and clinical/operational (predictive) analytics.
 
 <br>
 

@@ -2,7 +2,7 @@
 widget: blank
 weight: 20
 headless: true
-title: Statistical & Data Science Consulting
+title: Biostatistics & Health Data Science Consulting
 subtitle: How can I help?
 design:
   columns: '1'

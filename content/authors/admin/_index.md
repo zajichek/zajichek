@@ -1,6 +1,6 @@
 ---
 title: Alex Zajichek
-role: Statistician/Data Scientist
+role: Biostatistician/Data Scientist
 organizations:
 - name: Cleveland Clinic
   url: https://my.clevelandclinic.org/
@@ -19,8 +19,9 @@ social:
   link: https://www.researchgate.net/search/publication?q=zajichek
   
 interests:
-- R package and application development
+- Action-driven statistical analysis
 - Data and predictive modeling pipelines
+- R package, application & code development
 - Causal inference + Bayesian statistics
 - Version control, documentation, and project management
 
@@ -37,4 +38,6 @@ highlight_name: false
 superuser: true
 ---
 
-I'm a statistician and data scientist in Central Wisconsin. A heavy [R](https://www.r-project.org/)-user and advocate for open-source development, I like to build data tools, analyses and products that can help facilitate the decision-making process. I have an interest in seeing a thriving analytics community in Central Wisconsin, and enjoy learning about area businesses and identifying opportunities to develop rigorous yet practical data science solutions that promote action. I'm always open to collaboration and discussion, so feel free to [reach out](/#contact)!
+<p style = "font-size: 11px;"><em>(Last name pronounced "Zy-check")</em></p>
+
+I'm a biostatistician and data scientist in Central Wisconsin with an interest in seeing a thriving analytics community in the area. A heavy [R](https://www.r-project.org/)-user and advocate for open-source research & development, I like to build data tools, analyses and products that can help facilitate healthcare decision-making processes. I'm always open to collaboration and discussion, so feel free to [reach out](/#contact)!
