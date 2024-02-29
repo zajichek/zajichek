@@ -1,8 +1,5 @@
 # Navigation links
 main:
-  - name: Consulting
-    url: "consulting/"
-    weight: 10
   - name: Blog
     url: 'post/' # Links to /content/post
     weight: 20 # Order of the weight determines order in navigation pane
