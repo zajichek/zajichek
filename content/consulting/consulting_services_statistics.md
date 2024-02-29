@@ -2,7 +2,6 @@
 draft: true
 widget: blank
 headless: true
-title: Services Detail
 weight: 50
 design:
   columns: '1'
