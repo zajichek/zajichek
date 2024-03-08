@@ -20,10 +20,87 @@ projects: []
 
 Each year hospitals across the United States get [penalized by CMS](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp), withholding up to 3% of all Medicare reimbursement for an entire fiscal year, for having excess [readmissions](https://www.healthcare.gov/glossary/hospital-readmissions/). Additionally, there are implications from [commericial payers](https://www.uhcprovider.com/content/dam/provider/docs/public/health-plans/medicare/MA-Readmission-Program-Clinical-Guidelines.pdf), [quality programs](https://www.ncqa.org/hedis/measures/plan-all-cause-readmissions/), etc. that make it a focal point of the general [value-based care](https://www.cms.gov/priorities/innovation/key-concepts/value-based-care#:~:text=What%20is%20value%2Dbased%20care,what%20an%20individual%20values%20most.) landscape. Not to mention the obvious patient burden (both financially and [psychologically](https://pubmed.ncbi.nlm.nih.gov/34544571/)) of being hospitalized twice in a short period of time. Thus, it has become a [key area](https://www.definitivehc.com/blog/top-10-hospital-performance-metrics-you-need-to-know) of focus for hospitals in monitoring the overall health of their clinical and financial operations. 
 
-In turn, the day-to-day discussion becomes one of strategy: what interventions, processes, and workflows should be put in place to proactively prevent hospital readmissions from occurring? This is not totally straightforward. Do we focus on preventing the _readmission_, or the initial hospitalization altogether? You can't have a readmission without an index stay. For which patients? Who needs which resources? There can be conflicting priorities. Hospitals _depend_ on admissions (mostly from [commercial payors](https://www.definitivehc.com/resources/healthcare-insights/breaking-down-us-hospital-payor-mixes)) to keep the lights on. Also, programs like the [HRRP](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp) (CMS' penalty program) only apply to Medicare beneficiaries, which is a subset of the overall hospital population (and sometimes the [most unprofitable](https://www.aha.org/system/files/media/file/2020/09/fact-sheet-billing-explained-0820.pdf)). Should we just put our resources towards preventing admissions for the unprofitable patients? Probably not. Obviously, we are constrained morally (and legally (?)) from giving payor-based, preferential treatment, but this is simply the reality of the things stakeholders need to sift through. In my view, the best you can do to balance things, at least to start, is to be _meticulously aware_ of what is happening--through data.
+In turn, the day-to-day discussion becomes one of strategy: what interventions, processes, and workflows should be put in place to proactively prevent hospital readmissions from occurring? This is not totally straightforward. Do we focus on preventing the _readmission_, or the initial hospitalization altogether? You can't have a readmission without an index stay. For which patients? Who needs which resources? There can be conflicting priorities. Hospitals _depend_ on admissions (mostly from [commercial payors](https://www.definitivehc.com/resources/healthcare-insights/breaking-down-us-hospital-payor-mixes)) to keep the lights on. Also, programs like the [HRRP](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp) (CMS' penalty program) only apply to Medicare beneficiaries, which is a subset of the overall hospital population (and sometimes the [most unprofitable](https://www.aha.org/system/files/media/file/2020/09/fact-sheet-billing-explained-0820.pdf)). Should we just put our resources towards preventing admissions for the unprofitable patients? Probably not. Obviously, we are constrained morally (and probably legally) from giving payor-based, preferential treatment, but this is simply the reality of the things stakeholders need to sift through. In my view, the best you can do to balance things, at least to start, is to be _meticulously aware_ of what is happening--through data.
 
 In this realm, one component of particular interest is using [predictive analytics](https://en.wikipedia.org/wiki/Predictive_analytics) to anticipate and intervene on high-risk patients in order to prevent a subsequent hospitalization. Despite there being a [large body of work](https://pubmed.ncbi.nlm.nih.gov/?term=predicting+readmissions) by researchers developing creative and innovative approaches for preventing readmissions, the reality is (from my experience) that many hospitals probably do not leverage all the literature that is available because (a) most of it is just that--research, and it's difficult to confidently translate and tailor that to an actionable program for any one hospital, and (b) it is simply too difficult to parse and organize _because_ there is so much of it. 
 
-So, when hospitals do go down the route of implementing predictive tools for readmissions, it seems to be more readily available, yet (in my opinion) sub-optimal modeling frameworks that are used. For example, [Epic](https://www.epic.com/) has [their own](https://www.epicshare.org/tips-and-tricks/use-predictive-risk-score-to-reduce-readmission) readmission risk predictor native to its EHR platform for this very purpose. The common thing I notice about these tools used in practice (and in the way [CMS does it](https://qualitynet.cms.gov/inpatient/measures/readmission)) is the modeling setup: they predict the likelihood of readmission based on the state of the patient at the _time of hospital discharge_. Yet, it is [well known](https://www.aha.org/system/files/2018-02/11sep-tw-readmissions.pdf), and frankly just common sense, that the actual drivers, like the real, preventable reasons, for a readmission are circumstances of the patient _after_ being discharged from the hospital. That's not to say these scores aren't _correlated_ with the rates of readmission, or can't provide a useful marker; but with the complexities of managing a diverse hospital population, it makes it difficult to figure out what to do with a rapidly stale risk score that only reflects how the patient was when they left the hospital.
+So, when hospitals do go down the route of implementing predictive tools for readmissions, it seems to be more readily available, yet (in my opinion) sub-optimal modeling frameworks that are used. For example, [Epic](https://www.epic.com/) has [their own](https://www.epicshare.org/tips-and-tricks/use-predictive-risk-score-to-reduce-readmission) readmission risk predictor native to its EHR platform for this very purpose. The common thing I notice about the tools used in practice (and in the way [CMS does it](https://qualitynet.cms.gov/inpatient/measures/readmission)) is the modeling setup: they predict the likelihood of readmission based on the state of the patient at the time of _hospital discharge_. Yet, it is [well known](https://www.aha.org/system/files/2018-02/11sep-tw-readmissions.pdf), and frankly just common sense, that the actual drivers, like the real, preventable reasons, for a readmission are circumstances of the patient _after_ being discharged from the hospital. That's not to say these scores aren't _correlated_ with the rates of readmission, or can't provide a useful marker; but with the complexities of managing a diverse hospital population, it makes it difficult to figure out what to do with a rapidly stale risk score that only reflects how the patient was when they left the hospital, and ignores everything that happened after.
 
-Thus, it is my view that a reframing of the modeling problem is in order both from a risk quantification perspective, and for more actionable and intuitive analytics to inform practical, efficient, and tailored intervention to help the right patient at the right time.
+Thus, it is my view that a reframing of the modeling problem is in order. And in fact, it's more than that. In this effort, _how_ the information is displayed, propagated and relayed between clinical teams and leadership is as (if not more) important than the shear goal of accurate risk estimation. It requires cross-functional involvement (from the get-go), strategic design, attention to nuance and rigor, and a flexible scope in order to tie hospital-wide impact down to the individual patient. 
+
+This is my idea of how you might build a tool to effectively manage the readmission risk pool.
+
+# Table of contents
+
+* [Defining the readmission risk pool](#riskpooldefinition)
+* [Build a (near) real-time data tool](#whathappened)
+* [Predict the current readmission risk](#whatwillhappen)
+
+# What is the _readmission risk pool_? {#riskpooldefinition}
+
+We'll go with a very simple definition:
+
+> All patients at risk for hospital readmission at a given point in time.
+
+Let's use 30-day readmissions as an example. This would be all patients who were discharged from the hospital in the past 30 days who are still at risk for readmission. Meaning that up until the _current_ point in time, they have not already been readmitted or had an otherwise exclusionary event.
+
+From here on out, when we talk about the _risk pool_, this is what we mean. You can assume in general we're talking about 30-day readmissions, although nothing about this framework necessarily restricts us to that.
+
+# Step 1: What already happened? {#whathappened}
+
+In my view, before we even begin the conversation about _prediction_, we should have already exhausted all efforts to optimize the ability to know what _has already happened_ up to the current point in time. That means purposefully designing a tool that encapsulates the _full_ picture of readmissions for the hospital (system), tying the contributions of individual patients back to aggregated hospital metrics, in (near) real-time. From a care management perspective, this may be giving the ability to answer questions like:
+
+* Who is currently in the [_risk pool_](#riskpooldefinition)?
+* Has a patient already received, or is going to receive, a certain intervention?
+* What are the patient's socioeconomic conditions?
+* Have they filled their prescriptions?
+* What are the payor rules for the services they may need?
+
+From a coding or billing perspective:
+
+* Which patients contribute towards the [HRRP](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp) and/or other relevant metrics?
+* What is the readmission risk according to CMS' (or other programs') models?
+* What risk factors from CMS (or other programs) are currently documented (and are there discrepancies)?
+
+From a leadership perspective:
+
+* What is the current (estimated) HRRP penalty amount?
+* What share of patients in the (past and present) [risk pool](#riskpooldefinition) affect readmission penalty?
+* What is the _real-time_ readmission rate, where has it been, and how will it change under various scenarios with the patients who may affect it?
+
+The goal is to make it actionable for all stakeholders involved by giving them the most pertinent information they need when they need to know it. But doing so in a common, representative, well-connected tool so that the lineage is clear, and everyone is working from the same source of information. I strongly believe that putting in the cross-functional time, nuance, and rigor needed to design and implement tools like this, that mostly consists of figuring out how to move existing data points to a certain location at the right time, would relieve a lot of disconnect and probably give people most of what they need to make effective, informed decisions in a timely manner.
+
+## A prototype
+
+So what might such a tool look like? Well here's one possibility (the source code for this is [here](https://github.com/zajichek/scripts/tree/main/R/ReadmissionRiskPoolExampleApp)):
+
+* PLACE SCREENSHOT OF SHINY APP
+
+The focal point being the interactive map widget. It gives a simple and intuitive way to view the current [risk pool]() across the hospital's (or entire system's) service area. Care managers can use it to identify patients for intervention, while leadership can use it to quickly get a pulse on the total volume of patients across the system at risk for readmission. There are metrics that can be used to understand where we're at, and what impact the current patients will have on those rates. There can be filters added in order to view patients in certain disease categories, which hospital they were discharged from, where their PCP is located
+
+Build a map, use filters, flags for certain events (e.g., HRRP patient), hospital, diagnosis, payor, etc.
+
+* Metrics show what the current readmission rate, what it might be, where it's been
+* Estimated payment penalty and other program-specific metrics
+* Contributions of penalty 
+* Coverage of patients for certain interventions
+
+* Also have functionality to look at historical patients, etc. for more analytical purposes
+
+The additional effect of this approach is that the subsequent need and use-case for any _predictive_ solution becomes much more narrow and defined, thus making it way more clear to everyone involved, from IT and data science, to clinicians using it in the front lines, exactly what may be needed. For example, if a care management team can already quickly and intuitively answer all the questions they have about an individual or group of patients with respect to things that already occurred, in order to manage the [risk pool](#riskpooldefinition) on a day-to-day basis, then naturally the predictive piece only arises when the need is necessary (and predictably, it's probably related to resource utilization). In a world with unlimited resources, they could just continually intervene on the entire [risk pool](#riskpooldefinition) everyday, until they know each patient is not going to be readmitted (and ideally after). But in our world, they'll be faced scenarios like:
+
+* There are 500 patients in the [risk pool](#riskpooldefinition), but I only have time to intervene on 50 of them. Which ones should I choose?
+* Which patients are currently at the highest risk of being readmitted?
+* Patient A was discharged 20 days ago, and patient B was discharged 10 days ago. Which one should I intervene on?
+
+Going back to the intro, this is about being _meticulously aware_.
+
+# Step 2: What is going to happen? {#whatwillhappen}
+
+* Risk trajectories
+
+# Step 3: What should we do about it?
+
+* What if we texted, called, etc., what about X, Y, Z?
+* Learning what works and what doesn't. Overtime we get smarter about what does and doesn't actually work for different patients, and then incorporate those into the risk calculations
+* Involves data collection
