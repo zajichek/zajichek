@@ -2,10 +2,10 @@
 widget: hero
 headless: true
 weight: 10
-title: Biostatistical Consulting
+title: Statistical & Data Science Consulting
 cta:
   label: '**Click for more info**'
-  url: consulting/
+  url: https://www.centralstatz.com/
 cta_alt:
   label: "Reach out"
   url: /#contact
@@ -22,4 +22,4 @@ design:
     padding: ["20px", "0", "20px", "0"]
 ---
 
-Need help analyzing your healthcare data?
+Need help analyzing your data?
