@@ -9,7 +9,7 @@ design:
 
 # 2024
 
-* Maeve G. Macmurdo, Xinge Ji, Pratik Pimple, Amy L. Olson, Alex Milinovich, Blaine Martyn-Dow, Aman Pande, <strong>Alex Zajichek</strong>, Janine Bauman, Shaun Bender, Craig Conoscenti, David Sugano, Michael W. Kattan, Daniel A. Culver. [Proportion and predictors of FVC decline in patients with interstitial lung disease](https://www.sciencedirect.com/science/article/pii/S0954611124001306). Respiratory Medicine. Volume 227. 2024. 107656. ISSN 0954-6111. https://doi.org/10.1016/j.rmed.2024.107656
+* Maeve G. Macmurdo, Xinge Ji, Pratik Pimple, Amy L. Olson, Alex Milinovich, Blaine Martyn-Dow, Aman Pande, <strong>Alex Zajichek</strong>, Janine Bauman, Shaun Bender, Craig Conoscenti, David Sugano, Michael W. Kattan, Daniel A. Culver. [Proportion and predictors of FVC decline in patients with interstitial lung disease](https://doi.org/10.1016/j.rmed.2024.107656). Respiratory Medicine. Volume 227. 2024. 107656. ISSN 0954-6111. https://doi.org/10.1016/j.rmed.2024.107656
 
 # 2023 
 
