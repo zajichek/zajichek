@@ -11,6 +11,8 @@ design:
 
 * Aminian A, Gasoyan H, <strong>Zajichek A</strong>, et al. [Renoprotective Effects of Metabolic Surgery Versus GLP1 Receptor Agonists on Progression of Kidney Impairment in Patients with Established Kidney Disease](https://pubmed.ncbi.nlm.nih.gov/38860374/). Ann Surg. Published online June 11, 2024. doi:10.1097/SLA.0000000000006379
 
+<br>
+
 * Maeve G. Macmurdo, Xinge Ji, Pratik Pimple, Amy L. Olson, Alex Milinovich, Blaine Martyn-Dow, Aman Pande, <strong>Alex Zajichek</strong>, Janine Bauman, Shaun Bender, Craig Conoscenti, David Sugano, Michael W. Kattan, Daniel A. Culver. [Proportion and predictors of FVC decline in patients with interstitial lung disease](https://doi.org/10.1016/j.rmed.2024.107656). Respiratory Medicine. Volume 227. 2024. 107656. ISSN 0954-6111. https://doi.org/10.1016/j.rmed.2024.107656
 
 # 2023 
