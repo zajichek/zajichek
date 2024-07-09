@@ -4,7 +4,7 @@ headless: true
 weight: 10
 title: Statistical & Data Science Consulting
 cta:
-  label: '**Click for more info**'
+  label: '**Go to consultancy website**'
   url: https://www.centralstatz.com/
 cta_alt:
   label: "Reach out"
