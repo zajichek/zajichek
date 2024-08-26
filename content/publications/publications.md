@@ -9,6 +9,10 @@ design:
 
 # 2024
 
+* <strong>Alexander M Zajichek</strong>, Gary L Grunkemeier, [Statistical primer: propensity scores used as overlap weights provide exact covariate balance](https://doi.org/10.1093/ejcts/ezae318), European Journal of Cardio-Thoracic Surgery, 2024;, ezae318, https://doi.org/10.1093/ejcts/ezae318
+
+<br>
+
 * Aminian A, Gasoyan H, <strong>Zajichek A</strong>, et al. [Renoprotective Effects of Metabolic Surgery Versus GLP1 Receptor Agonists on Progression of Kidney Impairment in Patients with Established Kidney Disease](https://pubmed.ncbi.nlm.nih.gov/38860374/). Ann Surg. Published online June 11, 2024. doi:10.1097/SLA.0000000000006379
 
 <br>
