@@ -9,7 +9,7 @@ design:
 
 # 2024
 
-* <strong>Alexander M Zajichek</strong>, Gary L Grunkemeier, [Statistical primer: propensity scores used as overlap weights provide exact covariate balance](https://doi.org/10.1093/ejcts/ezae318), European Journal of Cardio-Thoracic Surgery, 2024;, ezae318, https://doi.org/10.1093/ejcts/ezae318
+* <strong>Alexander M Zajichek</strong>, Gary L Grunkemeier, [Statistical primer: propensity scores used as overlap weights provide exact covariate balance](https://doi.org/10.1093/ejcts/ezae318), European Journal of Cardio-Thoracic Surgery, 2024;, ezae318, https://doi.org/10.1093/ejcts/ezae318 {{< icon name="download" pack="fas" >}} ({{< staticref "uploads/OW_AcceptedManuscript_20240830.pdf" "newtab" >}}Accepted Manuscript{{< /staticref >}}).
 
 <br>
 
