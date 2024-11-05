@@ -1,0 +1,57 @@
+---
+title: "(Re)deriving a Bernoulli MLE"
+description: "Trying to remember calculus"
+author: "Alex Zajichek"
+date: "1/12/2023"
+image: "feature.png"
+categories:
+  - Estimation
+format:
+  html:
+    code-fold: true
+    code-tools: true
+---
+
+
+Over time, I've found myself constantly learning new things or having new ideas, only to later forget them, then trying to relearn the same thing at a later date. So I thought it might be worthwhile to try to create a knowledge base for myself that I continually add to so that I can refer back when needed to maintain intuition. These might be little programming tricks, math and/or statistics concepts, general thoughts or ideas, etc. 
+
+I tried to derive the MLE for a set of Bernoulli responses just to see if I still could, and got stuck. The _probability mass function (PMF)_ is
+
+$$P(Y_i = y) = p^y(1-p)^{1-y}$$
+First, we need to define the likelihood function:
+
+$$L(p) = \prod_{i=1}^nP(Y_i=y)$$
+Then, convert ot a log likelihood:
+
+$$
+\begin{equation} 
+\begin{split}
+log(L(p)) 
+&= log(\prod_{i=1}^nP(Y_i=y)) \\
+&= \sum_{i=1}^nlog(P(Y_i=y)) \\
+&= \sum_{i=1}^nlog(p^{y_i}(1-p)^{1-y_i}) \\
+&= log(p)\sum_{i=1}^ny_i + log(1-p)(n - \sum_{i=1}^ny_i)
+\end{split}
+\end{equation}
+$$
+Next, we need to differentiate with respect to $p$.
+
+$$
+\begin{equation} 
+\begin{split}
+\frac{d}{dp}log(L(p)) 
+&= \frac{d}{dp} log(p)\sum_{i=1}^ny_i + log(1-p)(n - \sum_{i=1}^ny_i) \\
+&= \sum_{i=1}^ny_i \frac{d}{dp} log(p) + (n - \sum_{i=1}^ny_i) \frac{d}{dp} log(1-p) \\
+&= \sum_{i=1}^ny_i \frac{1}{p} + (n - \sum_{i=1}^ny_i) \frac{1}{1-p} \frac{d}{dp} (1-p) \\
+\end{split}
+\end{equation}
+$$
+This is where my problem was. I forgot about the [chain rule](https://en.wikipedia.org/wiki/Chain_rule) when taking a derivative, so I wasn't doing the additional step of taking multiplying by the derivative of $1-p$, thus things weren't cancelling appropriately when solving for $p$. It should reduce to:
+
+$$\sum_{i=1}^ny_i \frac{1}{p} + (n - \sum_{i=1}^ny_i) \frac{-1}{1-p}$$
+Finally, we just set that equal to zero:
+
+$$\sum_{i=1}^ny_i \frac{1}{p} + (n - \sum_{i=1}^ny_i) \frac{-1}{1-p} = 0$$
+After some algebra:
+
+$$\hat{p} = \frac{\sum_{i=1}^ny_i}{n}$$

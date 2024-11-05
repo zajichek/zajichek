@@ -1,0 +1,40 @@
+project:
+  type: website
+
+website:
+  title: "Zajichek Stats"
+  favicon: "logo.png"
+  google-analytics: "G-9MW3W3RQD9"
+  site-url: https://www.zajichekstats.com/
+  repo-url: https://github.com/zajichek/zajichek
+  description: "Statistician/data scientist in Central Wisconsin."
+  page-footer: "© 2024 Zajichek Stats"
+  open-graph: true
+  navbar:
+    logo: "logo.png"
+    title: "Zajichek Stats"
+    left:
+      - href: index.qmd
+        text: Blog
+      - href: about.qmd
+        text: About
+      - href: publications.qmd
+        text: Publications
+    right:
+      - icon: linkedin
+        href: https://www.linkedin.com/in/alexzajichek
+        aria-label: LinkedIn
+      - icon: youtube
+        href: https://www.youtube.com/@centralstatz
+        aria-label: YouTube
+      - icon: github
+        href: https://github.com/zajichek
+        aria-label: GitHub
+      - icon: rss
+        href: index.xml
+
+format:
+  html:
+    theme: [styles.scss, lux]
+
+editor: source

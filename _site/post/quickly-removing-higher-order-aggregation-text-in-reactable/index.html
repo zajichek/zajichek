@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alex Zajichek">
+<meta name="dcterms.date" content="2023-06-29">
+
+<title>Removing higher-order aggregation text in {reactable} – Zajichek Stats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../logo.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9MW3W3RQD9"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
+</script>
+<script src="../../site_libs/core-js-2.5.3/shim.min.js"></script>
+<script src="../../site_libs/react-18.2.0/react.min.js"></script>
+<script src="../../site_libs/react-18.2.0/react-dom.min.js"></script>
+<script src="../../site_libs/reactwidget-2.0.0/react-tools.umd.cjs"></script>
+<link href="../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="../../site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+<script src="../../site_libs/reactable-binding-0.4.4/reactable.js"></script>
+
+
+<meta property="og:title" content="Removing higher-order aggregation text in {reactable} – Zajichek Stats">
+<meta property="og:description" content="Statistician/data scientist in Central Wisconsin.">
+<meta property="og:image" content="https://www.zajichekstats.com/post/quickly-removing-higher-order-aggregation-text-in-reactable/feature.png">
+<meta property="og:site_name" content="Zajichek Stats">
+<meta property="og:image:height" content="988">
+<meta property="og:image:width" content="1008">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Zajichek Stats</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/alexzajichek"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@centralstatz"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/zajichek"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Removing higher-order aggregation text in {reactable}</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">Tables</div>
+    <div class="quarto-category">Javascript</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex Zajichek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 29, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Often when I’m building a <a href="https://glin.github.io/reactable/"><code>reactable</code></a> I have potentially many aggregation levels but only want to display data in a lower subset of those. Here is a quick way to eliminate text using cell styling.</p>
+<p>First let’s load some packages and look at an example data set.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reactable)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> cheese<span class="sc">::</span>heart_disease</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 303 × 9
+     Age Sex    ChestPain           BP Cholesterol BloodSugar MaximumHR
+   &lt;dbl&gt; &lt;fct&gt;  &lt;fct&gt;            &lt;dbl&gt;       &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt;
+ 1    63 Male   Typical angina     145         233 TRUE             150
+ 2    67 Male   Asymptomatic       160         286 FALSE            108
+ 3    67 Male   Asymptomatic       120         229 FALSE            129
+ 4    37 Male   Non-anginal pain   130         250 FALSE            187
+ 5    41 Female Atypical angina    130         204 FALSE            172
+ 6    56 Male   Atypical angina    120         236 FALSE            178
+ 7    62 Female Asymptomatic       140         268 FALSE            160
+ 8    57 Female Asymptomatic       120         354 FALSE            163
+ 9    63 Male   Asymptomatic       130         254 FALSE            147
+10    53 Male   Asymptomatic       140         203 TRUE             155
+# ℹ 293 more rows
+# ℹ 2 more variables: ExerciseInducedAngina &lt;fct&gt;, HeartDisease &lt;fct&gt;</code></pre>
+</div>
+</div>
+<p>Suppose we are interested in these outcomes:</p>
+<ol type="1">
+<li>The rate of heart disease</li>
+<li>The rate of patients with a maximum heart rate &gt; 150</li>
+</ol>
+<p>And we want to summarize those, along with a few other patient characteristics, within a handful of important clinical factors. We might pivot our data into a long format to start:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pivot_dat <span class="ot">&lt;-</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  dat <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to character types</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(ChestPain, ExerciseInducedAngina, BloodSugar),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      as.character</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">MaximumHR =</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        MaximumHR <span class="sc">&gt;</span> <span class="dv">150</span> <span class="sc">~</span> <span class="st">"Yes"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"No"</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Send "important clinical factors" down the rows</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(ChestPain, ExerciseInducedAngina, BloodSugar),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"ClinicalFactor"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"Level"</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Send outcomes down the rows</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(HeartDisease, MaximumHR),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"Outcome"</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"HasOutcome"</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>pivot_dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,818 × 8
+     Age Sex      BP Cholesterol ClinicalFactor        Level  Outcome HasOutcome
+   &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;                 &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;     
+ 1    63 Male    145         233 ChestPain             Typic… HeartD… No        
+ 2    63 Male    145         233 ChestPain             Typic… Maximu… No        
+ 3    63 Male    145         233 ExerciseInducedAngina No     HeartD… No        
+ 4    63 Male    145         233 ExerciseInducedAngina No     Maximu… No        
+ 5    63 Male    145         233 BloodSugar            TRUE   HeartD… No        
+ 6    63 Male    145         233 BloodSugar            TRUE   Maximu… No        
+ 7    67 Male    160         286 ChestPain             Asymp… HeartD… Yes       
+ 8    67 Male    160         286 ChestPain             Asymp… Maximu… No        
+ 9    67 Male    160         286 ExerciseInducedAngina Yes    HeartD… Yes       
+10    67 Male    160         286 ExerciseInducedAngina Yes    Maximu… No        
+# ℹ 1,808 more rows</code></pre>
+</div>
+</div>
+<p>We can then calculate some summary statistics. Our full patient population is replicated for each <code>ClinicalFactor</code> and <code>Outcome</code>, so we should account for that.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>summary_dat <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  pivot_dat <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Summarize characteristics</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Patients =</span> <span class="fu">n</span>(),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">OutcomeRate =</span> <span class="fu">mean</span>(HasOutcome <span class="sc">==</span> <span class="st">"Yes"</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Age =</span> <span class="fu">mean</span>(Age),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Female =</span> <span class="fu">mean</span>(Sex <span class="sc">==</span> <span class="st">"Female"</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        Level,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        Outcome,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        HasOutcome</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add counts within groups</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">PercentOfPatients =</span> Patients <span class="sc">/</span> <span class="fu">sum</span>(Patients),</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(ClinicalFactor, Outcome)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make clean levels/labels</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">ClinicalFactor =</span> </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor <span class="sc">==</span> <span class="st">"BloodSugar"</span> <span class="sc">~</span> <span class="st">"Blood sugar &gt; 120 mg/dl?"</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor <span class="sc">==</span> <span class="st">"ChestPain"</span> <span class="sc">~</span> <span class="st">"Chest pain type"</span>,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor <span class="sc">==</span> <span class="st">"ExerciseInducedAngina"</span> <span class="sc">~</span> <span class="st">"Exercise-induced angina?"</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">Level =</span> </span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        Level <span class="sc">==</span> <span class="st">"TRUE"</span> <span class="sc">~</span> <span class="st">"Yes"</span>,</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        Level <span class="sc">==</span> <span class="st">"FALSE"</span> <span class="sc">~</span> <span class="st">"No"</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> Level</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">Outcome =</span> </span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        Outcome <span class="sc">==</span> <span class="st">"HeartDisease"</span> <span class="sc">~</span> <span class="st">"Heart disease"</span>,</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        Outcome <span class="sc">==</span> <span class="st">"MaximumHR"</span> <span class="sc">~</span> <span class="st">"Maximum HR &gt; 150"</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rearrange</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(PercentOfPatients, <span class="at">.after =</span> Patients) <span class="sc">|&gt;</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Outcome, <span class="at">.before =</span> <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    Outcome,</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    ClinicalFactor,</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    Level,</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    HasOutcome</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>summary_dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 32 × 9
+   Outcome       ClinicalFactor      Level HasOutcome Patients PercentOfPatients
+   &lt;chr&gt;         &lt;chr&gt;               &lt;chr&gt; &lt;chr&gt;         &lt;int&gt;             &lt;dbl&gt;
+ 1 Heart disease Blood sugar &gt; 120 … No    No              141            0.465 
+ 2 Heart disease Blood sugar &gt; 120 … No    Yes             117            0.386 
+ 3 Heart disease Blood sugar &gt; 120 … Yes   No               23            0.0759
+ 4 Heart disease Blood sugar &gt; 120 … Yes   Yes              22            0.0726
+ 5 Heart disease Chest pain type     Asym… No               39            0.129 
+ 6 Heart disease Chest pain type     Asym… Yes             105            0.347 
+ 7 Heart disease Chest pain type     Atyp… No               41            0.135 
+ 8 Heart disease Chest pain type     Atyp… Yes               9            0.0297
+ 9 Heart disease Chest pain type     Non-… No               68            0.224 
+10 Heart disease Chest pain type     Non-… Yes              18            0.0594
+# ℹ 22 more rows
+# ℹ 3 more variables: OutcomeRate &lt;dbl&gt;, Age &lt;dbl&gt;, Female &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Now we’re ready to build the table (note the use of the <a href="https://github.com/zajichek/zildge/blob/main/R/rectbl_agg_wtd.R"><code>zildge::rectbl_agg_wtd()</code></a> function to compute the weighted average, see <a href="https://www.zajichekstats.com/post/reactable-javascript/">my other post</a> for more information about this).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> summary_dat,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"ClinicalFactor"</span>, <span class="st">"Level"</span>),</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">ClinicalFactor =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Clinical factor"</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">HasOutcome =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Has Outcome?"</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">Patients =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Count"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">PercentOfPatients =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Percent"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">OutcomeRate =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Outcome rate (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">Age =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Avg. age (years)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>)),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">Female =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Female (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">columnGroups =</span> </span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colGroup</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Patients"</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Patients"</span>, <span class="st">"PercentOfPatients"</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">striped =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlight =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">bordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">resizable =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> reactablefmtr<span class="sc">::</span><span class="fu">sandstone</span>()</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  reactablefmtr<span class="sc">::</span><span class="fu">add_source</span>(<span class="st">"Use arrows to expand table"</span>, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">font_style =</span> <span class="st">"italic"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-7dee0434196488165b3c" style="width:auto;height:auto;"></div>
+<p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
+<script type="application/json" data-for="htmlwidget-7dee0434196488165b3c">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Outcome":["Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150"],"ClinicalFactor":["Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?"],"Level":["No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes","No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes"],"HasOutcome":["No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes"],"Patients":[141,117,23,22,39,105,41,9,68,18,16,7,141,63,23,76,117,141,22,23,92,52,9,41,29,57,9,14,66,138,73,26],"PercentOfPatients":[0.465346534653465,0.386138613861386,0.0759075907590759,0.0726072607260726,0.128712871287129,0.346534653465347,0.135313531353135,0.0297029702970297,0.224422442244224,0.0594059405940594,0.0528052805280528,0.0231023102310231,0.465346534653465,0.207920792079208,0.0759075907590759,0.250825082508251,0.386138613861386,0.465346534653465,0.0726072607260726,0.0759075907590759,0.303630363036304,0.171617161716172,0.0297029702970297,0.135313531353135,0.0957095709570957,0.188118811881188,0.0297029702970297,0.0462046204620462,0.217821782178218,0.455445544554455,0.240924092409241,0.0858085808580858],"OutcomeRate":[0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],"Age":[52,56.3931623931624,56.1739130434783,57.8636363636364,54.0769230769231,56.3333333333333,50.0243902439024,57.4444444444444,52.4264705882353,58.5,56.1875,55.1428571428571,52.4184397163121,57.0952380952381,53.6086956521739,56.2368421052632,57.0769230769231,51.4326241134752,58.6363636363636,55.4347826086956,56.6086956521739,54.1538461538462,59.4444444444444,49.5853658536585,58.2068965517241,51.4035087719298,59.6666666666667,53.4285714285714,58.2121212121212,51.7826086956522,56.5205479452055,53.1153846153846],"Female":[0.468085106382979,0.162393162393162,0.260869565217391,0.272727272727273,0.461538461538462,0.20952380952381,0.390243902439024,0.222222222222222,0.5,0.0555555555555556,0.25,0,0.453900709219858,0.174603174603175,0.347826086956522,0.184210526315789,0.256410256410256,0.390070921985816,0.272727272727273,0.260869565217391,0.228260869565217,0.365384615384615,0.222222222222222,0.390243902439024,0.413793103448276,0.403508771929825,0.111111111111111,0.214285714285714,0.363636363636364,0.369565217391304,0.164383561643836,0.384615384615385]},"columns":[{"id":"Outcome","name":"Outcome","type":"character"},{"id":"ClinicalFactor","name":"Clinical factor","type":"character"},{"id":"Level","name":"Level","type":"character"},{"id":"HasOutcome","name":"Has Outcome?","type":"character"},{"id":"Patients","name":"Count","type":"numeric","aggregate":"sum","align":"center"},{"id":"PercentOfPatients","name":"Percent","type":"numeric","aggregate":"sum","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center"},{"id":"OutcomeRate","name":"Outcome rate (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center"},{"id":"Age","name":"Avg. age (years)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2},"aggregated":{"digits":2}},"align":"center"},{"id":"Female","name":"Female (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center"}],"columnGroups":[{"name":"Patients","columns":["Patients","PercentOfPatients"]}],"groupBy":["Outcome","ClinicalFactor","Level"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"c12689269c1e419783d332983d8fb3c2"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.6.aggregate","tag.attribs.columns.7.aggregate","tag.attribs.columns.8.aggregate"],"jsHooks":[]}</script>
+</div>
+</div>
+<p><br></p>
+<p>There are a few problems with this table:</p>
+<ol type="1">
+<li>The redundancy of the top-level (and second-level) summary statistics is unappealing</li>
+<li>The top-level aggregation is just flat-out wrong because we’ve duplicated counts over the data set</li>
+</ol>
+<p>Maybe <em>1</em> is not a huge deal, but I’ve probably already established somewhere that there are 303 patients in the data set and the overall rate of heart disease is 45.9%. You still may choose to keep it as-is in this case as it’s not totally harmful. However, <em>2</em> needs to be addressed as the data is misleading and not really interpretable. <strong>So how can we remove the results from (at least) the top-level while maintaining the lower-level aggregation?</strong></p>
+<p>We can define an <code>R</code> function that provides JavaScript <a href="https://glin.github.io/reactable/articles/conditional-styling.html">custom styling</a> to a cell.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>remove_text <span class="ot">&lt;-</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(col, threshold) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">JS</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"function(rowInfo) {</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="st">          if(rowInfo.row['"</span>, col, <span class="st">"'] &gt; "</span>, threshold, <span class="st">") {</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">            return {fontSize:0}</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="st">          }</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="st">        }"</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>All this function does is reduce the font size to zero for any cell where the value of <code>col</code> in the respective row is greater than <code>threshold</code>. Thus, since we are over-counting the number of patients in the top-level, we can just apply this function to rows in which the count exceeds 303, which is the patient count in our data set. We provide this function to the <code>style</code> argument of <code>colDef()</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> summary_dat,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"ClinicalFactor"</span>, <span class="st">"Level"</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">ClinicalFactor =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Clinical factor"</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">HasOutcome =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Has Outcome?"</span>),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">Patients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Count"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">PercentOfPatients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Percent"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">OutcomeRate =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Outcome rate (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">Age =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Avg. age (years)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>)),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">Female =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Female (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">columnGroups =</span> </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colGroup</span>(</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Patients"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Patients"</span>, <span class="st">"PercentOfPatients"</span>)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">striped =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlight =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">bordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">resizable =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> reactablefmtr<span class="sc">::</span><span class="fu">sandstone</span>()</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  reactablefmtr<span class="sc">::</span><span class="fu">add_source</span>(<span class="st">"Use arrows to expand table"</span>, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">font_style =</span> <span class="st">"italic"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-f2b27ae6d30b4fc23737" style="width:auto;height:auto;"></div>
+<p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
+<script type="application/json" data-for="htmlwidget-f2b27ae6d30b4fc23737">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Outcome":["Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150"],"ClinicalFactor":["Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?"],"Level":["No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes","No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes"],"HasOutcome":["No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes"],"Patients":[141,117,23,22,39,105,41,9,68,18,16,7,141,63,23,76,117,141,22,23,92,52,9,41,29,57,9,14,66,138,73,26],"PercentOfPatients":[0.465346534653465,0.386138613861386,0.0759075907590759,0.0726072607260726,0.128712871287129,0.346534653465347,0.135313531353135,0.0297029702970297,0.224422442244224,0.0594059405940594,0.0528052805280528,0.0231023102310231,0.465346534653465,0.207920792079208,0.0759075907590759,0.250825082508251,0.386138613861386,0.465346534653465,0.0726072607260726,0.0759075907590759,0.303630363036304,0.171617161716172,0.0297029702970297,0.135313531353135,0.0957095709570957,0.188118811881188,0.0297029702970297,0.0462046204620462,0.217821782178218,0.455445544554455,0.240924092409241,0.0858085808580858],"OutcomeRate":[0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],"Age":[52,56.3931623931624,56.1739130434783,57.8636363636364,54.0769230769231,56.3333333333333,50.0243902439024,57.4444444444444,52.4264705882353,58.5,56.1875,55.1428571428571,52.4184397163121,57.0952380952381,53.6086956521739,56.2368421052632,57.0769230769231,51.4326241134752,58.6363636363636,55.4347826086956,56.6086956521739,54.1538461538462,59.4444444444444,49.5853658536585,58.2068965517241,51.4035087719298,59.6666666666667,53.4285714285714,58.2121212121212,51.7826086956522,56.5205479452055,53.1153846153846],"Female":[0.468085106382979,0.162393162393162,0.260869565217391,0.272727272727273,0.461538461538462,0.20952380952381,0.390243902439024,0.222222222222222,0.5,0.0555555555555556,0.25,0,0.453900709219858,0.174603174603175,0.347826086956522,0.184210526315789,0.256410256410256,0.390070921985816,0.272727272727273,0.260869565217391,0.228260869565217,0.365384615384615,0.222222222222222,0.390243902439024,0.413793103448276,0.403508771929825,0.111111111111111,0.214285714285714,0.363636363636364,0.369565217391304,0.164383561643836,0.384615384615385]},"columns":[{"id":"Outcome","name":"Outcome","type":"character"},{"id":"ClinicalFactor","name":"Clinical factor","type":"character"},{"id":"Level","name":"Level","type":"character"},{"id":"HasOutcome","name":"Has Outcome?","type":"character"},{"id":"Patients","name":"Count","type":"numeric","aggregate":"sum","align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"PercentOfPatients","name":"Percent","type":"numeric","aggregate":"sum","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"OutcomeRate","name":"Outcome rate (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Age","name":"Avg. age (years)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2},"aggregated":{"digits":2}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Female","name":"Female (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 303) {\n            return {fontSize:0}\n          }\n        }"}],"columnGroups":[{"name":"Patients","columns":["Patients","PercentOfPatients"]}],"groupBy":["Outcome","ClinicalFactor","Level"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"edf7478aaef4de899096f5154e62a4e6"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.4.style","tag.attribs.columns.5.style","tag.attribs.columns.6.aggregate","tag.attribs.columns.6.style","tag.attribs.columns.7.aggregate","tag.attribs.columns.7.style","tag.attribs.columns.8.aggregate","tag.attribs.columns.8.style"],"jsHooks":[]}</script>
+</div>
+</div>
+<p><br></p>
+<p>If we want to remove text from the second level of aggregation, we can just adjust the <code>threshold</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> summary_dat,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"ClinicalFactor"</span>, <span class="st">"Level"</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">ClinicalFactor =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Clinical factor"</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">HasOutcome =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Has Outcome?"</span>),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">Patients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Count"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">PercentOfPatients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Percent"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">OutcomeRate =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Outcome rate (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">Age =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Avg. age (years)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>)),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">Female =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Female (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">columnGroups =</span> </span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colGroup</span>(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Patients"</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Patients"</span>, <span class="st">"PercentOfPatients"</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">striped =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlight =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">bordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">resizable =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> reactablefmtr<span class="sc">::</span><span class="fu">sandstone</span>()</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  reactablefmtr<span class="sc">::</span><span class="fu">add_source</span>(<span class="st">"Use arrows to expand table"</span>, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">font_style =</span> <span class="st">"italic"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="reactable html-widget html-fill-item" id="htmlwidget-5f51993d07eb42406f25" style="width:auto;height:auto;"></div>
+<p style="color:#000;background:#FFFFFF;text-align:left;font-size:12px;font-style:italic;font-weight:normal;text-decoration:;letter-spacing:px;word-spacing:px;text-transform:;text-shadow:;margin-top:0px;margin-right:0px;margin-bottom:0px;margin-left:0px">Use arrows to expand table</p>
+<script type="application/json" data-for="htmlwidget-5f51993d07eb42406f25">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"Outcome":["Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Heart disease","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150","Maximum HR > 150"],"ClinicalFactor":["Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Blood sugar > 120 mg/dl?","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Chest pain type","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?","Exercise-induced angina?"],"Level":["No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes","No","No","Yes","Yes","Asymptomatic","Asymptomatic","Atypical angina","Atypical angina","Non-anginal pain","Non-anginal pain","Typical angina","Typical angina","No","No","Yes","Yes"],"HasOutcome":["No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes","No","Yes"],"Patients":[141,117,23,22,39,105,41,9,68,18,16,7,141,63,23,76,117,141,22,23,92,52,9,41,29,57,9,14,66,138,73,26],"PercentOfPatients":[0.465346534653465,0.386138613861386,0.0759075907590759,0.0726072607260726,0.128712871287129,0.346534653465347,0.135313531353135,0.0297029702970297,0.224422442244224,0.0594059405940594,0.0528052805280528,0.0231023102310231,0.465346534653465,0.207920792079208,0.0759075907590759,0.250825082508251,0.386138613861386,0.465346534653465,0.0726072607260726,0.0759075907590759,0.303630363036304,0.171617161716172,0.0297029702970297,0.135313531353135,0.0957095709570957,0.188118811881188,0.0297029702970297,0.0462046204620462,0.217821782178218,0.455445544554455,0.240924092409241,0.0858085808580858],"OutcomeRate":[0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],"Age":[52,56.3931623931624,56.1739130434783,57.8636363636364,54.0769230769231,56.3333333333333,50.0243902439024,57.4444444444444,52.4264705882353,58.5,56.1875,55.1428571428571,52.4184397163121,57.0952380952381,53.6086956521739,56.2368421052632,57.0769230769231,51.4326241134752,58.6363636363636,55.4347826086956,56.6086956521739,54.1538461538462,59.4444444444444,49.5853658536585,58.2068965517241,51.4035087719298,59.6666666666667,53.4285714285714,58.2121212121212,51.7826086956522,56.5205479452055,53.1153846153846],"Female":[0.468085106382979,0.162393162393162,0.260869565217391,0.272727272727273,0.461538461538462,0.20952380952381,0.390243902439024,0.222222222222222,0.5,0.0555555555555556,0.25,0,0.453900709219858,0.174603174603175,0.347826086956522,0.184210526315789,0.256410256410256,0.390070921985816,0.272727272727273,0.260869565217391,0.228260869565217,0.365384615384615,0.222222222222222,0.390243902439024,0.413793103448276,0.403508771929825,0.111111111111111,0.214285714285714,0.363636363636364,0.369565217391304,0.164383561643836,0.384615384615385]},"columns":[{"id":"Outcome","name":"Outcome","type":"character"},{"id":"ClinicalFactor","name":"Clinical factor","type":"character"},{"id":"Level","name":"Level","type":"character"},{"id":"HasOutcome","name":"Has Outcome?","type":"character"},{"id":"Patients","name":"Count","type":"numeric","aggregate":"sum","align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"PercentOfPatients","name":"Percent","type":"numeric","aggregate":"sum","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"OutcomeRate","name":"Outcome rate (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Age","name":"Avg. age (years)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2},"aggregated":{"digits":2}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"},{"id":"Female","name":"Female (%)","type":"numeric","aggregate":"function(values, rows) {\n            var numerator = 0\n            var denominator = 0\n\n            rows.forEach(function(row, index) {\n                numerator += row['Patients'] * values[index]\n                denominator += row['Patients']\n            })\n\n            if('mean' == 'mean') {\n                return numerator / denominator\n            } else {\n                return numerator\n            }\n        }","format":{"cell":{"digits":2,"percent":true},"aggregated":{"digits":2,"percent":true}},"align":"center","style":"function(rowInfo) {\n          if(rowInfo.row['Patients'] > 302) {\n            return {fontSize:0}\n          }\n        }"}],"columnGroups":[{"name":"Patients","columns":["Patients","PercentOfPatients"]}],"groupBy":["Outcome","ClinicalFactor","Level"],"resizable":true,"highlight":true,"bordered":true,"striped":true,"theme":{"color":"#3e3f3a","backgroundColor":"#ffffff","borderColor":"#f8f5f0","borderWidth":"1px","stripedColor":"#ededed","highlightColor":"#f8f5f0","cellPadding":6,"tableStyle":{"fontSize":15},"headerStyle":{"borderWidth":"2px","backgroundColor":"#f8f5f0","color":"#7c7a78","transitionDuration":"0.5s","&:hover[aria-sort]":{"color":"#000000"},"&[aria-sort='ascending'], &[aria-sort='descending']":{"color":"#000000"},"fontSize":16},"groupHeaderStyle":{"&:not(:empty)":{"color":"#3e3f3a","fontSize":16},"&:hover":{"fontWeight":"bold","transitionDuration":"1s","transitionTimingFunction":"ease-out","color":"#000000"}},"rowSelectedStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"inputStyle":{"backgroundColor":"#ffffff","borderColor":"#bcbfc1","color":"#3e3f3a"},"searchInputStyle":{"backgroundColor":"#ffffff","color":"#3e3f3a","borderColor":"#bcbfc1","&:focus":{"color":"#3e3f3a"}},"selectStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84","borderColor":"#ffffff","outlineColor":"#ffffff"},"pageButtonStyle":{"backgroundColor":"#f8f5f0","color":"#8e8c84","&:hover":{"backgroundColor":"#f3969a","color":"#8e8c84"}},"pageButtonHoverStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonActiveStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"},"pageButtonCurrentStyle":{"backgroundColor":"#dfd7ca","color":"#8e8c84"}},"dataKey":"5d25476238b69669768efc4e544b1ea3"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.4.style","tag.attribs.columns.5.style","tag.attribs.columns.6.aggregate","tag.attribs.columns.6.style","tag.attribs.columns.7.aggregate","tag.attribs.columns.7.style","tag.attribs.columns.8.aggregate","tag.attribs.columns.8.style"],"jsHooks":[]}</script>
+</div>
+</div>
+<p><br></p>
+<p>And that’s it.</p>
+<p>I’ll acknowledge that I didn’t exhaust all options for this task and that there are <em>definitely</em> better ways to do this with more directed intention by accessing various properties of the table. Obviously this only works if you have a column in the table that only increases during the aggregation and does so to predictable amounts. But it did the trick here.</p>
+
+
+<!-- -->
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.zajichekstats\.com\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb11" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Removing higher-order aggregation text in {reactable}"</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "6/29/2023"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">  - Tables</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Javascript</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>Often when I'm building a <span class="co">[</span><span class="ot">`reactable`</span><span class="co">](https://glin.github.io/reactable/)</span> I have potentially many aggregation levels but only want to display data in a lower subset of those. Here is a quick way to eliminate text using cell styling. </span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>First let's load some packages and look at an example data set.</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, warning = FALSE, message = FALSE}</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="in">library(tidyverse)</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="in">library(reactable)</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="in">dat &lt;- cheese::heart_disease</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="in">dat</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>Suppose we are interested in these outcomes: </span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The rate of heart disease</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The rate of patients with a maximum heart rate &gt; 150 </span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>And we want to summarize those, along with a few other patient characteristics, within a handful of important clinical factors. We might pivot our data into a long format to start:</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>pivot_dat <span class="ot">&lt;-</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>  dat <span class="sc">|&gt;</span> </span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to character types</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(ChestPain, ExerciseInducedAngina, BloodSugar),</span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>      as.character</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">MaximumHR =</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>        MaximumHR <span class="sc">&gt;</span> <span class="dv">150</span> <span class="sc">~</span> <span class="st">"Yes"</span>,</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"No"</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Send "important clinical factors" down the rows</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(ChestPain, ExerciseInducedAngina, BloodSugar),</span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"ClinicalFactor"</span>,</span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"Level"</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Send outcomes down the rows</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(HeartDisease, MaximumHR),</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"Outcome"</span>,</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"HasOutcome"</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>pivot_dat</span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>We can then calculate some summary statistics. Our full patient population is replicated for each <span class="in">`ClinicalFactor`</span> and <span class="in">`Outcome`</span>, so we should account for that.</span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-72"><a href="#cb11-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-73"><a href="#cb11-73" aria-hidden="true" tabindex="-1"></a>summary_dat <span class="ot">&lt;-</span></span>
+<span id="cb11-74"><a href="#cb11-74" aria-hidden="true" tabindex="-1"></a>  pivot_dat <span class="sc">|&gt;</span> </span>
+<span id="cb11-75"><a href="#cb11-75" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-76"><a href="#cb11-76" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Summarize characteristics</span></span>
+<span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">Patients =</span> <span class="fu">n</span>(),</span>
+<span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">OutcomeRate =</span> <span class="fu">mean</span>(HasOutcome <span class="sc">==</span> <span class="st">"Yes"</span>),</span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">Age =</span> <span class="fu">mean</span>(Age),</span>
+<span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">Female =</span> <span class="fu">mean</span>(Sex <span class="sc">==</span> <span class="st">"Female"</span>),</span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> </span>
+<span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(</span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor,</span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a>        Level,</span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>        Outcome,</span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a>        HasOutcome</span>
+<span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add counts within groups</span></span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">PercentOfPatients =</span> Patients <span class="sc">/</span> <span class="fu">sum</span>(Patients),</span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(ClinicalFactor, Outcome)</span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make clean levels/labels</span></span>
+<span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-99"><a href="#cb11-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">ClinicalFactor =</span> </span>
+<span id="cb11-100"><a href="#cb11-100" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb11-101"><a href="#cb11-101" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor <span class="sc">==</span> <span class="st">"BloodSugar"</span> <span class="sc">~</span> <span class="st">"Blood sugar &gt; 120 mg/dl?"</span>,</span>
+<span id="cb11-102"><a href="#cb11-102" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor <span class="sc">==</span> <span class="st">"ChestPain"</span> <span class="sc">~</span> <span class="st">"Chest pain type"</span>,</span>
+<span id="cb11-103"><a href="#cb11-103" aria-hidden="true" tabindex="-1"></a>        ClinicalFactor <span class="sc">==</span> <span class="st">"ExerciseInducedAngina"</span> <span class="sc">~</span> <span class="st">"Exercise-induced angina?"</span></span>
+<span id="cb11-104"><a href="#cb11-104" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb11-105"><a href="#cb11-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">Level =</span> </span>
+<span id="cb11-106"><a href="#cb11-106" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb11-107"><a href="#cb11-107" aria-hidden="true" tabindex="-1"></a>        Level <span class="sc">==</span> <span class="st">"TRUE"</span> <span class="sc">~</span> <span class="st">"Yes"</span>,</span>
+<span id="cb11-108"><a href="#cb11-108" aria-hidden="true" tabindex="-1"></a>        Level <span class="sc">==</span> <span class="st">"FALSE"</span> <span class="sc">~</span> <span class="st">"No"</span>,</span>
+<span id="cb11-109"><a href="#cb11-109" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> Level</span>
+<span id="cb11-110"><a href="#cb11-110" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb11-111"><a href="#cb11-111" aria-hidden="true" tabindex="-1"></a>    <span class="at">Outcome =</span> </span>
+<span id="cb11-112"><a href="#cb11-112" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb11-113"><a href="#cb11-113" aria-hidden="true" tabindex="-1"></a>        Outcome <span class="sc">==</span> <span class="st">"HeartDisease"</span> <span class="sc">~</span> <span class="st">"Heart disease"</span>,</span>
+<span id="cb11-114"><a href="#cb11-114" aria-hidden="true" tabindex="-1"></a>        Outcome <span class="sc">==</span> <span class="st">"MaximumHR"</span> <span class="sc">~</span> <span class="st">"Maximum HR &gt; 150"</span></span>
+<span id="cb11-115"><a href="#cb11-115" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-116"><a href="#cb11-116" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb11-117"><a href="#cb11-117" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-118"><a href="#cb11-118" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Rearrange</span></span>
+<span id="cb11-119"><a href="#cb11-119" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(PercentOfPatients, <span class="at">.after =</span> Patients) <span class="sc">|&gt;</span></span>
+<span id="cb11-120"><a href="#cb11-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(Outcome, <span class="at">.before =</span> <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb11-121"><a href="#cb11-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(</span>
+<span id="cb11-122"><a href="#cb11-122" aria-hidden="true" tabindex="-1"></a>    Outcome,</span>
+<span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a>    ClinicalFactor,</span>
+<span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a>    Level,</span>
+<span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a>    HasOutcome</span>
+<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a>summary_dat</span>
+<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a>Now we're ready to build the table (note the use of the <span class="co">[</span><span class="ot">`zildge::rectbl_agg_wtd()`</span><span class="co">](https://github.com/zajichek/zildge/blob/main/R/rectbl_agg_wtd.R)</span> function to compute the weighted average, see <span class="co">[</span><span class="ot">my other post</span><span class="co">](https://www.zajichekstats.com/post/reactable-javascript/)</span> for more information about this).</span>
+<span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(</span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> summary_dat,</span>
+<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"ClinicalFactor"</span>, <span class="st">"Level"</span>),</span>
+<span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> </span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a>      <span class="at">ClinicalFactor =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Clinical factor"</span>),</span>
+<span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a>      <span class="at">HasOutcome =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Has Outcome?"</span>),</span>
+<span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a>      <span class="at">Patients =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Count"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>),</span>
+<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a>      <span class="at">PercentOfPatients =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Percent"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a>      <span class="at">OutcomeRate =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Outcome rate (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a>      <span class="at">Age =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Avg. age (years)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>)),</span>
+<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a>      <span class="at">Female =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Female (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a>  <span class="at">columnGroups =</span> </span>
+<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colGroup</span>(</span>
+<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Patients"</span>,</span>
+<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Patients"</span>, <span class="st">"PercentOfPatients"</span>)</span>
+<span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a>  <span class="at">striped =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlight =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a>  <span class="at">bordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a>  <span class="at">resizable =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> reactablefmtr<span class="sc">::</span><span class="fu">sandstone</span>()</span>
+<span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a>  reactablefmtr<span class="sc">::</span><span class="fu">add_source</span>(<span class="st">"Use arrows to expand table"</span>, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">font_style =</span> <span class="st">"italic"</span>)</span>
+<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-163"><a href="#cb11-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a>There are a few problems with this table:</span>
+<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>The redundancy of the top-level (and second-level) summary statistics is unappealing</span>
+<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>The top-level aggregation is just flat-out wrong because we've duplicated counts over the data set</span>
+<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a>Maybe _1_ is not a huge deal, but I've probably already established somewhere that there are `r nrow(dat)` patients in the data set and the overall rate of heart disease is `r round(100*mean(dat$HeartDisease == "Yes"),1)`%. You still may choose to keep it as-is in this case as it's not totally harmful. However, _2_ needs to be addressed as the data is misleading and not really interpretable. __So how can we remove the results from (at least) the top-level while maintaining the lower-level aggregation?__</span>
+<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-173"><a href="#cb11-173" aria-hidden="true" tabindex="-1"></a>We can define an <span class="in">`R`</span> function that provides JavaScript <span class="co">[</span><span class="ot">custom styling</span><span class="co">](https://glin.github.io/reactable/articles/conditional-styling.html)</span> to a cell.</span>
+<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a>remove_text <span class="ot">&lt;-</span></span>
+<span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(col, threshold) {</span>
+<span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a>    <span class="fu">JS</span>(</span>
+<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(</span>
+<span id="cb11-182"><a href="#cb11-182" aria-hidden="true" tabindex="-1"></a>        <span class="st">"function(rowInfo) {</span></span>
+<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a><span class="st">          if(rowInfo.row['"</span>, col, <span class="st">"'] &gt; "</span>, threshold, <span class="st">") {</span></span>
+<span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a><span class="st">            return {fontSize:0}</span></span>
+<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a><span class="st">          }</span></span>
+<span id="cb11-186"><a href="#cb11-186" aria-hidden="true" tabindex="-1"></a><span class="st">        }"</span></span>
+<span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-191"><a href="#cb11-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-192"><a href="#cb11-192" aria-hidden="true" tabindex="-1"></a>All this function does is reduce the font size to zero for any cell where the value of <span class="in">`col`</span> in the respective row is greater than <span class="in">`threshold`</span>. Thus, since we are over-counting the number of patients in the top-level, we can just apply this function to rows in which the count exceeds <span class="in">`r nrow(dat)`</span>, which is the patient count in our data set. We provide this function to the <span class="in">`style`</span> argument of <span class="in">`colDef()`</span>.</span>
+<span id="cb11-193"><a href="#cb11-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-196"><a href="#cb11-196" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-197"><a href="#cb11-197" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(</span>
+<span id="cb11-198"><a href="#cb11-198" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> summary_dat,</span>
+<span id="cb11-199"><a href="#cb11-199" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"ClinicalFactor"</span>, <span class="st">"Level"</span>),</span>
+<span id="cb11-200"><a href="#cb11-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> </span>
+<span id="cb11-201"><a href="#cb11-201" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb11-202"><a href="#cb11-202" aria-hidden="true" tabindex="-1"></a>      <span class="at">ClinicalFactor =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Clinical factor"</span>),</span>
+<span id="cb11-203"><a href="#cb11-203" aria-hidden="true" tabindex="-1"></a>      <span class="at">HasOutcome =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Has Outcome?"</span>),</span>
+<span id="cb11-204"><a href="#cb11-204" aria-hidden="true" tabindex="-1"></a>      <span class="at">Patients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Count"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>),</span>
+<span id="cb11-205"><a href="#cb11-205" aria-hidden="true" tabindex="-1"></a>      <span class="at">PercentOfPatients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Percent"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-206"><a href="#cb11-206" aria-hidden="true" tabindex="-1"></a>      <span class="at">OutcomeRate =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Outcome rate (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-207"><a href="#cb11-207" aria-hidden="true" tabindex="-1"></a>      <span class="at">Age =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Avg. age (years)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>)),</span>
+<span id="cb11-208"><a href="#cb11-208" aria-hidden="true" tabindex="-1"></a>      <span class="at">Female =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat)), <span class="at">name =</span> <span class="st">"Female (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-209"><a href="#cb11-209" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-210"><a href="#cb11-210" aria-hidden="true" tabindex="-1"></a>  <span class="at">columnGroups =</span> </span>
+<span id="cb11-211"><a href="#cb11-211" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb11-212"><a href="#cb11-212" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colGroup</span>(</span>
+<span id="cb11-213"><a href="#cb11-213" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Patients"</span>,</span>
+<span id="cb11-214"><a href="#cb11-214" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Patients"</span>, <span class="st">"PercentOfPatients"</span>)</span>
+<span id="cb11-215"><a href="#cb11-215" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a>  <span class="at">striped =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlight =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a>  <span class="at">bordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a>  <span class="at">resizable =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> reactablefmtr<span class="sc">::</span><span class="fu">sandstone</span>()</span>
+<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb11-223"><a href="#cb11-223" aria-hidden="true" tabindex="-1"></a>  reactablefmtr<span class="sc">::</span><span class="fu">add_source</span>(<span class="st">"Use arrows to expand table"</span>, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">font_style =</span> <span class="st">"italic"</span>)</span>
+<span id="cb11-224"><a href="#cb11-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-226"><a href="#cb11-226" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb11-227"><a href="#cb11-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-228"><a href="#cb11-228" aria-hidden="true" tabindex="-1"></a>If we want to remove text from the second level of aggregation, we can just adjust the <span class="in">`threshold`</span>.</span>
+<span id="cb11-229"><a href="#cb11-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-232"><a href="#cb11-232" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb11-233"><a href="#cb11-233" aria-hidden="true" tabindex="-1"></a><span class="fu">reactable</span>(</span>
+<span id="cb11-234"><a href="#cb11-234" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> summary_dat,</span>
+<span id="cb11-235"><a href="#cb11-235" aria-hidden="true" tabindex="-1"></a>  <span class="at">groupBy =</span> <span class="fu">c</span>(<span class="st">"Outcome"</span>, <span class="st">"ClinicalFactor"</span>, <span class="st">"Level"</span>),</span>
+<span id="cb11-236"><a href="#cb11-236" aria-hidden="true" tabindex="-1"></a>  <span class="at">columns =</span> </span>
+<span id="cb11-237"><a href="#cb11-237" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb11-238"><a href="#cb11-238" aria-hidden="true" tabindex="-1"></a>      <span class="at">ClinicalFactor =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Clinical factor"</span>),</span>
+<span id="cb11-239"><a href="#cb11-239" aria-hidden="true" tabindex="-1"></a>      <span class="at">HasOutcome =</span> <span class="fu">colDef</span>(<span class="at">name =</span> <span class="st">"Has Outcome?"</span>),</span>
+<span id="cb11-240"><a href="#cb11-240" aria-hidden="true" tabindex="-1"></a>      <span class="at">Patients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Count"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>),</span>
+<span id="cb11-241"><a href="#cb11-241" aria-hidden="true" tabindex="-1"></a>      <span class="at">PercentOfPatients =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Percent"</span>, <span class="at">aggregate =</span> <span class="st">"sum"</span>, <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-242"><a href="#cb11-242" aria-hidden="true" tabindex="-1"></a>      <span class="at">OutcomeRate =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Outcome rate (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb11-243"><a href="#cb11-243" aria-hidden="true" tabindex="-1"></a>      <span class="at">Age =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Avg. age (years)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>)),</span>
+<span id="cb11-244"><a href="#cb11-244" aria-hidden="true" tabindex="-1"></a>      <span class="at">Female =</span> <span class="fu">colDef</span>(<span class="at">style =</span> <span class="fu">remove_text</span>(<span class="st">"Patients"</span>, <span class="fu">nrow</span>(dat) <span class="sc">-</span> <span class="dv">1</span>), <span class="at">name =</span> <span class="st">"Female (%)"</span>, <span class="at">aggregate =</span> zildge<span class="sc">::</span><span class="fu">rectbl_agg_wtd</span>(<span class="st">"Patients"</span>), <span class="at">align =</span> <span class="st">"center"</span>, <span class="at">format =</span> <span class="fu">colFormat</span>(<span class="at">digits =</span> <span class="dv">2</span>, <span class="at">percent =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-245"><a href="#cb11-245" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-246"><a href="#cb11-246" aria-hidden="true" tabindex="-1"></a>  <span class="at">columnGroups =</span> </span>
+<span id="cb11-247"><a href="#cb11-247" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb11-248"><a href="#cb11-248" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colGroup</span>(</span>
+<span id="cb11-249"><a href="#cb11-249" aria-hidden="true" tabindex="-1"></a>        <span class="at">name =</span> <span class="st">"Patients"</span>,</span>
+<span id="cb11-250"><a href="#cb11-250" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"Patients"</span>, <span class="st">"PercentOfPatients"</span>)</span>
+<span id="cb11-251"><a href="#cb11-251" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-252"><a href="#cb11-252" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb11-253"><a href="#cb11-253" aria-hidden="true" tabindex="-1"></a>  <span class="at">striped =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-254"><a href="#cb11-254" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlight =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-255"><a href="#cb11-255" aria-hidden="true" tabindex="-1"></a>  <span class="at">bordered =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-256"><a href="#cb11-256" aria-hidden="true" tabindex="-1"></a>  <span class="at">resizable =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb11-257"><a href="#cb11-257" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> reactablefmtr<span class="sc">::</span><span class="fu">sandstone</span>()</span>
+<span id="cb11-258"><a href="#cb11-258" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb11-259"><a href="#cb11-259" aria-hidden="true" tabindex="-1"></a>  reactablefmtr<span class="sc">::</span><span class="fu">add_source</span>(<span class="st">"Use arrows to expand table"</span>, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">font_style =</span> <span class="st">"italic"</span>)</span>
+<span id="cb11-260"><a href="#cb11-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-261"><a href="#cb11-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a>And that's it.</span>
+<span id="cb11-265"><a href="#cb11-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-266"><a href="#cb11-266" aria-hidden="true" tabindex="-1"></a>I'll acknowledge that I didn't exhaust all options for this task and that there are _definitely_ better ways to do this with more directed intention by accessing various properties of the table. Obviously this only works if you have a column in the table that only increases during the aggregation and does so to predictable amounts. But it did the trick here.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2024 Zajichek Stats</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

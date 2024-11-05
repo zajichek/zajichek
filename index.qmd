@@ -1,0 +1,16 @@
+---
+listing:
+  contents: post
+  sort: "date desc"
+  type: default
+  filter-ui: true
+  sort-ui: true
+  image-align: left
+  image-placeholder: "icon.png"
+  categories: true
+  feed: true
+---
+
+_Converting to Quarto_
+
+Visit my [consultancy page](https://www.centralstatz.com/)

@@ -1,0 +1,306 @@
+---
+title: "Statistical significance is...insignificant"
+description: '"A cheap way to get marketable results" -William Kruskal'
+author: "Alex Zajichek"
+date: "12/22/2023"
+image: "feature.png"
+categories:
+  - History
+  - Philosophy
+  - Research
+format:
+  html:
+    code-fold: true
+    code-tools: true
+---
+
+
+The longer I've been practicing as a statistician, maybe paradoxically, the more skeptical I've become of statistical significance ([#1](#sidenotes)). It manifests as a feeling of dissatisfaction, as if, even though you've stated what you "found", you don't _actually_ believe it to be true. I recently finished reading [_The Cult of Statistical Significance: How the Standard Error Costs Us Jobs, Justice, and Lives_](https://press.umich.edu/Books/T/The-Cult-of-Statistical-Significance2)--it instantly became one of my favorite books (here are my [favorite quotes and passages](#favoritequotes)). It affirms a lot of what I've come to suspect, with deep articulation about the vastness of the issue, backed by a thorough historical foundation. I can't help but wonder about the broader scientific, political, and societal implications this has had over the years (and continues to have). It really lit a fire in me to continue learning about and unraveling statistical history to connect those dots.
+
+# My take
+
+The _significance_ of a statistical result cannot be mechanically, mathematically, or systematically determined. It must be driven by a _practical_ relevance, or importance, which is inherently subjective, and a product of the values, beliefs, interests, and/or goals of the individual(s) interpreting the data. That result is always subject to dispute, critique, replication, and refinement, whether those reasons are process error ([#2](#sidenotes)), or the value of the information itself. The chance occurrence of a sampling probability crossing an arbitrary threshold is actually irrelevant.
+
+# What is statistical significance? {#whatisstatsig}
+
+> <span style="font-family: Garamond, serif; font-size: 20px; color: #2e5c46">"It's embedded like a tax code in the bureaucracy of science."</span><sub>1</sub>
+
+Technically speaking, it is when the likelihood of observing our data, _if_ an hypothesized state of the world were true (known as the _p-value_), is so small ([notoriously](https://www.tandfonline.com/doi/full/10.1080/00031305.2019.1583913), and most often, less than 5%), that the hypothetical state of the world must be false, and therefore, we have "significant" statistical evidence to say so. It positions itself as an objective tool to _decide_ (on the basis of this probability threshold) whether a statistical relationship is "real", and, often, subsequently that it "matters". 
+
+Take this [recent study](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2808358), for example, which is meant to characterize physician-propagated misinformation about the COVID-19 pandemic. The authors outline a set of [basic premises](https://cdn.jamanetwork.com/ama/content_public/journal/jamanetworkopen/939195/zoi230834supp1_prod_1697557763.1365.pdf?Expires=1704642946&Signature=nxggsGG3f~BQcev3DoFQmbURh3vsb1CtFrP4rSviM1XaF8Y9vtyGPmRRBTRDAXyvYzrGvW6vrJFsphYDRTI9LSJD35NYEc8RUdkZK8fJkKcSpr-AbsW1wyhe30CUf-x8GGPI2For6nZNLWoZhBn0m~GrC3JlmuTmCswv~3RH7HolcYV10ZTVgSh4ZvGaBOUKDdNhmITsHrocrTct-xvMnohwhM~6~nHZMATo6~grFfhnPrhgsDHRVkYdLr9o8yFEae4-ylEnzkulOfigZIKZJsj1s5iBbyPAB60k2KYYkXlBZnNAUpkrKSP33m9BiG8YY047fQOSRrqMrap-PaA45w__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA) that are used as a basis for classifying contrarian statements as _misinformation_ ([#3](#sidenotes)). At least some of this is built upon the attainment of statistical significance (or lack thereof).
+
+As an example, in the category of **Promoting Unapproved Medications for Prevention or Treatment** (in the Results section), the authors state:
+
+> <span style="font-family: Verdana, sans-serif; font-style: italic; font-size: 12px; color: #9e3634">"The 2 most prominent medications promoted were ivermectin and hydroxychloroquine, which have been found to not be effective at treating COVID-19 infections in randomized clinical trials."</span><sub>2</sub>
+
+This premise drove them to classify social media posts like this: 
+
+> <span style="font-family: Verdana, sans-serif; font-style: italic; font-size: 12px; color: #45A4CE">"Two of my toughest COVID patients--showed up with oxygen stats of 68% and 84% and would not go to the hospital. We treated them with IVM, steroids, and breathing treatments and here they are now."</span><sub>2</sub>
+
+as misinformation (see all [supportive quotes](https://cdn.jamanetwork.com/ama/content_public/journal/jamanetworkopen/939195/zoi230834t4_1697557763.5423.png?Expires=1704648605&Signature=vIdMdVOE4XQ76IbpK3v-OY0EzN5zbPooMwAeWZTXhWDu5fJnx4hpErMTWryrzYEaJOYO6YckYQIvSqmFFHp7LJ~8NughK380U2JDc2PBtonwbYYmVcXzRXT~oLftOZEXNxq0MWHqDFs1Ov7KNUdoqd1TuhYxCgFKWUvhdb5pXzB0zliNP-28kjQwZF9KLM70oerRsri0XM-HVfdKkPKrM1idAtUBFAZzBDg05y5BBQD8cLzgW4Fa7cINV-~1Dhyg9HpncVHeRACdc-tJwqqs4Z-VQfJPXMgzxP2-eyL6nhSA3IqIW9ax8CYgcYrha6yqq80wqaR4zTTGmXzf~rTWmQ__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA)). This is an actual doctor saying the drug helped _their_ patients, but the authors have deemed it ineffective. What justifies them making such a universal claim?
+
+If you look at [one of their references](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8394824/), the [meta-analysis](https://en.wikipedia.org/wiki/Meta-analysis) shows the [relative risk](https://en.wikipedia.org/wiki/Relative_risk) for all-cause mortality was estimated to be 
+37%. That is, the risk of death was 63% lower in patients who received ivermectin versus placebo or standard of care. However, because the 95% [confidence interval](https://en.wikipedia.org/wiki/Confidence_interval) ranged from 12% to 113% (i.e., there was _plausibility_ that ivermectin could produce up to a 13% _worse_ mortality rate, but equally plausible an 88% risk reduction), it was deemed _not_ statistically significant, and as the authors state:
+
+> <span style="font-family: Verdana, sans-serif; font-style: italic; font-size: 12px; color: #3d2f2f">"IVM [ivermectin], compared with control treatment, did not have an effect on the all-cause mortality rate."</span><sub>3</sub>
+
+and ultimately,
+
+> <span style="font-family: Verdana, sans-serif; font-style: italic; font-size: 12px; color: #3d2f2f">"Ivermectin is not a viable treatment option for COVID-19."</span><sub>3</sub>
+
+In other words, because the probability of observing this data, under the assumption of no difference in mortality risk (our p-value definition above), was not less than 5% (it was 31%), that gives reason to conclude _no difference at all_ ([#4](#sidenotes)). Furthermore, if the confidence interval crossed 100% by any amount, no matter how small, the p-value would have remained above 5% and not reached the threshold for statistical significance.
+
+# Why is it flawed?
+
+> <span style="font-family: Garamond, serif; font-size: 20px; color: #2e5c46">"Real science changes one's mind. That's one way to see that the proliferation of unpersuasive significance tests is not real science."</span><sub>1</sub>
+
+## An arbitrary threshold {#arbitrarythreshold}
+
+The 5% threshold is arbitrary. Despite that common acknowledgement, willful ignorance tends to prevail due to tradition and adherence to norms. The fact that the perceived significance of a result can suddenly change from minute differences speaks to the lack of robustness in the logic. In [the book](https://press.umich.edu/Books/T/The-Cult-of-Statistical-Significance2), the authors frequently discuss the importance of a _loss function_, which focuses on the potential consequences and implications of the result on the real-world decisions that are sought to be made from the information, rather than a predefined threshold based on sampling error probability. In this sense, the allowable risk tolerance can't be objectively or mechanically determined. It is context-dependent, and not all decisions are created equal. Yes, the p-value [above](#whatisstatsig) was 31%, but that error rate, along with the plausible range of risks (and benefits), may be sufficient to someone needing to make a treatment decision _now_.
+
+### Risks are subjective
+
+> <span style="font-family: Garamond, serif; font-size: 18px; color: #2e5c46">"It always depends on the loss, measured in side effects, treatment cost, death rates. The loss to a cool, scientific, impartial spectator will not be the same as the loss to the patient in question...[the balance between Type I/II errors] 'must be left to the patient, friends, and family'."</span><sub>1</sub>
+
+Beyond the statistical significance of a result is the question of what to do about it. In the [same article](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2808358), the authors state the following, still in the context of misinformation:
+
+> <span style="font-family: Verdana, sans-serif; font-style: italic; font-size: 12px; color: #9e3634">"Claims that myocarditis was common in children who received the vaccine and that the risks of myocarditis outweighed the risk of vaccination were also unfounded."</span><sub>2</sub>
+
+Nevermind the fact that the [study they reference](https://jamanetwork.com/journals/jama/fullarticle/2782900) _does_ show an increase in monthly case volume of myocarditis and pericarditis between pre/post-vaccine periods and the authors state:
+
+> <span style="font-family: Verdana, sans-serif; font-style: italic; font-size: 12px; color: #9e8a39">"Myocarditis developed rapidly in younger patients, mostly after the second vaccination. Pericarditis affected older patients later, after either the first or second dose."</span><sub>4</sub>
+
+The more important point is that the weight individuals place on statistical results to inform their decision making is subjective. The risk may be low, maybe even lower than the alternative, but that doesn't inform _how_ someone should weigh it.
+
+> <span style="font-family: Garamond, serif; font-size: 14px; color: #2e5c46">"Imagine that you and your infant child are standing on a sidewalk near a busy street. You have just purchased a hot dog from the street vendor and have safely crossed the street. Scenario 1: You suddenly realize you have forgotten the mustard and if you scurry across the busy street, dodging vehicles, there is a 95% probability you'll return safe with your mustard. Scenario 2: You forgot your child and you watch as she tries to cross the street herself, if you scurry across the busy street, dodging vehicles, there is a 95% probabiliity you'll return safe with your child. The sizeless scientist in effect declares 'they are equally important reasons for crossing the street'"</span><sub>1</sub>
+
+## It can't depend on sample size {#samplesize}
+
+> <span style="font-family: Garamond, serif; font-size: 18px; color: #2e5c46">"At high sample sizes, all null hypotheses are rejected, by mathematical fact, without having to look at the data."</span><sub>1</sub>
+
+One pretty simple argument is that of [sample size](https://www.omniconvert.com/what-is/sample-size/). In most contexts, a statistical test is, by definition, more likely to be declared _significant_ by simply [amassing more data](https://en.wikipedia.org/wiki/Standard_error), regardless of what the actual effect size is. This, on the other hand, _is_ completely mechanical and dissociated from the real-world context in which the test is being run. Thus, it prioritizes quantity over substance, and when blindly used, potentially promotes results that may lack practical meaning. 
+
+> <span style="font-family: Garamond, serif; font-size: 14px; color: #2e5c46">"...some cause of natural selection may have a high probability of replicability in additional samples but be trivial. Yet a cause may have a low probability of replicability but be important. This is what we mean when we say that a test of significance is neither necessary nor sufficient for a finding of importance"</span><sub>1</sub>
+
+It also tends to shift focus to attaining statistical significance and using it as a filter, causing the potential to miss meaningful insights that didn't reach this level.
+
+## We don't believe in "zero-sized" effects
+
+> <span style="font-family: Garamond, serif; font-size: 18px; color: #2e5c46">"Real scientists draw a line between what is large and small."</span><sub>1</sub>
+
+There is a major contradiction that arises. 
+
+The typical hypothesis test is conducted under the assumption of a [null hypothesis](https://en.wikipedia.org/wiki/Null_hypothesis) positing _no effect_. For example, in calculating the p-value [above](#whatisstatsig), it is assumed that there is _no_ difference in all-cause mortality rates between the treatment groups. However, I would argue that in any practical context, it's rare that someone would genuinely believe in the existence of precisely zero effect. Rather, it would stand to reason that what they really mean is "effectively zero" effect, something so small that it is considered inconsequential. 
+
+Herein lies the contradiction: they have now acknowledged some level of substantive significance, albeit undefined. If the true effect happens to be smaller than this threshold, as we [just explained](#samplesize), the estimate will still eventually be declared statistically significant with mathematical certainty no matter how minuscule, thus inevitably crossing the unspoken threshold of substantive meaning. Therefore, this begs into question the value of attaining statistical significance at all in favor of the need for explicit consideration of the real-world implications (i.e., the [loss function](#arbitrarythreshold)). At the _very least_, the substantive threshold should be identified and reflected in the null hypothesis so that the p-value is calibrated for substance.
+
+## The fallacy of the transposed conditional {#fallacy}
+
+This is where it gets especially interesting. There are logical errors with the conclusions drawn from hypothesis testing. I think the best way to describe it is jumping into the classic example that arises in Jacob Cohen's [_The Earth Is Round (p < .05)_](https://doi.org/10.1037/0003-066X.49.12.997) from 1994:
+
+> <span style="font-family: Verdana, sans-serif; font-style: italic; font-size: 12px; color: #45A4CE">"The incidence of schizophrenia in adults is about 2%. A proposed screening test is estimated to have at least 95% accuracy in making the positive diagnosis (sensitivity) and about 97% accuracy in declaring normality (specificity)...With a positive test for schizophrenia at hand, given the more than .95 assumed accuracy of the test, the probability of a positive test given that the case is normal is less than .05, that is, significant at p < .05. One would reject the hypothesis that the case is normal and conclude that the case has schizophrenia, as it happens mistakenly, but within the .05 alpha error. But that's not the point. The probability of the case being normal, given a positive test, is not what has just been discovered however much it sounds like it and however much it is wished to be. It is not true that the probability that the case is normal is less than .05, nor is it even unlikely that it is a normal case. By a Bayesian maneuver, this inverse probability, the probability that the case is normal, given a positive test for schizophrenia, is about .60!"</span><sub>5</sub>
+
+The desired interpretation of a statistically significant result induces a technical problem. The p-value provides the likelihood of observing the data under the assumption that the null hypothesis is true (a single state of the world), yet we _want_ to interpret it as evidence about the parameter of interest given the data. After all, we did collect it, and want that to be the basis of our conclusions. But that is not the probability we have concerned ourselves with. Using the p-value as a singular basis to determine significance disregards all other possibilities that the true parameter could be. When those possibilities are imbalanced (as they were here, since only 2% of the population had schizophrenia), it confuses which state of the world is most likely given the data with how likely the data is given a state of the world ([#5](#sidenotes)).
+
+# What to do instead?
+
+> <span style="font-family: Garamond, serif; font-size: 20px; color: #2e5c46">"Real science, unlike significance-testing science, is difficult. If it were not, it would not be real science, but instead it would be already established routine. Real science asks you to make real scientific judgements and real scientific arguments within a community of other scientists. It asks you to be quantitatively persuasive, not to be irrelevantely mechanical. Life is hard."</span><sub>1</sub>
+
+It's a scary thing to think about. Suppose statistical significance isn't there to bail you out. What are you supposed to do? How do you know if your results matter or not? I think this passage gives a pretty clear answer:
+
+> <span style="font-family: Garamond, serif; font-size: 16px; color: #2e5c46; font-weight: bold">"She can test her belief in the price effect by looking at the magnitudes, using, for example, the highly advanced technique common in data-heavy articles in physics journals: 'interocular trauma'. That is, she can look and see if the result hits her between the eyes."</span><sub>1</sub>
+
+The premise of this article has been that the implications of statistical results are context-dependent, so there isn't a one-size-fits-all alternative to replace statistical significance. Rather than seeking a systematic approach, the emphasis should be placed on cultivating understanding of the subject matter. It's akin to relying on intuition, like a feeling of "knowing" that you've gotten what you needed. Take this simple analogy: a tape measure is a tool that quantifies information needed to inform subsequent action, and the precision of the measurement is tailored to the specific needs of the task at hand. Sometimes a rough estimate is sufficient, while other times meticulous precision is necessary. The goal is to reach the point where, intuitively, you "know" that you've obtained the necessary information to move forward confidently. I see statistics as the same thing. Merely a _tool_ to be used to quantify the desired information needed to _inform_ (i.e., augment, not determine) a decision. 
+
+Now I'm not going to claim that I haven't repeatedly violated the practices I'm arguing against, it's hard not to, but these are things that I'm going to focus more on moving forward instead of p-values and statistical significance:
+
+### 1. Estimation & magnitude
+
+This is probably the easiest change to start making because it doesn't require an overhaul of statistical methods, but rather just a shift in focus to the magnitude of the estimates. By deliberately avoiding p-value calculations (and, when reading and consuming research, simply ignoring the concept of statistical significance altogether), the interpretation is governed by (a plausible range of) effect sizes, untainted by arbitrary, context-agnostic significance thresholds, and thus forces a scientific argument to be made on that basis. With a little extra brain power (and humility), this creates a much more contextually-rich, informative interpretation.
+
+### 2. Bayesian thinking & causal modeling
+
+Richard McElreath's [_Statistical Rethinking_](https://github.com/rmcelreath/stat_rethinking_2023) really convinced me that causal inference powered by Bayesian estimation is probably the best framework out there for scientific modeling (and I've only made it through the [first couple of chapters](https://www.zajichekstats.com/post/statistical-rethinking-2023-class-notes/) so far). It completely shifts the focus from the data itself to the data-generating _process_, putting the bulk of the hard work upfront, before data is collected, with a focus on mechanism and structure. It also addresses the [fallacy problem](#fallacy). However, it's definitely harder to start doing on a whim.
+
+First of all, the [math itself](https://en.wikipedia.org/wiki/Bayesian_statistics) is different from typical [frequentist](https://en.wikipedia.org/wiki/Frequentist_inference) methods, so there is a learning curve there. More difficult though is navigating the _practical_ complexities, such as properly eliciting the necessary subject matter expertise and piecing that together into coherent [prior distributions](https://en.wikipedia.org/wiki/Prior_probability) and [causal models](https://en.wikipedia.org/wiki/Causal_model). Nevermind the technical reasons why that is hard, it is simply more demanding from a time, brainpower, and collaboration perspective--and everyone is busy. Nevertheless I think it is a worthy pursuit ([#6](#sidenotes)).
+
+### 3. Decision-making & course of action
+
+This is where the [loss function](#arbitrarythreshold) is most relevant. 
+
+Instead of contorting a generic statistical result to tenuously align with real-world implications, I want to be more deliberate. The first step is to target and understand the tangible decision-making processes that the estimates seek to inform, with an identification of the current standards including practical constraints and nuances. Then, rather than passively using standard techniques, deriving tailored statistical methods to facilitate that usage, which may prompt more rigor, customization, or reframing of the statistical problem entirely to suit the specific context at hand. Estimation uncertainty can be fed as input into hypothetical scenarios to gain insight into where/what actions will be triggered and their subsequent downstream effects on the hard outcomes intended to be impacted. At that point, the _significance_ will be clear.
+
+#### Focus on the end-product
+
+I think a critical piece to this endeavor is to not only focus on the statistics, but also _how_ they will be disseminated. This means specifying the vehicle that will deliver the information to the right person at the right time. The emphasis on something tangible elicits certain practical and technological constraints that may be otherwise unbounding when focusing solely on the math. Further, this perspective acknowledges that the statistical methods are only a fragment of the overall data product, and may be direct cause for further refinement of the statistical approach itself. That is, even with robust statistical methods or results, the information may lose its utility if poorly conveyed or implemented. This could be due to anything from data pipelines and visualization to deployment and computing resources. This also enables the ability to be more forward-thinking about success measures and accountability/validation schemes like continuous monitoring to ensure sustained yet impactful presence in the intended decision-making context. 
+
+# Some historical gold
+
+To conclude this, I wanted to highlight an excerpt from the chapter _The Psychology of Psychological Significance Testing_ in [the book](https://press.umich.edu/Books/T/The-Cult-of-Statistical-Significance2) that I found especially fascinating about the propagation of statistical significance across university education in the United States (pages 142-143):
+
+> <span style="font-family: Garamond, serif; font-size: 14px; color: #2e5c46">
+<p>"In this context the 5 percent science was promoted by the new leaders of quantitative psychology and education. European humanists can score themselves by how many generations they are removed from Hegel--that is, in being taught by a teacher who was taught by a teacher who was taught by a teacher who was taught by Hegel at the University of Berlin. Likewise, statisticians can score themselves by how many generations they are from Fisher. Quinn McNemar, for example, of Stanford University, was an important teacher of psychologists who had himself studied statistical methods at Stanford with Harold Hotelling, the chief American disciple of Fisher. Hotelling had worked directly with Fisher. McNemar then taught L.G. Humphreys, Allen Edwards, David Grant, and scores of others. As early as 1935 all graduate students in psychology at Stanford, following the model of Iowa State, were required to master Fisher's crowning achievement, analysis of variance. Already by 1950, Gigerenzer et al. reckon, about half of the leading departments of psychology required training in Fisherian methods.</p>
+<p>Even rebels against Fisher were close to him, starting with [William Sealy] Gosset himself. Palmer Johnson of the University of Minnesota studied with Fisher in England, though he later had the bad taste to write articles with Fisher's erstwhile colleague and eternal enemy Jerzy Neyman, whom Fisher had cast into outer darkness. George Snedecor, an agricultural scientist at Iowa State University at Ames, was a cofounder of the first department of statistics in the United States. His important book <em>Statistical Methods</em> was influenced directly by Fisher himself, who somewhat surprisingly was in the 1930s a visiting professor of statistics at Iowa State. One can think of the Iowa schools then [1940s and 1950s] as one thinks of London's Gower Street in the 1920s and 1930s--a crucial crossroads of statistical methods and training. In a eulogy for S.S. Wilks, a student in the late 1920s of Henry L. Rietz and Allen T. Craig at the University of Iowa, Frederick Mostellar said that Iowa was then "the center of statistical study in the United States of America". Rietz, Craig, and Wilks worked closely with Fisher. E.F. Lindquist, the American leader of standardized testing for educators, also of the University of Iowa, was deeply influenced by Snedecor. Lindquist invented the Iowa Test of Basic Skills for schoolchildren. He too spent time with the great man.</p>
+<p>Some psychologists knew about the work of Neyman and Pearson and some even about that of the Bayesian Harold Jeffreys. But textbook authors, editors, and teachers--inspirited by Fisher's promise of raising their fields to the level of hard science--helped Fisher win the day. Statistical education narrowed at the same time as it spread. Decision theory and inverse probability, and Gosset's views on substantive significance, alternative hypotheses, and power, were pushed aside. Too introspective for the hard-boiled."</p>
+
+It seems as if Fisher's mechanization of statistical significance is what ultimately enabled _statistics_ to branch out as its own field of study (and that it took place in Iowa is a fun fact). It makes you wonder how this separation contributed to the subsequent growth of scientific inquiry, results, and knowledge by disrupting the synergy between the intuition held by the practitioner and the intricacies of statistical nuance. While the popular notion of "playing in everyone's backyard" is commonly portrayed as an advantage (which it is pretty cool), upon closer reflection, it might be a fundamental issue. [William Sealy Gosset](https://en.wikipedia.org/wiki/William_Sealy_Gosset), a.k.a _Student_, and the inventor of the [_t-test_](https://en.wikipedia.org/wiki/Student%27s_t-test), was first and foremost, a brewer of Guinness beer, and clearly prioritized substantive meaning:
+
+> <span style="font-family: Garamond, serif; font-size: 14px; color: #2e5c46">"Fisher, not the great transcendent, invented the 5 percent philosophy. By contrast, Gosset's economic approach to uncertainty prevented him from being able to stop thinking at .05 for fear he'd lose too much information, and profits."</span><sub>1</sub>
+
+> <span style="font-family: Garamond, serif; font-size: 14px; color: #2e5c46">"World War I had been under way for more than a year when Gosset--who wanted to serve in the war but was rejected because of nearsightedness--wrote to his elderly friend, the great Karl Pearson: 'My own war work is obviously to brew Guinness stout in such a way as to waste as little labor and material as possible, and I am hoping to help to do something fairly creditible in that way.' It seems he did."</span><sub>1</sub>
+
+He had a problem to solve: _"to brew the best tasting stout at a satisfying price."_. My takeaway: be like Gosset.
+
+# Side notes {#sidenotes}
+
+1. I don't think this has much to do with _statistical_ advancement, but rather the experience of observing its implications over time.
+<br><br>
+2. By _error_, I'm talking about the inevitable consequences of statistical analysis in the real-world. Data is messy and inaccurate, samples contain unintended biases and nuances, and estimation methods always produce a much more simplified version of reality. It probably doesn't need to be repeated, but as George Box [famously said](https://en.wikipedia.org/wiki/All_models_are_wrong), _"all models are wrong, some are useful"_.
+<br><br>
+3. In the article, they defined _COVID-19 misinformation_ as _"assertions unsupported by or contradicting US Centers for Disease Control and Prevention (CDC) guidance on COVID-19 prevention and treatment during the period assessed or contradicting the existing state of scientific evidence for any topics not covered by the CDC"_.
+<br><br>
+4. To give them the benefit of the doubt, they also use a "certainty of evidence" criteria in their decision making which is meant to rate the confidence they have in the result with respect to estimation accuracy, risk of bias, etc. However, the conclusion that there is _"no effect"_ seems questionable to say the least, and that suggesting otherwise is _misinformation_ is asinine.
+<br><br>
+5. Search for the _'Quinn is dead'_ quote [below](#favoritequotes) for another intuitive example of the _fallacy of the transposed conditional_.
+<br><br>
+6. A couple other points on Bayesian modeling. First, on sample size. The required number of samples needed to estimate something is _N=0_. That is, I can get parameter estimates solely based on the prior distributions that are driven by what is already known. Thinking of it this way, the data becomes secondary to the model, and is merely collected as a way to nudge parameters one way or another as more of it comes in. The _model_ always exists, relaying the best available information at that point in time, and I don't need to wait to cross arbitrary sample size thresholds in order to obtain my estimates. This seems to naturally lend itself better to the scientific process. Second, a criticism of Bayesian modeling is that it is too subjective because individual judgement is being used to inform prior distributions. However, I see this as an unequivocal strength. Frequentist methods (and noninformative priors) are not "objective". They carry assumptions that we probably wouldn't see as realistic, it is just convenient to use them. In that sense, they become _more_ arbitrary than utilizing pre-existing knowledge. There is an excellent [podcast episode](https://learnbayesstats.com/episode/45-biostats-clinical-trial-design-frank-harrell/) where this is discussed.
+
+# My favorite quotes {#favoritequotes}
+
+These are my favorite quotes and passages from [the book](https://press.umich.edu/Books/T/The-Cult-of-Statistical-Significance2):
+
+* _"The sizeless scientists have adopted a method of deciding which numbers are significant that has little to do with humanly significant numbers...Imagine that you and your infant child are standing on a sidewalk near a busy street. You have just purchased a hot dog from the street vendor and have safely crossed the street. Scenario 1: You suddenly realize you have forgotten the mustard and if you scurry across the busy street, dodging vehicles, there is a 95% probability you'll return safe with your mustard. Scenario 2: You forgot your child and you watch as she tries to cross the street herself, if you scurry across the busy street, dodging vehicles, there is a 95% probabiliity you'll return safe with your child. The sizeless scientist in effect declares 'they are equally important reasons for crossing the street'"_ (chapter 0, page 10)
+<br><br>
+* _"...since the arrival of the desktop computer with its ability to invert big matrices at the punch of a key, 'checking' on sampling variability effortlessly...electronic computation of statistical significance has cheapened to near zero...'Decision' has become socialized and bureaucratized--heedless of the social margins."_ (chapter 0, page 13)
+<br><br>
+* _"It's hard to do, unlike calculating t-statistics, which is a simpleton's parlor game. But actual science at the frontier is supposed to be difficult. If it wasn't, you wouldn't be at the frontier."_ (chapter 0, page 16)
+<br><br>
+* _"...some cause of natural selection may have a high probability of replicability in additional samples but be trivial. Yet a cause may have a low probability of replicability but be important. This is what we mean when we say that a test of significance is neither necessary nor sufficient for a finding of importance"_ (chapter 1, page 26)
+<br><br>
+* _"Unreasoning anger is a quite common reaction to challenges to the Fisherian orthodoxy."_ (chapter 1, page 31)
+<br><br>
+* _"Significance unfortunately is a useful means toward personal ends in the advance of science...Precision, knowledge, and control. In a narrow and cynical sense statistical significance is the way to achieve these. Design experiment. Then calculate statistical significance. Publish articles showing 'significant' results. Enjoy promotion."_ (chapter 1, page 32)
+<br><br>
+* _"An arbitrary level of statistical significance is the only standard in force--regardless of size, of loss, of cost, of ethics, of scientific persuasiveness. That is, regardless of oomph."_ (chapter 2, page 41)
+<br><br>
+* _"Gosset's economic approach to uncertainty prevented him from be able to stop thinking at .05 for fear he'd lose too much information, and profits...[Fisher] turned away from Gosset and sought a mechanical, uniform, and bureaucratic line of demarcation--an 'impenetrable' end, to scientific argument. So the insecure sciences, eager to establish an 'objective basis' for their research 'communicable to other rational minds', were pleased and materially rewarded by Fisher's 5 percent philosophy...With the low fee he set for them to rise to the rank of Sciences with a big S..."_ (chapter 3, page 46)
+<br><br>
+* _"Fisher's procedure appeals to scientists uncomfortable with any sort of argument...To avoid debate they seek certitude such as statistical significance. The unhappy result is that mere opinion and unargued crankery are **more** likely to rule the sizeless sciences, not less...A technique that was supposed to end arguments has in fact merely concealed the arguments behind a facade of testing that does not test."_ (chapter 3, page 47)
+<br><br>
+* _"'The goal of an empirical economist should not be to determine the truthfulness of a model but rather the domain of its usefulness' [Edward Leamer]"_ (chapter 3, page 52)
+<br><br>
+* _"Ten million tests of significance, in economics, done annually. If the ten million tests were in fact as conclusive as their own rhetoric requires, whether accepting or rejecting, then nearly every issue in economics would long since have been settled. By now there would therefore be far fewer tests per year, not, as is the case, more and more."_ (chapter 3, page 53)
+<br><br>
+* _"Real scientists draw a line between what is large and small."_ (chapter 3, page 54)
+<br><br>
+* _"Real science, unlike significance-testing science, is difficult. If it were not, it would not be real science, but instead it would be already established routine. Real science asks you to make real scientific judgements and real scientific arguments within a community of other scientists. It asks you to be quantitatively persuasive, not to be irrelevantely mechanical. Life is hard."_ (chapter 3, page 55)
+<br><br>
+* _"...seems to be today's prepublication attitude: merely increase the N [sample size] to get a still lower [standard error]...Notice the implication of such reasoning. It implies that something must be very wrong with the notion that statistical significance is **necessary** for substantive significance, a preliminary screen in which one puts one's data."_ (chapter 5, page 67)
+<br><br>
+* _"She can test her belief in the price effect by looking at the magnitudes, using, for example, the highly advanced technique common in data-heavy articles in physics journals: 'interocular trauma'. That is, she can look and see if the result hits her between the eyes."_ (chapter 5, page 72)
+<br><br>
+* _"'Pushing' an economically large **though noisily estimated** effect is not a misuse--or a 'stretch' of professional ethics. It is precisely the ethical thing to do. To argue otherwise is to fall into the mistaken belief that statistical significance **can** provide a screen through which the results can be put, to be examined then for **substantive** significance if they make it through the significance screen."_ (chapter 7, page 86)
+<br><br>
+* _"'Young people have to have careers' [former editor of the American Economic Review]"_ (chapter 8, page 89)
+<br><br>
+* _"Any scientific hypothesis is a matter of being close enough. The decisions the scientist makes on what constitutes 'closeness' 'depend entirely on the special purposes of the investigator'."_ (chapter 8, page 97)
+<br><br>
+* _"Real scientific tests are always a matter of how close to zero or how close to large or how close to some parameter value, and the standard of how close must be a substantive one, inclusive of tolerable loss."_ (chapter 9, page 98)
+<br><br>
+* _"...'the overall benefit-cost ratio for the Employer Experiment is 4.29, but it is not statistically different from zero. The benefit-cost ratio for white women...however, is 7.07, and is statistically different from zero...The Employer Experiment affected only white women.' The 7.07 ratio **affects**, they said, the 4.29 did not. This is a mistake. The best guess of the researchers was that the state got $4.29 for every dollar spent. The estimate was fuzzy, speaking of random sampling error alone. But that **does not mean it is to be taken as zero**."_ (chapter 9, page 99)
+<br><br>
+* _"Notice the respect for the approximate nature of social statistics in his very phrasing of 'around 0.4' instead of the 0.40768934 that his computer undoubtedly spewed out."_ (chapter 9, page 101)
+<br><br>
+* _"Real science changes one's mind. That's one way to see that the proliferation of unpersuasive significance tests is not real science."_ (chapter 9, page 101)
+<br><br>
+* _"At high sample sizes, all null hypotheses are rejected, by mathematical fact, without having to look at the data. No magic of instrumental variables is going to change that."_ (chapter 9, page 104)
+<br><br>
+* _"'Caution, common sense, and patience...are quite likely to keep [the experimenter] more free from error...than the man of little caution and common sense who guides himself by a mechanical application of sampling rules. He will be more likely to remember that there are sources of error more important than fluctuations of sampling.'"_ (chapter 10, page 114)
+<br><br>
+* _"'It is possible for a result to be useful and possess wide standard error. A result obtained by definitions and techniques drawn up with care, and carried out by excellent interviewing and supervision may have wide standard error because the sample was small; yet such a result might be well preferable to one obtained with a bigger sample, with a smaller standard error, but whose definitions, techniques, and interviewing were out of line with best practice and knowledge of the subject matter.' [W. Edwards Deming]"_ (chapter 10, page 117)
+<br><br>
+* _"It's embedded like a tax code in the bureaucracy of science."_ (chapter 11, page 124)
+<br><br>
+* _"...why actually replicate when the logic of Fisherian procedures gives you a virtual replication without the bother and expense? Why not go ahead and use the alloys F1 and F2 in airplanes? After all, p<.05."_ (chapter 11, page 127)
+<br><br>
+* _"In denying the plurality of overlapping hypotheses, the Fisherian tester asks very little of the data. She sees the world through the lens of one hypothesis--the null."_ (chapter 12, page 133)
+<br><br>
+* _"If you are a Fisherian, the fact of a large sample becomes your problem. You're deluded, thinking you've proved oomph before you've considered what it is."_ (chapter 12, page 135)
+<br><br>
+* _"It always depends on the loss, measured in side effects, treatment cost, death rates. The loss to a cool, scientific, impartial spectator will not be the same as the loss to the patient in question...[the balance between Type I/II errors] 'must be left to the patient, friends, and family'."_ (chapter 12, page 137)
+<br><br>
+* _"Designing experiments to find the maximal and minimal effect size is a better way to get powerful results and to keep the focus where is should be, on the effect size itself...[William Sealy Gosset]: 'We tend to think of effect size (when we think of it at all) as a fixed and immutable quantity that we attempt to detect. It may be more useful to think of effect size as a manipulable parameter than can, in a sense, be made larger through greater measurement accuracy.'"_ (chapter 12, page 139)
+<br><br>
+* _"Some psychologists knew about the work of Neyman and Pearson and some even about that of the Bayesian Harold Jeffreys. But textbook authors, editors, and teachers--inspirited by Fisher's promise of raising their fields to the level of hard science--helped Fisher win the day. Statistical education narrowed at the same time as it spread. Decision theory and inverse probability, and Gosset's views on substantive significance, alternative hypotheses, and power, were pushed aside. Too introspective for the hard-boiled."_ (chapter 13, page 143)
+<br><br>
+* _"Fisher wrote in 1955, 'In the US also the great importance of organized technology has I think made it easy to confuse the process appropriate for drawing correct conclusions, with those aimed rather at , let us say, speeding production, or saving money'. Notice the sneer by the new aristocracy of merit, as the clerisy fancied itself. Bourgeois production and money making, Fisher avers, are **not** the appropriate currencies of science."_ (chapter 13, page 145)
+<br><br>
+* _"Early on in an elementary statistics or psychometrics or econometrics book there might appear a loss function--'what if it rains the day of the company picnic?'. But the loss function disappears when the book gets down to producing a formula for science."_ (chapter 13, page 146)
+<br><br>
+* _"Power, simulation, a variety of experiments, triangulation, actual replication, and exploratory data analysis leading to interocular trauma from the effect of magnitudes are different modes of affirming the consequent and are more generally a reasonable program of Gosset or Bayesian and Feynman confirmationism than is the dogma of Fisherian or Popperian falsificationism."_ (chapter 13, page 153)
+<br><br>
+* _"The Fisher test can shed light on the probability that 'Quinn is dead' given that 'Quinn was hanged'. What the Fisher test wants to know and claims to measure is the opposite, the probability that Quinn was hanged, given that Quinn is dead...this probability is close to zero...In a nonhanging society people die for many reasons other than hanging...therefore being dead is very weak evidence indeed that Quinn was hanged...Being dead is 'consistent with' the hypothesis that Quinn was hanged as the positivist rhetoric of the Fisherian argument emphasizes. But so what? A myriad of other hypotheses...such as catching pneumonia or breaking your neck in a fall from your horse, are also consistent with it--'it' being the fact of being dead."_ (chapter 14, page 155)
+<br><br>
+* _"One of us has an elderly aunt who can sit in the garden of a hot, Indiana summer evening untouched by mosquitoes. She chalks up her immunity to a side effect of a 'nuclear treatment' received at midcentury to attack a tumor...Well, who's to deny her? Medical science since the arrival of Fisher's methods has had a problem with narrative...people believed that the use of p's and t's in the design and evaluation of clinical trials would mark an advance over old wive's tales, crankery, anecdote, folkways, and fast-talking patent medicine salesmen. The dream of mechanization was as compelling in medicine as it was in war, social work, and philosophy of mind...'Let the table decide'. At 5 percent the medical scientists suddenly submitted eyes locked hard in a sizeless stare. But the new method is just a mutation of old husband's tales, statistical crankery, probabilistic anecdote, scientific folkways, and fast-talking, twenty-first-century, statistical patent medicine salesmen."_ (chapter 14, page 160)
+<br><br>
+* _"Even the rare courageous Fisherians do not deign to make a case for their procedures. They merely complain that the procedures are being criticized...being comfortably in control, appear inclined to leave things as they are...If you don't have any arguments for an intellectual habit of a lifetime perhaps it is best to keep quiet"_ (chapter 15, page 169)
+<br><br>
+* _"If one can see or hear the problem, one does not need to rely on correlations...doctors have lost many of their skills of physical assessment, even with the stethoscope (and certainly with their hands) and have come to rely on a medical literature deeply infected with Fisherianism."_ (chapter 15, page 175)
+<br><br>
+* _"The Fisherian tests of significance, the only tests employed by the original authors of the seventy-one studies, literally could not see the beneficial effects of the therapies under study, though staring at them."_ (chapter 16, page 179)
+<br><br>
+* _"The 'sunshine herb' [St. John's wort] is frequently under attack (perhaps, one suspects, because it seems to be a cheap substitute for drugs)...the authors...concluded from the p-value that St. John's-wort is not clinically effective. Doesn't help, they said."_ (chapter 16, page 182)
+<br><br>
+* _"'...They were made on different days at different hours. They all relate to the same nest'. Since Edgeworth had collected his own data, he knew his observations intimately; for example, he controlled exactly for nest and time-of-day heterogeneity, reducing error in observations that cannot be matched with a mere test of statistical significance on a data set downloaded from the Internet, no matter how mathematically advanced the 'correction'."_ (chapter 17, page 189)
+<br><br>
+* _"Statistical significance can indicate the likelihood of the presence of an effect...But...so what?...Hoover an Siegler want to assign the responsibility to a man they call 'practical'. Shades of Fisher: the scientist is replaced by a mechanical puppet who acknowledges a signal at p=.05, and the puppet--not the scientist who knows why it might matter--is called 'practical'."_ (chapter 17, page 191)
+<br><br>
+* _"Statistics was not by any means the primary science on the Gower Street agenda. Biometry, but especially eugenics, was...Pearson's papers and the archives of the Biometric and Galton labs survive. One finds in them the ephemera of a scientific racism common to the age, and to which Galton, Pearson, and Fisher were leading contributors...Value judgements--arguments about the arguments--and Gosset's personal probability, were to be kept out of the neighborhood of their new sciences. Pearson would write in the 1920s against Jewish migration to Britain, and Fisher would write in the 1930s against material relief for poor people and literally in favor of relief for the rich on eugenic grounds. Such stuff was in the air..."_ (chapter 18, page 199)
+<br><br>
+* _"An early case, applied to the eggs of the cuckoo bird, illustrates literally the feel of substantive as against statistical significance."_ (chapter 19, page 203)
+<br><br>
+* _"There are ways other than getting inside the mind of the victim to know what matters to her. For instance, one could measure with some difficulty and sacrifice (but good science is difficult and sacrificial)..."_ (chapter 19, page 205)
+<br><br>
+* _"But Gosset in this study and others often found z or t beside the point. 'You want to be able to say 'if farmers [or whomever] in general do this [i.e., follow a certain experimental method] they will make money by it''. A criterion of merely statistical significance could not satisfy such taste._ (chapter 20, page 209)
+<br><br>
+* _"'Fisher was vague. Karl Pearson was vague. Egon Pearson vague. Neyman vague. Fisher and Neyman were fiery. Silly! Egon Pearson was on the outside. They were all jealous of one another, afraid somebody would get ahead. Gosset didn't have a jealous bone in his body. He asked the question [about power and alternative hypotheses]. Egon Pearson to a certain extent rephrased the question which Gosset had asked in statistical parlance. Neyman solved the problem mathematically.' [Florence Nightingale David]"_ (chapter 20, page 211)
+<br><br>
+* _"'There must be essential similarity to ordinary practice...Experiments must be so arranged as to obtain the maximum possible correlation [not the maximum possible statistical significance] between figures which are to be compared [like Leamer and other oomph-ful scientists, Gosset thought in terms of upper and lower bound estimates, best and worst case scenarios]...Repetitions should be so arranged as to have the minimum possible correlation between repetitions (or the highest possible negative correlation)...There should be economy of effory [net pecuniary advantage in the 1905 sense]' [Student (William Sealy Gosset)]. Fisher shrugged. The economic approach to the design of experiments was too difficult. He never did try Gosset's way."_ (chapter 21, page 216)
+<br><br>
+* _"An ethical life of science seems to require an emotional life outside of it. '...he [Fisher] is glad to discuss...things early in the morning or late at night. But he is not glad or even willing to have others work on the purely theoretical aspects of his work. He expects others to accept his discoveries without even questioning them. He does **not** admit that anything he ever said or wrote was wrong. But he goes much further than that. He does not admit even that the **way** he said anything or the nomenclature he used could be improved in any way.' [Raymond Birge]. Birge told Deming that Fisher was the most conceited man he ever met."_ (chapter 21, page 222)
+<br><br>
+* _"'Though recognizable as a psychological condition of reluctance, or resistance to the acceptance of a proposition, the feeling induced by a test of significance has an objective basis in that the probability statement on which it is based is a fact communicable to and verifiable by, other rational minds. The level of significance in such cases fulfils the conditions of a measure of the rational grounds for the disbelief it engenders.' [R.A. Fisher]"_ (chapter 21, page 223)
+<br><br>
+* _"To evaluate size matters/how much would have forced Fisher to listen to and cooperate with others. Determining whether something matters to people depends on actually listening to people, as a heart surgeon listens to a radiologist, as a beer brewer listens to a customer. Admitting that size matters would have required Fisher to admit that regression coefficients 'are capable of evaluation in any currency'. It would have put him in the unhappy position of having to communicate with others about the meaning of his findings. This, we have shown, he would not do."_ (chapter 21, page 224)
+<br><br>
+* _"Scientists, Fisher said, should 'not assume' their research is 'capable of evaluation'. They must not work to 'maximize profit', he said in 1955, only for 'faith'--a secular faith, he means, in the possibility that another mechanically calculated output of p-values by themselves could contribute to scientific progress. The scientist should not worry...whether their samples are random: just test, test, test, **as if** random. A 5 percent level of Type I error is, when 'formally' considered, says Fisher, the final judge of Science."_ (chapter 21, page 226)
+<br><br>
+* _"It is our experience that the more training a person has undergone in Fisherian methods the less easy it is for her to grasp our very elementary point...People who are highly trained in conventional economics have an especially difficult time. Most of them have no idea what we are talking about, though they are sure they do not approve. By contrast, undergraduates who have never had a statistics course, science and engineering professionals we work with or meet in our travels, businesspeople, musicians, activists, various colleagues in nonstatistical fields...as soon as they are able to grasp that we are **not** attacking statistics as such...these have no difficulty understanding our point and immediately begin wondering what the controversy is about."_ (chapter 23, page 239)
+<br><br>
+* _"One can take null-hypothesis significance testing as a sort of astrology, giving 'decisions' mechanically, justified within the system of astrology itself...Fisherisnism is **bad** input, straightforwardly misleading advice, erroneous astrology. Misleading advice is not made into good advice merely by its mechanical and pecuniary cheapness."_ (chapter 23, page 241/242)
+<br><br>
+* _"'Adherence to the rules originally conceived as a means, becomes transformed into an end-in-itself' [Robert Merton]. That seems about right: statistical significance, originally conceived as a means to substantive significance, became transformed by Fisher and then by bureaucracies of science into an end in itself. A t-tested certified fact will be 'equally convincing to all rational minds, irrespective of any intentions they may have in utilizing knowledge inferred'."_ (chapter 23, page 243)
+<br><br>
+* _"If we were to assemble our socioeconomic observations into a single chain of thought its strongest link would be coupling Merton's 'bureaucracy' with Hayek's 'scientism'. Scientism describes, 'of course, an attitude which is decidedly unscientific in the true sense of the word, since it involves a mechanical and uncritical application of habits of thought to fields different from those in which they have been formed. The scentistic as distinguished from the scientific view is not an unprejudiced but a very prejudiced approach which, before it has considered its subject, claims to know what is the most appropriate way of investigating it'. [Hayek]. The trick is to unshackle the bureaucracy of scientism, to break its mechanical rules, change its prejudice incentives, create new rituals, train capacity. No simple trick."_ (chapter 23, page 244)
+<br><br>
+* _"They need to acquire the virtues necessary for performing repeated experiments on the same material. They need to hear that random error is one out of many dozens of errors and seldom the biggest."_ (chapter 24, page 246)
+<br><br>
+* _"In science, as against careerism or pure mathematics, it is better to be approximately correct and scientifically relevant than it is to be precisely correct but humanly irrelevant. Not even the fully specified power function, balancing the risk of errors from random sampling, provides a full solution to a scientific problem. In truth, as Kruskal never tired of remarking, statistical 'significance' poses no scientific problem at all. With the aid of a personal computer and a grant such significance is easy to achieve."_ (chapter 24, page 246)
+<br><br>
+* _"Statistical scientists can teach substance without sacrificing the rigor they so passionately seek. Real rigor will **rise** with increased attention to substance."_ (chapter 24, page 247)
+<br><br>
+* _"The textbooks are wrong. The teaching is wrong. The seminar you just attended is wrong. The most prestigious journal in your scientific field is wrong...Science is mainly a series of approximations to discovering the sources of error. Science is a systematic way of reducing wrongs or can be."_ (chapter 24, page 251)
+<br><br>
+* _"Perhaps you feel frustrated by the random epistemology of the mainstream but don't know what to do. Perhaps you've been sedated by significance and lulled into silence. Perhaps you sense that the power of a Rothamsted test against a plausible Dublin alternative is statistically speaking low but are dazzled by the one-sided rhetoric of statistical significance. Perhaps you feel oppressed by the instrumental variable one should dare not to wield. Perhaps you feel frazzled by the 'social psychological rhetoric of fear' that keeps the abuse of significance in circulation. You want to come out of it. But perhaps you are cowed by the pretige of Fisherian dogma. Or, worse thought, perhaps you are cynically willing to be corrupted if it will keep a nice job. Repent, we say. Embrace your inner Gosset...'Who are you going to believe--us or your own lying eyes?'"_ (chapter 24, page 251)
+
+# References
+
+1. Deirdre McCloskey, Steve Ziliak. [_The Cult of Statistical Significance: How the Standard Error Costs Us Jobs, Justice, and Lives_](https://press.umich.edu/Books/T/The-Cult-of-Statistical-Significance2). University of Michigan Press. 2008. https://doi.org/10.3998/mpub.186351 (subtitle quote: chapter 10, page 112)
+<br><br>
+2. Sule S, DaCosta MC, DeCou E, Gilson C, Wallace K, Goff SL. [Communication of COVID-19 Misinformation on Social Media by Physicians in the US](https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2808358). JAMA Netw Open. 2023;6(8):e2328928. doi:10.1001/jamanetworkopen.2023.28928
+<br><br>
+3. Roman YM, Burela PA, Pasupuleti V, Piscoya A, Vidal JE, Hernandez AV. [Ivermectin for the Treatment of Coronavirus Disease 2019: A Systematic Review and Meta-analysis of Randomized Controlled Trials.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8394824/) Clin Infect Dis. 2022 Mar 23;74(6):1022-1029. doi: 10.1093/cid/ciab591. PMID: 34181716; PMCID: PMC8394824.
+<br><br>
+4. Diaz GA, Parsons GT, Gering SK, Meier AR, Hutchinson IV, Robicsek A. [Myocarditis and Pericarditis After Vaccination for COVID-19](https://jamanetwork.com/journals/jama/fullarticle/2782900). JAMA. 2021;326(12):1210–1212. doi:10.1001/jama.2021.13443
+<br><br>
+5. Cohen, J. (1994). [The earth is round (p < .05)](https://doi.org/10.1037/0003-066X.49.12.997). American Psychologist, 49(12), 997–1003. https://doi.org/10.1037/0003-066X.49.12.997
