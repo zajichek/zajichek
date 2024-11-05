@@ -8,7 +8,7 @@ $body-bg: $bg-color !default;
 $navbar-bg: $bg-color !default;
 
 .toplogo {
-  height: 25px;
+  height: 35px;
   margin-bottom: 0px;
   margin-left: -3px;
   margin-right: -3px;
@@ -16,9 +16,9 @@ $navbar-bg: $bg-color !default;
 }
 
 .navbar-brand {
-  font-family: 'Courier New', Monospace;
+  font-family: 'Lato', sans-serif;
   font-weight: 100;
-  color: black !important;
+  color: #004163 !important;
   font-size: 125% !important;
   text-transform: initial !important;
 }
