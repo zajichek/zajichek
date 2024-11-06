@@ -10,7 +10,3 @@ listing:
   categories: true
   feed: true
 ---
-
-_Converting to Quarto_
-
-Visit my [consultancy page](https://www.centralstatz.com/)

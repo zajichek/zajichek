@@ -3,7 +3,7 @@ project:
 
 website:
   title: "Zajichek Stats"
-  favicon: "logo.png"
+  favicon: "favicon.png"
   google-analytics: "G-9MW3W3RQD9"
   site-url: https://www.zajichekstats.com/
   repo-url: https://github.com/zajichek/zajichek
@@ -12,7 +12,7 @@ website:
   open-graph: true
   navbar:
     logo: "logo.png"
-    title: "Zajichek Stats"
+    title: false
     left:
       - href: index.qmd
         text: Blog
@@ -35,6 +35,6 @@ website:
 
 format:
   html:
-    theme: [styles.scss, lux]
+    theme: [styles.scss, default]
 
 editor: source
