@@ -10,3 +10,8 @@ listing:
   categories: true
   feed: true
 ---
+
+```{=html}
+<center><p style = 'font-size:20px; font-family: Copperplate, fantasy;'><b>A blog on statistical practice, programming, history, philosophy, and data science.</b<</p></center>
+<br>
+```

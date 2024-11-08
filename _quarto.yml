@@ -14,12 +14,10 @@ website:
     logo: "logo.png"
     title: false
     left:
-      - href: index.qmd
-        text: Blog
-      - href: about.qmd
-        text: About
       - href: publications.qmd
         text: Publications
+      - href: about.qmd
+        text: About
     right:
       - icon: linkedin
         href: https://www.linkedin.com/in/alexzajichek
