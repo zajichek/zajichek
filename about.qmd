@@ -2,7 +2,7 @@
 title: "Alex Zajichek"
 about:
   template: jolla
-  image: headshot.jpg
+  image: headshot.png
   links:
     - icon: envelope
       href: "mailto:alexzajichek@gmail.com"
@@ -16,7 +16,7 @@ about:
       href: https://x.com/zajichekstats
 ---
 
-Statistician and data scientist in Central Wisconsin.
+Statistician and data scientist in Central Wisconsin interested in statistical analysis and software development.
 
 ## Experience
 
