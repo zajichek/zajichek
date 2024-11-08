@@ -1,3 +1,35 @@
 ---
-title: "About"
+title: "Alex Zajichek"
+about:
+  template: jolla
+  image: headshot.jpg
+  links:
+    - icon: envelope
+      href: "mailto:alexzajichek@gmail.com"
+    - icon: linkedin
+      href: https://www.linkedin.com/in/alexzajichek
+    - icon: github
+      href: https://github.com/zajichek
+    - icon: youtube
+      href: https://www.youtube.com/@centralstatz
+    - icon: twitter
+      href: https://x.com/zajichekstats
 ---
+
+Statistician and data scientist in Central Wisconsin.
+
+## Experience
+
+Cleveland Clinic | Research Data Scientist | Feb 2023 - Present
+
+Aspirus Health | Data Scientist | Nov 2020 - Jun 2023
+
+Sentry Insurance | Advanced Analytics Modeler | Dec 2019 - Nov 2020
+
+Cleveland Clinic | Biostatistician | Aug 2017 - Dec 2019
+
+## Education
+
+University of Iowa | MS in Statistics | Iowa City, IA | Aug 2015 - May 2017
+
+University of Wisconsin - La Crosse | BS in Statistics | La Crosse, WI | Sep 2011 - Jun 2015

@@ -19,15 +19,17 @@ website:
       - href: about.qmd
         text: About
     right:
+      - icon: envelope
+        href: "mailto:alexzajichek@gmail.com"
       - icon: linkedin
         href: https://www.linkedin.com/in/alexzajichek
         aria-label: LinkedIn
-      - icon: youtube
-        href: https://www.youtube.com/@centralstatz
-        aria-label: YouTube
       - icon: github
         href: https://github.com/zajichek
         aria-label: GitHub
+      - icon: youtube
+        href: https://www.youtube.com/@centralstatz
+        aria-label: YouTube
       - icon: rss
         href: index.xml
 

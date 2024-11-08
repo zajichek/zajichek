@@ -1,5 +1,26 @@
 [
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Alex Zajichek",
+    "section": "",
+    "text": "Statistician and data scientist in Central Wisconsin."
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "Alex Zajichek",
+    "section": "Experience",
+    "text": "Experience\nCleveland Clinic | Research Data Scientist | Feb 2023 - Present\nAspirus Health | Data Scientist | Nov 2020 - Jun 2023\nSentry Insurance | Advanced Analytics Modeler | Dec 2019 - Nov 2020\nCleveland Clinic | Biostatistician | Aug 2017 - Dec 2019"
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "Alex Zajichek",
+    "section": "Education",
+    "text": "Education\nUniversity of Iowa | MS in Statistics | Iowa City, IA | Aug 2015 - May 2017\nUniversity of Wisconsin - La Crosse | BS in Statistics | La Crosse, WI | Sep 2011 - Jun 2015"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Zajichek Stats",
