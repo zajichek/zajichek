@@ -165,6 +165,8 @@
 <li><p>Having cross-functional involvement and buy in is essential. Someone can grab data from a database and build a model on their computer that is really accurate (statistically), but if it doesn’t fit into any clinical/operational workflow or doesn’t have the support it needs to work well in the system, does it really have value? Most of the success of a model in realizing real impact probably has little to do with the math, and mostly to do with the people and implementation.</p></li>
 <li><p>Finding ways to leverage previously-established information can provide a head start. If another hospital has developed models that <em>partially</em> work for your patients, can we develop methods such that we <em>augment</em> that with what is needed for our purposes, instead of starting from scratch?</p></li>
 </ul>
+    <bluesky-comments post="at://did:plc:sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lcicrrlvgc2k" config="{}"></bluesky-comments>
+  
 
 
 <!-- -->

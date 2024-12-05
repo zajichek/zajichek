@@ -190,3 +190,5 @@ For example, we may want to know whether a text or a phone call is more effectiv
 * Having cross-functional involvement and buy in is essential. Someone can grab data from a database and build a model on their computer that is really accurate (statistically), but if it doesn't fit into any clinical/operational workflow or doesn't have the support it needs to work well in the system, does it really have value? Most of the success of a model in realizing real impact probably has little to do with the math, and mostly to do with the people and implementation.
 
 * Finding ways to leverage previously-established information can provide a head start. If another hospital has developed models that _partially_ work for your patients, can we develop methods such that we _augment_ that with what is needed for our purposes, instead of starting from scratch? 
+
+{{< bluesky-comments uri="at://did:plc:sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lcicrrlvgc2k" >}}
