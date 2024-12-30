@@ -1,0 +1,681 @@
+---
+title: "The Value of Open-Source"
+subtitle: "Leveraging free, code-first tools to iterate toward advanced analytics"
+institute: "Research Data Scientist, Cleveland Clinic"
+author: "Alex Zajichek"
+date: "2025-02-27"
+date-format: long
+format:
+  revealjs: 
+    theme: [serif, custom.scss]
+    footer: "<em>AI Innovations at Work Conference 2025</em>"
+    slide-number: true
+    incremental: true
+    code-block-height: 250px
+---
+
+# What is AI, Anyway?
+
+::: {.notes}
+- Today we're going to talk about open source tools
+- Why you might consider using them to help you move towards more advanced analytics
+- Since we're at an AI conference, we need to talk about it. So we're going to first think about what AI is in the first place
+- The way AI is conveyed/presented is vague and ambiguous. We understand it's something to do something about, but very unclear what that something is. 
+- We don't get into specifics and meet people where they are
+:::
+
+## Two Sides of A Coin
+
+::: {.notes}
+- The way I view it, there are two sides of the coin that are generally not differentiated
+- Go out to the marketplace and see what's out there to help you accomplish something
+- I put "purchase" there intentionally
+- A productivity tool, like any other sort of tool. We don't particularly think about how it works.
+
+- The other side is about what actually goes into building those AI tools themselves
+- Data infra: How you collect, store data
+- Thinking: How you report and utilize information and frame problems analytically to be answered with data
+- Reasoning: How you deduce and infer and take action based on that information
+- Tools: Tools that are used to facilitate these processes
+
+- Boils down to how data can help make informed decisions
+
+- Ultimately, these are building blocks that create advanced AI/data science tools on the left
+
+:::
+
+<br>
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### AI as Tools
+
+- Pre-built products like [ChatGPT](https://chatgpt.com/), [Gemini](https://gemini.google.com/), etc.
+- Use (purchase) to conform to our tasks
+- Perceived as _productivity tools_
+- Dominates the conversation
+
+:::
+
+::: {.column width="50%"}
+
+### AI as Data Science
+
+- Data infrastructure, analytical thinking, statistical reasoning, tools for facilitation
+- How we use data to help _inform_ decision making
+- The building blocks of AI itself
+
+::: 
+
+::::
+
+---
+
+## Blurred Lines
+
+<br>
+
+::: {.notes}
+- What I've noticed in presentations, etc. is these aren't really distinguished in the conversation. Focus on tools, talk about needing better data strategy which devolves into how we can use the existing tool for our purpose (specifically ChatGPT).
+
+- So many conflicting definitions of AI, and how it relates to data science. If you search Google you get so many differing pictures of it (no clear answer)
+- I intentionally chose this picture because it's just as confusing as stating the definition of AI. 
+- There's so much varying overlap that it doesn't actually tell you anything.
+- I'm glad regression analysis is actually in there where it is. Very old technique. Going into my first ML class (after having plenty of statistics training) excited to "allow machines to learn and improve without being explicitly programmed". Regression was the first thing I learned about in my machine learning course. Regression is a core part of the ML field.
+- From that point forward I start noticing so many redunancies between these fields, and realized it's all basically the same thing in kind, just to varying degree
+- So it all points to: building from a solid data strategy and infrastructure will lead toward these more advanced capabilities.
+
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+<br>
+
+- Tend to focus on the first, bypassing the second; conflating views
+
+<br>
+
+- Leads to ambiguity and confusion (figure)
+
+:::
+
+::: {.column width="50%"}
+
+[![Figure: The confusing nature of AI-related fields](AIDiagram.png)](https://www.researchgate.net/figure/Venn-diagram-of-artificial-intelligence-and-data-science-Artificial-intelligence-AI-is_fig1_380790362)
+:::
+
+::::
+
+---
+
+## The Horse Before the Cart
+
+::: {.notes} 
+- So can we take a step back and strategically think about what we can do?
+- Before spending tons of money on black box tools in hopes they work...
+- Where does the value lie? 
+
+- This is now a somewhat old statistic, but even if we assume improvements, still a large portion of business at early stage in their data journey
+
+- Low hanging fruit going back to basics. 
+- This is not to say AI tools don't have their place. But we should be thinking strategically about what our needs really are vs. jumping on the AI hype train and spending tons of money because we think we need to.
+- You know your business. Where the value is. A whole world of stuff out there to be utilized...
+- Think about what sort of fundamental skills we can enhance and what tools we can integrate to facilitate fundamental analytical thinking.
+- Having solid foundational analytics strategy can then let you better evaluate what and when an AI productivity tool will be useful, rather than just hoping it solves your problem
+
+- Start thinking about these things and the decisions you need to make. Is AI really the solution? 
+
+- This is NOT to say to not use AI tools (on the productivity side) if they have clear and obvious benefit to you
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Current State
+
+- Gartner (2018): 87% of business at low analytics maturity [1]
+
+[![Figure: Gartner Analytics Maturity Model](AnalyticsMaturity.png)](https://www.jirav.com/blog/data-analytics-maturity-models)
+
+:::
+
+::: {.column width="50%"}
+
+### Back to Basics
+
+- Are you capturing what's important? (Data infrastructure)
+  + "If I knew X at time Y, I could do Z"
+- How are you using your data? (Reporting/analytical thinking)
+- What are your limitations? (Tools, skills, time, etc.)
+- Are _AI tools_ really the solution?
+  + _"AI for the sake of AI is a losing proposition"_ [2]. Be intentional!
+
+:::
+
+::::
+
+# The Case for Open-Source
+
+::: {.notes} 
+- I'd argue there's no better way to get on this road towards advanced analytics than with open-source tools
+- Build your foundation with open source software
+:::
+
+## What Is Open-Source?
+
+::: {.notes}
+
+- It is software that is first and foremost free, but also open, so you know exactly how it works
+- Although open source software can and is built by companies, I think of it as community developed. Namely that the users of the software are building it.
+- So my favorite way to think about what open source is is like a prestine workshop with all the tools you can imagine available. Now it is up to you to build what you want with them to serve your needs. I specifically include "directions" to emphasize that not only you can use the tools, but a plethora of resources to guide you and understand how you do and can use them.
+
+- When I talk about open source, I'm implying code-first. In my opinion it is the best way. Allows you to build exactly what you need. Pre-made, point and click tools always have their limitations and restrictions. Not to mention the cost...
+- Data science in general is as much an art as science. You need to create things in a way that is useful.
+- Gives you the groundwork and foundation to facilitate the way you want to solve problems. Use it how you want, instead of trying to conform your problems to how pre-existing tools work. 
+- Syntax to communicate your analytical ideas
+- Given that it's free, no matter who you are you can start. Just install the software. So it gives empowerment and flexibility for an individual to start using it in their own work, maybe locally, and see how it helps them solve potentially small problems. Build this foundation and iterate towards more widespread use.
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Background
+
+- In essence, free and open software ([Wikipedia](https://en.wikipedia.org/wiki/Open_source))
+- Think of as community built
+- Like a workshop for your raw materials (with directions)
+
+:::
+
+::: {.column width="50%"}
+
+### Benefits in Data Science
+
+- Code-first approach gives flexibility and control
+  + Art + science
+- Use it to _facilitate_ analytical approach
+  + Building blocks to AI
+- Low-cost iteration and experimentation (anyone can do it)
+
+:::
+
+::::
+
+<br>
+
+* <strong>Today's emphasis:</strong>: [R](https://www.r-project.org/), [Quarto](https://quarto.org/), [Shiny](https://shiny.posit.co/).
+
+---
+
+## The R Programming Language
+
+::: {.notes}
+
+- As compared to object oriented, though R also has OOP paradigm
+- Database connectivity, complex data manipulation, advanced statistical modeling, tables, graphs, interactivity, web applications, maps, etc.
+- If you look through the package list, there may be packages readily available for your use case
+
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Background
+
+* A free and open-source functional programming language
+* Developed in the 1990's for statistical computing, but has long since expanded to much broader usage
+* Advanced through [packages](https://r-pkgs.org/) developed by the community ([Package list](https://cran.r-project.org/web/packages/available_packages_by_name.html))
+* Commonly used in the [RStudio IDE](https://posit.co/products/open-source/rstudio/)
+:::
+
+::: {.column width="50%"}
+
+### Example
+
+```{r}
+#| code-line-numbers: "|1|2|3-10"
+#| echo: true
+library(plotly) # Load package
+my_data <- trees # Assign object (dataset)
+plot_ly(
+  data = my_data,
+  x = ~Height,
+  y = ~Girth,
+  size = ~Volume,
+  color = ~Volume,
+  text = ~paste0("Height: ", Height, "<br>Girth: ", Girth, "<br>Volume: ", Volume), height = 300, width = 500
+)
+```
+
+:::
+
+::::
+
+---
+
+### Map example
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{.r code-line-numbers="|1-4|6-19|21-45"}
+# Load packages
+library(tidyverse)
+library(tidycensus)
+library(mapgl)
+
+# Extract a data set to use
+dat <- 
+  get_acs(
+    geography = "tract",
+    variables = "B19013_001", # Median income,
+    state = "WI",
+    year = 2022,
+    geometry = TRUE
+  ) |>
+  
+  # Make an information column
+  mutate(
+    Info = paste0(str_remove(NAME, ";.+$"), "<br>Median Income ($): ", round(estimate))
+  )
+
+maplibre() |>
+  
+  # Focus the mapping area
+  fit_bounds(dat) |>
+  
+  # Fill with the data values
+  add_fill_layer(
+    id = "mc_acs",
+    source = dat,
+    fill_outline_color = "black",
+    fill_color = 
+      interpolate(
+        column = "estimate",
+        values = range(dat$estimate, na.rm = TRUE),
+        stops = c("#f2d37c", "#08519c"),
+        na_color = "gray"
+      ),
+    fill_opacity = 0.50,
+    popup = "Info"
+  ) |>
+  add_legend(
+    legend_title = "Median income ($)",
+    values = range(dat$estimate, na.rm = TRUE),
+    colors = c("#f2d37c", "#08519c")
+  )
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+# Load packages
+library(tidyverse)
+library(tidycensus)
+library(mapgl)
+
+# Extract a data set to use
+dat <- 
+  get_acs(
+    geography = "tract",
+    variables = "B19013_001", # Median income,
+    state = "WI",
+    year = 2022,
+    geometry = TRUE,
+    progress_bar = FALSE
+  ) |>
+  
+  # Make an information column
+  mutate(
+    Info = paste0(str_remove(NAME, ";.+$"), "<br>Median Income ($): ", round(estimate))
+  )
+
+maplibre() |>
+  
+  # Focus the mapping area
+  fit_bounds(dat) |>
+  
+  # Fill with the data values
+  add_fill_layer(
+    id = "mc_acs",
+    source = dat,
+    fill_outline_color = "black",
+    fill_color = 
+      interpolate(
+        column = "estimate",
+        values = range(dat$estimate, na.rm = TRUE),
+        stops = c("#f2d37c", "#08519c"),
+        na_color = "gray"
+      ),
+    fill_opacity = 0.50,
+    popup = "Info"
+  ) |>
+  add_legend(
+    legend_title = "Median income ($)",
+    values = range(dat$estimate, na.rm = TRUE),
+    colors = c("#f2d37c", "#08519c")
+  )
+```
+
+:::
+
+::::
+
+---
+
+## Quarto for Reproducible Documents
+
+::: {.notes}
+
+- These slides and the website it is contained in, all built with Quarto (for free)
+- Used the examples in the previous slides as meta-examples of why Quarto is awesome. 
+- Use these open source tools to easily deliver powerful interactive analytical content.
+- Embed code chunks for reproducible reporting straight in your document
+- Imagine now this is connected to your database...
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Background
+
+- [Quarto](https://quarto.org/) is an open source technical publishing system
+- Build custom analytical documents in programmatic way
+- Vehicle for dissemination, promoting automation and reproducibility
+- Integrates well with [R](https://www.r-project.org/), [Python](https://www.python.org/), and many other tools
+  + _This_ presentation (and [website](https://www.centralstatz.com/presentations/the-value-of-open-source/) that it's contained in) are built in [Quarto](https://quarto.org/)
+
+:::
+
+::: {.column width="50%"}
+
+YAML (header/metadata)
+``` yaml
+---
+title: "The Value of Open-Source"
+subtitle: "Leveraging free, code-first tools to iterate toward advanced analytics"
+institute: "Research Data Scientist, Cleveland Clinic"
+author: "Alex Zajichek"
+date: "2025-02-27"
+date-format: long
+format:
+  revealjs: 
+    theme: [serif, custom.scss]
+    footer: "<em>AI Innovations at Work Conference 2025</em>"
+    slide-number: true
+    incremental: true
+---
+```
+
+Markdown (body)
+``` markdown
+### Background
+
+- [Quarto](https://quarto.org/) is a open source technical publishing system
+- Build custom analytical documents in programmatic way
+- Vehicle for dissemination, promoting automation and reproducibility
+```
+
+:::
+
+::::
+
+---
+
+## Shiny for Web Applications
+
+::: {.notes}
+- Good example of separating AI tools from the foundational data strategy stuff: building applications that utilize AI tools
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Background
+
+- [Shiny](https://shiny.posit.co/) is an R _package_ for building custom, interactive web applications
+  + You can do it in [Python too](https://shiny.posit.co/py/)!
+- Allows users to interact with data, analytics, models, etc. however you see fit
+
+::: {style="font-size: 50%;"}
+Example: [Deploying an LLM-powered Shiny app](https://www.youtube.com/watch?v=YB_VyRV5wwQ)
+:::
+{{< video https://www.youtube.com/embed/YB_VyRV5wwQ width="100%">}}
+
+:::
+
+::: {.column width="50%"}
+
+### Example (in R)
+
+```{.r code-line-numbers="|1|3-19|21-30|32-33"}
+library(shiny) # Load package
+
+# The user interface
+ui <- 
+  fluidPage(
+    title = "MyApp", 
+    sidebarLayout(
+      sidebarPanel(
+        selectInput(
+          inputId = "color",
+          label = "Choose Color",
+          choices = c("red", "blue", "green")
+        )
+      ),
+      mainPanel(
+        plotOutput("my_plot")
+      )
+    )
+  )
+
+# How the inputs turn to outputs
+server <- 
+  function(input, output) {
+    
+    output$my_plot <-
+      renderPlot({
+        with(trees, plot(Height, Girth, col = input$color))
+      })
+    
+  }
+
+# Run the app
+shinyApp(ui, server)
+```
+
+![](shiny.gif)
+:::
+
+::::
+
+---
+
+## Deployment and integration
+
+::: {.notes}
+
+- So you can see when you start using programming languages like R (or Python), in combination with flexible tools like Quarto and custom applications with Shiny, you have all sorts of tools in your toolbox to dream up whatever is going to fit your needs. Out of the box, this is all free so far.
+- The last piece to touch on is how you can start to share/disseminate your work too. When starting out, most likely making these things locally. Ultimately you want other people to see your reports, use the web applications, etc. Even this can be free (to an extent).
+- The beautiful thing is that it can remain free only until you need it not be
+- Use what works
+- Pay as needed
+- Posit Connect Cloud (now in beta)
+- shinyapps.io
+- Shiny Server
+- Quarto Pub
+- Index
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- Last piece of the puzzle: sharing the work
+- Start with free; Iterate and pay as needed
+  + Not all or nothing!
+- Repeat: use to facilitate analytical strategy
+
+:::
+
+::: {.column width="50%"}
+
+### Options to get started
+
+::: {style="font-size: 75%;"}
+
+- [Posit Connect Cloud](https://connect.posit.cloud/): Deploy Shiny apps, Quarto docs, and more to the web for free from [GitHub](https://github.com/)
+  + Now in beta with private deployment options (for low cost)
+- [shinyapps.io](https://www.shinyapps.io/): Deploy Shiny apps to the web; free basic plan
+  + Pay for more features like security, domains, and authentication
+- [Quarto Pub](https://quartopub.com/): Freely publish Quarto output to the web for public access
+- [Shiny Server](https://posit.co/products/open-source/shiny-server/): Open source (free) server to deploy Shiny apps and other content
+  + Install on premises or the cloud
+  
+:::
+
+:::
+
+::::
+
+---
+
+## How can I learn?
+
+::: {.notes}
+- What we saw here was a very narrow glimpse into what these tools can do. So how can you learn more yourself?
+- First, just install them--they are free!
+- Take the code from these slides even and run it yourself
+- Again, the workshop analogy. You probably need to be curious and want to learn new skills, but in my opinion it's the best way to build a foundation.
+- Start task based: try reproducing some very small little task, like creating a graph programmatically that you'd normally do in Excel
+- You start to figure things out as you go, which allows you to iterate over time and continuing building and expanding the capabilities
+- Start with free stuff, and only incur costs as needed for solutions you are building and need
+- Use AI tools to help you learn!
+:::
+
+::: {.panel-tabset}
+
+### Initial strategy
+
+- First, go install them and mess around
+
+<br>
+
+- Make a (small) tangible goal, figure it out, then iterate
+  + Document everything
+
+<br>
+
+- Focus on automation, reporting and reproducibility to start (low hanging fruit)
+  + Build the foundation for analytics maturity
+
+### Free resources
+
+- [_R for Data Science_](https://r4ds.had.co.nz/) by Hadley Wickham
+- [_An Introduction to Statistical Learning_](https://www.statlearning.com/) for statistics and data science foundations
+- A [free R course](https://www.goquantfish.com/courses/gentle-intro-to-R) on [QuantFish](https://www.goquantfish.com/)
+- Endless [YouTube](https://www.youtube.com/) resources for [R](https://www.youtube.com/results?search_query=r+programming+language), [Quarto](https://www.youtube.com/playlist?list=PL9HYL-VRX0oQI8fVioFxMTBrViFnRX_Df), [Shiny](https://www.youtube.com/results?search_query=shiny+r)...and everything else
+- Community boards like [Posit Community](https://forum.posit.co/top?period=monthly), [Stack Overflow](https://stackoverflow.com/), etc.
+- Visit [Posit PBC's](https://posit.co/) website and learning resources
+  + Major developer/maintainer of many tools we talked about today
+
+### Use AI tools!
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+#### ChatGPT
+
+:::
+
+::: {.column width="50%"}
+
+#### Shiny Assistant
+
+https://gallery.shinyapps.io/assistant/
+
+:::
+
+::::
+
+:::
+
+---
+
+# Tools in Action: [riskcalc.org](https://riskcalc.org/)
+
+## What is [riskcalc.org](https://riskcalc.org/)?
+
+::: {.notes}
+- Interesting thought experiment for what "AI" is. 
+:::
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Background
+
+- Repository of risk calculators for individualized medical decision making
+- Embedded with published predictive models for various clinical outcomes
+- Majority are regression models
+
+:::
+
+::: {.column width="50%"}
+
+<br>
+<br>
+
+![](riskcalc.gif)
+
+:::
+
+::::
+
+--- 
+
+## Low-Cost Backend
+
+- Each calculator is a Shiny app
+- Diagram showing path
+- Shiny Server: Can install on premises, have a functioning shiny server behind your firewall, for free
+- All of these things are free
+
+- Use AWS (we pay, but you can start for free)
+
+---
+
+# Acknowledgements
+
+- QHS
+- AM, KJ, BMD
+- Mike Kattan
+
+---
+
+## Conclusion
+
+- Ai tools can be useful...
+- Open source best way to get started and facilitate because of low-cost and flexibility
+
+---
+
+# References
+
+1. https://www.gartner.com/en/newsroom/press-releases/2018-12-06-gartner-data-shows-87-percent-of-organizations-have-low-bi-and-analytics-maturity
+2. https://www.kearney.com/service/digital-analytics/ai-assessment-aia-2024-the-drive-for-greater-maturity-scale-and-impact
+

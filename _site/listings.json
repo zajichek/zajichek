@@ -1,5 +1,12 @@
 [
   {
+    "listing": "/presentations.html",
+    "items": [
+      "/presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
+      "/presentations/the-value-of-open-source/index.html"
+    ]
+  },
+  {
     "listing": "/index.html",
     "items": [
       "/post/managing-the-readmission-risk-pool/index.html",

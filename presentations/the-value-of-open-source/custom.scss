@@ -1,0 +1,31 @@
+/*-- scss:defaults --*/
+
+$link-color: #42affa;
+$presentation-font-size-root: 30px;
+$presentation-font-smaller: .6;
+
+/*-- scss:rules --*/
+
+.reveal .slide blockquote {
+  border-left: 3px solid $text-muted;
+  padding-left: 0.5em;
+}
+
+.reveal h1 {
+    background-color: #b8977d;
+    padding: 10px 0px 10px 20px;
+    height: 85px;
+    color: black;
+    border-radius: 0px;
+    text-align: center;
+}
+
+.reveal h2 {
+    background-color: #baa28f;
+    padding: 10px 0px 5px 10px;
+    color: black;
+}
+
+.reveal h3 {
+  text-align: center;
+}

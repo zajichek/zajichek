@@ -1,0 +1,14 @@
+---
+title: "An assessment of non-traditional regression models for count data"
+author: Alex Zajichek
+date: "2018-02-12"
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="NonTraditionalCountRegression.pdf"></iframe>
+</center>
+```
+
+[Link to slideshow](NonTraditionalCountRegression.pdf)

@@ -16,7 +16,7 @@ about:
       href: https://x.com/zajichekstats
 ---
 
-Statistician and data scientist in Central Wisconsin interested in statistical analysis and software development.
+Statistician and data scientist in Central Wisconsin interested in statistical analysis and software development. Need statistical help? Visit my [consultancy page](https://www.centralstatz.com/).
 
 ## Experience
 

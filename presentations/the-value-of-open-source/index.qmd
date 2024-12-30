@@ -1,0 +1,16 @@
+---
+title: "The value of open-source: Leveraging free, code-first tools to iterate toward advanced analytics"
+author: Alex Zajichek
+date: "2025-02-27"
+---
+
+_In progress_
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="slides.html"></iframe>
+</center>
+```
+
+[Link to slideshow](slides.qmd)

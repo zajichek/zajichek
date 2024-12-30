@@ -16,6 +16,8 @@ website:
     left:
       - href: publications.qmd
         text: Publications
+      - href: presentations.qmd
+        text: Presentations
       - href: about.qmd
         text: About
     right:
