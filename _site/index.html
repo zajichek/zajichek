@@ -139,10 +139,10 @@ window.Quarto = {
 </script>
 
 <link rel="alternate" type="application/rss+xml" title="Zajichek Stats" href="index.xml" data-external="1"><meta property="og:title" content="Zajichek Stats">
-<meta property="og:image" content="https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/feature.png">
+<meta property="og:image" content="https://www.zajichekstats.com/post/reconciling-regression-equation-spline-terms/feature.png">
 <meta property="og:site_name" content="Zajichek Stats">
-<meta property="og:image:height" content="418">
-<meta property="og:image:width" content="418">
+<meta property="og:image:height" content="1084">
+<meta property="og:image:width" content="1026">
 </head>
 
 <body class="nav-fixed">
@@ -214,7 +214,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(15)</span></div><div class="category" data-category="Bayesian Statistics">Bayesian Statistics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Causal Inference">Causal Inference <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Communication">Communication <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Data Wrangling">Data Wrangling <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Estimation">Estimation <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Healthcare">Healthcare <span class="quarto-category-count">(3)</span></div><div class="category" data-category="History">History <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Javascript">Javascript <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Maps">Maps <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Modeling">Modeling <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Philosophy">Philosophy <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Prediction">Prediction <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Probability">Probability <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Propensity Scores">Propensity Scores <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Quantum">Quantum <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Regression">Regression <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Research">Research <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Survival Analysis">Survival Analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Tables">Tables <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Weighting">Weighting <span class="quarto-category-count">(1)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(22)</span></div><div class="category" data-category="Bayesian Statistics">Bayesian Statistics <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Causal Inference">Causal Inference <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Communication">Communication <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Data Wrangling">Data Wrangling <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Decision Making">Decision Making <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Deployment">Deployment <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Estimation">Estimation <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Healthcare">Healthcare <span class="quarto-category-count">(3)</span></div><div class="category" data-category="History">History <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Javascript">Javascript <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Learning">Learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Maps">Maps <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Modeling">Modeling <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Philosophy">Philosophy <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Prediction">Prediction <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Probability">Probability <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Project Management">Project Management <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Propensity Scores">Propensity Scores <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Quantum">Quantum <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Regression">Regression <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Research">Research <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Software Development">Software Development <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Statistical Significance">Statistical Significance <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Survival Analysis">Survival Analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Tables">Tables <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Web applications">Web applications <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Weighting">Weighting <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -254,7 +254,148 @@ window.Quarto = {
     </div>
 </div>
 <div class="list quarto-listing-default">
-<div class="quarto-post image-left" data-index="0" data-categories="Healthcare,Modeling,Prediction" data-listing-date-sort="1721970000000" data-listing-file-modified-sort="1733413742696" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3789">
+<div class="quarto-post image-left" data-index="0" data-categories="Regression" data-listing-date-sort="1732514400000" data-listing-file-modified-sort="1735655166678" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1497">
+<div class="thumbnail">
+<p><a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external"></a></p><a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external">
+<p><img loading="lazy" src="./post/reconciling-regression-equation-spline-terms/feature.png" class="thumbnail-image"></p>
+</a><p><a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external">How to reconcile the regression equation from spline terms</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Regression'); return false;">
+Regression
+</div>
+</div>
+<div class="listing-description">
+<a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external">Using the {rms::rcs} function</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external">
+<div class="listing-date">
+Nov 25, 2024
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="1" data-categories="Bayesian Statistics" data-listing-date-sort="1730178000000" data-listing-file-modified-sort="1735655222555" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2801">
+<div class="thumbnail">
+<p><a href="./post/can-you-have-a-model-without-data/index.html" class="no-external"></a></p><a href="./post/can-you-have-a-model-without-data/index.html" class="no-external">
+<p><img loading="lazy" src="./post/can-you-have-a-model-without-data/feature.png" class="thumbnail-image"></p>
+</a><p><a href="./post/can-you-have-a-model-without-data/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/can-you-have-a-model-without-data/index.html" class="no-external">Can you have a model without data?</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./post/can-you-have-a-model-without-data/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Bayesian Statistics'); return false;">
+Bayesian Statistics
+</div>
+</div>
+<div class="listing-description">
+<a href="./post/can-you-have-a-model-without-data/index.html" class="no-external">Yes, by being a Bayesian.</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./post/can-you-have-a-model-without-data/index.html" class="no-external">
+<div class="listing-date">
+Oct 29, 2024
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="2" data-categories="Deployment,Learning,Software Development" data-listing-date-sort="1727240400000" data-listing-file-modified-sort="1733003683615" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1243">
+<div class="thumbnail">
+<p><a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external"></a></p><a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external">
+<p><img loading="lazy" src="./post/you-should-have-a-data-science-blog/feature.png" class="thumbnail-image"></p>
+</a><p><a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external">You should have a data science blog</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Deployment'); return false;">
+Deployment
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Learning'); return false;">
+Learning
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Software Development'); return false;">
+Software Development
+</div>
+</div>
+<div class="listing-description">
+<a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external">Easy and free are only a couple benefits.</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external">
+<div class="listing-date">
+Sep 25, 2024
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="3" data-categories="Web applications,Deployment" data-listing-date-sort="1724130000000" data-listing-file-modified-sort="1733003907652" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3042">
+<div class="thumbnail">
+<p><a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external"></a></p><a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external">
+<p><img loading="lazy" src="./post/low-cost-ways-to-build-and-deploy-apps/feature.png" class="thumbnail-image"></p>
+</a><p><a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external">Low cost ways to build and deploy analytical web apps</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Web applications'); return false;">
+Web applications
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Deployment'); return false;">
+Deployment
+</div>
+</div>
+<div class="listing-description">
+<a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external">An overview of some server options</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external">
+<div class="listing-date">
+Aug 20, 2024
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="4" data-categories="Healthcare,Modeling,Prediction" data-listing-date-sort="1721970000000" data-listing-file-modified-sort="1733413742696" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3789">
 <div class="thumbnail">
 <p><a href="./post/managing-the-readmission-risk-pool/index.html" class="no-external"></a></p><a href="./post/managing-the-readmission-risk-pool/index.html" class="no-external">
 <p><img loading="lazy" src="./post/managing-the-readmission-risk-pool/feature.png" class="thumbnail-image"></p>
@@ -293,7 +434,109 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="1" data-categories="Quantum,Probability" data-listing-date-sort="1708063200000" data-listing-file-modified-sort="1730766333744" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="954">
+<div class="quarto-post image-left" data-index="5" data-categories="Regression" data-listing-date-sort="1721365200000" data-listing-file-modified-sort="1735655197812" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2640">
+<div class="thumbnail">
+<p><a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external"></a></p><a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external">
+<p><img loading="lazy" src="./post/how-to-assess-the-proportional-odds-assumption/feature.png" class="thumbnail-image"></p>
+</a><p><a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external">How do you assess the proportional-odds assumption? Directly.</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Regression'); return false;">
+Regression
+</div>
+</div>
+<div class="listing-description">
+<a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external">A simple visual check.</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external">
+<div class="listing-date">
+Jul 19, 2024
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="6" data-categories="Statistical Significance,Decision Making" data-listing-date-sort="1718773200000" data-listing-file-modified-sort="1733004339744" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2774">
+<div class="thumbnail">
+<p><a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external"></a></p><a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external">
+<p><img loading="lazy" src="./post/simple-example-why-statistical-significance-is-insufficient/feature.png" class="thumbnail-image"></p>
+</a><p><a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external">A simple example why statistical significance is insufficient for action</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Statistical Significance'); return false;">
+Statistical Significance
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Decision Making'); return false;">
+Decision Making
+</div>
+</div>
+<div class="listing-description">
+<a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external">It ignores the basic question: “How much?”</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external">
+<div class="listing-date">
+Jun 19, 2024
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="7" data-categories="Project Management" data-listing-date-sort="1715835600000" data-listing-file-modified-sort="1733004536968" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1089">
+<div class="thumbnail">
+<p><a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external"></a></p><a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external">
+<p><img loading="lazy" src="./post/ways-to-ensure-success-of-statistical-project/feature.png" class="thumbnail-image"></p>
+</a><p><a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external">5 ways to help ensure success of a statistical project</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external"></a>
+</div>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('Project Management'); return false;">
+Project Management
+</div>
+</div>
+<div class="listing-description">
+<a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external">How can we increase the likelihood that things will go as expected?</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external">
+<div class="listing-date">
+May 16, 2024
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="8" data-categories="Quantum,Probability" data-listing-date-sort="1708063200000" data-listing-file-modified-sort="1730766333744" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="954">
 <div class="thumbnail">
 <p><a href="./post/quantum-entanglement-from-statistical-perspective/index.html" class="no-external"></a></p><a href="./post/quantum-entanglement-from-statistical-perspective/index.html" class="no-external">
 <p><img loading="lazy" src="./post/quantum-entanglement-from-statistical-perspective/feature.png" class="thumbnail-image"></p>
@@ -329,7 +572,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="2" data-categories="History,Philosophy" data-listing-date-sort="1707544800000" data-listing-file-modified-sort="1730766077465" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1602">
+<div class="quarto-post image-left" data-index="9" data-categories="History,Philosophy" data-listing-date-sort="1707544800000" data-listing-file-modified-sort="1730766077465" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1602">
 <div class="thumbnail">
 <p><a href="./post/on-the-creation-of-classical-statistics/index.html" class="no-external"></a></p><a href="./post/on-the-creation-of-classical-statistics/index.html" class="no-external">
 <p><img loading="lazy" src="./post/on-the-creation-of-classical-statistics/feature.png" class="thumbnail-image"></p>
@@ -365,7 +608,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="3" data-categories="History,Philosophy,Research" data-listing-date-sort="1703224800000" data-listing-file-modified-sort="1730765784732" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8278">
+<div class="quarto-post image-left" data-index="10" data-categories="History,Philosophy,Research" data-listing-date-sort="1703224800000" data-listing-file-modified-sort="1730765784732" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8278">
 <div class="thumbnail">
 <p><a href="./post/statistical-significance-is-insignificant/index.html" class="no-external"></a></p><a href="./post/statistical-significance-is-insignificant/index.html" class="no-external">
 <p><img loading="lazy" src="./post/statistical-significance-is-insignificant/feature.png" class="thumbnail-image"></p>
@@ -404,7 +647,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="4" data-categories="Causal Inference,Survival Analysis,Propensity Scores,Weighting" data-listing-date-sort="1696222800000" data-listing-file-modified-sort="1730765361991" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8301">
+<div class="quarto-post image-left" data-index="11" data-categories="Causal Inference,Survival Analysis,Propensity Scores,Weighting" data-listing-date-sort="1696222800000" data-listing-file-modified-sort="1730765361991" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8301">
 <div class="thumbnail">
 <p><a href="./post/the-overlap-weight/index.html" class="no-external"></a></p><a href="./post/the-overlap-weight/index.html" class="no-external">
 <p><img loading="lazy" src="./post/the-overlap-weight/feature.png" class="thumbnail-image"></p>
@@ -446,7 +689,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="5" data-categories="Tables,Javascript" data-listing-date-sort="1688014800000" data-listing-file-modified-sort="1730764930065" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1761">
+<div class="quarto-post image-left" data-index="12" data-categories="Tables,Javascript" data-listing-date-sort="1688014800000" data-listing-file-modified-sort="1730764930065" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1761">
 <div class="thumbnail">
 <p><a href="./post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html" class="no-external"></a></p><a href="./post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html" class="no-external">
 <p><img loading="lazy" src="./post/quickly-removing-higher-order-aggregation-text-in-reactable/feature.png" class="thumbnail-image"></p>
@@ -482,7 +725,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="6" data-categories="Data Wrangling" data-listing-date-sort="1675317600000" data-listing-file-modified-sort="1730764547740" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="400">
+<div class="quarto-post image-left" data-index="13" data-categories="Data Wrangling" data-listing-date-sort="1675317600000" data-listing-file-modified-sort="1730764547740" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="400">
 <div class="thumbnail">
 <p><a href="./post/nesting-with-tidyr/index.html" class="no-external"></a></p><a href="./post/nesting-with-tidyr/index.html" class="no-external">
 <p><img loading="lazy" src="./post/nesting-with-tidyr/feature.png" class="thumbnail-image"></p>
@@ -515,7 +758,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="7" data-categories="Communication" data-listing-date-sort="1673676000000" data-listing-file-modified-sort="1730758429729" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="534">
+<div class="quarto-post image-left" data-index="14" data-categories="Communication" data-listing-date-sort="1673676000000" data-listing-file-modified-sort="1730758429729" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="534">
 <div class="thumbnail">
 <p><a href="./post/some-takeaways-from-effective-data-storytelling/index.html" class="no-external"></a></p><a href="./post/some-takeaways-from-effective-data-storytelling/index.html" class="no-external">
 <p><img loading="lazy" src="./post/some-takeaways-from-effective-data-storytelling/feature.png" class="thumbnail-image"></p>
@@ -548,7 +791,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="8" data-categories="Estimation,Modeling" data-listing-date-sort="1673589600000" data-listing-file-modified-sort="1730758143790" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="718">
+<div class="quarto-post image-left" data-index="15" data-categories="Estimation,Modeling" data-listing-date-sort="1673589600000" data-listing-file-modified-sort="1730758143790" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="718">
 <div class="thumbnail">
 <p><a href="./post/the-evasive-spline/index.html" class="no-external"></a></p><a href="./post/the-evasive-spline/index.html" class="no-external">
 <p><img loading="lazy" src="./post/the-evasive-spline/feature.png" class="thumbnail-image"></p>
@@ -584,7 +827,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="9" data-categories="Estimation" data-listing-date-sort="1673503200000" data-listing-file-modified-sort="1730757835569" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="240">
+<div class="quarto-post image-left" data-index="16" data-categories="Estimation" data-listing-date-sort="1673503200000" data-listing-file-modified-sort="1730757835569" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="240">
 <div class="thumbnail">
 <p><a href="./post/deriving-a-bernoulli-mle/index.html" class="no-external"></a></p><a href="./post/deriving-a-bernoulli-mle/index.html" class="no-external">
 <p><img loading="lazy" src="./post/deriving-a-bernoulli-mle/feature.png" class="thumbnail-image"></p>
@@ -617,7 +860,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="10" data-categories="Bayesian Statistics,Causal Inference" data-listing-date-sort="1672552800000" data-listing-file-modified-sort="1730757435640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="53" data-listing-word-count-sort="10421">
+<div class="quarto-post image-left" data-index="17" data-categories="Bayesian Statistics,Causal Inference" data-listing-date-sort="1672552800000" data-listing-file-modified-sort="1730757435640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="53" data-listing-word-count-sort="10421">
 <div class="thumbnail">
 <p><a href="./post/statistical-rethinking-2023-class-notes/index.html" class="no-external"></a></p><a href="./post/statistical-rethinking-2023-class-notes/index.html" class="no-external">
 <p><img loading="lazy" src="./post/statistical-rethinking-2023-class-notes/feature.png" class="thumbnail-image"></p>
@@ -653,7 +896,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="11" data-categories="Healthcare,Tables,Javascript" data-listing-date-sort="1659243600000" data-listing-file-modified-sort="1730755762796" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1836">
+<div class="quarto-post image-left" data-index="18" data-categories="Healthcare,Tables,Javascript" data-listing-date-sort="1659243600000" data-listing-file-modified-sort="1730755762796" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1836">
 <div class="thumbnail">
 <p><a href="./post/reactable-javascript/index.html" class="no-external"></a></p><a href="./post/reactable-javascript/index.html" class="no-external">
 <p><img loading="lazy" src="./post/reactable-javascript/feature.png" class="thumbnail-image"></p>
@@ -692,7 +935,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="12" data-categories="Healthcare,Maps,Javascript" data-listing-date-sort="1655528400000" data-listing-file-modified-sort="1730754969275" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5201">
+<div class="quarto-post image-left" data-index="19" data-categories="Healthcare,Maps,Javascript" data-listing-date-sort="1655528400000" data-listing-file-modified-sort="1730754969275" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5201">
 <div class="thumbnail">
 <p><a href="./post/filterable-maps/index.html" class="no-external"></a></p><a href="./post/filterable-maps/index.html" class="no-external">
 <p><img loading="lazy" src="./post/filterable-maps/feature.png" class="thumbnail-image"></p>
@@ -731,7 +974,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="13" data-categories="Regression" data-listing-date-sort="1640671200000" data-listing-file-modified-sort="1730753883527" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="40" data-listing-word-count-sort="7848">
+<div class="quarto-post image-left" data-index="20" data-categories="Regression" data-listing-date-sort="1640671200000" data-listing-file-modified-sort="1730753883527" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="40" data-listing-word-count-sort="7848">
 <div class="thumbnail">
 <p><a href="./post/com-poisson-regression/index.html" class="no-external"></a></p><a href="./post/com-poisson-regression/index.html" class="no-external">
 <p><img loading="lazy" src="./post/com-poisson-regression/feature.png" class="thumbnail-image"></p>
@@ -764,7 +1007,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="14" data-categories="Causal Inference" data-listing-date-sort="1626325200000" data-listing-file-modified-sort="1730731902173" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2038">
+<div class="quarto-post image-left" data-index="21" data-categories="Causal Inference" data-listing-date-sort="1626325200000" data-listing-file-modified-sort="1730731902173" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2038">
 <div class="thumbnail">
 <p><a href="./post/a-look-at-collider-bias/index.html" class="no-external"></a></p><a href="./post/a-look-at-collider-bias/index.html" class="no-external">
 <p><img loading="lazy" src="./post/a-look-at-collider-bias/feature.png" class="thumbnail-image"></p>

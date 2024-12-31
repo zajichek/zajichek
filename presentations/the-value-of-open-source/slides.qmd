@@ -394,7 +394,7 @@ maplibre() |>
 - Build custom analytical documents in programmatic way
 - Vehicle for dissemination, promoting automation and reproducibility
 - Integrates well with [R](https://www.r-project.org/), [Python](https://www.python.org/), and many other tools
-  + _This_ presentation (and [website](https://www.centralstatz.com/presentations/the-value-of-open-source/) that it's contained in) are built in [Quarto](https://quarto.org/)
+  + _This_ [presentation](https://www.zajichekstats.com/presentations/the-value-of-open-source/slides#/title-slide) (and [website](https://www.zajichekstats.com) that it's contained in) are built in [Quarto](https://quarto.org/) (see [source code](https://github.com/zajichek/zajichek/blob/main/presentations/the-value-of-open-source/slides.qmd))
 
 :::
 

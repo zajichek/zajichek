@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alex Zajichek">
+<meta name="dcterms.date" content="2024-08-20">
+<meta name="description" content="An overview of some server options">
+
+<title>Low cost ways to build and deploy analytical web apps – Zajichek Stats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/bluesky-comments-1.0.0/bluesky-comments.js"></script>
+<link href="../../site_libs/quarto-contrib/bluesky-comments-1.0.0/styles.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9MW3W3RQD9"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
+</script>
+
+
+<meta property="og:title" content="Low cost ways to build and deploy analytical web apps – Zajichek Stats">
+<meta property="og:description" content="An overview of some server options">
+<meta property="og:image" content="https://www.zajichekstats.com/post/low-cost-ways-to-build-and-deploy-apps/feature.png">
+<meta property="og:site_name" content="Zajichek Stats">
+<meta property="og:image:height" content="444">
+<meta property="og:image:width" content="425">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../presentations.html"> 
+<span class="menu-text">Presentations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:alexzajichek@gmail.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/alexzajichek"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/zajichek"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@centralstatz"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Low cost ways to build and deploy analytical web apps</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">Web applications</div>
+    <div class="quarto-category">Deployment</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    An overview of some server options
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex Zajichek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 20, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/vttykZnwIbA" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>In the era of <a href="https://en.wikipedia.org/wiki/Artificial_intelligence">artificial intelligence</a> (AI), organizations are often told they must <a href="https://medium.com/@markkloepfel/artificial-intelligence-adopt-or-get-left-behind-6e7387e695b9">buy in or get left behind</a>. I’ve attended various presentations like this. The presenters discuss how things are changing, provide some high-level overview of AI, and then convey that the organization must develop a strategy for it. However, the feeling left in the room is usually that of confusion and ambiguity. They understand that they should be <em>thinking</em> about it, but it’s totally unclear what (if anything) they should actually <em>do</em>.</p>
+<p>First, it’s not really clear what is meant by “AI”, as it can mean <a href="https://hai.stanford.edu/sites/default/files/2020-09/AI-Definitions-HAI.pdf">many things</a> (I often don’t know what they mean by it either). Second, the implication seems to be pointed toward AI in the context of tools that can be <em>purchased</em> from vendors, therefore adding a financial stressor to decision makers when figuring out how to act. It also conveys a one-sided message: that AI <em>is</em> products that you buy, never really discussing the technical foundation, and thus foregoing the idea of taking these concepts and building incrementally.</p>
+<p>Sure, there are all sorts of obscure ways organizations can use tools like <a href="">ChatGPT</a>, for example, but I would venture to guess that in the bigger picture, much of the target audience is at a relatively early stage of their data science journey, and unaware of all of the opportunity that is available using low-cost, or free, programming languages and technologies that can get them well on their way to a mature advanced analytics function, without making a direct jump to cost-intensive solutions in hopes that they “work”. There’s a better way.</p>
+<p>Data science is all about asking the right questions and figuring out ways to provide answers to those questions to the people who need them at the right time so they can take action. This is somewhat arbitrary, but that also means it leaves the door open to an infinite number of ways to develop solutions for it, many of which can be solved (a) by going back to the fundamentals: data quality, data collection, data storage, infrastructure, reporting workflows, etc., and (b) with, at least to start, freely-available software, tools and programming languages. AI is simply hyperbole for data and analytical strategy. There’s lots of ways to start using data better, and that doesn’t necessarily mean opening your wallet.</p>
+<section id="a-shiny-intro" class="level1">
+<h1>A Shiny intro</h1>
+<p>One of those tools, which I use almost everyday, is <a href="https://shiny.posit.co/">Shiny</a>. It is a <strong>free</strong> toolkit built primarily for the <a href="https://www.r-project.org/">R programming language</a> (also <strong>free</strong>), but has recently been made <a href="https://shiny.posit.co/py/">available in Python</a> as well (another <strong>free</strong> <a href="https://www.python.org/">programming language</a>), that enables you to build completely custom analytical web applications for whatever your purpose may be, whether that is for data exploration, dashboards, reporting, predictive modeling, mapping…the possibilities are endless.</p>
+<p>Given these are code-first data science tools, there is of course a learning curve. It will take some effort to figure out. The main advantage is that it is <strong>free</strong>, allowing you to start slow, learn as you go, and progress iteratively. You can start realizing incremental, tangible impact without having to invest tons of money in a product upfront. Additionally, doing this can build the fundamental skills needed to continue maturing the path toward advanced analytics. Cost incurs as it financially makes sense from a value perspective, because you are in total control of what you are producing. In this article, we provide a brief overview of where you can start building and sharing these applications for <strong>free</strong>.</p>
+</section>
+<section id="where-can-i-share-my-app" class="level1">
+<h1>Where can I share my app?</h1>
+<p>This is not a tutorial on how to <em>build</em> Shiny apps, as there are <a href="https://shiny.posit.co/r/articles/">tons of resources</a> available to help you begin doing so. However, a big hurdle is often how to get that app off of your computer and in the hands of others for consumption. I’m here to tell you that even that part can be easily done with no cost.</p>
+<p><strong>Bottom line:</strong> <em>There is infrastructure out there that allows you to easily build and share completely custom, powerful web applications for $0</em>.</p>
+<p>Thus, if you are an individual, part of a small team, someone in a big organization, a leader, etc., and want to find better ways to interact with your data, you can begin developing and <em>sharing</em> useful applications with people (or the world). All for free. Which makes it feasible for anyone to begin experimenting, prototyping, and building with minimal risk. Here some of the options for doing so:</p>
+<section id="locally" class="level2">
+<h2 class="anchored" data-anchor-id="locally">1. Locally</h2>
+<p>We already said that the primary goal of sharing an application is to get it off of your local machine, but this is still worth mentioning, because it is how you start. Once you install <a href="https://www.r-project.org/">R</a>, <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>, and the <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html"><code>shiny</code> package</a>, you’ll have everything you need to begin developing and running apps. This is of course a great way to <em>develop</em>, and often the way you would do it regardless, because you can write the code, run the app to see how it works, make changes, test, and repeat.</p>
+<p>But once it’s finalized and you want to share it, without other infrastructure in place, you would need to send the code files to someone else and have them run it on their own machine, which means they need to have all the software installed as well. This can be a totally legitimate approach in certain cases. It is certainly a starting point, but it’s far from ideal.</p>
+<section id="side-note" class="level3">
+<h3 class="anchored" data-anchor-id="side-note">Side note</h3>
+<p>Another reason I mention local “deployment” is because I actually use this approach quite often. When I am analyzing a dataset, it is extremely useful to be able to spin up an application for my own usage to easily explore certain aspects of it, among many other uses. In this case, the audience is me, and I can make it work however I need it to serve my purposes. You can do this too, and don’t need it to run anywhere but your own computer, yet it is still very useful.</p>
+</section>
+</section>
+<section id="shinyapps" class="level2">
+<h2 class="anchored" data-anchor-id="shinyapps">2. shinyapps.io</h2>
+<p>The most obvious location to deploy a <em>Shiny</em> app is the place specifically purposed for it: <a href="https://www.shinyapps.io/">shinyapps.io</a>. It is a cloud-based server built and maintained by <a href="https://posit.co/">Posit</a> (who we’ll see come up a lot in this article) that is made for hosting apps built in this framework. It has been around for quite a while, and, as we’ll see, there have been other platforms developed for hosting these apps that may be a better fit. Nevertheless, this is a totally viable option and great way to start deploying things, and they have a free tier that allows you to deploy up to five (5) applications with 25 hours of active usage per month.</p>
+<section id="the-basics" class="level3">
+<h3 class="anchored" data-anchor-id="the-basics">The Basics</h3>
+<p>The concept is simple: develop your app on your local machine (e.g., in RStudio) and then run the <code>rsconnect::deployApp</code> function to deploy it to <a href="https://www.shinyapps.io/">shinyapps.io</a>. You can create an account with your email address or sign up through GitHub (like I did), among other options. Here is an outline of the steps I took to deploy <a href="https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/">this app</a>:</p>
+<section id="make-an-application" class="level4">
+<h4 class="anchored" data-anchor-id="make-an-application">1. Make an application</h4>
+<p>First you just need to code up an app. This could be very simple like the one found <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html">here</a> to get started.</p>
+<p>I’m using an <a href="https://github.com/centralstatz/ExampleApps/tree/main/ReadmissionRiskPool">existing demo app</a> we have in <a href="https://github.com/centralstatz">our GitHub page</a>. From Terminal we can execute (and you can too):</p>
+<pre><code>git clone https://github.com/centralstatz/ExampleApps.git</code></pre>
+<p>The app we want is located at <code>ExampleApps/ReadmissionRiskPool</code>.</p>
+</section>
+<section id="configure-connection-to-shinyapps.io" class="level4">
+<h4 class="anchored" data-anchor-id="configure-connection-to-shinyapps.io">2. Configure connection to <a href="https://www.shinyapps.io/">shinyapps.io</a></h4>
+<p>When you sign up, you’ll get a basic list of instructions for getting started. Assuming you are doing it with R, you need to install the <code>rsconnect</code> R package and register your account information, which includes tokens/secrets that are provided with your <a href="https://www.shinyapps.io/">shinyapps.io</a> account.</p>
+<pre><code># Install the configuration library
+install.packages("rsconnect")
+
+# Setup account information
+my_user_name &lt;- "&lt;GET_FROM_ACCOUNT&gt;"
+my_token &lt;- "&lt;GET_FROM_ACCOUNT&gt;"
+my_secret &lt;- "&lt;GET_FROM_ACCOUNT&gt;"
+rsconnect::setAccountInfo(
+  name = my_user_name,         
+  token = my_token,     
+  secret = my_secret
+)</code></pre>
+</section>
+<section id="deploy-the-application" class="level4">
+<h4 class="anchored" data-anchor-id="deploy-the-application">3. Deploy the application</h4>
+<p>Once your account is configured, you can call <code>rsconnect::deployApp()</code> with the application specified and it will be uploaded to the host server.</p>
+<pre><code># Assume we're working in the repo just cloned
+rsconnect::deployApp("ReadmissionRiskPool")</code></pre>
+<p>And just like that we have a custom, interactive web application <a href="https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/">available to the world</a>.</p>
+<p>One thing you might notice is the web URL: <a href="https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/">https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/</a></p>
+<p>It is obviously not very nice looking. One way to clean this up would be to have a better username (the first part of it). Then, once you start getting into the <a href="https://www.shinyapps.io/">shinyapps.io</a> paid plans, they allow for custom domains.</p>
+<p>Another part of this is security. The app we just deployed is publicly available, which is definitely not always what is desired. Again, with the paid tiers you can begin introducing authentication into the applications for restricted access.</p>
+</section>
+</section>
+</section>
+<section id="posit-cloud" class="level2">
+<h2 class="anchored" data-anchor-id="posit-cloud">3. Posit Cloud</h2>
+<p>This platform takes it up a notch. <a href="https://posit.cloud/">Posit Cloud</a>, developed and maintained by the <a href="https://posit.co/">same company</a>, is not only a place to share applications, but a cloud-based service where you can <em>develop</em> your code as well, so everything is accessed in your web browser. As the <a href="https://posit.cloud/">website describes</a> it is a great platform for collaboration, teaching, etc. in a more all-encompassing environment.</p>
+<p>You can organize content into “spaces”, which are disjointed areas for separate work streams. Within each space, and at the content item level, you can control settings for who has access, to what, and how much. Each user creates a login to the platform, and is able to access the spaces that they have created or have been shared with them. The free tier enables you a single shared space (which you can invite other users to) with up to 25 projects/outputs and limited computation usage. There is also infrastructure in place to establish connections to databases, among other things, that make it a feasible home for full-fledged data solutions. The other very important thing to note is that it is not only <a href="https://shiny.posit.co/">Shiny</a> applications that can be deployed here, but all sorts of other analytical content such as <a href="https://rmarkdown.rstudio.com/">R Markdown</a> and <a href="https://quarto.org/">Quarto</a> documents, <a href="https://www.rplumber.io/">API’s</a>, etc. Here is an introductory video for more information straight from the source:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/-fzwm4ZhVQQ" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<section id="how-we-use-posit-cloud" class="level3">
+<h3 class="anchored" data-anchor-id="how-we-use-posit-cloud">How we use Posit Cloud</h3>
+<p>With the paid plans of <a href="https://posit.cloud/">Posit Cloud</a>, you are allowed an unlimited number of spaces, as well as beefed-up compute. This is what enables us to take advantage of this platform as an offering for client engagements. Each client gets their own private space which all of their analytical content we are collaborating on lives, and only we (us and the client) have access. Here’s one possible example of how a client engagement could work:</p>
+<ol type="1">
+<li><p>A client reaches out because they want to build a web application that enables them to interactively explore data related to their customer base on a reactive map, among other functionality.</p></li>
+<li><p>We initialize a new space in <a href="https://posit.cloud/">Posit Cloud</a> and invite the client via email. They receive the invitation link that takes them to the space upon login, creating an account if they have not done so already.</p></li>
+<li><p>We initialize a new private (or public, if applicable) <a href="https://github.com/">GitHub</a> repository on our <a href="https://github.com/centralstatz">organization’s page</a> to hold all of the application’s source code and its change-tracking history. Optionally, the client can be added as a member with viewing privileges of these files as well for full transparency.</p></li>
+<li><p>We initialize a new RStudio project within the workspace sourced from the created GitHub repository. This serves as the development environment for the application.</p></li>
+<li><p>The client has a dataset in a large Excel file that we would like to use as the source for the application. It gets uploaded into the application’s project by us after the client sends it in an email (or alternatively, the client goes in and uploads it themselves).</p></li>
+<li><p>The app development work begins. We work iteratively with the client to construct it most optimally to fit their needs (occassionally pushing code to <a href="https://github.com/">GitHub</a> to track changes). Because they have direct access to the space, they can see it anytime. We can quickly <em>show</em> progress updates, bounce ideas back and forth, test functionality, and answer questions in a timely manner, until it is satisfactory. Then, we deploy the final application, and the client is enabled to go into it on-demand and use it as seen fit.</p></li>
+<li><p>Over time, the data becomes stale so the client would like it to be updated on a recurring monthly basis. One option would be to send a new Excel file each month and we will manually update and re-deploy the application. Instead, we decide to use Posit Cloud’s <a href="https://docs.posit.co/cloud/guide/data/#external-databases">built-in data integration</a> capabilities. So we establish a connection to a SQL database in which the Excel file was sourced from, and build the queries directly into the application’s source code so that the application itself is sourced directly from the database. No middleman required.</p></li>
+</ol>
+<p>Overall, <a href="https://posit.cloud/">Posit Cloud</a> is a highly recommended tool to use for individuals and/or teams of people to get started with application development and deployment. Or even if you’re a seasoned Shiny developer, the infrastructure you get out of the box is amazing. And again, it is free.</p>
+</section>
+</section>
+<section id="connect-cloud" class="level2">
+<h2 class="anchored" data-anchor-id="connect-cloud">4. Connect Cloud</h2>
+<p><a href="https://posit.co/">Posit</a> <a href="https://posit.co/blog/introducing-posit-connect-cloud/">just recently</a> launched the <a href="https://docs.posit.co/connect-cloud/user/">Alpha release</a> of their newest platform, called <a href="https://connect.posit.cloud/">Connect Cloud</a>. It is in its early phase, and it’s all about easy deployment. As the <a href="https://connect.posit.cloud/">home page</a> states, there are three (3) steps to get an application up and running with a shareable link that can be accessed from anywhere:</p>
+<ol type="1">
+<li>Create a new account by authenticating with <a href="https://github.com/">GitHub</a> (so you must have a GitHub account)</li>
+<li>Link to a public repository (from GitHub) containing the code for a <a href="https://shiny.posit.co/">Shiny</a> application (or whatever other type of content you’re deploying)</li>
+<li>Deploy the application and share the link</li>
+</ol>
+<p>We did this with the application deployed in <a href="#shinyapps">#2</a>, and yes, it’s that easy (and, once again, free). The link for the app on <em>this</em> platform is <a href="https://connect.posit.cloud/zajichek/content/01912861-8be7-59e2-215a-cdeffdd549f2">here</a>.</p>
+<p>The main thing you have to remember to do before making your final commit to <a href="https://github.com/">GitHub</a>, and subsequently configuring the app connection to the repository, is to create the <code>manifest.json</code> file in your application’s root directory to capture the environment parameters that need to be created (automatically by <a href="">Connect Cloud</a>) for it to run. This can be done with a simple command:</p>
+<pre><code>rsconnect::writeManifest()</code></pre>
+<p>You can watch this video to get a more thorough introduction:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/HWCPLURWYgY" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>We don’t quite yet know where this platform is going to go given that it is in such early stages. Although the infrastructure it already provides, and the ease at which it is done, is magic-like, there are of course a lot of things it <em>doesn’t</em> have (yet): login without GitHub, source apps from private repositories, private content, authentication, security, etc. These were the things I wondered about when I attended the live webinar above, which in turn had me thinking how it exactly compares with the purpose of <a href="https://posit.cloud/">Posit Cloud</a> (in the <a href="https://www.youtube.com/live/HWCPLURWYgY">video</a>, I explicitly asked this at <a href="https://youtu.be/HWCPLURWYgY?t=1766">29:26</a>). It sounds like these “commercial” considerations are all part of the roadmap, so we are very excited to see where it goes.</p>
+<p>Nevertheless, even in its current state, <a href="https://connect.posit.cloud/">Connect Cloud</a> is a highly recommended platform to start using for anyone wanting to build a data science portfolio and deploy <em>public</em> content.</p>
+</section>
+<section id="shiny-server" class="level2">
+<h2 class="anchored" data-anchor-id="shiny-server">5. Shiny Server</h2>
+<p>Want total control over the infrastructure? If yes, <a href="https://posit.co/products/open-source/shiny-server/">Shiny Server</a> might be for you.</p>
+<p>This is an <em>open-source</em> server configuration that can be installed on-premises (or wherever you’d like). The huge advantage is that it is <em>always</em> free–you just need to install the software. The disadvantage is that you need a server bulky enough to handle the desired compute <em>and</em> you need people who know how to manage it. Compared to the others, this option is like the wild west. It provides you the basic skeleton to get stuff working, but from there you have ultimate freedom to do with it what you wish, which can easily get out of hand as the developer/user bases grow and you’re trying to maintain environments as new software package versions are constantly being released.</p>
+<p>I always consider this a fantastic option for relatively large organizations who are early in their data science journeys. They likely have mature information technology (IT) teams supporting existing systems, but have not yet invested heavily in advanced analytics infrastructure. This provides an opportunity to leverage those mature systems admin teams to setup up and manage the backend of this infrastructure that then enables data scientists in the organization to deliver great analytic content (and prove its value) without spending tons of money on acquiring the software. Low risk with huge potential.</p>
+<section id="amazon-web-services-aws" class="level3">
+<h3 class="anchored" data-anchor-id="amazon-web-services-aws">Amazon Web Services (AWS)</h3>
+<p>Despite it being open-source, most individuals (or small companies for that matter) probably don’t have adequate server space to implement <a href="https://posit.co/products/open-source/shiny-server/">Shiny Server</a> in the way they’d like. However, you <em>can</em> do it if you use external compute resources. <a href="https://aws.amazon.com/ec2/">Amazon EC2</a> is one way to make it happen. And still for free.</p>
+<p>The way it works is that you spin up an EC2 instance of your choice (essentially a computer, ranging from very low to very high compute power, the <code>t2.micro</code> being the one that you can use for <strong>free</strong>), install <a href="https://posit.co/products/open-source/shiny-server/">Shiny Server</a> on the instance, and then have all the freedom in the world to deploy applications to it and access them on the web. <a href="https://www.charlesbordet.com/en/guide-shiny-aws/">This</a> is an excellent resource that I followed when learning how to do this, which you can see a detailed account of my steps <a href="https://github.com/zajichek/shinydemo-aws/issues/1">here</a> as well.</p>
+<p>The real cool thing about this setup is that you can take it wherever you want to go. You have unlimited ability to customize the design of your server pages, integrate it with other software/tools, assign custom domains, etc. The possibilities are endless. When <a href="https://github.com/zajichek/shinydemo-aws/issues/1">I learned how to do this</a>, I was able to quickly get it to a state where my server is live and accessible at a subdomain of one of my websites: <a href="http://apps.zajichekstats.com/">http://apps.zajichekstats.com/</a>. Clicking that link takes you to the home page of my Shiny Server on an AWS EC2 <code>t2.micro</code> instance, where subsequent applications are found at subpages of that (e.g., <a href="http://apps.zajichekstats.com/shinydemo-aws/">http://apps.zajichekstats.com/shinydemo-aws/</a>). This entire setup, including the subdomain assignment, was done for free, and it is barely scratching the surface of what <em>can</em> be done with it.</p>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>There are many different ways (and this list probably doesn’t come close to covering the possible ones (e.g., <a href="https://azure.microsoft.com/en-us/products/app-service">Azure App Service</a>)) to start building and sharing data science products for no cost. So, what are you waiting for? Give them a try!</p>
+    <bluesky-comments post="at://did:plc:sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lc73mgu5ns2t" config="{}"></bluesky-comments>
+  
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.zajichekstats\.com\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2024 Zajichek Stats</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

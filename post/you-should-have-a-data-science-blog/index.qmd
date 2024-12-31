@@ -1,0 +1,61 @@
+---
+title: "You should have a data science blog"
+description: "Easy and free are only a couple benefits."
+author: "Alex Zajichek"
+date: "9/25/2024"
+image: "feature.png"
+categories:
+  - Deployment
+  - Learning
+  - Software Development
+format:
+  html:
+    code-fold: true
+    code-tools: true
+---
+
+One thing I would highly recommend to anyone with an interest in statistics/data science, whether you're a student just starting out or a professional increasing your skills, is to create a blog. In _this_ blog post, we'll cover some of the benefits of doing so and touch on our preferred workflow to get one up and running (for free).
+
+# Benefits
+
+## 1. Software development/deployment
+
+You might think that the logistics/maintenance of a blog sounds cumbersome. You just want to stick to the content. However, learning how to create, develop, maintain, and deploy the blog, regardless of its content, provides in itself exposure to essential skills for data science: software development and deployment. Simply knowing the math or the R/Python commands to run a model is one thing, but if you want to deliver effective analytical solutions, those results probably need to be delivered to the end user in a useful way. Building a blog (website) forces you to learn about things such as [version control](https://www.atlassian.com/git/tutorials/what-is-version-control), [CI/CD](https://www.synopsys.com/glossary/what-is-cicd.html), [web hosting](https://en.wikipedia.org/wiki/Web_hosting_service), [DNS records](https://www.cloudflare.com/learning/dns/dns-records/), [web development](https://www.geeksforgeeks.org/web-development/)...the list goes on, which are all components of creating a data science _product_. Marrying these things to the content creation itself provides you an arsenal of tools that can be exploited in all sorts of contexts.
+
+## 2. Solidify concepts
+
+There are a lot of topics to keep track of when you're learning statistics/data science, and one very effective way to solidify your understanding is to write it out coherently. For example, you may be learning about [linear regression]() but there may be nuances surrounding it that are fuzzy, such as why a $\beta$ parameter is interpreted the way that it is. So, you may opt to write a blog post that goes through this derivation in an applied example with a coherent, structured narrative--by the end, you'll generally grasp the thing you set out for. You just need to start with an outline of thing you want to understand and then learn it as you write. This is exactly the type of thing I do as well when I want to fully vet my understanding of something, such as in [this post](https://www.zajichekstats.com/post/the-evasive-spline/). Not only does this help with becoming a better writer, which is a great skill in and of itself, but it forces you to articulate a topic thoroughly, as if someone else is going to read it (which they hopefully will!). More importantly, it allows you to have permanent, easily accessible place to put your work.
+
+## 3. Reference repository
+
+On a related note of conceptual understanding: your blog posts are now just public web pages on the internet. That means you can use your collection of articles simply as an accessible repository for you to refer back to when you need them. If you took the time to write an article to help yourself solidify a concept (#2), then it was probably (a) tricky enough that over time you may lose your intuition on it occasionally, and (b) important enough that it was worth writing out. So, having a place where you've written out your thought process about a topic, in your own words, is an invaluable resource for you to refer back to. I can't tell you the number of times I've referred back to articles I've written to remember little things. The beauty of it is that when my curiosity comes at a random part of the day, I know exactly where to look, and I can whip out my phone, remember the thing, and then stop thinking about it.
+
+## 4. Portfolio to showcase
+
+The fact that you even have a website is impressive. It shows that you can figure out how to do things, but more importantly, that you have the drive/initiative to create projects related to your craft. The skills in creating and maintaining the website are undoubtedly transferable to the work you'd do in data science. Add in interesting content you are producing in the blog posts themselves, such as code tutorials, analyses, method exploration, whatever it may be, then you have something that can prove your capabilities, and set you apart from other candidates. The convenience and security of having that all accessible through a simple web URL that you can quickly share with someone is a real advantage, as if someone asks you for work samples or something like that, you can confidently respond knowing the work was already done.
+
+## 5. Engaging in public discourse
+
+Having your own blog means you can write about whatever you'd like, however you want to say it, providing an avenue to contribute your own unique thoughts and perspectives. You may read a book or another article on some data science (or other) topic, and have strong thoughts, questions, or opinions about what was said. Or you just want to dig a little deeper into a certain aspect of it. Or reframe it in a way that is more understandable for yourself. Write it out and share it! Others may find your take interesting (or not, who cares). It only adds thought diversity, and makes you more connected to your field, as a peer.
+
+# A blog workflow
+
+In short, my preferred approach is based on the [Quarto](https://quarto.org/) framework, and you can see a step-by-step tutorial [here](https://quarto.org/docs/websites/website-blog.html). That's actually how this very website is built/maintained, which you can find the source code for [here](https://github.com/centralstatz/centralstatz). I'll just touch on some of the steps involved:
+
+## 1. Install software
+
+I prefer to use [RStudio](https://posit.co/download/rstudio-desktop/) as my IDE for developing my websites, so you'll also need to [install R](https://www.r-project.org/). Then, you can [install Quarto](https://quarto.org/docs/get-started/) and you'll have what you need. 
+
+## 2. Store code on GitHub
+
+The source code for the blog should be [version controlled](https://www.atlassian.com/git/tutorials/what-is-version-control) and stored in a remote repository. I prefer [GitHub](https://www.github.com/). It's not actually necessary to do this, but creates a much cleaner workflow and promotes better software development practices, as it retains all history to your code changes. As you develop your website locally, you'll commit and push changes as you get to good stopping points, and GitHub will serve as your website's source of truth. 
+
+## 3. Host your site on Netlify
+
+Your code is on GitHub, but you need a server that will actually host the live application. That is where [Netlify](https://www.netlify.com/) comes in, where you can host your website for free. To make it very easy, you can configure Netlify to update your website everytime code changes are made to GitHub (#2), automatically. So when I develop my website (like this very blog post), I just commit and push my changes to GitHub (from RStudio) and that will automatically trigger Netlify to grab changes from the repository and update the live website. By default, your website URL will be something like `website.netlify.app`, but Netlify also has a great domain management system where you can point your website to a custom URL that you own (which you'll likely have to pay for). Nevertheless, if you don't mind the default URL, it is completely free.
+
+# Get started
+
+My advice is to get your website workflow up and running first: create the local (default) application, push the code to GitHub, configure Netlify to host the website, and, if you choose, set up your custom domain (again, this last part costs money). Then you can start to make tweaks to your website and make sure everything operates as expected for general maintenance. From there, you can then focus on customizing your website in any way you want, and more importantly, developing the actual content for your blog.
+
+{{< bluesky-comments uri="at://did:plc:sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lc73hlfqyk2t" >}}

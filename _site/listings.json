@@ -9,7 +9,14 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/reconciling-regression-equation-spline-terms/index.html",
+      "/post/can-you-have-a-model-without-data/index.html",
+      "/post/you-should-have-a-data-science-blog/index.html",
+      "/post/low-cost-ways-to-build-and-deploy-apps/index.html",
       "/post/managing-the-readmission-risk-pool/index.html",
+      "/post/how-to-assess-the-proportional-odds-assumption/index.html",
+      "/post/simple-example-why-statistical-significance-is-insufficient/index.html",
+      "/post/ways-to-ensure-success-of-statistical-project/index.html",
       "/post/quantum-entanglement-from-statistical-perspective/index.html",
       "/post/on-the-creation-of-classical-statistics/index.html",
       "/post/statistical-significance-is-insignificant/index.html",

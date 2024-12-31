@@ -1,0 +1,175 @@
+---
+title: "Low cost ways to build and deploy analytical web apps"
+description: "An overview of some server options"
+author: "Alex Zajichek"
+date: "8/20/2024"
+image: "feature.png"
+draft: false
+categories:
+  - Web applications
+  - Deployment
+---
+
+{{< video https://www.youtube.com/embed/vttykZnwIbA >}}
+
+In the era of [artificial intelligence](https://en.wikipedia.org/wiki/Artificial_intelligence) (AI), organizations are often told they must [buy in or get left behind](https://medium.com/@markkloepfel/artificial-intelligence-adopt-or-get-left-behind-6e7387e695b9). I've attended various presentations like this. The presenters discuss how things are changing, provide some high-level overview of AI, and then convey that the organization must develop a strategy for it. However, the feeling left in the room is usually that of confusion and ambiguity. They understand that they should be _thinking_ about it, but it's totally unclear what (if anything) they should actually _do_. 
+
+First, it's not really clear what is meant by "AI", as it can mean [many things](https://hai.stanford.edu/sites/default/files/2020-09/AI-Definitions-HAI.pdf) (I often don't know what they mean by it either). Second, the implication seems to be pointed toward AI in the context of tools that can be _purchased_ from vendors, therefore adding a financial stressor to decision makers when figuring out how to act. It also conveys a one-sided message: that AI _is_ products that you buy, never really discussing the technical foundation, and thus foregoing the idea of taking these concepts and building incrementally.
+
+Sure, there are all sorts of obscure ways organizations can use tools like [ChatGPT](), for example, but I would venture to guess that in the bigger picture, much of the target audience is at a relatively early stage of their data science journey, and unaware of all of the opportunity that is available using low-cost, or free, programming languages and technologies that can get them well on their way to a mature advanced analytics function, without making a direct jump to cost-intensive solutions in hopes that they "work". There's a better way.
+
+Data science is all about asking the right questions and figuring out ways to provide answers to those questions to the people who need them at the right time so they can take action. This is somewhat arbitrary, but that also means it leaves the door open to an infinite number of ways to develop solutions for it, many of which can be solved (a) by going back to the fundamentals: data quality, data collection, data storage, infrastructure, reporting workflows, etc., and (b) with, at least to start, freely-available software, tools and programming languages. AI is simply hyperbole for data and analytical strategy. There's lots of ways to start using data better, and that doesn't necessarily mean opening your wallet.
+
+# A Shiny intro
+
+One of those tools, which I use almost everyday, is [Shiny](https://shiny.posit.co/). It is a <strong>free</strong> toolkit built primarily for the [R programming language](https://www.r-project.org/) (also <strong>free</strong>), but has recently been made [available in Python](https://shiny.posit.co/py/) as well (another <strong>free</strong> [programming language](https://www.python.org/)), that enables you to build completely custom analytical web applications for whatever your purpose may be, whether that is for data exploration, dashboards, reporting, predictive modeling, mapping...the possibilities are endless. 
+
+Given these are code-first data science tools, there is of course a learning curve. It will take some effort to figure out. The main advantage is that it is <strong>free</strong>, allowing you to start slow, learn as you go, and progress iteratively. You can start realizing incremental, tangible impact without having to invest tons of money in a product upfront. Additionally, doing this can build the fundamental skills needed to continue maturing the path toward advanced analytics. Cost incurs as it financially makes sense from a value perspective, because you are in total control of what you are producing. In this article, we provide a brief overview of where you can start building and sharing these applications for <strong>free</strong>.
+
+# Where can I share my app?
+
+This is not a tutorial on how to _build_ Shiny apps, as there are [tons of resources](https://shiny.posit.co/r/articles/) available to help you begin doing so. However, a big hurdle is often how to get that app off of your computer and in the hands of others for consumption. I'm here to tell you that even that part can be easily done with no cost.
+
+**Bottom line:** _There is infrastructure out there that allows you to easily build and share completely custom, powerful web applications for $0_.
+
+Thus, if you are an individual, part of a small team, someone in a big organization, a leader, etc., and want to find better ways to interact with your data, you can begin developing and _sharing_ useful applications with people (or the world). All for free. Which makes it feasible for anyone to begin experimenting, prototyping, and building with minimal risk. Here some of the options for doing so:
+
+## 1. Locally
+
+We already said that the primary goal of sharing an application is to get it off of your local machine, but this is still worth mentioning, because it is how you start. Once you install [R](https://www.r-project.org/), [RStudio](https://posit.co/download/rstudio-desktop/), and the [`shiny` package](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html), you'll have everything you need to begin developing and running apps. This is of course a great way to _develop_, and often the way you would do it regardless, because you can write the code, run the app to see how it works, make changes, test, and repeat. 
+
+But once it's finalized and you want to share it, without other infrastructure in place, you would need to send the code files to someone else and have them run it on their own machine, which means they need to have all the software installed as well. This can be a totally legitimate approach in certain cases. It is certainly a starting point, but it's far from ideal.
+
+### Side note
+
+Another reason I mention local "deployment" is because I actually use this approach quite often. When I am analyzing a dataset, it is extremely useful to be able to spin up an application for my own usage to easily explore certain aspects of it, among many other uses. In this case, the audience is me, and I can make it work however I need it to serve my purposes. You can do this too, and don't need it to run anywhere but your own computer, yet it is still very useful.
+
+## 2. shinyapps.io {#shinyapps}
+
+The most obvious location to deploy a _Shiny_ app is the place specifically purposed for it: [shinyapps.io](https://www.shinyapps.io/). It is a cloud-based server built and maintained by [Posit](https://posit.co/) (who we'll see come up a lot in this article) that is made for hosting apps built in this framework. It has been around for quite a while, and, as we'll see, there have been other platforms developed for hosting these apps that may be a better fit. Nevertheless, this is a totally viable option and great way to start deploying things, and they have a free tier that allows you to deploy up to five (5) applications with 25 hours of active usage per month.
+
+### The Basics
+
+The concept is simple: develop your app on your local machine (e.g., in RStudio) and then run the `rsconnect::deployApp` function to deploy it to [shinyapps.io](https://www.shinyapps.io/). You can create an account with your email address or sign up through GitHub (like I did), among other options. Here is an outline of the steps I took to deploy [this app](https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/):
+
+#### 1. Make an application
+
+First you just need to code up an app. This could be very simple like the one found [here](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html) to get started.
+
+I'm using an [existing demo app](https://github.com/centralstatz/ExampleApps/tree/main/ReadmissionRiskPool) we have in [our GitHub page](https://github.com/centralstatz). From Terminal we can execute (and you can too):
+
+```
+git clone https://github.com/centralstatz/ExampleApps.git
+```
+
+The app we want is located at `ExampleApps/ReadmissionRiskPool`.
+
+#### 2. Configure connection to [shinyapps.io](https://www.shinyapps.io/)
+
+When you sign up, you'll get a basic list of instructions for getting started. Assuming you are doing it with R, you need to install the `rsconnect` R package and register your account information, which includes tokens/secrets that are provided with your [shinyapps.io](https://www.shinyapps.io/) account. 
+
+```
+# Install the configuration library
+install.packages("rsconnect")
+
+# Setup account information
+my_user_name <- "<GET_FROM_ACCOUNT>"
+my_token <- "<GET_FROM_ACCOUNT>"
+my_secret <- "<GET_FROM_ACCOUNT>"
+rsconnect::setAccountInfo(
+  name = my_user_name,         
+  token = my_token,     
+  secret = my_secret
+)
+```
+
+#### 3. Deploy the application
+
+Once your account is configured, you can call `rsconnect::deployApp()` with the application specified and it will be uploaded to the host server. 
+
+```
+# Assume we're working in the repo just cloned
+rsconnect::deployApp("ReadmissionRiskPool")
+```
+
+And just like that we have a custom, interactive web application [available to the world](https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/).
+
+One thing you might notice is the web URL: [https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/](https://tgzz86-alex0zajichek.shinyapps.io/readmissionriskpool/)
+
+It is obviously not very nice looking. One way to clean this up would be to have a better username (the first part of it). Then, once you start getting into the [shinyapps.io](https://www.shinyapps.io/) paid plans, they allow for custom domains. 
+
+Another part of this is security. The app we just deployed is publicly available, which is definitely not always what is desired. Again, with the paid tiers you can begin introducing authentication into the applications for restricted access.
+
+## 3. Posit Cloud
+
+This platform takes it up a notch. [Posit Cloud](https://posit.cloud/), developed and maintained by the [same company](https://posit.co/), is not only a place to share applications, but a cloud-based service where you can _develop_ your code as well, so everything is accessed in your web browser. As the [website describes](https://posit.cloud/) it is a great platform for collaboration, teaching, etc. in a more all-encompassing environment. 
+
+You can organize content into "spaces", which are disjointed areas for separate work streams. Within each space, and at the content item level, you can control settings for who has access, to what, and how much. Each user creates a login to the platform, and is able to access the spaces that they have created or have been shared with them. The free tier enables you a single shared space (which you can invite other users to) with up to 25 projects/outputs and limited computation usage. There is also infrastructure in place to establish connections to databases, among other things, that make it a feasible home for full-fledged data solutions. The other very important thing to note is that it is not only [Shiny](https://shiny.posit.co/) applications that can be deployed here, but all sorts of other analytical content such as [R Markdown](https://rmarkdown.rstudio.com/) and [Quarto](https://quarto.org/) documents, [API's](https://www.rplumber.io/), etc. Here is an introductory video for more information straight from the source:
+
+{{< video https://www.youtube.com/embed/-fzwm4ZhVQQ >}}
+
+### How we use Posit Cloud
+
+With the paid plans of [Posit Cloud](https://posit.cloud/), you are allowed an unlimited number of spaces, as well as beefed-up compute. This is what enables us to take advantage of this platform as an offering for client engagements. Each client gets their own private space which all of their analytical content we are collaborating on lives, and only we (us and the client) have access. Here's one possible example of how a client engagement could work:
+
+1. A client reaches out because they want to build a web application that enables them to interactively explore data related to their customer base on a reactive map, among other functionality.
+
+2. We initialize a new space in [Posit Cloud](https://posit.cloud/) and invite the client via email. They receive the invitation link that takes them to the space upon login, creating an account if they have not done so already.
+
+3. We initialize a new private (or public, if applicable) [GitHub](https://github.com/) repository on our [organization's page](https://github.com/centralstatz) to hold all of the application's source code and its change-tracking history. Optionally, the client can be added as a member with viewing privileges of these files as well for full transparency.
+
+4. We initialize a new RStudio project within the workspace sourced from the created GitHub repository. This serves as the development environment for the application.
+
+5. The client has a dataset in a large Excel file that we would like to use as the source for the application. It gets uploaded into the application's project by us after the client sends it in an email (or alternatively, the client goes in and uploads it themselves).
+
+6. The app development work begins. We work iteratively with the client to construct it most optimally to fit their needs (occassionally pushing code to [GitHub](https://github.com/) to track changes). Because they have direct access to the space, they can see it anytime. We can quickly _show_ progress updates, bounce ideas back and forth, test functionality, and answer questions in a timely manner, until it is satisfactory. Then, we deploy the final application, and the client is enabled to go into it on-demand and use it as seen fit.
+
+7. Over time, the data becomes stale so the client would like it to be updated on a recurring monthly basis. One option would be to send a new Excel file each month and we will manually update and re-deploy the application. Instead, we decide to use Posit Cloud's [built-in data integration](https://docs.posit.co/cloud/guide/data/#external-databases) capabilities. So we establish a connection to a SQL database in which the Excel file was sourced from, and build the queries directly into the application's source code so that the application itself is sourced directly from the database. No middleman required.
+
+Overall, [Posit Cloud](https://posit.cloud/) is a highly recommended tool to use for individuals and/or teams of people to get started with application development and deployment. Or even if you're a seasoned Shiny developer, the infrastructure you get out of the box is amazing. And again, it is free.
+
+## 4. Connect Cloud
+
+[Posit](https://posit.co/) [just recently](https://posit.co/blog/introducing-posit-connect-cloud/) launched the [Alpha release](https://docs.posit.co/connect-cloud/user/) of their newest platform, called [Connect Cloud](https://connect.posit.cloud/). It is in its early phase, and it's all about easy deployment. As the [home page](https://connect.posit.cloud/) states, there are three (3) steps to get an application up and running with a shareable link that can be accessed from anywhere:
+
+1. Create a new account by authenticating with [GitHub](https://github.com/) (so you must have a GitHub account)
+2. Link to a public repository (from GitHub) containing the code for a [Shiny](https://shiny.posit.co/) application (or whatever other type of content you're deploying)
+3. Deploy the application and share the link
+
+We did this with the application deployed in [#2](#shinyapps), and yes, it's that easy (and, once again, free). The link for the app on _this_ platform is [here](https://connect.posit.cloud/zajichek/content/01912861-8be7-59e2-215a-cdeffdd549f2).
+
+The main thing you have to remember to do before making your final commit to [GitHub](https://github.com/), and subsequently configuring the app connection to the repository, is to create the `manifest.json` file in your application's root directory to capture the environment parameters that need to be created (automatically by [Connect Cloud]()) for it to run. This can be done with a simple command:
+
+```
+rsconnect::writeManifest()
+```
+
+You can watch this video to get a more thorough introduction:
+
+{{< video https://www.youtube.com/embed/HWCPLURWYgY >}}
+
+We don't quite yet know where this platform is going to go given that it is in such early stages. Although the infrastructure it already provides, and the ease at which it is done, is magic-like, there are of course a lot of things it _doesn't_ have (yet): login without GitHub, source apps from private repositories, private content, authentication, security, etc. These were the things I wondered about when I attended the live webinar above, which in turn had me thinking how it exactly compares with the purpose of [Posit Cloud](https://posit.cloud/) (in the [video](https://www.youtube.com/live/HWCPLURWYgY), I explicitly asked this at [29:26](https://youtu.be/HWCPLURWYgY?t=1766)). It sounds like these "commercial" considerations are all part of the roadmap, so we are very excited to see where it goes.
+
+Nevertheless, even in its current state, [Connect Cloud](https://connect.posit.cloud/) is a highly recommended platform to start using for anyone wanting to build a data science portfolio and deploy _public_ content.
+
+## 5. Shiny Server
+
+Want total control over the infrastructure? If yes, [Shiny Server](https://posit.co/products/open-source/shiny-server/) might be for you. 
+
+This is an _open-source_ server configuration that can be installed on-premises (or wherever you'd like). The huge advantage is that it is _always_ free--you just need to install the software. The disadvantage is that you need a server bulky enough to handle the desired compute _and_ you need people who know how to manage it. Compared to the others, this option is like the wild west. It provides you the basic skeleton to get stuff working, but from there you have ultimate freedom to do with it what you wish, which can easily get out of hand as the developer/user bases grow and you're trying to maintain environments as new software package versions are constantly being released.
+
+I always consider this a fantastic option for relatively large organizations who are early in their data science journeys. They likely have mature information technology (IT) teams supporting existing systems, but have not yet invested heavily in advanced analytics infrastructure. This provides an opportunity to leverage those mature systems admin teams to setup up and manage the backend of this infrastructure that then enables data scientists in the organization to deliver great analytic content (and prove its value) without spending tons of money on acquiring the software. Low risk with huge potential.
+
+### Amazon Web Services (AWS)
+
+Despite it being open-source, most individuals (or small companies for that matter) probably don't have adequate server space to implement [Shiny Server](https://posit.co/products/open-source/shiny-server/) in the way they'd like. However, you _can_ do it if you use external compute resources. [Amazon EC2](https://aws.amazon.com/ec2/) is one way to make it happen. And still for free.
+
+The way it works is that you spin up an EC2 instance of your choice (essentially a computer, ranging from very low to very high compute power, the `t2.micro` being the one that you can use for <strong>free</strong>), install [Shiny Server](https://posit.co/products/open-source/shiny-server/) on the instance, and then have all the freedom in the world to deploy applications to it and access them on the web. [This](https://www.charlesbordet.com/en/guide-shiny-aws/) is an excellent resource that I followed when learning how to do this, which you can see a detailed account of my steps [here](https://github.com/zajichek/shinydemo-aws/issues/1) as well.
+
+The real cool thing about this setup is that you can take it wherever you want to go. You have unlimited ability to customize the design of your server pages, integrate it with other software/tools, assign custom domains, etc. The possibilities are endless. When [I learned how to do this](https://github.com/zajichek/shinydemo-aws/issues/1), I was able to quickly get it to a state where my server is live and accessible at a subdomain of one of my websites: [http://apps.zajichekstats.com/](http://apps.zajichekstats.com/). Clicking that link takes you to the home page of my Shiny Server on an AWS EC2 `t2.micro` instance, where subsequent applications are found at subpages of that (e.g., [http://apps.zajichekstats.com/shinydemo-aws/](http://apps.zajichekstats.com/shinydemo-aws/)). This entire setup, including the subdomain assignment, was done for free, and it is barely scratching the surface of what _can_ be done with it.
+
+# Conclusion
+
+There are many different ways (and this list probably doesn't come close to covering the possible ones (e.g., [Azure App Service](https://azure.microsoft.com/en-us/products/app-service))) to start building and sharing data science products for no cost. So, what are you waiting for? Give them a try!
+
+{{< bluesky-comments uri="at://did:plc:sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lc73mgu5ns2t" >}}

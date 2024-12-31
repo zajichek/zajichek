@@ -1,0 +1,42 @@
+---
+title: "5 ways to help ensure success of a statistical project"
+description: "How can we increase the likelihood that things will go as expected?"
+author: "Alex Zajichek"
+date: "5/16/2024"
+image: "feature.png"
+draft: false
+categories:
+  - Project Management
+---
+
+{{< video https://www.youtube.com/embed/blO16Uuo68E >}}
+
+Sometimes stats projects don’t go as planned. There are delays, setbacks, surprises, ambiguity, scope creep...the list goes on. All of these things can lead to a seemingly longer list of questions than what was started with: *Did we answer the research question? Are we confident in the result? What do we do now?* It’s a sense of dissatisfaction.
+
+Many of these issues stem from the early phases of the project, and (maybe I should collect data on this) they can largely be alleviated when more care is taken at that stage. Actually, the [book I’m currently reading](https://theeffectbook.net/) summed it up perfectly, *“Well-designed research is research capable of answering the question it’s trying to answer”*. Sounds obtuse, but it is undoubtedly true, even for projects outside of what you may define as “research”. This is about proper planning. So here are 5 things that can help increase the likelihood of a successful statistical project:
+
+# 1. Assemble your team...early {#assembleteam}
+
+It’s often a misconception that the statistician’s role is to simply analyze, or “run the tests on”, the data at the end once it is collected. This is far from optimal. Statistical analysis is not systematic or mechanical. Rather, it requires knowledge and intuition about the subject matter context. Add in a lack of transparency to the data collection itself, the chances of lost insight definitely increase. In fact, it might be the case that a few poor design choices end up adding huge complexities in answering the original question, or maybe even make it impossible altogether. So, if you have a project idea, consult your statistician! Early and often during the development phase.
+
+Now, data people are certainly not the only ones you need involved early. Far from it. Who better to help shape the final product than the end-users—the people who will actually be using the information *and* know what works? If you want to integrate models into your operational workflow, what sort of resource or technical constraints may there be? Well, we probably have to talk to systems and IT people who will also likely need to commit their own resources for upkeep. And it comes full circle, because all of these nuances may even affect the statistical choices made from a mathematical perspective (i.e., design, modeling framework, etc.). There are plenty more important roles that could be described here, but the bottom line is that cross-functional collaboration, from the beginning, is crucial.
+
+# 2. Make the goals clear, then plan accordingly
+
+There is a common issue in data projects of ambiguous or non-specific objectives. Statistics is inherently “gray”, by definition, because there is no right answer. Uncertainty always exists. So unless you already know exactly what you’re looking for in the data, without a clearly defined goal, you can find yourself spinning in circles and never know when what you’ve done is sufficient to move on.
+
+My recommendation is to have multiple levels: the *statistical* goals and the real-world goals that they are supporting. The statistical goals should be stated as clear, specific questions with quantitative answers that data (among other things) will be used to estimate. However, we have to think about how these statistical quantities will be *used* afterwards. For example, the approach taken to estimate the likelihood of a customer buying a product (a statistical goal) may differ if we're trying to decrease costs versus increase retention, especially when thinking about the solution as a whole. The question comes down to what we are trying to accomplish with the new information. Once that is clear, we can envision the roadmap for how it will be used, which can be an anchor for developing the right methodology, making analytic decisions easier to manage.
+
+# 3. Think about taking action
+
+Once you obtain the new information you set out to find, what are you going to do about it? Under what circumstances? Based on which results? Having some inkling as to what it is going to enable (or disable) someone to do–not just in general, but a specific example–adds clarity to the practical implications of investing the time and money into finding the answers. These things can unravel many of the nuances that were originally an oversight, and may end up causing changes to how the information gets disseminated, who gets involved and when, or even the math itself. All in all, it allows for more proper design at the beginning, a reduction of wasted time/resources, and a better chance of finding the right solution. The reason we perform statistical analysis is (or should be) to inform some action or decision. If it doesn’t, then you may need to think about why that is and adjust. My favorite way to frame this to someone is by asking a simple question: *“If you knew X at time Y then you could do Z. What are X, Y and Z?”*.
+
+# 4. Create a tangible product
+
+It may sound trivial, but it’s worth thinking about (and even explicitly defining). By what means will the result or solution be delivered? To whom? When? How? Is it going to be a comprehensive report or just a number sent in an email? It might even be a model deployed in the organization’s systems and workflows, or an application hosted on the web. These tell you all sorts of things about who should get involved (see [#1](#assembleteam)) and what it will take to get there. It is about ensuring that the right information gets to the right people at the right time in an expected and predictable manner. It can be the case that a data project fails not because of bad statistics or models, but because it wasn’t disseminated optimally. Having a tangible end-product that you can work towards keeps everyone’s eye on the ball, exposes where the problems are, helps you plan deliverables, create milestones, and makes it clear when you are veering off course.
+
+# 5. Answer the question, “did it work?”
+
+Oftentimes when you look at a statistic like a p-value, it leaves an empty feeling like you haven’t been convinced. That’s because it does not yet directly translate to the real-world impact the new insight is supposed to address. Maybe it’s useful during data analysis, but we should be thinking beyond the inferences made from the sample at hand to what we need to see to convince us that the results really matter. If the information we’ve garnered is actually useful, then we should expect improvements to play out where the rubber meets the road once it is utilized. The most direct way to do this: test it.
+
+{{< bluesky-comments uri="at://did:plc:sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lc747wvce22t" >}}
