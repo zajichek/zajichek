@@ -572,7 +572,7 @@ shinyApp(ui, server)
 
 ---
 
-## Deployment and integration
+## Deployment and Integration
 
 ::: {.notes}
 
@@ -594,7 +594,8 @@ shinyApp(ui, server)
 
 ::: {.fragment}
 
-- Last piece of the puzzle: sharing the work
+### How can we share it?
+
 - Start with free; iterate and pay as needed
   + Not all or nothing!
 - Repeat: use to facilitate analytical strategy
@@ -641,6 +642,9 @@ shinyApp(ui, server)
 - You start to figure things out as you go, which allows you to iterate over time and continuing building and expanding the capabilities
 - Start with free stuff, and only incur costs as needed for solutions you are building and need
 - Use AI tools to help you learn!
+
+- Prompt: "Make me an app template to dynamically explore customers on a map with various filters"
+
 :::
 
 ::: {.panel-tabset}
@@ -675,15 +679,33 @@ shinyApp(ui, server)
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 #### ChatGPT
+
+- A companion for any and all questions along the way
+
+::: {.fragment}
+
+![](chatgpt.gif)
+
+:::
+
+:::
 
 :::
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 #### Shiny Assistant
 
-https://gallery.shinyapps.io/assistant/
+- An LLM interface to specifically help you develop Shiny apps
+- Quickly get a template started for your concept
+- Live demo: [https://gallery.shinyapps.io/assistant/](https://gallery.shinyapps.io/assistant/)
+
+:::
 
 :::
 
