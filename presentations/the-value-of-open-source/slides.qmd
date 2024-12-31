@@ -50,6 +50,8 @@ format:
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 ### AI as Tools
 
 - Pre-built products like [ChatGPT](https://chatgpt.com/), [Gemini](https://gemini.google.com/), etc.
@@ -59,7 +61,11 @@ format:
 
 :::
 
+:::
+
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ### AI as Data Science
 
@@ -68,6 +74,8 @@ format:
 - The building blocks of AI itself
 
 ::: 
+
+:::
 
 ::::
 
@@ -99,13 +107,18 @@ format:
 
 <br>
 
-- Leads to ambiguity and confusion (figure)
+- Leads to ambiguity and confusion
 
 :::
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 [![Figure: The confusing nature of AI-related fields](AIDiagram.png)](https://www.researchgate.net/figure/Venn-diagram-of-artificial-intelligence-and-data-science-Artificial-intelligence-AI-is_fig1_380790362)
+
+:::
+
 :::
 
 ::::
@@ -136,6 +149,8 @@ format:
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 ### Current State
 
 - Gartner (2018): 87% of business at low analytics maturity [1]
@@ -144,7 +159,11 @@ format:
 
 :::
 
+:::
+
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ### Back to Basics
 
@@ -154,6 +173,8 @@ format:
 - What are your limitations? (Tools, skills, time, etc.)
 - Are _AI tools_ really the solution?
   + _"AI for the sake of AI is a losing proposition"_ [2]. Be intentional!
+
+:::
 
 :::
 
@@ -185,6 +206,8 @@ format:
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 ### Background
 
 - In essence, free and open software ([Wikipedia](https://en.wikipedia.org/wiki/Open_source))
@@ -193,15 +216,20 @@ format:
 
 :::
 
+:::
+
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ### Benefits in Data Science
 
-- Code-first approach gives flexibility and control
-  + Art + science
+- Code-first approach gives flexibility and control (art + science)
 - Use it to _facilitate_ analytical approach
   + Building blocks to AI
 - Low-cost iteration and experimentation (anyone can do it)
+
+:::
 
 :::
 
@@ -227,15 +255,22 @@ format:
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 ### Background
 
 * A free and open-source functional programming language
 * Developed in the 1990's for statistical computing, but has long since expanded to much broader usage
 * Advanced through [packages](https://r-pkgs.org/) developed by the community ([Package list](https://cran.r-project.org/web/packages/available_packages_by_name.html))
 * Commonly used in the [RStudio IDE](https://posit.co/products/open-source/rstudio/)
+
+:::
+
 :::
 
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ### Example
 
@@ -256,6 +291,8 @@ plot_ly(
 
 :::
 
+:::
+
 ::::
 
 ---
@@ -265,6 +302,8 @@ plot_ly(
 :::: {.columns}
 
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ```{.r code-line-numbers="|1-4|6-19|21-45"}
 # Load packages
@@ -316,7 +355,11 @@ maplibre() |>
 
 :::
 
+:::
+
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ```{r}
 # Load packages
@@ -369,6 +412,8 @@ maplibre() |>
 
 :::
 
+:::
+
 ::::
 
 ---
@@ -388,6 +433,8 @@ maplibre() |>
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 ### Background
 
 - [Quarto](https://quarto.org/) is an open source technical publishing system
@@ -398,7 +445,11 @@ maplibre() |>
 
 :::
 
+:::
+
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 YAML (header/metadata)
 ``` yaml
@@ -429,6 +480,8 @@ Markdown (body)
 
 :::
 
+:::
+
 ::::
 
 ---
@@ -443,11 +496,17 @@ Markdown (body)
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 ### Background
 
 - [Shiny](https://shiny.posit.co/) is an R _package_ for building custom, interactive web applications
   + You can do it in [Python too](https://shiny.posit.co/py/)!
 - Allows users to interact with data, analytics, models, etc. however you see fit
+
+:::
+
+::: {.fragment}
 
 ::: {style="font-size: 50%;"}
 Example: [Deploying an LLM-powered Shiny app](https://www.youtube.com/watch?v=YB_VyRV5wwQ)
@@ -456,7 +515,11 @@ Example: [Deploying an LLM-powered Shiny app](https://www.youtube.com/watch?v=YB
 
 :::
 
+:::
+
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ### Example (in R)
 
@@ -496,7 +559,13 @@ server <-
 shinyApp(ui, server)
 ```
 
+:::
+
+::: {.fragment}
+
 ![](shiny.gif)
+:::
+
 :::
 
 ::::
@@ -523,14 +592,20 @@ shinyApp(ui, server)
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 - Last piece of the puzzle: sharing the work
-- Start with free; Iterate and pay as needed
+- Start with free; iterate and pay as needed
   + Not all or nothing!
 - Repeat: use to facilitate analytical strategy
 
 :::
 
+:::
+
 ::: {.column width="50%"}
+
+::: {.fragment}
 
 ### Options to get started
 
@@ -543,7 +618,10 @@ shinyApp(ui, server)
 - [Quarto Pub](https://quartopub.com/): Freely publish Quarto output to the web for public access
 - [Shiny Server](https://posit.co/products/open-source/shiny-server/): Open source (free) server to deploy Shiny apps and other content
   + Install on premises or the cloud
-  
+  + Intriguing option for orgs new to data science
+
+:::
+
 :::
 
 :::
