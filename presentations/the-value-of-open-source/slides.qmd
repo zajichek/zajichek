@@ -713,11 +713,9 @@ shinyApp(ui, server)
 
 :::
 
----
-
 # Tools in Action: [riskcalc.org](https://riskcalc.org/)
 
-## What is [riskcalc.org](https://riskcalc.org/)?
+## What is it?
 
 ::: {.notes}
 - Interesting thought experiment for what "AI" is. 
@@ -727,11 +725,16 @@ shinyApp(ui, server)
 
 ::: {.column width="50%"}
 
+::: {.fragment}
+
 ### Background
 
-- Repository of risk calculators for individualized medical decision making
+- [riskcalc.org](https://riskcalc.org/) is a website containing a repository of risk calculators for individualized medical decision making
 - Embedded with published predictive models for various clinical outcomes
+- Each calculator is a [Shiny](https://shiny.posit.co/) application
 - Majority are regression models
+
+:::
 
 :::
 
@@ -748,34 +751,86 @@ shinyApp(ui, server)
 
 --- 
 
-## Low-Cost Backend
+## The Backend
 
-- Each calculator is a Shiny app
-- Diagram showing path
-- Shiny Server: Can install on premises, have a functioning shiny server behind your firewall, for free
-- All of these things are free
+:::: {.columns}
 
-- Use AWS (we pay, but you can start for free)
+::: {.column width="60%"}
+
+[![Figure: Tools supporting riskcalc.org](riskcalctools.png)](https://www.appsilon.com/post/alternatives-to-scaling-shiny)
+
+:::
+
+::: {.column width="40%"}
+
+::: {.fragment}
+
+### Key points
+
+- Can build working infrastructure for free _to start_
+
+<br>
+
+- Incur cost for service as needed
+
+<br>
+
+- AWS versus on premises
+
+:::
+
+:::
+
+::::
 
 ---
 
-# Acknowledgements
+## Acknowledgements
 
-- QHS
-- AM, KJ, BMD
-- Mike Kattan
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Co-developers
+
+::: {.nonincremental}
+
+- Alex Milinovich
+- Xinge (Kathy) Ji
+- Blaine Martyn-Dow
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+### _In Memory_
+
+<img src="mike.png" style="width:50%; height:50%; padding-left:25%">
+
+::: {style="font-size: 75%; padding-left:25%"}
+
+Michael W. Kattan, PhD <br>
+Department Chair (2004-2024) <br>
+Quantitative Health Sciences <br>
+Cleveland Clinic
+
+:::
+
+:::
+
+::::
+
+# Questions?
 
 ---
 
-## Conclusion
+## References
 
-- Ai tools can be useful...
-- Open source best way to get started and facilitate because of low-cost and flexibility
-
----
-
-# References
+::: {.nonincremental}
 
 1. https://www.gartner.com/en/newsroom/press-releases/2018-12-06-gartner-data-shows-87-percent-of-organizations-have-low-bi-and-analytics-maturity
 2. https://www.kearney.com/service/digital-analytics/ai-assessment-aia-2024-the-drive-for-greater-maturity-scale-and-impact
 
+:::

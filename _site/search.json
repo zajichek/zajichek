@@ -798,25 +798,32 @@
     "text": "How can I learn?\n\n\nWhat we saw here was a very narrow glimpse into what these tools can do. So how can you learn more yourself?\nFirst, just install them–they are free!\nTake the code from these slides even and run it yourself\nAgain, the workshop analogy. You probably need to be curious and want to learn new skills, but in my opinion it’s the best way to build a foundation.\nStart task based: try reproducing some very small little task, like creating a graph programmatically that you’d normally do in Excel\nYou start to figure things out as you go, which allows you to iterate over time and continuing building and expanding the capabilities\nStart with free stuff, and only incur costs as needed for solutions you are building and need\nUse AI tools to help you learn!\nPrompt: “Make me an app template to dynamically explore customers on a map with various filters”\n\n\n\nInitial strategyFree resourcesUse AI tools!\n\n\n\nFirst, go install them and mess around\n\n\n\nMake a (small) tangible goal, figure it out, then iterate\n\nDocument everything\n\n\n\n\nFocus on automation, reporting and reproducibility to start (low hanging fruit)\n\nBuild the foundation for analytics maturity\n\n\n\n\n\nR for Data Science by Hadley Wickham\nAn Introduction to Statistical Learning for statistics and data science foundations\nA free R course on QuantFish\nEndless YouTube resources for R, Quarto, Shiny…and everything else\nCommunity boards like Posit Community, Stack Overflow, etc.\nVisit Posit PBC’s website and learning resources\n\nMajor developer/maintainer of many tools we talked about today\n\n\n\n\n\n\n\n\nChatGPT\n\nA companion for any and all questions along the way\n\n\n\n\n\n\n\n\nShiny Assistant\n\nAn LLM interface to specifically help you develop Shiny apps\nQuickly get a template started for your concept\nLive demo: https://gallery.shinyapps.io/assistant/"
   },
   {
-    "objectID": "presentations/the-value-of-open-source/slides.html#what-is-riskcalc.org",
-    "href": "presentations/the-value-of-open-source/slides.html#what-is-riskcalc.org",
+    "objectID": "presentations/the-value-of-open-source/slides.html#what-is-it",
+    "href": "presentations/the-value-of-open-source/slides.html#what-is-it",
     "title": "The Value of Open-Source",
-    "section": "What is riskcalc.org?",
-    "text": "What is riskcalc.org?\n\n\nInteresting thought experiment for what “AI” is.\n\n\n\n\nBackground\n\nRepository of risk calculators for individualized medical decision making\nEmbedded with published predictive models for various clinical outcomes\nMajority are regression models"
+    "section": "What is it?",
+    "text": "What is it?\n\n\nInteresting thought experiment for what “AI” is.\n\n\n\n\n\n\nBackground\n\nriskcalc.org is a website containing a repository of risk calculators for individualized medical decision making\nEmbedded with published predictive models for various clinical outcomes\nEach calculator is a Shiny application\nMajority are regression models"
   },
   {
-    "objectID": "presentations/the-value-of-open-source/slides.html#low-cost-backend",
-    "href": "presentations/the-value-of-open-source/slides.html#low-cost-backend",
+    "objectID": "presentations/the-value-of-open-source/slides.html#the-backend",
+    "href": "presentations/the-value-of-open-source/slides.html#the-backend",
     "title": "The Value of Open-Source",
-    "section": "Low-Cost Backend",
-    "text": "Low-Cost Backend\n\nEach calculator is a Shiny app\nDiagram showing path\nShiny Server: Can install on premises, have a functioning shiny server behind your firewall, for free\nAll of these things are free\nUse AWS (we pay, but you can start for free)"
+    "section": "The Backend",
+    "text": "The Backend\n\n\n\n\n\nFigure: Tools supporting riskcalc.org\n\n\n\n\n\nKey points\n\nCan build working infrastructure for free to start\n\n\n\nIncur cost for service as needed\n\n\n\nAWS versus on premises"
   },
   {
-    "objectID": "presentations/the-value-of-open-source/slides.html#conclusion",
-    "href": "presentations/the-value-of-open-source/slides.html#conclusion",
+    "objectID": "presentations/the-value-of-open-source/slides.html#acknowledgements",
+    "href": "presentations/the-value-of-open-source/slides.html#acknowledgements",
     "title": "The Value of Open-Source",
-    "section": "Conclusion",
-    "text": "Conclusion\n\nAi tools can be useful…\nOpen source best way to get started and facilitate because of low-cost and flexibility"
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\n\n\nCo-developers\n\n\nAlex Milinovich\nXinge (Kathy) Ji\nBlaine Martyn-Dow\n\n\n\nIn Memory\n\n\nMichael W. Kattan, PhD  Department Chair (2004-2024)  Quantitative Health Sciences  Cleveland Clinic"
+  },
+  {
+    "objectID": "presentations/the-value-of-open-source/slides.html#references",
+    "href": "presentations/the-value-of-open-source/slides.html#references",
+    "title": "The Value of Open-Source",
+    "section": "References",
+    "text": "References\n\n\nhttps://www.gartner.com/en/newsroom/press-releases/2018-12-06-gartner-data-shows-87-percent-of-organizations-have-low-bi-and-analytics-maturity\nhttps://www.kearney.com/service/digital-analytics/ai-assessment-aia-2024-the-drive-for-greater-maturity-scale-and-impact\n\n\n\n\n\nAI Innovations at Work Conference 2025"
   },
   {
     "objectID": "presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
