@@ -729,8 +729,8 @@ shinyApp(ui, server)
 
 ### Background
 
-- [riskcalc.org](https://riskcalc.org/) is a website containing a repository of risk calculators for individualized medical decision making
-- Embedded with published predictive models for various clinical outcomes
+- [riskcalc.org](https://riskcalc.org/) is a free-to-use repository of risk calculators for individualized medical decision making (~10-15K users/month)
+- Embedded with published predictive models
 - Each calculator is a [Shiny](https://shiny.posit.co/) application
 - Majority are regression models
 
@@ -767,7 +767,7 @@ shinyApp(ui, server)
 
 ### Key points
 
-- Can build working infrastructure for free _to start_
+- Can build working infrastructure for free (to start)
 
 <br>
 
@@ -815,6 +815,8 @@ Michael W. Kattan, PhD <br>
 Department Chair (2004-2024) <br>
 Quantitative Health Sciences <br>
 Cleveland Clinic
+
+<p style="font-size:75%;"><em>Creator of <a href="https://riskcalc.org/">riskcalc.org</a></em></p>
 
 :::
 

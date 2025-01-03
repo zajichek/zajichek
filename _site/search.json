@@ -802,21 +802,21 @@
     "href": "presentations/the-value-of-open-source/slides.html#what-is-it",
     "title": "The Value of Open-Source",
     "section": "What is it?",
-    "text": "What is it?\n\n\nInteresting thought experiment for what “AI” is.\n\n\n\n\n\n\nBackground\n\nriskcalc.org is a website containing a repository of risk calculators for individualized medical decision making\nEmbedded with published predictive models for various clinical outcomes\nEach calculator is a Shiny application\nMajority are regression models"
+    "text": "What is it?\n\n\nInteresting thought experiment for what “AI” is.\n\n\n\n\n\n\nBackground\n\nriskcalc.org is a free-to-use repository of risk calculators for individualized medical decision making (~10-15K users/month)\nEmbedded with published predictive models\nEach calculator is a Shiny application\nMajority are regression models"
   },
   {
     "objectID": "presentations/the-value-of-open-source/slides.html#the-backend",
     "href": "presentations/the-value-of-open-source/slides.html#the-backend",
     "title": "The Value of Open-Source",
     "section": "The Backend",
-    "text": "The Backend\n\n\n\n\n\nFigure: Tools supporting riskcalc.org\n\n\n\n\n\nKey points\n\nCan build working infrastructure for free to start\n\n\n\nIncur cost for service as needed\n\n\n\nAWS versus on premises"
+    "text": "The Backend\n\n\n\n\n\nFigure: Tools supporting riskcalc.org\n\n\n\n\n\nKey points\n\nCan build working infrastructure for free (to start)\n\n\n\nIncur cost for service as needed\n\n\n\nAWS versus on premises"
   },
   {
     "objectID": "presentations/the-value-of-open-source/slides.html#acknowledgements",
     "href": "presentations/the-value-of-open-source/slides.html#acknowledgements",
     "title": "The Value of Open-Source",
     "section": "Acknowledgements",
-    "text": "Acknowledgements\n\n\nCo-developers\n\n\nAlex Milinovich\nXinge (Kathy) Ji\nBlaine Martyn-Dow\n\n\n\nIn Memory\n\n\nMichael W. Kattan, PhD  Department Chair (2004-2024)  Quantitative Health Sciences  Cleveland Clinic"
+    "text": "Acknowledgements\n\n\nCo-developers\n\n\nAlex Milinovich\nXinge (Kathy) Ji\nBlaine Martyn-Dow\n\n\n\nIn Memory\n\n\nMichael W. Kattan, PhD  Department Chair (2004-2024)  Quantitative Health Sciences  Cleveland Clinic\n\nCreator of riskcalc.org"
   },
   {
     "objectID": "presentations/the-value-of-open-source/slides.html#references",
