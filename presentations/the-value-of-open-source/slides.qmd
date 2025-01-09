@@ -826,6 +826,14 @@ Cleveland Clinic
 
 # Questions?
 
+<br>
+
+::: {style="font-size: 75%; text-align:center"}
+
+Link to slides: [www.zajichekstats.com/presentations/the-value-of-open-source](https://www.zajichekstats.com/presentations/the-value-of-open-source/slides#/title-slide)
+
+:::
+
 ---
 
 ## References
