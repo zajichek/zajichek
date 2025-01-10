@@ -10,6 +10,7 @@ website:
   description: "Statistician/data scientist in Central Wisconsin."
   page-footer: "© 2024 Zajichek Stats"
   open-graph: true
+  draft-mode: unlinked
   navbar:
     logo: "logo.png"
     title: false

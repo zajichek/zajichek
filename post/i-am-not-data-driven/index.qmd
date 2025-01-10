@@ -1,0 +1,32 @@
+---
+title: "I am not data-driven"
+description: "I prefer data-informed. It's different."
+author: "Alex Zajichek"
+date: "1/10/2025"
+image: "feature.png"
+categories:
+  - Philosophy
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---
+
+In the foreword to [Jordan Peterson](https://www.jordanbpeterson.com/)'s, [_"12 Rules of Life: An Antidote to Chaos"_](https://www.amazon.com/gp/product/0345816021) (page _xxi_), it states:
+
+> "_Modern_ moral relativism has many sources. As we in the West learned more history, we understood that different epochs had different moral codes. As we travelled the seas and explored the globe, we learned of far-flung tribes on different continents whose different moral codes made sense relative to, or within the framework of, their societies. Science played a role, too, by attacking the religious grounds for ethics and rules. Materialist social science implied that we could divide the world into facts (which all could observe, and were objective and "real") and values (which were subjective and personal). Then we could first agree on the facts, and, maybe, one day, develop a scientific code of ethics (which has yet to arrive). Moreover, by implying that values had a lesser reality than facts, science contributed in yet another way to moral relativism, for it treated "value" as secondary. **(But the idea that we can easily separate facts and values was and remains naive; to some extent, one's values determine what one will pay attention to, and what will count as a fact.)**" - Dr. Norman Doidge, MD
+
+I could just end it here, because that quote just about encapsulates my entire reasoning for the title of this article (especially the bold part). But since I have more to say on it, and would like to more explicitly relate this to statistics, I'll proceed. 
+
+* The bold part at the end, in particular, perfectly encapsulates the reason for why I think being "data-driven" makes no sense at all, despite it being a popular phrase to show sophistication or superiority. 
+
+* It is also the precise, fundamental reason for the long standing issues with statistical significance as a whole and why it is meaningless
+
+* Short of complete utilitarianism, data-driven doesn't make any sense.
+
+* JBP podcast clips (numerous of them in 2024)
+  + Huberman podcast he does
+  + Also one of the main points of We Who Wrestle with God
+
+* Light of the Mind, Light of the World similar theme

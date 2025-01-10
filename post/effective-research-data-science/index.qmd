@@ -1,0 +1,17 @@
+---
+title: "Effective research data science"
+description: "A framework to achieve useful iteration, collaboration and results."
+author: "Alex Zajichek"
+date: "1/10/2025"
+image: "feature.png"
+categories:
+  - Project Management
+  - Research
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---
+
+![](process.png)
