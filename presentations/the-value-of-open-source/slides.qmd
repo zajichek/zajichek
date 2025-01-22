@@ -798,6 +798,7 @@ shinyApp(ui, server)
 - Alex Milinovich
 - Xinge (Kathy) Ji
 - Blaine Martyn-Dow
+- Other contributors
 
 :::
 
