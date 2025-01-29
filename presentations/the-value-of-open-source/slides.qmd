@@ -14,6 +14,51 @@ format:
     code-block-height: 250px
 ---
 
+## A Little Background
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+::: {.fragment}
+
+### Who is QHS?
+
+::: {style="font-size: 75%;"}
+
+- Department of 120+ biostatisticians, data scientists, programmers, etc. that collaborate on and supply quantitative support to research activities at Cleveland Clinic 
+
+<br>
+
+- From clinical trials and study design to precision medicine, population health, AI in medicine, and more, across many disease areas
+
+<br>
+
+- My area focuses on clinical prediction modeling and observational statistical analysis, primarily using EHR and/or registry data
+
+:::
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+<br>
+<br>
+
+![](qhs.png)
+
+::: {style="font-size: 75%;"}
+
+[www.lerner.ccf.org/quantitative-health](https://www.lerner.ccf.org/quantitative-health/)
+
+:::
+
+:::
+
+::::
+
 # What is AI, Anyway?
 
 ::: {.notes}
@@ -168,8 +213,8 @@ format:
 ### Back to Basics
 
 - Are you capturing what's important? (Data infrastructure)
-  + "If I knew X at time Y, I could do Z"
 - How are you using your data? (Reporting/analytical thinking)
+    + "If I knew X at time Y, I could do Z" (action oriented)
 - What are your limitations? (Tools, skills, time, etc.)
 - Are _AI tools_ really the solution?
   + _"AI for the sake of AI is a losing proposition"_ [2]. Be intentional!

@@ -4,8 +4,6 @@ author: Alex Zajichek
 date: "2025-02-27"
 ---
 
-_In progress_
-
 ```{=html}
 <center>
 <h3>Slides</h3>
