@@ -16,6 +16,8 @@ format:
 
 ## A Little Background
 
+<br>
+
 :::: {.columns}
 
 ::: {.column width="50%"}
@@ -46,10 +48,11 @@ format:
 
 <br>
 <br>
+<br>
 
 ![](qhs.png)
 
-::: {style="font-size: 75%;"}
+::: {style="font-size: 75%; text-align: center"}
 
 [www.lerner.ccf.org/quantitative-health](https://www.lerner.ccf.org/quantitative-health/)
 
@@ -694,6 +697,16 @@ shinyApp(ui, server)
 
 ::: {.panel-tabset}
 
+### Free resources
+
+- [_R for Data Science_](https://r4ds.had.co.nz/) by Hadley Wickham
+- [_An Introduction to Statistical Learning_](https://www.statlearning.com/) for statistics and data science foundations
+- A [free R course](https://www.goquantfish.com/courses/gentle-intro-to-R) on [QuantFish](https://www.goquantfish.com/)
+- Endless [YouTube](https://www.youtube.com/) resources for [R](https://www.youtube.com/results?search_query=r+programming+language), [Quarto](https://www.youtube.com/playlist?list=PL9HYL-VRX0oQI8fVioFxMTBrViFnRX_Df), [Shiny](https://www.youtube.com/results?search_query=shiny+r)...and everything else
+- Community boards like [Posit Community](https://forum.posit.co/top?period=monthly), [Stack Overflow](https://stackoverflow.com/), etc.
+- Visit [Posit PBC's](https://posit.co/) website and learning resources
+  + Major developer/maintainer of many tools we talked about today
+  
 ### Initial strategy
 
 - First, go install them and mess around
@@ -707,16 +720,6 @@ shinyApp(ui, server)
 
 - Focus on automation, reporting and reproducibility to start (low hanging fruit)
   + Build the foundation for analytics maturity
-
-### Free resources
-
-- [_R for Data Science_](https://r4ds.had.co.nz/) by Hadley Wickham
-- [_An Introduction to Statistical Learning_](https://www.statlearning.com/) for statistics and data science foundations
-- A [free R course](https://www.goquantfish.com/courses/gentle-intro-to-R) on [QuantFish](https://www.goquantfish.com/)
-- Endless [YouTube](https://www.youtube.com/) resources for [R](https://www.youtube.com/results?search_query=r+programming+language), [Quarto](https://www.youtube.com/playlist?list=PL9HYL-VRX0oQI8fVioFxMTBrViFnRX_Df), [Shiny](https://www.youtube.com/results?search_query=shiny+r)...and everything else
-- Community boards like [Posit Community](https://forum.posit.co/top?period=monthly), [Stack Overflow](https://stackoverflow.com/), etc.
-- Visit [Posit PBC's](https://posit.co/) website and learning resources
-  + Major developer/maintainer of many tools we talked about today
 
 ### Use AI tools!
 
