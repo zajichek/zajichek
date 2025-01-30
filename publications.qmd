@@ -2,6 +2,10 @@
 title: "Publications"
 ---
 
+# 2025
+
+* Werneburg, G.T., Rhoads, D.D., Milinovich, A., McSweeney, S., Knorr, J., Mourany, L., <strong>Zajichek, A.</strong>, Goldman, H.B., Haber, G.-P. and Vasavada, S.P. (2025), [External validation of predictive models for antibiotic susceptibility of urine culture](https://bjui-journals.onlinelibrary.wiley.com/doi/10.1111/bju.16626). BJU Int. https://doi.org/10.1111/bju.16626
+
 # 2024
 
 * <strong>Alexander M Zajichek</strong>, Gary L Grunkemeier, [Statistical primer: propensity scores used as overlap weights provide exact covariate balance](https://doi.org/10.1093/ejcts/ezae318), European Journal of Cardio-Thoracic Surgery, 2024;, ezae318, https://doi.org/10.1093/ejcts/ezae318 [Accepted Manuscript](OW_AcceptedManuscript_20240830.pdf)
