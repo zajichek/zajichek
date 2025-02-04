@@ -217,7 +217,6 @@ format:
 
 - Are you capturing what's important? (Data infrastructure)
 - How are you using your data? (Reporting/analytical thinking)
-    + "If I knew X at time Y, I could do Z" (action oriented)
 - What are your limitations? (Tools, skills, time, etc.)
 - Are _AI tools_ really the solution?
   + _"AI for the sake of AI is a losing proposition"_ [2]. Be intentional!
@@ -260,7 +259,7 @@ format:
 
 - In essence, free and open software ([Wikipedia](https://en.wikipedia.org/wiki/Open_source))
 - Think of as community built
-- Like a workshop for your raw materials (with directions)
+- Like a workshop for your raw materials
 
 :::
 
@@ -309,8 +308,8 @@ format:
 
 * A free and open-source functional programming language
 * Developed in the 1990's for statistical computing, but has long since expanded to much broader usage
-* Advanced through [packages](https://r-pkgs.org/) developed by the community ([Package list](https://cran.r-project.org/web/packages/available_packages_by_name.html))
 * Commonly used in the [RStudio IDE](https://posit.co/products/open-source/rstudio/)
+* Advanced through [packages](https://r-pkgs.org/) developed by the community ([Package list](https://cran.r-project.org/web/packages/available_packages_by_name.html))
 
 :::
 
@@ -353,27 +352,44 @@ plot_ly(
 
 ::: {.fragment}
 
-```{.r code-line-numbers="|1-4|6-19|21-45"}
+```{.r code-line-numbers="|1-4|6-11|13-35|36-62"}
 # Load packages
 library(tidyverse)
 library(tidycensus)
 library(mapgl)
 
-# Extract a data set to use
+# Import WI tracts
+wi_tracts <- 
+  arcgislayers::arc_read(
+    url = "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2023/Tracts_Blocks/MapServer/4", 
+    where = "STATE = '55'"
+  )
+
+# Extract median income by tract
 dat <- 
   get_acs(
     geography = "tract",
     variables = "B19013_001", # Median income,
     state = "WI",
     year = 2022,
-    geometry = TRUE
+    progress_bar = FALSE
+  ) |>
+  
+  # Join to get boundaries
+  inner_join(
+    y = wi_tracts |> select(GEOID, geometry),
+    by = "GEOID"
   ) |>
   
   # Make an information column
   mutate(
     Info = paste0(str_remove(NAME, ";.+$"), "<br>Median Income ($): ", round(estimate))
-  )
+  ) |>
+  
+  # Convert to spatial data frame
+  sf::st_as_sf()
 
+# Make the make
 maplibre() |>
   
   # Focus the mapping area
@@ -415,22 +431,38 @@ library(tidyverse)
 library(tidycensus)
 library(mapgl)
 
-# Extract a data set to use
+# Import WI tracts
+wi_tracts <- 
+  arcgislayers::arc_read(
+    url = "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2023/Tracts_Blocks/MapServer/4", 
+    where = "STATE = '55'"
+  )
+
+# Extract median income by tract
 dat <- 
   get_acs(
     geography = "tract",
     variables = "B19013_001", # Median income,
     state = "WI",
     year = 2022,
-    geometry = TRUE,
     progress_bar = FALSE
+  ) |>
+  
+  # Join to get boundaries
+  inner_join(
+    y = wi_tracts |> select(GEOID, geometry),
+    by = "GEOID"
   ) |>
   
   # Make an information column
   mutate(
     Info = paste0(str_remove(NAME, ";.+$"), "<br>Median Income ($): ", round(estimate))
-  )
+  ) |>
+  
+  # Convert to spatial data frame
+  sf::st_as_sf()
 
+# Make the make
 maplibre() |>
   
   # Focus the mapping area
@@ -714,7 +746,6 @@ shinyApp(ui, server)
 <br>
 
 - Make a (small) tangible goal, figure it out, then iterate
-  + Document everything
 
 <br>
 
@@ -872,6 +903,24 @@ Cleveland Clinic
 :::
 
 ::::
+
+---
+
+## Conclusion
+
+- AI tools are really just implementations of statistical models
+
+<br>
+
+- Seek to use AI tools to enhance your analytical strategy (not be it) 
+
+<br>
+
+- Open source tools help do this because they are free, flexible, and customizable
+
+<br>
+
+- Build towards analytics maturity while staying grounded in the problems you are trying to solve
 
 # Questions?
 
