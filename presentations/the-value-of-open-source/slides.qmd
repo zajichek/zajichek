@@ -215,11 +215,11 @@ format:
 
 ### Back to Basics
 
+- Are _AI tools_ really the solution?
+  + _"AI for the sake of AI is a losing proposition"_ [2]. Be intentional!
 - Are you capturing what's important? (Data infrastructure)
 - How are you using your data? (Reporting/analytical thinking)
 - What are your limitations? (Tools, skills, time, etc.)
-- Are _AI tools_ really the solution?
-  + _"AI for the sake of AI is a losing proposition"_ [2]. Be intentional!
 
 :::
 
@@ -271,10 +271,10 @@ format:
 
 ### Benefits in Data Science
 
+- Low-cost iteration and experimentation (anyone can do it)
 - Code-first approach gives flexibility and control (art + science)
 - Use it to _facilitate_ analytical approach
   + Building blocks to AI
-- Low-cost iteration and experimentation (anyone can do it)
 
 :::
 
@@ -518,8 +518,8 @@ maplibre() |>
 ### Background
 
 - [Quarto](https://quarto.org/) is an open source technical publishing system
-- Build custom analytical documents in programmatic way
-- Vehicle for dissemination, promoting automation and reproducibility
+- Vehicle for dissemination
+- Build custom analytical documents in programmatic way, promoting automation and reproducibility
 - Integrates well with [R](https://www.r-project.org/), [Python](https://www.python.org/), and many other tools
   + _This_ [presentation](https://www.zajichekstats.com/presentations/the-value-of-open-source/slides#/title-slide) (and [website](https://www.zajichekstats.com) that it's contained in) are built in [Quarto](https://quarto.org/) (see [source code](https://github.com/zajichek/zajichek/blob/main/presentations/the-value-of-open-source/slides.qmd))
 
