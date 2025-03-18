@@ -2,9 +2,51 @@
   {
     "objectID": "presentations.html",
     "href": "presentations.html",
-    "title": "Presentations",
+    "title": "Projects & Presentations",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nDate\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nFeb 12, 2018\n\n\nAn assessment of non-traditional regression models for count data\n\n\nAlex Zajichek\n\n\n\n\nFeb 27, 2025\n\n\nThe value of open-source: Leveraging free, code-first tools to iterate toward advanced analytics\n\n\nAlex Zajichek\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nDate\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nFeb 27, 2025\n\n\nThe value of open-source: Leveraging free, code-first tools to iterate toward advanced analytics\n\n\nAlex Zajichek\n\n\n\n\nJan 10, 2025\n\n\nA journey through Statistical Rethinking\n\n\nAlex Zajichek\n\n\n\n\nSep 3, 2024\n\n\ncarecompare: An R package to enable hospitals and health systems to access, explore, and analyze performance in quality measures and payment programs\n\n\nAlex Zajichek\n\n\n\n\nJul 18, 2023\n\n\ncheese: An R package for statistical analysis workflows\n\n\nAlex Zajichek\n\n\n\n\nJun 30, 2023\n\n\nzildge: An R package containing functions that I frequently use\n\n\nAlex Zajichek\n\n\n\n\nFeb 12, 2018\n\n\nAn assessment of non-traditional regression models for count data\n\n\nAlex Zajichek\n\n\n\n\nMay 5, 2017\n\n\nMidwest home price index vs. national average from 1991-2016\n\n\nAlex Zajichek\n\n\n\n\nMay 2, 2017\n\n\nJNaiveBayes: An R package implementing the Naive Bayes text classifier in Java\n\n\nTyler Olson, Alex Zajichek\n\n\n\n\nMar 24, 2017\n\n\nEstimating player contribution in hockey with regularized logistic regression\n\n\nAlex Zajichek\n\n\n\n\nFeb 10, 2017\n\n\nModeling the probability of an NHL goal for player placement strategy: A naive (Bayes’) approach\n\n\nAlex Zajichek\n\n\n\n\nDec 8, 2016\n\n\nAn analysis of binary classification methods via simulation and application\n\n\nBrandon Bergerud, Jeff Hajewski, Sam Justice, Tyler Olson, Alex Zajichek\n\n\n\n\nDec 5, 2016\n\n\nGibbs sampler in Python with R and OpenBUGS comparisons\n\n\nTyler Olson, Alex Zajichek\n\n\n\n\nMay 5, 2016\n\n\nPredicting the 2016 NCAA men’s basketball tournament\n\n\nTyler Olson, Tom Tran, Alex Zajichek\n\n\n\n\nOct 31, 2015\n\n\nAn introduction to SQL Server, RODBC, and ggplot2 with PITCHf/x data\n\n\nSam Justice, Tyler Olson, Alex Zajichek\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html",
+    "href": "presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html",
+    "title": "Predicting the 2016 NCAA men’s basketball tournament",
+    "section": "",
+    "text": "Slides\n\n\nLink to slides\n\nPaper\n\n\nLink to paper"
+  },
+  {
+    "objectID": "presentations/modeling-probability-of-nhl-goal/index.html",
+    "href": "presentations/modeling-probability-of-nhl-goal/index.html",
+    "title": "Modeling the probability of an NHL goal for player placement strategy: A naive (Bayes’) approach",
+    "section": "",
+    "text": "Slides\n\n\nLink to slideshow\n\nPaper\n\n\nLink to paper\nLink to project Shiny app source code"
+  },
+  {
+    "objectID": "presentations/carecompare/index.html",
+    "href": "presentations/carecompare/index.html",
+    "title": "carecompare: An R package to enable hospitals and health systems to access, explore, and analyze performance in quality measures and payment programs",
+    "section": "",
+    "text": "Link to source code"
+  },
+  {
+    "objectID": "presentations/estimating-player-contribution-in-hockey/index.html",
+    "href": "presentations/estimating-player-contribution-in-hockey/index.html",
+    "title": "Estimating player contribution in hockey with regularized logistic regression",
+    "section": "",
+    "text": "Slides\n\n\nLink to slideshow"
+  },
+  {
+    "objectID": "presentations/cheese/index.html",
+    "href": "presentations/cheese/index.html",
+    "title": "cheese: An R package for statistical analysis workflows",
+    "section": "",
+    "text": "Link to source code"
+  },
+  {
+    "objectID": "presentations/midwest-home-price-index/index.html",
+    "href": "presentations/midwest-home-price-index/index.html",
+    "title": "Midwest home price index vs. national average from 1991-2016",
+    "section": "",
+    "text": "Slides\n\n\nLink to slideshow\n\nPaper\n\n\nLink to paper"
   },
   {
     "objectID": "presentations/the-value-of-open-source/index.html",
@@ -840,10 +882,52 @@
     "text": "References\n\n\nhttps://www.gartner.com/en/newsroom/press-releases/2018-12-06-gartner-data-shows-87-percent-of-organizations-have-low-bi-and-analytics-maturity\nhttps://www.kearney.com/service/digital-analytics/ai-assessment-aia-2024-the-drive-for-greater-maturity-scale-and-impact\n\n\n\n\n\nAI Innovations at Work Conference 2025"
   },
   {
+    "objectID": "presentations/gibbs-sampler-in-python/index.html",
+    "href": "presentations/gibbs-sampler-in-python/index.html",
+    "title": "Gibbs sampler in Python with R and OpenBUGS comparisons",
+    "section": "",
+    "text": "Slides\n\n\nLink to slides\n\nPaper\n\n\nLink to paper"
+  },
+  {
     "objectID": "presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
     "href": "presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
     "title": "An assessment of non-traditional regression models for count data",
     "section": "",
     "text": "Slides\n\n\nLink to slideshow"
+  },
+  {
+    "objectID": "presentations/JNaiveBayes/index.html",
+    "href": "presentations/JNaiveBayes/index.html",
+    "title": "JNaiveBayes: An R package implementing the Naive Bayes text classifier in Java",
+    "section": "",
+    "text": "Paper\n\n\nLink to paper\nLink to package source code"
+  },
+  {
+    "objectID": "presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html",
+    "href": "presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html",
+    "title": "An analysis of binary classification methods via simulation and application",
+    "section": "",
+    "text": "Paper\n\n\nLink to paper"
+  },
+  {
+    "objectID": "presentations/zildge/index.html",
+    "href": "presentations/zildge/index.html",
+    "title": "zildge: An R package containing functions that I frequently use",
+    "section": "",
+    "text": "Link to source code"
+  },
+  {
+    "objectID": "presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html",
+    "href": "presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html",
+    "title": "An introduction to SQL Server, RODBC, and ggplot2 with PITCHf/x data",
+    "section": "",
+    "text": "Slides\n\n\nLink to paper"
+  },
+  {
+    "objectID": "presentations/journey-through-statistical-rethinking/index.html",
+    "href": "presentations/journey-through-statistical-rethinking/index.html",
+    "title": "A journey through Statistical Rethinking",
+    "section": "",
+    "text": "Link to working book\nLink to source code"
   }
 ]

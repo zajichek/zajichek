@@ -1,0 +1,23 @@
+---
+title: "Midwest home price index vs. national average from 1991-2016"
+author: Alex Zajichek
+date: "2017-05-05"
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="AlexZajichek-ProjectSlides.pdf"></iframe>
+</center>
+```
+
+[Link to slideshow](AlexZajichek-ProjectSlides.pdf)
+
+```{=html}
+<center>
+<h3>Paper</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="AlexZajichek-ProjectPaper.pdf"></iframe>
+</center>
+```
+
+[Link to paper](AlexZajichek-ProjectPaper.pdf)

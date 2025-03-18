@@ -1,0 +1,19 @@
+---
+title: "An analysis of binary classification methods via simulation and application"
+author: 
+  - Brandon Bergerud
+  - Jeff Hajewski
+  - Sam Justice
+  - Tyler Olson
+  - Alex Zajichek
+date: "2016-12-08"
+---
+
+```{=html}
+<center>
+<h3>Paper</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="final_report.pdf"></iframe>
+</center>
+```
+
+[Link to paper](final_report.pdf)

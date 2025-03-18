@@ -1,0 +1,25 @@
+---
+title: "Modeling the probability of an NHL goal for player placement strategy: A naive (Bayes') approach"
+author: Alex Zajichek
+date: "2017-02-10"
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="slides.pdf"></iframe>
+</center>
+```
+
+[Link to slideshow](slides.pdf)
+
+```{=html}
+<center>
+<h3>Paper</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="CreativeComponent-AlexZajichek.pdf"></iframe>
+</center>
+```
+
+[Link to paper](CreativeComponent-AlexZajichek.pdf)
+
+[Link to project Shiny app source code](https://github.com/zajichek/scripts/tree/main/NHL%20Shot%20Probability%20(Masters%20Project)/NHLShiny)

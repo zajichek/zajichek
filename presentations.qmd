@@ -1,7 +1,8 @@
 ---
-title: "Presentations"
+title: "Projects & Presentations"
 listing:
   contents: 
     - "presentations/*/index.qmd"
   type: table
+  sort: "date desc"
 ---

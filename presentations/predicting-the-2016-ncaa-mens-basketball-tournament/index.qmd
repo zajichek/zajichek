@@ -1,0 +1,26 @@
+---
+title: "Predicting the 2016 NCAA men's basketball tournament"
+author: 
+  - Tyler Olson
+  - Tom Tran
+  - Alex Zajichek
+date: "2016-05-05"
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="projectslides.pdf"></iframe>
+</center>
+```
+
+[Link to slides](projectslides.pdf)
+
+```{=html}
+<center>
+<h3>Paper</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="MarchMadnessReport.pdf"></iframe>
+</center>
+```
+
+[Link to paper](MarchMadnessReport.pdf)

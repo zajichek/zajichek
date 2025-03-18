@@ -1,0 +1,17 @@
+---
+title: "An introduction to SQL Server, RODBC, and ggplot2 with PITCHf/x data"
+author: 
+  - Sam Justice
+  - Tyler Olson
+  - Alex Zajichek
+date: "2015-10-31"
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="projectSlides.pdf"></iframe>
+</center>
+```
+
+[Link to paper](projectSlides.pdf)

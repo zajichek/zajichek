@@ -1,0 +1,25 @@
+---
+title: "Gibbs sampler in Python with R and OpenBUGS comparisons"
+author: 
+  - Tyler Olson
+  - Alex Zajichek
+date: "2016-12-05"
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="GIBBS-presentation.pdf"></iframe>
+</center>
+```
+
+[Link to slides](GIBBS-presentation.pdf)
+
+```{=html}
+<center>
+<h3>Paper</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="writeUp.pdf"></iframe>
+</center>
+```
+
+[Link to paper](writeUp.pdf)

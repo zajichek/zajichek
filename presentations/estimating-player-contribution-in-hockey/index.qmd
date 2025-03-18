@@ -1,0 +1,14 @@
+---
+title: "Estimating player contribution in hockey with regularized logistic regression"
+author: Alex Zajichek
+date: "2017-03-24"
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="hockeyPresentation.pdf"></iframe>
+</center>
+```
+
+[Link to slideshow](hockeyPresentation.pdf)

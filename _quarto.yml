@@ -18,7 +18,7 @@ website:
       - href: publications.qmd
         text: Publications
       - href: presentations.qmd
-        text: Presentations
+        text: Projects & Presentations
       - href: about.qmd
         text: About
     right:

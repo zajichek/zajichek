@@ -2,8 +2,20 @@
   {
     "listing": "/presentations.html",
     "items": [
+      "/presentations/the-value-of-open-source/index.html",
+      "/presentations/journey-through-statistical-rethinking/index.html",
+      "/presentations/carecompare/index.html",
+      "/presentations/cheese/index.html",
+      "/presentations/zildge/index.html",
       "/presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
-      "/presentations/the-value-of-open-source/index.html"
+      "/presentations/midwest-home-price-index/index.html",
+      "/presentations/JNaiveBayes/index.html",
+      "/presentations/estimating-player-contribution-in-hockey/index.html",
+      "/presentations/modeling-probability-of-nhl-goal/index.html",
+      "/presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html",
+      "/presentations/gibbs-sampler-in-python/index.html",
+      "/presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html",
+      "/presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html"
     ]
   },
   {

@@ -1,0 +1,9 @@
+---
+title: "A journey through Statistical Rethinking"
+author: Alex Zajichek
+date: "2025-01-10"
+---
+
+[Link to working book](https://zajichek.github.io/statistical_rethinking/)
+
+[Link to source code](https://github.com/zajichek/statistical_rethinking)
