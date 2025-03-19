@@ -1,0 +1,7 @@
+---
+title: "riskcalc: An R package for building risk calculators"
+author: Alex Zajichek
+date: "2024-10-04"
+---
+
+[Link to source code](https://github.com/ClevelandClinicQHS/riskcalc)
