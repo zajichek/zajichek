@@ -1,6 +1,6 @@
 ---
-title: "Effective research data science"
-description: "A framework to achieve useful iteration, collaboration and results."
+title: "Operational versus research data science"
+description: "These are treated differently, but they shouldn't be."
 author: "Alex Zajichek"
 date: "1/10/2025"
 image: "feature.png"
@@ -13,5 +13,11 @@ format:
     code-tools: true
 draft: true
 ---
+
+Should the way we approach a data science problem be different in a business/operational/pragmatic context versus it being under the guise of "research"?
+
+No. They are the same thing.
+
+Then why do we do it?
 
 ![](process.png)

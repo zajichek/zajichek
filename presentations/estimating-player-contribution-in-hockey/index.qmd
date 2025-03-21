@@ -12,3 +12,5 @@ date: "2017-03-24"
 ```
 
 [Link to slideshow](hockeyPresentation.pdf)
+
+[Link to original paper](https://arxiv.org/pdf/1209.5026)
