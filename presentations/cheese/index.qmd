@@ -4,4 +4,6 @@ author: Alex Zajichek
 date: "2023-07-18"
 ---
 
+[Link to package website](https://zajichek.github.io/cheese/)
+
 [Link to source code](https://github.com/zajichek/cheese)

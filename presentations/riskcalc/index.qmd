@@ -4,4 +4,6 @@ author: Alex Zajichek
 date: "2024-10-04"
 ---
 
+[Link to package website](https://clevelandclinicqhs.github.io/riskcalc/)
+
 [Link to source code](https://github.com/ClevelandClinicQHS/riskcalc)
