@@ -1,0 +1,47 @@
+---
+title: "What decision are we trying to make, anyway?"
+description: "The crux of the statistical significance issue."
+author: "Alex Zajichek"
+date: "4/23/2025"
+image: "feature.png"
+categories:
+  - Philosophy
+  - Statistical Significance
+  - Decision Making
+format:
+  html:
+    code-fold: true
+    code-tools: true
+---
+
+Everyone acknowledges, or even agrees with, the issues and limitations of [statistical significance](https://www.ncbi.nlm.nih.gov/books/NBK459346/#:~:text=A%20study%20is%20statistically%20significant,not%20a%20statistically%20significant%20result.) (which I previously wrote about [here](https://www.zajichekstats.com/post/statistical-significance-is-insignificant/)): the effect size is ignored, you'll get it with a really large sample, it doesn't account for practical importance, and so on...
+
+Yet it is still used all the time, and life goes on. People debate these nuances back and forth as to when and where it is or isn't valid, etc. But just recently in a [conversation on LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7319500623299653633?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7319500623299653633%2C7319674842163621888%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287319674842163621888%2Curn%3Ali%3Aactivity%3A7319500623299653633%29), I had a realization of the fundamental reason on why it is an issue, and why there are many [calls to ban](https://www.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#d1e167) p-values and statistical significance entirely. 
+
+> "Except experimental field, like randomized clinical trials, where both statistical and practical significance are necessary and when combined, answer the question of interest."
+
+It's _not_ that a p-value, or statistical significance itself even, is inherently bad or wrong. **It _all_ has to do exclusively with how they are used, interpreted, implemented, and implicated.**
+
+Take [this point from Adrian Olszewski's post](https://www.linkedin.com/posts/adrianolszewski_how-to-combine-statistical-discernibility-activity-7310365190959632384-sNHs?utm_source=share&utm_medium=member_desktop&rcm=ACoAACwA1gEB29rAFO327bVy4fMmOqVeTbmsXA8) (which was cited in the conversation above) talking about using statistical significance in combination with practical importance, but in a mathematically formal manner.
+
+The key quote here is:
+
+> "We all make BINARY decisions every day, based on some criteria."
+
+And from this supporting image:
+
+![](adrian.png)
+
+> "Thresholds are essential in binary decision making in experimental studies..."
+
+All of that is well and good, and sure, makes sense if statistical significance helps you solve a problem in that way. But the main thing that stuck out to me was the emphasis on _decisions_. 
+
+**THIS** is exactly the problem with statistical significance.
+
+We use it to declare there is or isn't an effect of some sort, therefore implicating decision X, Y, or Z. But in many (or most) cases, it is only a _guise_ of a decision actually being made. Think about it: in a typical academic publication, they collect data, run some statistical modeling and/or tests, and get a p-value. The "decision" being made amounts to writing the words _"there was a significant difference"_ on a page in some boilerplate fashion, not an actual action being taken. Where's the decision? 
+
+Sure, you might argue that a published statistical test result could _lead_ to many decisions being made by those consuming the analysis. That's exactly the point. We have no idea what these decisions are. It is intractable. Those subsequent decisions are not actually related to or reflected in the statistical setup and testing done in the original analysis. We don't know who is using the results, how they are using them, or what they are using them for. It's just words on a page.
+
+Contrast this with, say, [William Sealy Gosset](https://en.wikipedia.org/wiki/William_Sealy_Gosset) (the inventor of the [t-test](https://en.wikipedia.org/wiki/Student%27s_t-test), and who I [wrote about previously](https://www.zajichekstats.com/post/on-the-creation-of-classical-statistics/)), whose primary goal was to brew better beer. His statistical testing methodology, and the use of statistical significance, was directly tailored to the problem at hand and the decisions he was trying to make in order to produce higher quality product. It was tangible. He could _see_ the impact with his own two eyes of using significance testing for decisions he was actually making. And in his case, it provided value. Kind of like the way a tape measure is as useful as the context it is applied and the tolerance needed for making a decision. It's not just the fact that a tape measure was used that creates its importance, it's that the information happens to be useful in that situation so subsequent action can be taken.
+
+So when we say statistical significance or p-values should be banned, what we really mean is that they shouldn't be used the way they are. If we could just find better uses for them, then sure, they can stay. The problem is that incentive structures, education, etc. are poorly designed around these concepts, and they are so deeply ingrained that it's difficult to dig our way out.

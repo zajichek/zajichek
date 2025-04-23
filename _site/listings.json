@@ -22,6 +22,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/what-decision-are-we-trying-to-make/index.html",
       "/post/reconciling-regression-equation-spline-terms/index.html",
       "/post/can-you-have-a-model-without-data/index.html",
       "/post/you-should-have-a-data-science-blog/index.html",
