@@ -1,0 +1,242 @@
+---
+title: "riskcalc.org"
+subtitle: "A Repository of Risk Calculators for Medical Decision Making"
+institute: "Research Data Scientist, Cleveland Clinic"
+author: "Alex Zajichek"
+date: "2025-06-12"
+date-format: long
+format:
+  revealjs: 
+    theme: [serif, custom.scss]
+    footer: "<em>R/Medicine Conference 2025</em>"
+    slide-number: true
+    incremental: true
+    code-block-height: 250px
+---
+
+## A Little Background
+
+<br>
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+::: {style="font-size: 75%;"}
+
+- QHS is a department of over 100 biostatisticians, data scientists, programmers, etc. that collaborate on and supply quantitative support to research activities at Cleveland Clinic 
+
+<br>
+
+- From clinical trials and study design to precision medicine and population health across many disease areas
+
+<br>
+
+- My work focuses on clinical prediction modeling and observational statistical analysis, primarily using EHR and/or registry data
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+<br>
+<br>
+<br>
+
+![](qhs.png)
+
+::: {style="font-size: 75%; text-align: center"}
+
+[www.lerner.ccf.org/quantitative-health](https://www.lerner.ccf.org/quantitative-health/)
+
+:::
+
+:::
+
+::::
+
+## What is riskcalc.org?
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+- Free repository of risk calculators for individualized medical decision making; intended for clinician/patient use
+- Embedded with predictive models from published research studies; mostly regression
+- Each calculator is a separate [Shiny](https://shiny.posit.co/) application
+- Average about 10-15K active users/month (per Google Analytics)
+
+:::
+
+::: {.column width="50%"}
+
+<br>
+<br>
+
+![](riskcalc.gif)
+
+:::
+
+::::
+
+--- 
+
+## The Backend
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+::: {.fragment}
+
+[![Figure: Tools supporting riskcalc.org](riskcalctools.png)](https://www.appsilon.com/post/alternatives-to-scaling-shiny)
+
+:::
+
+:::
+
+::: {.column width="40%"}
+
+<br>
+<br>
+<br>
+<br>
+
+- Low-cost infrastructure!
+
+:::
+
+::::
+
+---
+
+## Recent Developments
+
+
+
+- Added source code to public [QHS GitHub repository](https://github.com/ClevelandClinicQHS/riskcalc-website) and links in the apps themselves ([Example](https://riskcalc.org/AKIpostCardiacSurgery/))
+
+<br>
+
+- Updated [home page](https://riskcalc.org/) with icons and reorganized groupings for easier navigation
+
+<br>
+
+- Built an [R package](https://github.com/ClevelandClinicQHS/riskcalc) to accelerate building risk calculators with the standard layout (work in progress)
+
+---
+
+## Where are we going?
+
+:::: {.columns}
+
+::: {.column}
+
+::: {.fragment}
+
+### Current Backend 
+
+- More formal integration with GitHub; currently disconnected
+- Better R/package version maintenance strategy on server
+- More cohesive/standard format for model representation
+- Model monitoring and updating
+
+::: {.notes}
+
+- How can we more formally use GitHub for source management, through CI/CD. Currently we just "put" it there, but it's not actually connected to the live platform
+
+- We run into problems with version as different people develop calculators in different contexts, using new packages, R versions, etc. Sometimes have to retrofit applications to work on server so everything doesn't break. Pipe operator a great example of this. Containerize things...
+
+- Currently hardcode model equations into code to stay lightweight, or save as RData object, but no real standardization. Want to generalize the concept of "risk calculator" to be agnostic to methodology, to accommodate ML and other frameworks, but need to have a modular way to do it consistently.
+
+- Often in academia models are developed, papers are published, risk calcluator is built and released and then "forgotten". Becomes an artifcact and then we move on to the next thing. Given these are supposed to be living, breathing data products, would be good to monitor them accordingly to assess performance
+
+:::
+
+:::
+
+:::
+
+::: {.column}
+
+::: {.fragment}
+
+### Potential Future States
+
+- One stop shop for clinical risk prediction; community involvement
+- API development for model access
+- More direct research ecosystem for methodological advancement; clinical integration
+
+::: {.notes}
+
+- These are some possibilities we've discussed
+
+- Academia saturated with prediction models, don't know what to use.
+- How we garner community development to submit models, coalesce, rank/upvote models so the best prediction is given for the given context. 
+- Invoke community model validation. Display validation levels of models.
+
+- Want to be able to give access to models to researchers and organizations to use in their workflows
+
+- How can we advance methodology for clinical risk prediction, in the context of using these types of tools for medical decision making? (e.g., pool models/information to take advantage of independent information w/o redundancy, use of prior information, etc.)
+- Academia disconnected from clinical workflows; how to partner to be more directly informed by clinical constraints (focus on the tool, not just the model) (bridging research and clinical)
+- Being able to adapt to local environments
+
+:::
+
+:::
+
+:::
+
+::::
+
+---
+
+## Acknowledgements
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+### Co-developers
+
+::: {.nonincremental}
+
+- Alex Milinovich
+- Xinge (Kathy) Ji
+- Blaine Martyn-Dow
+- Daniel Rotroff
+- Many others...
+
+:::
+
+:::
+
+::: {.column width="50%"}
+
+### _In Memory_
+
+<img src="mike.png" style="width:50%; height:50%; padding-left:25%">
+
+::: {style="font-size: 75%; padding-left:25%"}
+
+Michael W. Kattan, PhD <br>
+Department Chair (2004-2024) <br>
+Quantitative Health Sciences <br>
+Cleveland Clinic
+
+<p style="font-size:75%;"><em>Creator of <a href="https://riskcalc.org/">riskcalc.org</a></em></p>
+
+:::
+
+:::
+
+::::
+
+# Questions?
+
+::: {style="font-size: 75%; text-align:center"}
+
+Link to slides: [www.zajichekstats.com/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making](https://www.zajichekstats.com/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/slides#/title-slide)
+
+:::

@@ -1,0 +1,32 @@
+---
+title: "Objectifying statistics: the CS perspective"
+description: "Incolcating ambuguity and poor practice"
+author: "Alex Zajichek"
+date: "1/10/2025"
+image: "feature.png"
+categories:
+  - Philosophy
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---
+
+Back in graduate school I was taking my first Machine Learing course
+
+- All the terms are same
+  + One hot encoding (design matrix, fundamental concept)
+  + Features (variables)
+
+- I learned neural nets in my statistics course
+- Neural nets under certain restrictions and activation functions reduce to a logistic regression model. We're just bending space to fit a line.
+
+- I could train an autonomous chatbot based on a simple linear regression model (the same method used over 100 years ago). It would give horrid responses, but nevertheless it could happen. Point being that the technological implementation is totally separate from the underlying math that drives it. Similarly, I could have an extremely complex model mathematically, and the output ends of just being spit out into an ugly spreadsheet, or better yet, it's not even productionized, it's just written about in a manuscript.
+
+- Some might say the difference is model specification vs. function identification. But where's the line? Splines, GAMs, etc....
+
+- It's transitioning statistics to a more algorithmic, objective process, just like CS in general...
+- But that's not just them doing it, it's also the problem with statistical significance...
+
+- In this new world of AI, it creates more ambiguity and confusion. They think AI is a new thing. That you need to forget what you've been doing. But in reality it's all the same stuff, just new ways to implement it.

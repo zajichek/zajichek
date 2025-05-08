@@ -1,0 +1,16 @@
+---
+title: "riskcalc.org: A Repository of Risk Calculators for Medical Decision Making"
+author: Alex Zajichek
+date: "2025-06-12"
+---
+
+Presented at the [R/Medicine 2025](https://rconsortium.github.io/RMedicine_website/) conference.
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="slides.html"></iframe>
+</center>
+```
+
+[Full screen slideshow](slides.qmd)
