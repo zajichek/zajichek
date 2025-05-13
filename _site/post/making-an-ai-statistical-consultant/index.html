@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Alex Zajichek">
-<meta name="dcterms.date" content="2025-05-12">
+<meta name="dcterms.date" content="2025-05-13">
 <meta name="description" content="Exploring some new R packages for AI.">
 
 <title>Making an AI statistical consultant – Zajichek Stats</title>
@@ -113,19 +113,20 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 </script>
-<meta name="quarto:status" content="draft">
 
 
 <meta property="og:title" content="Making an AI statistical consultant – Zajichek Stats">
 <meta property="og:description" content="Exploring some new R packages for AI.">
 <meta property="og:image" content="https://www.zajichekstats.com/post/making-an-ai-statistical-consultant/feature.png">
 <meta property="og:site_name" content="Zajichek Stats">
+<meta property="og:image:height" content="1004">
+<meta property="og:image:width" content="1258">
 </head>
 
 <body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -195,7 +196,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Making an AI statistical consultant</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Making an AI statistical consultant</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
   <div class="quarto-categories">
     <div class="quarto-category">AI</div>
     <div class="quarto-category">Shiny</div>
@@ -222,7 +223,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 12, 2025</p>
+      <p class="date">May 13, 2025</p>
     </div>
   </div>
   
@@ -235,13 +236,239 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 
 
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/WKB548RjE9o" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<p>The stuff <a href="">Posit</a> has been <a href="">doing with AI</a> has been really refreshing for data scientists, especially R and Python developers. With <a href="">ChatGPT</a> and the other popular chat <a href="">GUIs</a> out there, using AI tools was sort of fun, but now with the ability to programmatically interact with LLM’s as part of my data science tech stack, I’m actually excited about using them.</p>
-<p>I attended <a href="">ShinyConf 2025</a> and there were a lot of great talks that made these tools very appealing to work with. They introduced the <a href="">ellmer</a> package in R, and other ones such as <a href="">shinychat</a> and <a href="">querychat</a>. Having no experience using these yet, I wanted to see how simple it would be to build and deploy a chat application from scratch that acts as a statistical consultant, which is what is in the video above 👆 👆 👆</p>
+<p>The stuff <a href="https://posit.co/">Posit</a> has been <a href="https://posit.co/use-cases/ai/">doing with AI</a> has been really refreshing for data scientists, especially R and Python developers. With <a href="https://chatgpt.com/">ChatGPT</a> and the other popular chat <a href="https://en.wikipedia.org/wiki/Graphical_user_interface">GUIs</a> out there, using AI tools was sort of fun, but now with the ability to programmatically interact with LLM’s as part of my data science tech stack, I’m actually excited about using them.</p>
+<p>I attended <a href="https://www.shinyconf.com/">ShinyConf 2025</a> and there were a lot of great talks that made these tools very appealing to work with. They introduced the <a href="https://ellmer.tidyverse.org/">ellmer</a> package in R, and other ones such as <a href="https://posit-dev.github.io/shinychat/">shinychat</a> and <a href="https://github.com/posit-dev/querychat">querychat</a>. Having no experience using these yet, I wanted to see how simple it would be to build and deploy a chat application from scratch that acts as a statistical consultant, which is what is in the video above 👆 👆 👆</p>
 <p>Here are the steps taken, in text form:</p>
+<section id="live-app-source-code" class="level1">
+<h1>Live app + source code</h1>
+<p>First, if you wanted to see how the app works and the full code behind it, you can find these here:</p>
+<ul>
+<li><a href="https://01962be4-3359-d652-ac24-9641c956445a.share.connect.posit.cloud/">Live app</a></li>
+<li><a href="https://github.com/centralstatz/statistical_consultant_chat/">Source code</a></li>
+</ul>
+<p>Now on to the tutorial 👇</p>
+</section>
+<section id="install-the-libraries" class="level1">
+<h1>1. Install the libraries</h1>
+<p>Of course, we need to make sure <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/"><code>shiny</code></a> is installed.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"shiny"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Then the brunt of the work here is going to be done by:</p>
+<ul>
+<li><a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a>: What we use to send prompts and receive responses from an LLM</li>
+<li><a href="https://posit-dev.github.io/shinychat/"><code>shinychat</code></a>: How we create the chat user interface for our application</li>
+</ul>
+<p>Both of these are on <a href="https://cran.r-project.org/">CRAN</a>, so we can also install them easily.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ellmer"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"shinychat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="choose-an-llm-provider" class="level1">
+<h1>2. Choose an LLM provider</h1>
+<p>You need to choose which LLM you want to facilitate the chat function in your application. <a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a> supports all the major ones, and you can scan through the list <a href="https://ellmer.tidyverse.org/reference/index.html">here</a>.</p>
+<p>Many of these require some sort of payment for API usage, but <a href="https://gemini.google.com/app">Google Gemini</a> offers free-tier usage, so that’s what I went with. So from that list above, I chose the <a href="https://ellmer.tidyverse.org/reference/chat_gemini.html"><code>chat_gemini</code></a> option.</p>
+<section id="setting-up-the-api" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-the-api">Setting up the API</h2>
+<p>In order to get this working, you need to configure an API key to send prompts to the model programmatically.</p>
+<section id="a.-retrieve-the-api-key" class="level3">
+<h3 class="anchored" data-anchor-id="a.-retrieve-the-api-key">a. Retrieve the API key</h3>
+<p>You can go to the <a href="https://aistudio.google.com/apikey">Google AI Studio</a> (and login with your Google account and agree to terms), click <em>Create API Key</em> in the top-right corner, and copy the key to your clipboard (see <a href="https://youtu.be/WKB548RjE9o?t=199">this part of the video above</a> for a visual).</p>
+</section>
+<section id="apikey" class="level3">
+<h3 class="anchored" data-anchor-id="apikey">b. Set your local environment variable</h3>
+<p>As stated in the <a href="https://ellmer.tidyverse.org/reference/chat_gemini.html">function documentation</a>, rather than hard-coding your API key into your app code, you just put in your local R environment file (<code>.Renviron</code>) as <code>GOOGLE_API_KEY</code>. As always, this is made simple with the <a href="https://usethis.r-lib.org/"><code>usethis</code></a> package.</p>
+<p>In <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>, just type <code>usethis::edit_r_environ()</code> and your <code>.Renviron</code> file will open. Then on a new line, enter your API key:</p>
+<pre><code>GOOGLE_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXX &lt;-- FILL IN WITH YOUR KEY</code></pre>
+<p>Save it, and that’s it.</p>
+<p>You should immediately be able to send/receive a response from Gemini:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load package</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ellmer)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up chat</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_gemini</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using model = "gemini-2.0-flash".</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Send a prompt</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"What's a word that rhymes with orange?"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>This is a classic riddle! The truth is, there aren't any perfect rhymes for 
+"orange" in the English language. 
+
+However, people sometimes use near rhymes or words that rhyme in specific 
+dialects. For example:
+
+*   **"Door hinge"** - If you combine two words, you can get a near rhyme.
+*   **"Lozenge"** - This is the closest near rhyme you'll find as it sounds 
+almost like "lore-inj"
+
+**So, the best answer is: There isn't a perfect rhyme for "orange."**</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="createproject" class="level1">
+<h1>3. Initialize a new R project</h1>
+<p>I store my code on <a href="https://github.com/">GitHub</a>, so I first went there to create a new <em>public</em> repository (you can see mine <a href="https://github.com/centralstatz/statistical_consultant_chat/">here</a>).</p>
+<p>Then in <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>, you can create a new project (<em>File -&gt; New Project -&gt; Version Control -&gt; Git</em>). Clone the repository you just made so that your local project is pre-configured to push changes to the remote repo (see <a href="https://youtu.be/WKB548RjE9o?t=34">here</a>).</p>
+</section>
+<section id="systemprompt" class="level1">
+<h1>4. Develop the system prompt</h1>
+<p>One of the most important concepts during <a href="https://www.shinyconf.com/">ShinyConf 2025</a> was the <a href="https://ellmer.tidyverse.org/articles/ellmer.html#what-is-a-prompt"><em>system prompt</em></a>. It is how you shape the broader LLM that you’ll be using (in my case, <a href="https://gemini.google.com/app">Gemini</a>) to take on a given behavior or persona that you’d like for your application. You set this <em>once</em> upon application start up.</p>
+<p>For my purposes, I wanted the chatbot to act like a statistical consultant. Not just any statistical consultant, but one that was very focused on <em>practical</em> application (not statistical significance), as if a business owner was interacting with it trying to use data to make a decision that they needed to take action on soon. This was my system prompt:</p>
+<blockquote class="blockquote">
+<p>“You are a statistical consultant. You are interacting subject matter experts and/or business leaders who are trying to use statistics to take action and make decisions. The person you are talking to is interested in tangible, real-world results and outcomes, so you should problem solve with insofar as to help them achieve those goals. We are not necessarily concerned with things like statistical signifcance or just running tests, unless it is actually relevant to the action or decision point. Instead, focus on the practical steps this person may take, in the context of their problem, to move closer to their desired goal. To do this, you will ask questions about what they are trying to solve, and how we know that what we’ve done provides real value. Then once you’ve gained enough information, you can develop a pragmatic strategy for how they should get started, and what the roadmap may look like. You’re suggestions may include technical things where it makes sense (like tools, methodology, etc.), but should very much be focused on what a non-statistical person might be able to do to further this effort (e.g., better data collection, personnell, etc.)”</p>
+</blockquote>
+<p>You can see the raw file <a href="https://github.com/centralstatz/statistical_consultant_chat/blob/main/system_prompt.txt">here</a>.</p>
+<section id="systempromptinapp" class="level2">
+<h2 class="anchored" data-anchor-id="systempromptinapp">Placing it into the app</h2>
+<p>Since this was long text, I just put it in <a href="https://github.com/centralstatz/statistical_consultant_chat/blob/main/system_prompt.txt">its own text file</a> in my <a href="https://github.com/centralstatz/statistical_consultant_chat/tree/main">app’s directory</a>. Then when app starts, load it into memory (see <a href="https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L8C1-L8C49">this line</a>):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>system_prompt <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="st">"system_prompt.txt"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Then when the <code>chat_gemini</code> object is created, the imported prompt is entered there in the <code>system_prompt</code> argument (see <a href="https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L22C3-L22C75">this line</a>:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_gemini</span>(<span class="at">system_prompt =</span> <span class="fu">paste</span>(system_prompt, <span class="at">collapse =</span> <span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="put-the-app-together" class="level1">
+<h1>5. Put the app together</h1>
+<p>We haven’t talked about the <a href="https://posit-dev.github.io/shinychat/"><code>shinychat</code></a> package yet, so we’ll do that here as we build the main application file, which you can find <a href="https://github.com/centralstatz/statistical_consultant_chat/blob/main/app.R">here</a>.</p>
+<section id="a.-load-the-required-packages" class="level2">
+<h2 class="anchored" data-anchor-id="a.-load-the-required-packages">a. Load the required packages</h2>
+<p>The first part of the app just loads the packages we need (and imports the system prompt that we <a href="#systemprompt">discussed above</a>).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bslib)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ellmer)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinychat)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Import system prompt</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>system_prompt <span class="ot">&lt;-</span> <span class="fu">readLines</span>(<span class="st">"system_prompt.txt"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="userinterface" class="level2">
+<h2 class="anchored" data-anchor-id="userinterface">b. Make the user interface</h2>
+<p>All we want here is the chat interface, nothing else, so it’s quite simple. First, we use the <a href="https://rstudio.github.io/bslib/index.html"><code>bslib</code></a> package to <a href="https://rstudio.github.io/bslib/reference/page.html">create a page</a>.</p>
+<p>Then within there is where <a href="https://posit-dev.github.io/shinychat/"><code>shinychat</code></a> comes in, which very easily makes a chat user interface with the <a href="https://posit-dev.github.io/shinychat/reference/chat_ui.html"><code>chat_ui</code></a> function.</p>
+<p>We place that in the page, and specify the <code>id</code> and <code>placeholder</code> for chat initialization, and the entire user interface just looks like this (see <a href="https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L10">these lines</a>):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">page_fluid</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">chat_ui</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">id =</span> <span class="st">"chat"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">placeholder =</span> <span class="st">"Hi, I'm a statistical consultant, how can I help you?"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="c.-define-the-server" class="level2">
+<h2 class="anchored" data-anchor-id="c.-define-the-server">c.&nbsp;Define the server</h2>
+<p>First we create the chat object like <a href="#systempromptinapp">we did above</a>. Then we have to figure out how to continuously send/receive messages while the app is running. That’s where <a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a> comes back into play.</p>
+<p>When we create the <code>chat_gemini</code> object, it is an <a href="https://r6.r-lib.org/articles/Introduction.html">R6</a> object of type <a href="https://ellmer.tidyverse.org/reference/Chat.html"><em>Chat</em></a>, and we use the <a href="https://ellmer.tidyverse.org/reference/Chat.html#method-stream-async-"><code>stream_async</code></a> method to feed responses back from the LLM, but we allow it to provide response as it goes so we’re not just waiting for all of it to complete. In that method, we provide the <code>input$chat_user_input</code> which is just the message we type into the chat interface we <a href="#userinterface">created above</a> (and is automatically accessible via the creation of the <a href="https://posit-dev.github.io/shinychat/reference/chat_ui.html"><code>chat_ui</code></a>).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Once we create that stream, then we go back to <a href="https://posit-dev.github.io/shinychat/"><code>shinychat</code></a> and use the <a href="https://posit-dev.github.io/shinychat/reference/chat_append.html"><code>chat_append</code></a> function to feed our <a href="https://posit-dev.github.io/shinychat/reference/chat_ui.html"><code>chat_ui</code></a> the results. And that’s it.</p>
+<p>The full server function looks like this (see it <a href="https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L19">here</a>):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Setup the chat</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  chat <span class="ot">&lt;-</span> <span class="fu">chat_gemini</span>(<span class="at">system_prompt =</span> <span class="fu">paste</span>(system_prompt, <span class="at">collapse =</span> <span class="st">""</span>))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Stream responses as they come</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>chat_user_input, {</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    stream <span class="ot">&lt;-</span> chat<span class="sc">$</span><span class="fu">stream_async</span>(input<span class="sc">$</span>chat_user_input)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">chat_append</span>(<span class="st">"chat"</span>, stream)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>And our app is complete. We should now be able to run it locally.</p>
+</section>
+</section>
+<section id="deploy-the-app" class="level1">
+<h1>6. Deploy the app</h1>
+<p>The live app is <a href="https://01962be4-3359-d652-ac24-9641c956445a.share.connect.posit.cloud/">here</a>.</p>
+<p>I used <a href="https://connect.posit.cloud/">Posit Connect Cloud</a>, which is an awesome platform for deploying data science apps to the web. Basically all complex configuration is done there, we just need to supply the code. And you can do it for <a href="https://connect.posit.cloud/plans">free</a>.</p>
+<section id="a.-capturing-your-environment" class="level2">
+<h2 class="anchored" data-anchor-id="a.-capturing-your-environment">a. Capturing your environment</h2>
+<p>The last thing you’ll want to do before deploying to <a href="https://connect.posit.cloud/">Connect Cloud</a> is to create a file called <code>manifest.json</code> and store it at the root of your app directory. You do this after you’ve made all changes to your app code, and it’s meant to capture your R environment and packages/dependencies so that it can be recreated upon deployment. Yet again, this is done with a simple line of code (assuming your working directory is your app’s location):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rsconnect<span class="sc">::</span><span class="fu">writeManifest</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>You should now see <code>manifest.json</code>.</p>
+</section>
+<section id="b.-push-to-github" class="level2">
+<h2 class="anchored" data-anchor-id="b.-push-to-github">b. Push to GitHub</h2>
+<p>We can then commit changes and push the code to GitHub in the repository that was <a href="#createproject">created earlier</a>. <a href="https://github.com/centralstatz/statistical_consultant_chat/commit/d22d2bf925040525624113e762cba373da131a99">This</a> was my commit for the app.</p>
+</section>
+<section id="c.-setup-on-connect-cloud" class="level2">
+<h2 class="anchored" data-anchor-id="c.-setup-on-connect-cloud">c.&nbsp;Setup on Connect Cloud</h2>
+<p>I created my account using GitHub credentials (see <a href="https://connect.posit.cloud/zajichek">my profile</a>), so when I want to deploy something, it already has access to relevant metadata.</p>
+<p>First, hit the <em>Publish</em> button from your homepage:</p>
+<p><img src="publish.png" class="img-fluid"></p>
+<p>Select <em>Shiny</em>:</p>
+<p><img src="shiny.png" class="img-fluid"></p>
+<p>Then configure the location of your code:</p>
+<p><img src="configure.png" class="img-fluid"></p>
+<p>The repository name should auto-populate in the list if you signed up with GitHub. Then select the file that contains your app code (in my case, <code>app.R</code>). I chose to <em>Automatically publish on push</em> so that if I change my code and push to GitHub, the live app will automatically reflect updates.</p>
+<section id="re-configure-your-api-key" class="level3">
+<h3 class="anchored" data-anchor-id="re-configure-your-api-key">(Re) configure your API key</h3>
+<p>Since we’re no longer local, we need to re-establish the connection to the LLM provider by setting the <code>GOOGLE_API_KEY</code> environment variable on Connect Cloud. Click <em>Advanced settings</em>:</p>
+<p><img src="advancedsettings1.png" class="img-fluid"></p>
+<p>Then <em>Add variable</em>, and enter your API key <a href="#apikey">from above</a>:</p>
+<p><img src="advancedsettings2.png" class="img-fluid"></p>
+<p>The hit <em>Publish</em>. Your app is now live. You can copy the public link to your app in the top-right of the page, and share it for the world to use!</p>
+<p><br></p>
+<p>My live app is <a href="https://01962be4-3359-d652-ac24-9641c956445a.share.connect.posit.cloud/">here</a>. This is a snippet of how it works:</p>
+<p><img src="livechatapp.gif" class="img-fluid"></p>
 
 
 <!-- -->
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -715,33 +942,250 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Making an AI statistical consultant"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Exploring some new R packages for AI."</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "5/12/2025"</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - AI</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Shiny</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Web Applications</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> true</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://www.youtube.com/embed/WKB548RjE9o &gt;}}</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>The stuff <span class="co">[</span><span class="ot">Posit</span><span class="co">]()</span> has been <span class="co">[</span><span class="ot">doing with AI</span><span class="co">]()</span> has been really refreshing for data scientists, especially R and Python developers. With <span class="co">[</span><span class="ot">ChatGPT</span><span class="co">]()</span> and the other popular chat <span class="co">[</span><span class="ot">GUIs</span><span class="co">]()</span> out there, using AI tools was sort of fun, but now with the ability to programmatically interact with LLM's as part of my data science tech stack, I'm actually excited about using them. </span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>I attended <span class="co">[</span><span class="ot">ShinyConf 2025</span><span class="co">]()</span> and there were a lot of great talks that made these tools very appealing to work with. They introduced the <span class="co">[</span><span class="ot">ellmer</span><span class="co">]()</span> package in R, and other ones such as <span class="co">[</span><span class="ot">shinychat</span><span class="co">]()</span> and <span class="co">[</span><span class="ot">querychat</span><span class="co">]()</span>. Having no experience using these yet, I wanted to see how simple it would be to build and deploy a chat application from scratch that acts as a statistical consultant, which is what is in the video above <span class="in">`r emo::ji("backhand index pointing up")`</span> <span class="in">`r emo::ji("backhand index pointing up")`</span> <span class="in">`r emo::ji("backhand index pointing up")`</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>Here are the steps taken, in text form:</span>
+<div class="sourceCode" id="cb15" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Making an AI statistical consultant"</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Exploring some new R packages for AI."</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "5/13/2025"</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - AI</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Shiny</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Web Applications</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://www.youtube.com/embed/WKB548RjE9o &gt;}}</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>The stuff <span class="co">[</span><span class="ot">Posit</span><span class="co">](https://posit.co/)</span> has been <span class="co">[</span><span class="ot">doing with AI</span><span class="co">](https://posit.co/use-cases/ai/)</span> has been really refreshing for data scientists, especially R and Python developers. With <span class="co">[</span><span class="ot">ChatGPT</span><span class="co">](https://chatgpt.com/)</span> and the other popular chat <span class="co">[</span><span class="ot">GUIs</span><span class="co">](https://en.wikipedia.org/wiki/Graphical_user_interface)</span> out there, using AI tools was sort of fun, but now with the ability to programmatically interact with LLM's as part of my data science tech stack, I'm actually excited about using them. </span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>I attended <span class="co">[</span><span class="ot">ShinyConf 2025</span><span class="co">](https://www.shinyconf.com/)</span> and there were a lot of great talks that made these tools very appealing to work with. They introduced the <span class="co">[</span><span class="ot">ellmer</span><span class="co">](https://ellmer.tidyverse.org/)</span> package in R, and other ones such as <span class="co">[</span><span class="ot">shinychat</span><span class="co">](https://posit-dev.github.io/shinychat/)</span> and <span class="co">[</span><span class="ot">querychat</span><span class="co">](https://github.com/posit-dev/querychat)</span>. Having no experience using these yet, I wanted to see how simple it would be to build and deploy a chat application from scratch that acts as a statistical consultant, which is what is in the video above <span class="in">`r emo::ji("backhand index pointing up")`</span> <span class="in">`r emo::ji("backhand index pointing up")`</span> <span class="in">`r emo::ji("backhand index pointing up")`</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>Here are the steps taken, in text form:</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># Live app + source code</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>First, if you wanted to see how the app works and the full code behind it, you can find these here:</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">Live app</span><span class="co">](https://01962be4-3359-d652-ac24-9641c956445a.share.connect.posit.cloud/)</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">Source code</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/)</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>Now on to the tutorial <span class="in">`r emo::ji("backhand index pointing down")`</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="fu"># 1. Install the libraries</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>Of course, we need to make sure <span class="co">[</span><span class="ot">`shiny`</span><span class="co">](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/)</span> is installed.</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="in">install.packages("shiny")</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>Then the brunt of the work here is going to be done by:</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span>: What we use to send prompts and receive responses from an LLM</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">`shinychat`</span><span class="co">](https://posit-dev.github.io/shinychat/)</span>: How we create the chat user interface for our application</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>Both of these are on <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/)</span>, so we can also install them easily.</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a><span class="in">install.packages("ellmer")</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a><span class="in">install.packages("shinychat")</span></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="fu"># 2. Choose an LLM provider</span></span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>You need to choose which LLM you want to facilitate the chat function in your application. <span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span> supports all the major ones, and you can scan through the list <span class="co">[</span><span class="ot">here</span><span class="co">](https://ellmer.tidyverse.org/reference/index.html)</span>. </span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>Many of these require some sort of payment for API usage, but <span class="co">[</span><span class="ot">Google Gemini</span><span class="co">](https://gemini.google.com/app)</span> offers free-tier usage, so that's what I went with. So from that list above, I chose the <span class="co">[</span><span class="ot">`chat_gemini`</span><span class="co">](https://ellmer.tidyverse.org/reference/chat_gemini.html)</span> option.</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="fu">## Setting up the API</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>In order to get this working, you need to configure an API key to send prompts to the model programmatically.</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a><span class="fu">### a. Retrieve the API key</span></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>You can go to the <span class="co">[</span><span class="ot">Google AI Studio</span><span class="co">](https://aistudio.google.com/apikey)</span> (and login with your Google account and agree to terms), click _Create API Key_ in the top-right corner, and copy the key to your clipboard (see <span class="co">[</span><span class="ot">this part of the video above</span><span class="co">](https://youtu.be/WKB548RjE9o?t=199)</span> for a visual).</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a><span class="fu">### b. Set your local environment variable {#apikey}</span></span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>As stated in the <span class="co">[</span><span class="ot">function documentation</span><span class="co">](https://ellmer.tidyverse.org/reference/chat_gemini.html)</span>, rather than hard-coding your API key into your app code, you just put in your local R environment file (<span class="in">`.Renviron`</span>) as <span class="in">`GOOGLE_API_KEY`</span>. As always, this is made simple with the <span class="co">[</span><span class="ot">`usethis`</span><span class="co">](https://usethis.r-lib.org/)</span> package.</span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>In <span class="co">[</span><span class="ot">RStudio</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>, just type <span class="in">`usethis::edit_r_environ()`</span> and your <span class="in">`.Renviron`</span> file will open. Then on a new line, enter your API key:</span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="in">GOOGLE_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXX &lt;-- FILL IN WITH YOUR KEY</span></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>Save it, and that's it.</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>You should immediately be able to send/receive a response from Gemini:</span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Load package</span></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ellmer)</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up chat</span></span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_gemini</span>()</span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Send a prompt</span></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"What's a word that rhymes with orange?"</span>)</span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a><span class="fu"># 3. Initialize a new R project {#createproject}</span></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>I store my code on <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/)</span>, so I first went there to create a new _public_ repository (you can see mine <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/)</span>).</span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>Then in <span class="co">[</span><span class="ot">RStudio</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>, you can create a new project (_File -&gt; New Project -&gt; Version Control -&gt; Git_). Clone the repository you just made so that your local project is pre-configured to push changes to the remote repo (see <span class="co">[</span><span class="ot">here</span><span class="co">](https://youtu.be/WKB548RjE9o?t=34)</span>).</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a><span class="fu"># 4. Develop the system prompt {#systemprompt}</span></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>One of the most important concepts during <span class="co">[</span><span class="ot">ShinyConf 2025</span><span class="co">](https://www.shinyconf.com/)</span> was the <span class="co">[</span><span class="ot">_system prompt_</span><span class="co">](https://ellmer.tidyverse.org/articles/ellmer.html#what-is-a-prompt)</span>. It is how you shape the broader LLM that you'll be using (in my case, <span class="co">[</span><span class="ot">Gemini</span><span class="co">](https://gemini.google.com/app)</span>) to take on a given behavior or persona that you'd like for your application. You set this *once* upon application start up.</span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>For my purposes, I wanted the chatbot to act like a statistical consultant. Not just any statistical consultant, but one that was very focused on _practical_ application (not statistical significance), as if a business owner was interacting with it trying to use data to make a decision that they needed to take action on soon. This was my system prompt:</span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "You are a statistical consultant. You are interacting subject matter experts and/or business leaders who are trying to use statistics to take action and make decisions. The person you are talking to is interested in tangible, real-world results and outcomes, so you should problem solve with insofar as to help them achieve those goals. We are not necessarily concerned with things like statistical signifcance or just running tests, unless it is actually relevant to the action or decision point. Instead, focus on the practical steps this person may take, in the context of their problem, to move closer to their desired goal. To do this, you will ask questions about what they are trying to solve, and how we know that what we've done provides real value. Then once you've gained enough information, you can develop a pragmatic strategy for how they should get started, and what the roadmap may look like. You're suggestions may include technical things where it makes sense (like tools, methodology, etc.), but should very much be focused on what a non-statistical person might be able to do to further this effort (e.g., better data collection, personnell, etc.)"</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a>You can see the raw file <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/blob/main/system_prompt.txt)</span>.</span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a><span class="fu">## Placing it into the app {#systempromptinapp}</span></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>Since this was long text, I just put it in <span class="co">[</span><span class="ot">its own text file</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/blob/main/system_prompt.txt)</span> in my <span class="co">[</span><span class="ot">app's directory</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/tree/main)</span>. Then when app starts, load it into memory (see <span class="co">[</span><span class="ot">this line</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L8C1-L8C49)</span>):</span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a><span class="in">system_prompt &lt;- readLines("system_prompt.txt") </span></span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>Then when the <span class="in">`chat_gemini`</span> object is created, the imported prompt is entered there in the <span class="in">`system_prompt`</span> argument (see <span class="co">[</span><span class="ot">this line</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L22C3-L22C75)</span>:</span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a><span class="in">chat &lt;- chat_gemini(system_prompt = paste(system_prompt, collapse = ""))</span></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a><span class="fu"># 5. Put the app together</span></span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>We haven't talked about the <span class="co">[</span><span class="ot">`shinychat`</span><span class="co">](https://posit-dev.github.io/shinychat/)</span> package yet, so we'll do that here as we build the main application file, which you can find <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/blob/main/app.R)</span>.</span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a><span class="fu">## a. Load the required packages</span></span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>The first part of the app just loads the packages we need (and imports the system prompt that we <span class="co">[</span><span class="ot">discussed above</span><span class="co">](#systemprompt)</span>).</span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a><span class="in"># Load packages</span></span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a><span class="in">library(shiny)</span></span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a><span class="in">library(bslib)</span></span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a><span class="in">library(ellmer)</span></span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a><span class="in">library(shinychat)</span></span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a><span class="in"># Import system prompt</span></span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a><span class="in">system_prompt &lt;- readLines("system_prompt.txt") </span></span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a><span class="fu">## b. Make the user interface {#userinterface}</span></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>All we want here is the chat interface, nothing else, so it's quite simple. First, we use the <span class="co">[</span><span class="ot">`bslib`</span><span class="co">](https://rstudio.github.io/bslib/index.html)</span> package to <span class="co">[</span><span class="ot">create a page</span><span class="co">](https://rstudio.github.io/bslib/reference/page.html)</span>. </span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>Then within there is where <span class="co">[</span><span class="ot">`shinychat`</span><span class="co">](https://posit-dev.github.io/shinychat/)</span> comes in, which very easily makes a chat user interface with the <span class="co">[</span><span class="ot">`chat_ui`</span><span class="co">](https://posit-dev.github.io/shinychat/reference/chat_ui.html)</span> function. </span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>We place that in the page, and specify the <span class="in">`id`</span> and <span class="in">`placeholder`</span> for chat initialization, and the entire user interface just looks like this (see <span class="co">[</span><span class="ot">these lines</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L10)</span>):</span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- page_fluid(</span></span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a><span class="in">  chat_ui(</span></span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a><span class="in">    id = "chat",</span></span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a><span class="in">    placeholder = "Hi, I'm a statistical consultant, how can I help you?"</span></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a><span class="fu">## c. Define the server</span></span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>First we create the chat object like <span class="co">[</span><span class="ot">we did above</span><span class="co">](#systempromptinapp)</span>. Then we have to figure out how to continuously send/receive messages while the app is running. That's where <span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span> comes back into play.</span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>When we create the <span class="in">`chat_gemini`</span> object, it is an <span class="co">[</span><span class="ot">R6</span><span class="co">](https://r6.r-lib.org/articles/Introduction.html)</span> object of type <span class="co">[</span><span class="ot">_Chat_</span><span class="co">](https://ellmer.tidyverse.org/reference/Chat.html)</span>, and we use the <span class="co">[</span><span class="ot">`stream_async`</span><span class="co">](https://ellmer.tidyverse.org/reference/Chat.html#method-stream-async-)</span> method to feed responses back from the LLM, but we allow it to provide response as it goes so we're not just waiting for all of it to complete. In that method, we provide the <span class="in">`input$chat_user_input`</span> which is just the message we type into the chat interface we <span class="co">[</span><span class="ot">created above</span><span class="co">](#userinterface)</span> (and is automatically accessible via the creation of the <span class="co">[</span><span class="ot">`chat_ui`</span><span class="co">](https://posit-dev.github.io/shinychat/reference/chat_ui.html)</span>).</span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a><span class="in">stream &lt;- chat$stream_async(input$chat_user_input)</span></span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>Once we create that stream, then we go back to <span class="co">[</span><span class="ot">`shinychat`</span><span class="co">](https://posit-dev.github.io/shinychat/)</span> and use the <span class="co">[</span><span class="ot">`chat_append`</span><span class="co">](https://posit-dev.github.io/shinychat/reference/chat_append.html)</span> function to feed our <span class="co">[</span><span class="ot">`chat_ui`</span><span class="co">](https://posit-dev.github.io/shinychat/reference/chat_ui.html)</span> the results. And that's it. </span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>The full server function looks like this (see it <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/blob/03151165178f75d70520e952ab0efed9a89ed9c6/app.R#L19)</span>):</span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a><span class="in">  # Setup the chat</span></span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a><span class="in">  chat &lt;- chat_gemini(system_prompt = paste(system_prompt, collapse = ""))</span></span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a><span class="in">  # Stream responses as they come</span></span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a><span class="in">  observeEvent(input$chat_user_input, {</span></span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a><span class="in">    stream &lt;- chat$stream_async(input$chat_user_input)</span></span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a><span class="in">    chat_append("chat", stream)</span></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a><span class="in">  })</span></span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a>And our app is complete. We should now be able to run it locally.</span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a><span class="fu"># 6. Deploy the app</span></span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a>The live app is <span class="co">[</span><span class="ot">here</span><span class="co">](https://01962be4-3359-d652-ac24-9641c956445a.share.connect.posit.cloud/)</span>.</span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>I used <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span>, which is an awesome platform for deploying data science apps to the web. Basically all complex configuration is done there, we just need to supply the code. And you can do it for <span class="co">[</span><span class="ot">free</span><span class="co">](https://connect.posit.cloud/plans)</span>.</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a><span class="fu">## a. Capturing your environment</span></span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a>The last thing you'll want to do before deploying to <span class="co">[</span><span class="ot">Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span> is to create a file called <span class="in">`manifest.json`</span> and store it at the root of your app directory. You do this after you've made all changes to your app code, and it's meant to capture your R environment and packages/dependencies so that it can be recreated upon deployment. Yet again, this is done with a simple line of code (assuming your working directory is your app's location):</span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a><span class="in">rsconnect::writeManifest()</span></span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a>You should now see <span class="in">`manifest.json`</span>.</span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a><span class="fu">## b. Push to GitHub</span></span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a>We can then commit changes and push the code to GitHub in the repository that was <span class="co">[</span><span class="ot">created earlier</span><span class="co">](#createproject)</span>. <span class="co">[</span><span class="ot">This</span><span class="co">](https://github.com/centralstatz/statistical_consultant_chat/commit/d22d2bf925040525624113e762cba373da131a99)</span> was my commit for the app. </span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a><span class="fu">## c. Setup on Connect Cloud</span></span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a>I created my account using GitHub credentials (see <span class="co">[</span><span class="ot">my profile</span><span class="co">](https://connect.posit.cloud/zajichek)</span>), so when I want to deploy something, it already has access to relevant metadata. </span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a>First, hit the _Publish_ button from your homepage:</span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a><span class="al">![](publish.png)</span></span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a>Select _Shiny_:</span>
+<span id="cb15-221"><a href="#cb15-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-222"><a href="#cb15-222" aria-hidden="true" tabindex="-1"></a><span class="al">![](shiny.png)</span></span>
+<span id="cb15-223"><a href="#cb15-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-224"><a href="#cb15-224" aria-hidden="true" tabindex="-1"></a>Then configure the location of your code:</span>
+<span id="cb15-225"><a href="#cb15-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-226"><a href="#cb15-226" aria-hidden="true" tabindex="-1"></a><span class="al">![](configure.png)</span></span>
+<span id="cb15-227"><a href="#cb15-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-228"><a href="#cb15-228" aria-hidden="true" tabindex="-1"></a>The repository name should auto-populate in the list if you signed up with GitHub. Then select the file that contains your app code (in my case, <span class="in">`app.R`</span>). I chose to _Automatically publish on push_ so that if I change my code and push to GitHub, the live app will automatically reflect updates.</span>
+<span id="cb15-229"><a href="#cb15-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-230"><a href="#cb15-230" aria-hidden="true" tabindex="-1"></a><span class="fu">### (Re) configure your API key</span></span>
+<span id="cb15-231"><a href="#cb15-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-232"><a href="#cb15-232" aria-hidden="true" tabindex="-1"></a>Since we're no longer local, we need to re-establish the connection to the LLM provider by setting the <span class="in">`GOOGLE_API_KEY`</span> environment variable on Connect Cloud. Click _Advanced settings_:</span>
+<span id="cb15-233"><a href="#cb15-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-234"><a href="#cb15-234" aria-hidden="true" tabindex="-1"></a><span class="al">![](advancedsettings1.png)</span></span>
+<span id="cb15-235"><a href="#cb15-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-236"><a href="#cb15-236" aria-hidden="true" tabindex="-1"></a>Then _Add variable_, and enter your API key <span class="co">[</span><span class="ot">from above</span><span class="co">](#apikey)</span>:</span>
+<span id="cb15-237"><a href="#cb15-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-238"><a href="#cb15-238" aria-hidden="true" tabindex="-1"></a><span class="al">![](advancedsettings2.png)</span></span>
+<span id="cb15-239"><a href="#cb15-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-240"><a href="#cb15-240" aria-hidden="true" tabindex="-1"></a>The hit _Publish_. Your app is now live. You can copy the public link to your app in the top-right of the page, and share it for the world to use!</span>
+<span id="cb15-241"><a href="#cb15-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-242"><a href="#cb15-242" aria-hidden="true" tabindex="-1"></a>&lt;br&gt;</span>
+<span id="cb15-243"><a href="#cb15-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-244"><a href="#cb15-244" aria-hidden="true" tabindex="-1"></a>My live app is <span class="co">[</span><span class="ot">here</span><span class="co">](https://01962be4-3359-d652-ac24-9641c956445a.share.connect.posit.cloud/)</span>. This is a snippet of how it works:</span>
+<span id="cb15-245"><a href="#cb15-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-246"><a href="#cb15-246" aria-hidden="true" tabindex="-1"></a><span class="al">![](livechatapp.gif)</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
