@@ -1,0 +1,15 @@
+{
+  "hash": "89f503a3fc613888c8c2c9df761061bc",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Making an AI statistical consultant\"\ndescription: \"Exploring some new R packages for AI.\"\nauthor: \"Alex Zajichek\"\ndate: \"5/12/2025\"\nimage: \"feature.png\"\ncategories:\n  - AI\n  - Shiny\n  - Web Applications\nformat:\n  html:\n    code-fold: true\n    code-tools: true\ndraft: true\n---\n\n::: {.cell}\n\n:::\n\n{{< video https://www.youtube.com/embed/WKB548RjE9o >}}\n\n\n\n\nThe stuff [Posit]() has been [doing with AI]() has been really refreshing for data scientists, especially R and Python developers. With [ChatGPT]() and the other popular chat [GUIs]() out there, using AI tools was sort of fun, but now with the ability to programmatically interact with LLM's as part of my data science tech stack, I'm actually excited about using them. \n\nI attended [ShinyConf 2025]() and there were a lot of great talks that made these tools very appealing to work with. They introduced the [ellmer]() package in R, and other ones such as [shinychat]() and [querychat](). Having no experience using these yet, I wanted to see how simple it would be to build and deploy a chat application from scratch that acts as a statistical consultant, which is what is in the video above 👆 👆 👆\n\nHere are the steps taken, in text form:\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
