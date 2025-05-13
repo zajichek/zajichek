@@ -23,7 +23,7 @@ website:
         text: About
     right:
       - icon: envelope
-        href: "mailto:alexzajichek@gmail.com"
+        href: "mailto:alex@centralstatz.com"
       - icon: linkedin
         href: https://www.linkedin.com/in/alexzajichek
         aria-label: LinkedIn

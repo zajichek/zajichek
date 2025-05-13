@@ -5,7 +5,7 @@ about:
   image: headshot.png
   links:
     - icon: envelope
-      href: "mailto:alexzajichek@gmail.com"
+      href: "mailto:alex@centralstatz.com"
     - icon: linkedin
       href: https://www.linkedin.com/in/alexzajichek
     - icon: github
