@@ -20,4 +20,7 @@ No. They are the same thing.
 
 Then why do we do it?
 
+* The reason is simple: make better decisions for patients to get better outcomes
+* Sounds like contradiction, but the less we focus on publishing, the better research we will have
+
 ![](process.png)

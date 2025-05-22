@@ -15,12 +15,14 @@ website:
     logo: "logo.png"
     title: false
     left:
-      - href: publications.qmd
-        text: Publications
       - href: presentations.qmd
         text: Projects & Presentations
+      - href: publications.qmd
+        text: Publications
       - href: about.qmd
         text: About
+      - href: https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share
+        text: Subscribe
     right:
       - icon: envelope
         href: "mailto:alex@centralstatz.com"

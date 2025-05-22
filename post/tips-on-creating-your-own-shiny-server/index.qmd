@@ -1,0 +1,14 @@
+---
+title: "Tips on creating your own Shiny Server"
+description: "Incolcating ambuguity and poor practice"
+author: "Alex Zajichek"
+date: "1/10/2025"
+image: "feature.png"
+categories:
+  - Philosophy
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---

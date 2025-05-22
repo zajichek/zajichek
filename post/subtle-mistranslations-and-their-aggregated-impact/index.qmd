@@ -1,0 +1,14 @@
+---
+title: "Subtle mistranslations of clinical research in media"
+description: "And their aggregate effect"
+author: "Alex Zajichek"
+date: "1/10/2025"
+image: "feature.png"
+categories:
+  - Philosophy
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---
