@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alex Zajichek">
+<meta name="dcterms.date" content="2025-05-23">
+<meta name="description" content="How we can use natural language to interact with and manipulate app content.">
+
+<title>Building a custom LLM-powered Shiny app for hospital readmissions with {querychat} – Zajichek Stats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9MW3W3RQD9"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
+</script>
+
+
+<meta property="og:title" content="Building a custom LLM-powered Shiny app for hospital readmissions with {querychat} – Zajichek Stats">
+<meta property="og:description" content="How we can use natural language to interact with and manipulate app content.">
+<meta property="og:image" content="https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/feature.png">
+<meta property="og:site_name" content="Zajichek Stats">
+<meta property="og:image:height" content="1226">
+<meta property="og:image:width" content="1862">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../presentations.html"> 
+<span class="menu-text">Projects &amp; Presentations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share"> 
+<span class="menu-text">Subscribe</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:alex@centralstatz.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/alexzajichek"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/zajichek"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@centralstatz"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">AI</div>
+    <div class="quarto-category">Shiny</div>
+    <div class="quarto-category">Web Applications</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    How we can use natural language to interact with and manipulate app content.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex Zajichek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 23, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/YlLcxuAjgJw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>I’ve been exploring the various <a href="https://posit.co/use-cases/ai/">AI tools</a> that <a href="https://posit.co/">Posit</a> has been releasing over the past few months, and I gotta say, they are really cool and incredibly fun to work with. I wanted to learn how to use packages like <a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a>, <a href="https://posit-dev.github.io/shinychat"><code>shinychat</code></a>, and <a href="https://github.com/posit-dev/querychat/tree/main/r-package"><code>querychat</code></a> to enable the user of an <a href="https://shiny.posit.co/">R Shiny</a> application to explore a dataset and dynamically manipulate app visuals/results using natural language in chat format. So I built and deployed an app that explores results from the <a href="https://qualitynet.cms.gov/inpatient/hrrp">Hospital Readmissions Reduction Program (HRRP)</a> for the state of Wisconsin, using these features. I go through it in the video above 👆, or you can read on for a text description.</p>
+<section id="the-app" class="level1">
+<h1>The App</h1>
+<p>Here’s what it looks like in action:</p>
+<p><img src="readmit_app.gif" class="img-fluid"></p>
+<p>It was deployed to <a href="https://connect.posit.cloud/">Posit Connect Cloud</a>. That, in combination with using <a href="https://gemini.google.com/app">Google Gemini</a> as my LLM provider, made the development and deployment of this app <strong>completely free</strong>. Feel free to access the <a href="https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/">live app</a> and/or the <a href="https://github.com/centralstatz/hospital_readmissions_explorer">source code</a>.</p>
+</section>
+<section id="some-background-on-readmissions" class="level1">
+<h1>Some Background on Readmissions</h1>
+<p>The context of this app involves the <a href="https://qualitynet.cms.gov/inpatient/hrrp">Hospital Readmissions Reduction Program (HRRP)</a>.</p>
+<p>Each year hospitals across the United States are penalized by <a href="https://www.cms.gov/">CMS</a> for having too many <a href="https://en.wikipedia.org/wiki/Hospital_readmission">readmissions</a> in one or more of the following diagnosis groups:</p>
+<ul>
+<li>AMI: Acute myocardial infarction</li>
+<li>CABG: Coronary artery bypass graft surgery</li>
+<li>COPD: Chronic obstructive pulmonary disease</li>
+<li>HF: Heart failure</li>
+<li>TKA/THA: Total hip/knee surgery</li>
+<li>PN: Pneumonia</li>
+</ul>
+<p>It is a 3-year reporting period in which the readmissions are tallied, and then the hospital is penalized for the duration of a subsequent fiscal year (the penalty amounts to 3% maximum of all Medicare reimbursements). Only ~50% of hospitals actually receive penalty, and the program only applies to patients on Medicare.</p>
+<section id="penalty-calculation" class="level2">
+<h2 class="anchored" data-anchor-id="penalty-calculation">Penalty calculation</h2>
+<p>The penalty is calculated (in a very simplified description) based on the hospital’s relative performance of the <em>excess readmission ratio</em>, which is the ratio of the hospital’s <em>predicted</em> and <em>expected</em> readmission rates. These are estimated for each diagnosis group and then aggregated across the groups to determine the overall payment penalty. See more <a href="https://qualitynet.cms.gov/inpatient/hrrp/measures">here</a>.</p>
+<p>The predicted and expected readmission rates are estimated from a <a href="https://en.wikipedia.org/wiki/Generalized_linear_mixed_model">generalized linear mixed effects model</a> via logistic regression (specifically, it is a <a href="https://www.bristol.ac.uk/cmm/learning/videos/random-intercepts.html">random-intercept model</a>). They risk adjust hospitals’ readmission rates by entering numerous risk factors in these models (like comorbidities, etc., which you can find details <a href="https://qualitynet.cms.gov/inpatient/measures/readmission/methodology">here</a>). They use this model to tease out an individual hospital effect on the readmission rate <em>after</em> accounting for the case-mix of that hospital, and compare this individual effect to the “average” hospital. If you’re worse than average, you get penalized (again, as a simple description). So overall, the ratio meant to quantify how likely a patient is to be readmitted to <em>your</em> hospital versus the <em>average</em> hospital after accounting for how sick they are.</p>
+<p>In this app, the main metrics we are working with are what are described above:</p>
+<ul>
+<li>Excess readmission ratio</li>
+<li>Predicted readmission rate</li>
+<li>Expected readmission rate</li>
+</ul>
+</section>
+<section id="data-source" class="level2">
+<h2 class="anchored" data-anchor-id="data-source">Data source</h2>
+<p>The datasets themselves that contain this data come from the <a href="https://data.cms.gov/provider-data/">CMS Provider Data Catalog</a>. Specifically, we use the following:</p>
+<ul>
+<li><a href="https://data.cms.gov/provider-data/dataset/xubh-q36u">Hospital General Information</a>: Provides information on hospitals such as state, location, etc.</li>
+<li><a href="https://data.cms.gov/provider-data/dataset/9n3s-kdb3">Hospital Readmissions Reduction Program</a>: Contains readmission program metrics for each hospital participating in the program</li>
+</ul>
+<p>In the application, the datasets are scraped directly from the web source by using HTTR GET request to get metadata about the dataset, constructing the appropriate file path, and then importing it as a CSV file.</p>
+<p>You can see how I did this here by creating a utility function that takes a <code>datasetid</code> as identified on the source website and imports the dataset (so this can be used for any dataset in the catalog).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to import dataset from CMS Provider Data Catalog (see https://github.com/zajichek/carecompare/blob/b1fa89382adfe77bd5f230f4162b03767ece10ea/R/FUNCTIONS.R#L99)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pdc_read <span class="ot">&lt;-</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">datasetid =</span> <span class="cn">NULL</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  ) {</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check for input</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(datasetid)) </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">stop</span>(<span class="st">"Please specify a dataset identifier."</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the url</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/"</span>, datasetid, <span class="st">"?show-reference-ids=false"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make the request, extract the content</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    request <span class="ot">&lt;-</span> httr<span class="sc">::</span><span class="fu">content</span>(httr<span class="sc">::</span><span class="fu">GET</span>(url))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update the variable</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    downloadurl <span class="ot">&lt;-</span> request<span class="sc">$</span>distribution[[<span class="dv">1</span>]]<span class="sc">$</span>data<span class="sc">$</span>downloadURL</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Import the dataset</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    readr<span class="sc">::</span><span class="fu">read_csv</span>(</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> downloadurl,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>      ...</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Import datasets</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Hospital information</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>hospitals <span class="ot">&lt;-</span> <span class="fu">pdc_read</span>(<span class="at">datasetid =</span> <span class="st">"xubh-q36u"</span>, <span class="at">guess_max =</span> <span class="dv">10000</span>) <span class="co"># https://data.cms.gov/provider-data/dataset/xubh-q36u</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># HRRP outcomes</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>hrrp <span class="ot">&lt;-</span> <span class="fu">pdc_read</span>(<span class="at">datasetid =</span> <span class="st">"9n3s-kdb3"</span>, <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"N/A"</span>, <span class="st">""</span>, <span class="st">" "</span>)) <span class="co"># https://data.cms.gov/provider-data/dataset/9n3s-kdb3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The datasets look like this:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hospitals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5,384 × 38
+   `Facility ID` `Facility Name`            Address `City/Town` State `ZIP Code`
+   &lt;chr&gt;         &lt;chr&gt;                      &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;     
+ 1 010001        SOUTHEAST HEALTH MEDICAL … 1108 R… DOTHAN      AL    36301     
+ 2 010005        MARSHALL MEDICAL CENTERS   2505 U… BOAZ        AL    35957     
+ 3 010006        NORTH ALABAMA MEDICAL CEN… 1701 V… FLORENCE    AL    35630     
+ 4 010007        MIZELL MEMORIAL HOSPITAL   702 N … OPP         AL    36467     
+ 5 010008        CRENSHAW COMMUNITY HOSPIT… 101 HO… LUVERNE     AL    36049     
+ 6 010011        ST. VINCENT'S EAST         50 MED… BIRMINGHAM  AL    35235     
+ 7 010012        DEKALB REGIONAL MEDICAL C… 200 ME… FORT PAYNE  AL    35968     
+ 8 010016        SHELBY BAPTIST MEDICAL CE… 1000 F… ALABASTER   AL    35007     
+ 9 010018        CALLAHAN EYE HOSPITAL      1720 U… BIRMINGHAM  AL    35233     
+10 010019        HELEN KELLER HOSPITAL      1300 S… SHEFFIELD   AL    35660     
+# ℹ 5,374 more rows
+# ℹ 32 more variables: `County/Parish` &lt;chr&gt;, `Telephone Number` &lt;chr&gt;,
+#   `Hospital Type` &lt;chr&gt;, `Hospital Ownership` &lt;chr&gt;,
+#   `Emergency Services` &lt;chr&gt;,
+#   `Meets criteria for birthing friendly designation` &lt;chr&gt;,
+#   `Hospital overall rating` &lt;chr&gt;, `Hospital overall rating footnote` &lt;chr&gt;,
+#   `MORT Group Measure Count` &lt;chr&gt;, …</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hrrp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 18,510 × 12
+   `Facility Name`     `Facility ID` State `Measure Name` `Number of Discharges`
+   &lt;chr&gt;               &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;                           &lt;dbl&gt;
+ 1 SOUTHEAST HEALTH M… 010001        AL    READM-30-AMI-…                    296
+ 2 SOUTHEAST HEALTH M… 010001        AL    READM-30-CABG…                    151
+ 3 SOUTHEAST HEALTH M… 010001        AL    READM-30-HF-H…                    681
+ 4 SOUTHEAST HEALTH M… 010001        AL    READM-30-HIP-…                     NA
+ 5 SOUTHEAST HEALTH M… 010001        AL    READM-30-PN-H…                    490
+ 6 SOUTHEAST HEALTH M… 010001        AL    READM-30-COPD…                    130
+ 7 MARSHALL MEDICAL C… 010005        AL    READM-30-CABG…                     NA
+ 8 MARSHALL MEDICAL C… 010005        AL    READM-30-HIP-…                     NA
+ 9 MARSHALL MEDICAL C… 010005        AL    READM-30-HF-H…                    176
+10 MARSHALL MEDICAL C… 010005        AL    READM-30-PN-H…                    305
+# ℹ 18,500 more rows
+# ℹ 7 more variables: Footnote &lt;dbl&gt;, `Excess Readmission Ratio` &lt;dbl&gt;,
+#   `Predicted Readmission Rate` &lt;dbl&gt;, `Expected Readmission Rate` &lt;dbl&gt;,
+#   `Number of Readmissions` &lt;chr&gt;, `Start Date` &lt;chr&gt;, `End Date` &lt;chr&gt;</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="code-summary" class="level1">
+<h1>Code summary</h1>
+<p>This article is mainly focusing on the part of the code that enables the connection and use of LLM’s to chat with the data, but I wanted to make a few notes about the rest of the app. Feel free to browse the complete app source code <a href="https://github.com/centralstatz/hospital_readmissions_explorer/tree/main">here</a>.</p>
+<p>First, the <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/global.R"><code>global.R</code></a> file creates the objects that are available during the app runtime. It is executed once at app launch. This is where the datasets are imported and cleaned, and the base map of Wisconsin is created (using <a href="https://rstudio.github.io/leaflet/"><code>leaflet</code></a>). This is done so the app doesn’t have to redraw the map everytime from scratch, only the points need be updated as things change (with <a href="https://rstudio.github.io/leaflet/reference/leafletProxy.html"><code>leafletProxy</code></a>). This file is also where the first step for setting up <a href="https://github.com/posit-dev/querychat/blob/main/r-package"><code>querychat</code></a> occurs.</p>
+<p>Second, the <a href="https://rstudio.github.io/bslib/"><code>bslib</code></a> package is used to drive the app layout in <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/ui.R"><code>ui.R</code></a>, and works well with <a href="https://github.com/posit-dev/querychat/blob/main/r-package"><code>querychat</code></a>. The plots in the app are made with the <a href="https://jkunst.com/highcharter/"><code>highcharter</code></a> package, which I just discovered as an alternative to <a href="https://plotly.com/r/"><code>plotly</code></a> and I think it may be my new favorite plotting library (but don’t worry, I’ll always continue using the latter + <a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a>). Also, I found the <a href="https://dreamrs.github.io/datamods/"><code>datamods</code></a> package to be really useful for creating the dynamic group filters in the traditional inputs, which is what makes the hospital filters simultaneously update as other columns are filtered. This is done with the <a href="https://dreamrs.github.io/datamods/reference/select-group.html"><code>select_group_*</code></a> functions.</p>
+<p>Finally, the general strategy in <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/server.R"><code>server.R</code></a> to implement the toggle between traditional filters and the “chat-mode” was to have a <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson6/"><code>reactive</code></a> data frame that updates based on conditional logic via the status of the toggle input (via <a href="https://rstudio.github.io/bslib/reference/input_switch.html"><code>input_switch</code></a>). We either apply the set of filters to the master dataset in the app, or just provide the dataset returned by the chat object.</p>
+</section>
+<section id="implementing-chat-functionality" class="level1">
+<h1>Implementing chat functionality</h1>
+<p>There are two main packages you need to have installed to make this work:</p>
+<ul>
+<li><a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a>: The package drives the backend for sending and receiving messages to the LLM</li>
+<li><a href="https://github.com/posit-dev/querychat/tree/main/r-package"><code>querychat</code></a>: Sets up the UI components and server (using <a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a> internally) to chat within your app, build and execute SQL statements on your dataset, and return the result to be used within the app.</li>
+</ul>
+<section id="step-1-initialize-the-connection" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-initialize-the-connection">Step 1: Initialize the connection</h2>
+<p>The first step is to initialize the connection to the LLM of your choice, supply your dataset, and additional information to help it perform better using the <code>querychat_init</code> function. The following snippet is what is implemented in the app (or see it <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/global.R#L224">here</a>):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure the chat object</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>querychat_config <span class="ot">&lt;-</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">querychat_init</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">df =</span> master_dat,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">tbl_name =</span> <span class="st">"HospitalHRRP"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">create_chat_func =</span> purrr<span class="sc">::</span><span class="fu">partial</span>(ellmer<span class="sc">::</span>chat_gemini),</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">greeting =</span> <span class="st">"Ask me a question about the HRRP in Wisconsin"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_description =</span> <span class="fu">readLines</span>(<span class="st">"data_description.md"</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="prompting-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="prompting-strategy">Prompting strategy</h3>
+<p>The overarching premise of this package is that the LLM’s can be great at generating SQL queries. So when we use the chat in the app, no data is ever being sent to the LLM. Only metadata about the dataset. Then it can translate our natural languge inputs into curated SQL queries. See more <a href="https://github.com/posit-dev/querychat/blob/main/r-package/README.md#powered-by-sql">here</a>. The <code>tblName</code> argument is what will appear in queries generated in the chat.</p>
+</section>
+<section id="choosing-an-llm-provider" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-an-llm-provider">Choosing an LLM provider</h3>
+<p>I used <a href="https://gemini.google.com/app">Google Gemini</a> because it’s free and I didn’t have to provide payment information to start using it. It’s not the optimal model to use (you can see recommendations <a href="https://github.com/posit-dev/querychat/blob/main/r-package/README.md#powered-by-llms">here</a>), but it actually does give pretty decent results and is definitely sufficient for demonstration purposes. I provided more detail on configuring the API in <a href="https://www.zajichekstats.com/post/making-an-ai-statistical-consultant/">this blog post</a>.</p>
+</section>
+<section id="providing-a-data-description" class="level3">
+<h3 class="anchored" data-anchor-id="providing-a-data-description">Providing a data description</h3>
+<p>What I’ve found to be the most important part: the <code>data_description</code> argument. This is your chance to supply the LLM with some initial information to consider before it starts trying to generate queries on your data. By default, it will only give it some basic information (see <a href="https://github.com/posit-dev/querychat/blob/main/r-package/README.md#data-description">here</a>), but provider more detail and context will make it work a lot better and give a lot more flexibility into how the chat interaction can occur.</p>
+<p>In my app, I created a <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/data_description.md"><code>data_description.md</code></a> file that I feed into this argument which gives the LLM a detailed description of not only the columns in my dataset, but the context in which the data is for (i.e., hospital readmissions). The most important part in my file to get things working robustly was this line:</p>
+<blockquote class="blockquote">
+<p>“Important Note:: The hospital information fields are all in capital letters (all characters), so queries on this data should always capitalize all characters when searching for specific cities or counties.”</p>
+</blockquote>
+<p>Since the hospital location columns in the raw dataset were in all capital letters, the LLM would not generate sufficient queries without this unless I also capitalized specific cities/counties in my prompts. That’s not very natural, so this <em>a priori</em> prompt helped resolve that. Now in my app when I ask for <em>“hospitals in marathon county”</em>, it will correctly generate a query that says <code>SELECT * FROM HospitalHRRP WHERE County = "MARATHON"</code>.</p>
+</section>
+</section>
+<section id="step-2-setup-the-user-interface" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-setup-the-user-interface">Step 2: Setup the user interface</h2>
+<p>In the <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson2/">app UI</a>, we need to specify where (and how) we want the chat interface to appear. In this app, we use the <code>querychat_ui</code> function (see <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/ui.R#L123">here</a>). It’s literally just one line of code that you can put anywhere in your app: <code>querychat_ui(id = "chat")</code>. You could also use the <code>querychat_sidebar</code> function if you wanted your entire app side panel to be a nicer looking chat pane. However, in this app, I wanted to be able to toggle between manual filters and chat mode, so I opted for the former.</p>
+<section id="toggling-between-manual-and-llm-filtering" class="level3">
+<h3 class="anchored" data-anchor-id="toggling-between-manual-and-llm-filtering">Toggling between manual and LLM filtering</h3>
+<p>The “Chat Mode” toggle button is just built from an <code>input_switch</code> (see <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/ui.R#L35">here</a>). Based on the current value of that switch, either the manual input panel or the chat pane is displayed with a condition panel:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chat input</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">conditionalPanel</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">condition =</span> <span class="st">"input.chat_mode"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># The chat user interface</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">querychat_ui</span>(<span class="at">id =</span> <span class="st">"chat"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Simple enough, but pretty useful feature.</p>
+<p>That is all you need to do on the user interface side to setup the chat. Everything else, like manipulating and updating visuals, is done on the server side.</p>
+</section>
+</section>
+<section id="step-3-manage-the-data-output" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-manage-the-data-output">Step 3: Manage the data output</h2>
+<p>Finally, we just need to set things up on the server side to feed the data sent back from the chat (i.e., received from the query) into our visuals. Conceptually, you can basically just treat this dataset like any reactive data frame you would normally use in a Shiny application, so it’s quite easy to work with.</p>
+<p>First you need to create the chat server object (<code>querychat_server</code>) using the previously-initialized object from <code>querychat_init</code>. This can just be run somewhere in the server function (see <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/server.R#L20">here</a>).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make the chat server</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>querychat <span class="ot">&lt;-</span> <span class="fu">querychat_server</span>(<span class="st">"chat"</span>, querychat_config)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="accessing-the-returned-data" class="level3">
+<h3 class="anchored" data-anchor-id="accessing-the-returned-data">Accessing the returned data</h3>
+<p>The <code>querychat</code> server above then holds a <code>$df()</code> object, which consists of the current data stored from the most recent query executed (assuming the query is returning a data set and not a response in the chat itself). So, we just need to access that data object wherever we want to use the data in our app–just like any other dataset in a Shiny app (see <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/server.R#L30">here</a>).</p>
+<p>In this app, to implement the toggle functionality between manual and chat filtering on the backend, I just did this:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to current hospitals (with metric criteria)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>current_hospitals <span class="ot">&lt;-</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reactive</span>({</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use dataset based on app mode</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(input<span class="sc">$</span>chat_mode) {</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Get the dataset being returned by the chat</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      temp_hospitals <span class="ot">&lt;-</span> querychat<span class="sc">$</span><span class="fu">df</span>()</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Use the dataset filtered manually</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      temp_hospitals <span class="ot">&lt;-</span> </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">current_hospitals_temp</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Filter to the specified metric ranges</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>          DiagnosisCategory <span class="sc">==</span> input<span class="sc">$</span>diagnosis,</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>          Excess <span class="sc">&gt;=</span> <span class="fu">min</span>(input<span class="sc">$</span>excess), Excess <span class="sc">&lt;=</span> <span class="fu">max</span>(input<span class="sc">$</span>excess),</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>          Predicted <span class="sc">&gt;=</span> <span class="fu">min</span>(input<span class="sc">$</span>predicted), Predicted <span class="sc">&lt;=</span> <span class="fu">max</span>(input<span class="sc">$</span>predicted),</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>          Expected <span class="sc">&gt;=</span> <span class="fu">min</span>(input<span class="sc">$</span>expected), Expected <span class="sc">&lt;=</span> <span class="fu">max</span>(input<span class="sc">$</span>expected)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    temp_hospitals</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>In short, if the app is in chat mode, use the data returned from the SQL query. Otherwise, use the dataset that is created from the manual filters. These datasets are always in the same format, so I can then cascade it down through the app visuals like I would any other dataset, agnostic to what means it was created.</p>
+</section>
+</section>
+</section>
+<section id="deploying-the-app" class="level1">
+<h1>Deploying the app</h1>
+<p>As mentioned previously, the app was deployed to <a href="https://connect.posit.cloud/">Posit Connect Cloud</a> for free (you can have up to 5 live Shiny applications in the free tier). I gave a more detailed description on how you deploy an app to this platform with the LLM API configured in <a href="https://www.zajichekstats.com/post/making-an-ai-statistical-consultant/">this blog post</a>, so check there for more detail. The main things you need to remember for deployment are to:</p>
+<ul>
+<li>Create your <code>manifest.json</code> file after you’ve completed app development by running <code>rsconnect::writeManifest()</code> so you can capture your app’s dependencies</li>
+<li>Put your code in a public GitHub repository (unless you want to upgrade to a paid tier then you can deploy from private repos)</li>
+<li>Add your <code>GOOGLE_API_KEY</code> (or whatever API you’re using) to the environment variable list while you are configuring your deployment on <a href="https://connect.posit.cloud/">Posit Connect Cloud</a></li>
+</ul>
+<p>Other than that, things will likely run smooth.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.zajichekstats\.com\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "How we can use natural language to interact with and manipulate app content."</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "5/23/2025"</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - AI</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Shiny</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Web Applications</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://www.youtube.com/embed/YlLcxuAjgJw &gt;}}</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>I've been exploring the various <span class="co">[</span><span class="ot">AI tools</span><span class="co">](https://posit.co/use-cases/ai/)</span> that <span class="co">[</span><span class="ot">Posit</span><span class="co">](https://posit.co/)</span> has been releasing over the past few months, and I gotta say, they are really cool and incredibly fun to work with. I wanted to learn how to use packages like <span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span>, <span class="co">[</span><span class="ot">`shinychat`</span><span class="co">](https://posit-dev.github.io/shinychat)</span>, and <span class="co">[</span><span class="ot">`querychat`</span><span class="co">](https://github.com/posit-dev/querychat/tree/main/r-package)</span> to enable the user of an <span class="co">[</span><span class="ot">R Shiny</span><span class="co">](https://shiny.posit.co/)</span> application to explore a dataset and dynamically manipulate app visuals/results using natural language in chat format. So I built and deployed an app that explores results from the <span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program (HRRP)</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp)</span> for the state of Wisconsin, using these features. I go through it in the video above <span class="in">`r emo::ji("backhand index pointing up")`</span>, or you can read on for a text description.</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="fu"># The App</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>Here's what it looks like in action:</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="al">![](readmit_app.gif)</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>It was deployed to <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span>. That, in combination with using <span class="co">[</span><span class="ot">Google Gemini</span><span class="co">](https://gemini.google.com/app)</span> as my LLM provider, made the development and deployment of this app **completely free**. Feel free to access the <span class="co">[</span><span class="ot">live app</span><span class="co">](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)</span> and/or the <span class="co">[</span><span class="ot">source code</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer)</span>.</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="fu"># Some Background on Readmissions</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>The context of this app involves the <span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program (HRRP)</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp)</span>. </span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>Each year hospitals across the United States are penalized by <span class="co">[</span><span class="ot">CMS</span><span class="co">](https://www.cms.gov/)</span> for having too many <span class="co">[</span><span class="ot">readmissions</span><span class="co">](https://en.wikipedia.org/wiki/Hospital_readmission)</span> in one or more of the following diagnosis groups:</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>AMI: Acute myocardial infarction</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>CABG: Coronary artery bypass graft surgery</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>COPD: Chronic obstructive pulmonary disease</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>HF: Heart failure</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>TKA/THA: Total hip/knee surgery</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>PN: Pneumonia</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>It is a 3-year reporting period in which the readmissions are tallied, and then the hospital is penalized for the duration of a subsequent fiscal year (the penalty amounts to 3% maximum of all Medicare reimbursements). Only ~50% of hospitals actually receive penalty, and the program only applies to patients on Medicare.</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Penalty calculation</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>The penalty is calculated (in a very simplified description) based on the hospital's relative performance of the _excess readmission ratio_, which is the ratio of the hospital's _predicted_ and _expected_ readmission rates. These are estimated for each diagnosis group and then aggregated across the groups to determine the overall payment penalty. See more <span class="co">[</span><span class="ot">here</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/measures)</span>.</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>The predicted and expected readmission rates are estimated from a <span class="co">[</span><span class="ot">generalized linear mixed effects model</span><span class="co">](https://en.wikipedia.org/wiki/Generalized_linear_mixed_model)</span> via logistic regression (specifically, it is a <span class="co">[</span><span class="ot">random-intercept model</span><span class="co">](https://www.bristol.ac.uk/cmm/learning/videos/random-intercepts.html)</span>). They risk adjust hospitals' readmission rates by entering numerous risk factors in these models (like comorbidities, etc., which you can find details <span class="co">[</span><span class="ot">here</span><span class="co">](https://qualitynet.cms.gov/inpatient/measures/readmission/methodology)</span>). They use this model to tease out an individual hospital effect on the readmission rate _after_ accounting for the case-mix of that hospital, and compare this individual effect to the "average" hospital. If you're worse than average, you get penalized (again, as a simple description). So overall, the ratio meant to quantify how likely a patient is to be readmitted to _your_ hospital versus the _average_ hospital after accounting for how sick they are.</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>In this app, the main metrics we are working with are what are described above:</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Excess readmission ratio</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Predicted readmission rate</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Expected readmission rate</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data source</span></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>The datasets themselves that contain this data come from the <span class="co">[</span><span class="ot">CMS Provider Data Catalog</span><span class="co">](https://data.cms.gov/provider-data/)</span>. Specifically, we use the following:</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">Hospital General Information</span><span class="co">](https://data.cms.gov/provider-data/dataset/xubh-q36u)</span>: Provides information on hospitals such as state, location, etc.</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program</span><span class="co">](https://data.cms.gov/provider-data/dataset/9n3s-kdb3)</span>: Contains readmission program metrics for each hospital participating in the program</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>In the application, the datasets are scraped directly from the web source by using HTTR GET request to get metadata about the dataset, constructing the appropriate file path, and then importing it as a CSV file. </span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>You can see how I did this here by creating a utility function that takes a <span class="in">`datasetid`</span> as identified on the source website and imports the dataset (so this can be used for any dataset in the catalog).</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, message=FALSE, warning=FALSE}</span></span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a><span class="in"># Load packages</span></span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a><span class="in">library(tidyverse)</span></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a><span class="in"># Function to import dataset from CMS Provider Data Catalog (see https://github.com/zajichek/carecompare/blob/b1fa89382adfe77bd5f230f4162b03767ece10ea/R/FUNCTIONS.R#L99)</span></span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a><span class="in">pdc_read &lt;-</span></span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a><span class="in">  function(</span></span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a><span class="in">    datasetid = NULL,</span></span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a><span class="in">    ...</span></span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a><span class="in">  ) {</span></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a><span class="in">    # Check for input</span></span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a><span class="in">    if(is.null(datasetid)) </span></span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a><span class="in">      stop("Please specify a dataset identifier.")</span></span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a><span class="in">    # Make the url</span></span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a><span class="in">    url &lt;- paste0("https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/", datasetid, "?show-reference-ids=false")</span></span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a><span class="in">    # Make the request, extract the content</span></span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a><span class="in">    request &lt;- httr::content(httr::GET(url))</span></span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a><span class="in">    # Update the variable</span></span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a><span class="in">    downloadurl &lt;- request$distribution[[1]]$data$downloadURL</span></span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a><span class="in">    # Import the dataset</span></span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a><span class="in">    readr::read_csv(</span></span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a><span class="in">      file = downloadurl,</span></span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a><span class="in">      ...</span></span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a><span class="in">    )</span></span>
+<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a><span class="in">  }</span></span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a><span class="in">## Import datasets</span></span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a><span class="in"># Hospital information</span></span>
+<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a><span class="in">hospitals &lt;- pdc_read(datasetid = "xubh-q36u", guess_max = 10000) # https://data.cms.gov/provider-data/dataset/xubh-q36u</span></span>
+<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a><span class="in"># HRRP outcomes</span></span>
+<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a><span class="in">hrrp &lt;- pdc_read(datasetid = "9n3s-kdb3", na = c("N/A", "", " ")) # https://data.cms.gov/provider-data/dataset/9n3s-kdb3</span></span>
+<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-109"><a href="#cb10-109" aria-hidden="true" tabindex="-1"></a>The datasets look like this:</span>
+<span id="cb10-110"><a href="#cb10-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>hospitals</span>
+<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>hrrp</span>
+<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a><span class="fu"># Code summary</span></span>
+<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a>This article is mainly focusing on the part of the code that enables the connection and use of LLM's to chat with the data, but I wanted to make a few notes about the rest of the app. Feel free to browse the complete app source code <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/tree/main)</span>.</span>
+<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-122"><a href="#cb10-122" aria-hidden="true" tabindex="-1"></a>First, the <span class="co">[</span><span class="ot">`global.R`</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/global.R)</span> file creates the objects that are available during the app runtime. It is executed once at app launch. This is where the datasets are imported and cleaned, and the base map of Wisconsin is created (using <span class="co">[</span><span class="ot">`leaflet`</span><span class="co">](https://rstudio.github.io/leaflet/)</span>). This is done so the app doesn't have to redraw the map everytime from scratch, only the points need be updated as things change (with <span class="co">[</span><span class="ot">`leafletProxy`</span><span class="co">](https://rstudio.github.io/leaflet/reference/leafletProxy.html)</span>). This file is also where the first step for setting up <span class="co">[</span><span class="ot">`querychat`</span><span class="co">](https://github.com/posit-dev/querychat/blob/main/r-package)</span> occurs.</span>
+<span id="cb10-123"><a href="#cb10-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a>Second, the <span class="co">[</span><span class="ot">`bslib`</span><span class="co">](https://rstudio.github.io/bslib/)</span> package is used to drive the app layout in <span class="co">[</span><span class="ot">`ui.R`</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/ui.R)</span>, and works well with <span class="co">[</span><span class="ot">`querychat`</span><span class="co">](https://github.com/posit-dev/querychat/blob/main/r-package)</span>. The plots in the app are made with the <span class="co">[</span><span class="ot">`highcharter`</span><span class="co">](https://jkunst.com/highcharter/)</span> package, which I just discovered as an alternative to <span class="co">[</span><span class="ot">`plotly`</span><span class="co">](https://plotly.com/r/)</span> and I think it may be my new favorite plotting library (but don't worry, I'll always continue using the latter + <span class="co">[</span><span class="ot">`ggplot2`</span><span class="co">](https://ggplot2.tidyverse.org/)</span>). Also, I found the <span class="co">[</span><span class="ot">`datamods`</span><span class="co">](https://dreamrs.github.io/datamods/)</span> package to be really useful for creating the dynamic group filters in the traditional inputs, which is what makes the hospital filters simultaneously update as other columns are filtered. This is done with the <span class="co">[</span><span class="ot">`select_group_*`</span><span class="co">](https://dreamrs.github.io/datamods/reference/select-group.html)</span> functions.</span>
+<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a>Finally, the general strategy in <span class="co">[</span><span class="ot">`server.R`</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/server.R)</span> to implement the toggle between traditional filters and the "chat-mode" was to have a <span class="co">[</span><span class="ot">`reactive`</span><span class="co">](https://shiny.posit.co/r/getstarted/shiny-basics/lesson6/)</span> data frame that updates based on conditional logic via the status of the toggle input (via <span class="co">[</span><span class="ot">`input_switch`</span><span class="co">](https://rstudio.github.io/bslib/reference/input_switch.html)</span>). We either apply the set of filters to the master dataset in the app, or just provide the dataset returned by the chat object.</span>
+<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a><span class="fu"># Implementing chat functionality</span></span>
+<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a>There are two main packages you need to have installed to make this work:</span>
+<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span>: The package drives the backend for sending and receiving messages to the LLM</span>
+<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="co">[</span><span class="ot">`querychat`</span><span class="co">](https://github.com/posit-dev/querychat/tree/main/r-package)</span>: Sets up the UI components and server (using <span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span> internally) to chat within your app, build and execute SQL statements on your dataset, and return the result to be used within the app.</span>
+<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a><span class="fu">## Step 1: Initialize the connection</span></span>
+<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a>The first step is to initialize the connection to the LLM of your choice, supply your dataset, and additional information to help it perform better using the <span class="in">`querychat_init`</span> function. The following snippet is what is implemented in the app (or see it <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/global.R#L224)</span>):</span>
+<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval=FALSE}</span></span>
+<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a><span class="in"># Configure the chat object</span></span>
+<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a><span class="in">querychat_config &lt;- </span></span>
+<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a><span class="in">  querychat_init(</span></span>
+<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a><span class="in">    df = master_dat,</span></span>
+<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a><span class="in">    tbl_name = "HospitalHRRP",</span></span>
+<span id="cb10-145"><a href="#cb10-145" aria-hidden="true" tabindex="-1"></a><span class="in">    create_chat_func = purrr::partial(ellmer::chat_gemini),</span></span>
+<span id="cb10-146"><a href="#cb10-146" aria-hidden="true" tabindex="-1"></a><span class="in">    greeting = "Ask me a question about the HRRP in Wisconsin",</span></span>
+<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a><span class="in">    data_description = readLines("data_description.md")</span></span>
+<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a><span class="fu">### Prompting strategy</span></span>
+<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a>The overarching premise of this package is that the LLM's can be great at generating SQL queries. So when we use the chat in the app, no data is ever being sent to the LLM. Only metadata about the dataset. Then it can translate our natural languge inputs into curated SQL queries. See more <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/posit-dev/querychat/blob/main/r-package/README.md#powered-by-sql)</span>. The <span class="in">`tblName`</span> argument is what will appear in queries generated in the chat.</span>
+<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a><span class="fu">### Choosing an LLM provider</span></span>
+<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a>I used <span class="co">[</span><span class="ot">Google Gemini</span><span class="co">](https://gemini.google.com/app)</span> because it's free and I didn't have to provide payment information to start using it. It's not the optimal model to use (you can see recommendations <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/posit-dev/querychat/blob/main/r-package/README.md#powered-by-llms)</span>), but it actually does give pretty decent results and is definitely sufficient for demonstration purposes. I provided more detail on configuring the API in <span class="co">[</span><span class="ot">this blog post</span><span class="co">](https://www.zajichekstats.com/post/making-an-ai-statistical-consultant/)</span>.</span>
+<span id="cb10-158"><a href="#cb10-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-159"><a href="#cb10-159" aria-hidden="true" tabindex="-1"></a><span class="fu">### Providing a data description</span></span>
+<span id="cb10-160"><a href="#cb10-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-161"><a href="#cb10-161" aria-hidden="true" tabindex="-1"></a>What I've found to be the most important part: the <span class="in">`data_description`</span> argument. This is your chance to supply the LLM with some initial information to consider before it starts trying to generate queries on your data. By default, it will only give it some basic information (see <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/posit-dev/querychat/blob/main/r-package/README.md#data-description)</span>), but provider more detail and context will make it work a lot better and give a lot more flexibility into how the chat interaction can occur.</span>
+<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a>In my app, I created a <span class="co">[</span><span class="ot">`data_description.md`</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/data_description.md)</span> file that I feed into this argument which gives the LLM a detailed description of not only the columns in my dataset, but the context in which the data is for (i.e., hospital readmissions). The most important part in my file to get things working robustly was this line:</span>
+<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "Important Note:: The hospital information fields are all in capital letters (all characters), so queries on this data should always capitalize all characters when searching for specific cities or counties."</span></span>
+<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a>Since the hospital location columns in the raw dataset were in all capital letters, the LLM would not generate sufficient queries without this unless I also capitalized specific cities/counties in my prompts. That's not very natural, so this _a priori_ prompt helped resolve that. Now in my app when I ask for _"hospitals in marathon county"_, it will correctly generate a query that says <span class="in">`SELECT * FROM HospitalHRRP WHERE County = "MARATHON"`</span>.</span>
+<span id="cb10-168"><a href="#cb10-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-169"><a href="#cb10-169" aria-hidden="true" tabindex="-1"></a><span class="fu">## Step 2: Setup the user interface</span></span>
+<span id="cb10-170"><a href="#cb10-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-171"><a href="#cb10-171" aria-hidden="true" tabindex="-1"></a>In the <span class="co">[</span><span class="ot">app UI</span><span class="co">](https://shiny.posit.co/r/getstarted/shiny-basics/lesson2/)</span>, we need to specify where (and how) we want the chat interface to appear. In this app, we use the <span class="in">`querychat_ui`</span> function (see <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/ui.R#L123)</span>). It's literally just one line of code that you can put anywhere in your app: <span class="in">`querychat_ui(id = "chat")`</span>. You could also use the <span class="in">`querychat_sidebar`</span> function if you wanted your entire app side panel to be a nicer looking chat pane. However, in this app, I wanted to be able to toggle between manual filters and chat mode, so I opted for the former.</span>
+<span id="cb10-172"><a href="#cb10-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-173"><a href="#cb10-173" aria-hidden="true" tabindex="-1"></a><span class="fu">### Toggling between manual and LLM filtering</span></span>
+<span id="cb10-174"><a href="#cb10-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-175"><a href="#cb10-175" aria-hidden="true" tabindex="-1"></a>The "Chat Mode" toggle button is just built from an <span class="in">`input_switch`</span> (see <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/ui.R#L35)</span>). Based on the current value of that switch, either the manual input panel or the chat pane is displayed with a condition panel:</span>
+<span id="cb10-176"><a href="#cb10-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-177"><a href="#cb10-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb10-178"><a href="#cb10-178" aria-hidden="true" tabindex="-1"></a><span class="in"># Chat input</span></span>
+<span id="cb10-179"><a href="#cb10-179" aria-hidden="true" tabindex="-1"></a><span class="in">conditionalPanel(</span></span>
+<span id="cb10-180"><a href="#cb10-180" aria-hidden="true" tabindex="-1"></a><span class="in">  condition = "input.chat_mode",</span></span>
+<span id="cb10-181"><a href="#cb10-181" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb10-182"><a href="#cb10-182" aria-hidden="true" tabindex="-1"></a><span class="in">  # The chat user interface</span></span>
+<span id="cb10-183"><a href="#cb10-183" aria-hidden="true" tabindex="-1"></a><span class="in">  querychat_ui(id = "chat")</span></span>
+<span id="cb10-184"><a href="#cb10-184" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
+<span id="cb10-185"><a href="#cb10-185" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-186"><a href="#cb10-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-187"><a href="#cb10-187" aria-hidden="true" tabindex="-1"></a>Simple enough, but pretty useful feature.</span>
+<span id="cb10-188"><a href="#cb10-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-189"><a href="#cb10-189" aria-hidden="true" tabindex="-1"></a>That is all you need to do on the user interface side to setup the chat. Everything else, like manipulating and updating visuals, is done on the server side.</span>
+<span id="cb10-190"><a href="#cb10-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-191"><a href="#cb10-191" aria-hidden="true" tabindex="-1"></a><span class="fu">## Step 3: Manage the data output</span></span>
+<span id="cb10-192"><a href="#cb10-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-193"><a href="#cb10-193" aria-hidden="true" tabindex="-1"></a>Finally, we just need to set things up on the server side to feed the data sent back from the chat (i.e., received from the query) into our visuals. Conceptually, you can basically just treat this dataset like any reactive data frame you would normally use in a Shiny application, so it's quite easy to work with.</span>
+<span id="cb10-194"><a href="#cb10-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-195"><a href="#cb10-195" aria-hidden="true" tabindex="-1"></a>First you need to create the chat server object (<span class="in">`querychat_server`</span>) using the previously-initialized object from <span class="in">`querychat_init`</span>. This can just be run somewhere in the server function (see <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/server.R#L20)</span>).</span>
+<span id="cb10-196"><a href="#cb10-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-197"><a href="#cb10-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb10-198"><a href="#cb10-198" aria-hidden="true" tabindex="-1"></a><span class="in"># Make the chat server</span></span>
+<span id="cb10-199"><a href="#cb10-199" aria-hidden="true" tabindex="-1"></a><span class="in">querychat &lt;- querychat_server("chat", querychat_config)</span></span>
+<span id="cb10-200"><a href="#cb10-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-201"><a href="#cb10-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-202"><a href="#cb10-202" aria-hidden="true" tabindex="-1"></a><span class="fu">### Accessing the returned data</span></span>
+<span id="cb10-203"><a href="#cb10-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-204"><a href="#cb10-204" aria-hidden="true" tabindex="-1"></a>The <span class="in">`querychat`</span> server above then holds a <span class="in">`$df()`</span> object, which consists of the current data stored from the most recent query executed (assuming the query is returning a data set and not a response in the chat itself). So, we just need to access that data object wherever we want to use the data in our app--just like any other dataset in a Shiny app (see <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/a0eec2e86664cf261dcd0b03e43ede78773c9e44/server.R#L30)</span>).</span>
+<span id="cb10-205"><a href="#cb10-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-206"><a href="#cb10-206" aria-hidden="true" tabindex="-1"></a>In this app, to implement the toggle functionality between manual and chat filtering on the backend, I just did this:</span>
+<span id="cb10-207"><a href="#cb10-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-208"><a href="#cb10-208" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb10-209"><a href="#cb10-209" aria-hidden="true" tabindex="-1"></a><span class="in"># Filter to current hospitals (with metric criteria)</span></span>
+<span id="cb10-210"><a href="#cb10-210" aria-hidden="true" tabindex="-1"></a><span class="in">current_hospitals &lt;- </span></span>
+<span id="cb10-211"><a href="#cb10-211" aria-hidden="true" tabindex="-1"></a><span class="in">  reactive({</span></span>
+<span id="cb10-212"><a href="#cb10-212" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-213"><a href="#cb10-213" aria-hidden="true" tabindex="-1"></a><span class="in">    # Use dataset based on app mode</span></span>
+<span id="cb10-214"><a href="#cb10-214" aria-hidden="true" tabindex="-1"></a><span class="in">    if(input$chat_mode) {</span></span>
+<span id="cb10-215"><a href="#cb10-215" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb10-216"><a href="#cb10-216" aria-hidden="true" tabindex="-1"></a><span class="in">      # Get the dataset being returned by the chat</span></span>
+<span id="cb10-217"><a href="#cb10-217" aria-hidden="true" tabindex="-1"></a><span class="in">      temp_hospitals &lt;- querychat$df()</span></span>
+<span id="cb10-218"><a href="#cb10-218" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb10-219"><a href="#cb10-219" aria-hidden="true" tabindex="-1"></a><span class="in">    } else {</span></span>
+<span id="cb10-220"><a href="#cb10-220" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb10-221"><a href="#cb10-221" aria-hidden="true" tabindex="-1"></a><span class="in">      # Use the dataset filtered manually</span></span>
+<span id="cb10-222"><a href="#cb10-222" aria-hidden="true" tabindex="-1"></a><span class="in">      temp_hospitals &lt;- </span></span>
+<span id="cb10-223"><a href="#cb10-223" aria-hidden="true" tabindex="-1"></a><span class="in">        current_hospitals_temp() |&gt;</span></span>
+<span id="cb10-224"><a href="#cb10-224" aria-hidden="true" tabindex="-1"></a><span class="in">        </span></span>
+<span id="cb10-225"><a href="#cb10-225" aria-hidden="true" tabindex="-1"></a><span class="in">        # Filter to the specified metric ranges</span></span>
+<span id="cb10-226"><a href="#cb10-226" aria-hidden="true" tabindex="-1"></a><span class="in">        filter(</span></span>
+<span id="cb10-227"><a href="#cb10-227" aria-hidden="true" tabindex="-1"></a><span class="in">          DiagnosisCategory == input$diagnosis,</span></span>
+<span id="cb10-228"><a href="#cb10-228" aria-hidden="true" tabindex="-1"></a><span class="in">          Excess &gt;= min(input$excess), Excess &lt;= max(input$excess),</span></span>
+<span id="cb10-229"><a href="#cb10-229" aria-hidden="true" tabindex="-1"></a><span class="in">          Predicted &gt;= min(input$predicted), Predicted &lt;= max(input$predicted),</span></span>
+<span id="cb10-230"><a href="#cb10-230" aria-hidden="true" tabindex="-1"></a><span class="in">          Expected &gt;= min(input$expected), Expected &lt;= max(input$expected)</span></span>
+<span id="cb10-231"><a href="#cb10-231" aria-hidden="true" tabindex="-1"></a><span class="in">        )</span></span>
+<span id="cb10-232"><a href="#cb10-232" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb10-233"><a href="#cb10-233" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-234"><a href="#cb10-234" aria-hidden="true" tabindex="-1"></a><span class="in">    temp_hospitals</span></span>
+<span id="cb10-235"><a href="#cb10-235" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb10-236"><a href="#cb10-236" aria-hidden="true" tabindex="-1"></a><span class="in">  })</span></span>
+<span id="cb10-237"><a href="#cb10-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-238"><a href="#cb10-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-239"><a href="#cb10-239" aria-hidden="true" tabindex="-1"></a>In short, if the app is in chat mode, use the data returned from the SQL query. Otherwise, use the dataset that is created from the manual filters. These datasets are always in the same format, so I can then cascade it down through the app visuals like I would any other dataset, agnostic to what means it was created.</span>
+<span id="cb10-240"><a href="#cb10-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-241"><a href="#cb10-241" aria-hidden="true" tabindex="-1"></a><span class="fu"># Deploying the app</span></span>
+<span id="cb10-242"><a href="#cb10-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-243"><a href="#cb10-243" aria-hidden="true" tabindex="-1"></a>As mentioned previously, the app was deployed to <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span> for free (you can have up to 5 live Shiny applications in the free tier). I gave a more detailed description on how you deploy an app to this platform with the LLM API configured in <span class="co">[</span><span class="ot">this blog post</span><span class="co">](https://www.zajichekstats.com/post/making-an-ai-statistical-consultant/)</span>, so check there for more detail. The main things you need to remember for deployment are to:</span>
+<span id="cb10-244"><a href="#cb10-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-245"><a href="#cb10-245" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Create your <span class="in">`manifest.json`</span> file after you've completed app development by running <span class="in">`rsconnect::writeManifest()`</span> so you can capture your app's dependencies</span>
+<span id="cb10-246"><a href="#cb10-246" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Put your code in a public GitHub repository (unless you want to upgrade to a paid tier then you can deploy from private repos)</span>
+<span id="cb10-247"><a href="#cb10-247" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Add your <span class="in">`GOOGLE_API_KEY`</span> (or whatever API you're using) to the environment variable list while you are configuring your deployment on <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span></span>
+<span id="cb10-248"><a href="#cb10-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-249"><a href="#cb10-249" aria-hidden="true" tabindex="-1"></a>Other than that, things will likely run smooth.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2025 Zajichek Stats</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
