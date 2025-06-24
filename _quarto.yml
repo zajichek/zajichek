@@ -19,6 +19,8 @@ website:
         text: Projects & Presentations
       - href: publications.qmd
         text: Publications
+      - href: https://www.centralstatz.com/
+        text: Consultancy 
       - href: about.qmd
         text: About
       - href: https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share

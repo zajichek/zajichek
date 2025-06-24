@@ -14,3 +14,7 @@ Presented at the [R/Medicine 2025](https://rconsortium.github.io/RMedicine_websi
 ```
 
 [Full screen slideshow](slides.qmd)
+
+### Conference Presentation
+
+{{< video https://www.youtube.com/embed/zUS89jbF0Jg >}}

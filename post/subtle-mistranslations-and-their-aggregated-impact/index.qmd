@@ -1,6 +1,6 @@
 ---
 title: "Subtle mistranslations of clinical research in media"
-description: "And their aggregate effect"
+description: "What's the aggregate effect?"
 author: "Alex Zajichek"
 date: "1/10/2025"
 image: "feature.png"
@@ -12,3 +12,32 @@ format:
     code-tools: true
 draft: true
 ---
+
+I came across a new article published 4/23/2025 by the [National Geographic](), called [_"Why heart attacks are rising in young adults-and what to watch out for"_](https://www.nationalgeographic.com/premium/article/heart-attacks-rising-young-adults-risk-factors) (unfortunately it's behind a paywall which I accessed through my free Apple News trial). Reading through this, just like most other articles you read throughout the media, there are tons of claims made throughout that are just simply stated as fact. It usually says something like, _"Research shows that..."_ or _"A study conducted by..."_, or the thing is just stated in directly in their narrative. The text is usually linked to whatever source they are citing for that claim. But this has me wondering, how many people actually vet out that a given claim is correct, or that it accurately reflects what the cited scientific paper says? My guess is probably not many. Given the article itself might be long enough, then with 10, 20, or even 30+ sentences like this, it's actually intractable to verify. Vetting out a single claim could take hours in itself to sift through a research paper (which in turn, similarly cites other research). This isn't even considering the potential doubts of the research itself...
+
+When I was reading the aforementioned article, I scoped out one of the cited claims:
+
+> "Other factors like tobacco, cocaine, marijuana, and alcohol use have been associated with increased risks of heart attack in younger adults too."
+
+This comes from [this study](https://www.ahajournals.org/doi/10.1161/CIRCULATIONAHA.118.036506).
+
+While in this particular case just reading the sentence, we can use common sense to intuit that there is probably substantial merit to the claim. It's definitely believable. But the problem is that this _isn't_ what the cited research says.
+
+When we read the claim as stated, we as "young adults" in the general public are to interpret this as, _"scientific research is showing me that if I use tobacco, cocaine, marijuana, or alcohol, I may be at an increased risk of heart attack in the future"_. Maybe that's true.
+
+But the cited study is called: [_"Cardiac Arrest in Young Patients with Myocardial Infarction"_](https://www.ahajournals.org/doi/10.1161/CIRCULATIONAHA.118.036506). In the first paragraph it states, _"We sought to determine the prevalence and outcomes of OHCA [out-of-hospital cardiac arrest] in individuals with their first MI before 50 years of age."_.
+
+In order to correctly calibrate a research design to that claim, at the very least, you'd need a bunch of young people who do and don't use these substances, follow them over a specified period of time, and observe whether the outcome of interest (that being "heart attack", according to the article) occurred. This study doesn't do that. It only looks at patients who are younger than 50 years old _and_ presented to the hospital with [type 1 myocardial infarction](). Furthermore, the outcome here wasn't a heart attack, it was all-cause and cardiovascular _death_.
+
+* Not representative of young people
+* OHCA occurred before the hospitalization
+* Non OHCA had way more diabetes (20% vs. 9%)
+* OHCA more likely substance users; seems like acute events vs. chronic illness
+* Not looking at the right direction even to get at the statement
+* OHCA group is only patients who survived their cardiac arrest to make it into the study
+* The VAST majority of those deaths occurred in the hospital; after surviving, there were lower rate (acute event)
+
+
+
+
+Need to use common sense, and be skeptical. Take it with a grain of salt.
