@@ -9,7 +9,7 @@
 <link>https://www.zajichekstats.com/</link>
 <atom:link href="https://www.zajichekstats.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>Statistician/data scientist in Central Wisconsin.</description>
-<generator>quarto-1.5.57</generator>
+<generator>quarto-1.7.33</generator>
 <lastBuildDate>Fri, 23 May 2025 05:00:00 GMT</lastBuildDate>
 <item>
   <title>Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}</title>
@@ -2145,7 +2145,7 @@ font-style: inherit;">2</span>))</span></code></pre></div>
 92% Confidence Interval
 </div></th>
 </tr>
-<tr class="odd">
+<tr class="even">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Estimate</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Lower</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Upper</th>
@@ -2159,8 +2159,6 @@ font-style: inherit;">2</span>))</span></code></pre></div>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 <p>Despite what we may think of this result (which is certainly high in any general population context), there’s not much wiggle room with respect to the output. The data is what it is: we estimate that <img src="https://latex.codecogs.com/png.latex?p"> is somewhere between 41% and 51% with 92% confidence. And that’s it.</p>
@@ -4127,7 +4125,7 @@ font-style: inherit;">2</span>))</span></code></pre></div>
 95% CI
 </div></th>
 </tr>
-<tr class="odd">
+<tr class="even">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Age (years)</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Odds-ratio</th>
 <th style="text-align: left;" data-quarto-table-cell-role="th">Lower</th>
@@ -4173,8 +4171,6 @@ font-style: inherit;">2</span>))</span></code></pre></div>
 </tr>
 </tbody>
 </table>
-
-
 </div>
 </div>
 <p>Generally, the estimates pan out roughly how we suspected. In particular, the estimated odds of <em>worse</em> perceived quality of life in the city for 65-74 year olds are 3 times that of 18-34 year olds, after adjusting for annual household income and gender (with a 95% <a href="https://en.wikipedia.org/wiki/Confidence_interval">confidence interval</a> of 1.4 to 6.5).</p>
