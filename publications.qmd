@@ -4,6 +4,8 @@ title: "Publications"
 
 # 2025
 
+* Gasoyan, H., Alavi, M.H., <strong>Zajichek, A.</strong> et al. [Macrovascular and microvascular outcomes of metabolic surgery versus GLP-1 receptor agonists in patients with diabetes and obesity](https://www.nature.com/articles/s41591-025-03893-3). Nat Med (2025). https://doi.org/10.1038/s41591-025-03893-3
+
 * Chapman B, Albert NM, <strong>Zajichek A</strong>, Steinel E, Baran D, Svensson LG, Cho L, Kapadia S, Hohman J, Rothman R, Estep JD, Pavlic G, Vest A, Starling RC, Martyn T. [A Heart Failure Society of America-Developed Educational Module Improves Clinician Comfort With Initiation and Optimization of Guideline-Directed Medical Therapy](https://onlinejcf.com/article/S1071-9164(25)00300-8/fulltext). J Card Fail. 2025 Jul 19:S1071-9164(25)00300-8. doi: 10.1016/j.cardfail.2025.06.012. PMID: 40691911.
 
 * Werneburg, G.T., Rhoads, D.D., Milinovich, A., McSweeney, S., Knorr, J., Mourany, L., <strong>Zajichek, A.</strong>, Goldman, H.B., Haber, G.-P. and Vasavada, S.P. (2025), [External validation of predictive models for antibiotic susceptibility of urine culture](https://bjui-journals.onlinelibrary.wiley.com/doi/10.1111/bju.16626). BJU Int. https://doi.org/10.1111/bju.16626
