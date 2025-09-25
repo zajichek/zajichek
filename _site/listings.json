@@ -23,6 +23,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/this-tylenol-thing-is-out-of-hand/index.html",
       "/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html",
       "/post/making-an-ai-statistical-consultant/index.html",
       "/post/what-decision-are-we-trying-to-make/index.html",
