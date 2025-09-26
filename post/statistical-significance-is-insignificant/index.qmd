@@ -8,6 +8,7 @@ categories:
   - History
   - Philosophy
   - Research
+  - Statistical Significance
 format:
   html:
     code-fold: true

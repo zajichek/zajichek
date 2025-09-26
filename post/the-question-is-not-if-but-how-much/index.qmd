@@ -1,0 +1,29 @@
+---
+title: "The question is not if, but how much"
+description: "We focus on a binary that doesn't exist."
+author: "Alex Zajichek"
+date: "9/26/2025"
+image: "feature.png"
+categories:
+  - Philosophy
+  - Statistical Significance
+  - Decision Making
+format:
+  html:
+    code-fold: true
+    code-tools: true
+---
+
+In the current [Tylenol debate](https://www.usnews.com/news/health-news/articles/2025-09-26/tylenol-refutes-old-post-as-pregnancy-safety-debate-resurfaces), everyone is talking about whether there _is_ or _isn't_ some sort of (causal) association of its use with autism and/or other neurodevelopmental disorders. Pointing to studies like [this JAMA paper](https://jamanetwork.com/journals/jama/fullarticle/2817406) or [this systematic review](https://ehjournal.biomedcentral.com/articles/10.1186/s12940-025-01208-0), depending what side of the debate you're on, as evidence for their conclusion. You even have the [American College of Obstetricians and Gynecologists](https://www.acog.org/) putting out a [statement](https://www.acog.org/news/news-releases/2025/09/acog-affirms-safety-benefits-acetaminophen-pregnancy) reading:
+
+> "In more than two decades of research on the use of acetaminophen in pregnancy, not a single reputable study has successfully concluded that the use of acetaminophen in any trimester of pregnancy causes neurodevelopmental disorders in children. In fact, the two highest-quality studies on this subject—one of which was published in JAMA last year—found no significant associations between use of acetaminophen during pregnancy and children’s risk of autism, ADHD, or intellectual disability. The studies that are frequently pointed to as evidence of a causal relationship, including the latest systematic review released in August, include the same methodological limitations—for example, lack of a control for confounding factors or use of unreliable self-reported data—that are prevalent in the majority of studies on this topic."
+
+What's missing from all of this is the conversation not about _if_ there is an effect or not, but _how much_ of an effect there is. Surely, there must be variation with respect to how large effect is, how that changes with dose and time, who is taking it, etc. What are those numbers that are actually going to help individual people make informed decisions?
+
+There is a line in [this article](https://www.nature.com/articles/d41586-025-02876-1) that sums it up nicely:
+
+> "At the heart of this is people trying to look for simple answers to complex problems."
+
+I actually don't believe in this binary (association vs. no association) as a concept. The effect _is_ there, it just may be extremely small, extremely large, or something in between. We can't "prove" that no association exists, no matter what we do. The important part is accurately estimating what it _is_ as best as possible, in a relevant, interpretable context, and figuring out whether it is _practically_ meaningful (not statistically) and use it to weigh the benefits and costs. Whether it is "statistically significant" (or not) is irrelevant, and is probably the reason why this binary debate exists in the first place.
+
+You can read more on my thoughts about statistical significance [here](https://www.zajichekstats.com/post/statistical-significance-is-insignificant/).

@@ -10,7 +10,40 @@
 <atom:link href="https://www.zajichekstats.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>Statistician/data scientist in Central Wisconsin.</description>
 <generator>quarto-1.7.33</generator>
-<lastBuildDate>Fri, 23 May 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 26 Sep 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>The question is not if, but how much</title>
+  <dc:creator>Alex Zajichek</dc:creator>
+  <link>https://www.zajichekstats.com/post/the-question-is-not-if-but-how-much/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>In the current <a href="https://www.usnews.com/news/health-news/articles/2025-09-26/tylenol-refutes-old-post-as-pregnancy-safety-debate-resurfaces">Tylenol debate</a>, everyone is talking about whether there <em>is</em> or <em>isn’t</em> some sort of (causal) association of its use with autism and/or other neurodevelopmental disorders. Pointing to studies like <a href="https://jamanetwork.com/journals/jama/fullarticle/2817406">this JAMA paper</a> or <a href="https://ehjournal.biomedcentral.com/articles/10.1186/s12940-025-01208-0">this systematic review</a>, depending what side of the debate you’re on, as evidence for their conclusion. You even have the <a href="https://www.acog.org/">American College of Obstetricians and Gynecologists</a> putting out a <a href="https://www.acog.org/news/news-releases/2025/09/acog-affirms-safety-benefits-acetaminophen-pregnancy">statement</a> reading:</p>
+<blockquote class="blockquote">
+<p>“In more than two decades of research on the use of acetaminophen in pregnancy, not a single reputable study has successfully concluded that the use of acetaminophen in any trimester of pregnancy causes neurodevelopmental disorders in children. In fact, the two highest-quality studies on this subject—one of which was published in JAMA last year—found no significant associations between use of acetaminophen during pregnancy and children’s risk of autism, ADHD, or intellectual disability. The studies that are frequently pointed to as evidence of a causal relationship, including the latest systematic review released in August, include the same methodological limitations—for example, lack of a control for confounding factors or use of unreliable self-reported data—that are prevalent in the majority of studies on this topic.”</p>
+</blockquote>
+<p>What’s missing from all of this is the conversation not about <em>if</em> there is an effect or not, but <em>how much</em> of an effect there is. Surely, there must be variation with respect to how large effect is, how that changes with dose and time, who is taking it, etc. What are those numbers that are actually going to help individual people make informed decisions?</p>
+<p>There is a line in <a href="https://www.nature.com/articles/d41586-025-02876-1">this article</a> that sums it up nicely:</p>
+<blockquote class="blockquote">
+<p>“At the heart of this is people trying to look for simple answers to complex problems.”</p>
+</blockquote>
+<p>I actually don’t believe in this binary (association vs.&nbsp;no association) as a concept. The effect <em>is</em> there, it just may be extremely small, extremely large, or something in between. We can’t “prove” that no association exists, no matter what we do. The important part is accurately estimating what it <em>is</em> as best as possible, in a relevant, interpretable context, and figuring out whether it is <em>practically</em> meaningful (not statistically) and use it to weigh the benefits and costs. Whether it is “statistically significant” (or not) is irrelevant, and is probably the reason why this binary debate exists in the first place.</p>
+<p>You can read more on my thoughts about statistical significance <a href="https://www.zajichekstats.com/post/statistical-significance-is-insignificant/">here</a>.</p>
+
+
+<!-- -->
+
+
+ ]]></description>
+  <category>Philosophy</category>
+  <category>Statistical Significance</category>
+  <category>Decision Making</category>
+  <guid>https://www.zajichekstats.com/post/the-question-is-not-if-but-how-much/</guid>
+  <pubDate>Fri, 26 Sep 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://www.zajichekstats.com/post/the-question-is-not-if-but-how-much/feature.png" medium="image" type="image/png" height="143" width="144"/>
+</item>
 <item>
   <title>Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}</title>
   <dc:creator>Alex Zajichek</dc:creator>
@@ -6606,6 +6639,7 @@ Some psychologists knew about the work of Neyman and Pearson and some even about
   <category>History</category>
   <category>Philosophy</category>
   <category>Research</category>
+  <category>Statistical Significance</category>
   <guid>https://www.zajichekstats.com/post/statistical-significance-is-insignificant/</guid>
   <pubDate>Fri, 22 Dec 2023 06:00:00 GMT</pubDate>
   <media:content url="https://www.zajichekstats.com/post/statistical-significance-is-insignificant/feature.png" medium="image" type="image/png" height="145" width="144"/>
@@ -12406,35 +12440,6 @@ font-style: inherit;">2</span>))</span></code></pre></div>
   <guid>https://www.zajichekstats.com/post/the-evasive-spline/</guid>
   <pubDate>Fri, 13 Jan 2023 06:00:00 GMT</pubDate>
   <media:content url="https://www.zajichekstats.com/post/the-evasive-spline/feature.png" medium="image" type="image/png" height="145" width="144"/>
-</item>
-<item>
-  <title>(Re)deriving a Bernoulli MLE</title>
-  <dc:creator>Alex Zajichek</dc:creator>
-  <link>https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>Over time, I’ve found myself constantly learning new things or having new ideas, only to later forget them, then trying to relearn the same thing at a later date. So I thought it might be worthwhile to try to create a knowledge base for myself that I continually add to so that I can refer back when needed to maintain intuition. These might be little programming tricks, math and/or statistics concepts, general thoughts or ideas, etc.</p>
-<p>I tried to derive the MLE for a set of Bernoulli responses just to see if I still could, and got stuck. The <em>probability mass function (PMF)</em> is</p>
-<p><img src="https://latex.codecogs.com/png.latex?P(Y_i%20=%20y)%20=%20p%5Ey(1-p)%5E%7B1-y%7D"> First, we need to define the likelihood function:</p>
-<p><img src="https://latex.codecogs.com/png.latex?L(p)%20=%20%5Cprod_%7Bi=1%7D%5EnP(Y_i=y)"> Then, convert ot a log likelihood:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Bequation%7D%0A%5Cbegin%7Bsplit%7D%0Alog(L(p))%0A&amp;=%20log(%5Cprod_%7Bi=1%7D%5EnP(Y_i=y))%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Enlog(P(Y_i=y))%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Enlog(p%5E%7By_i%7D(1-p)%5E%7B1-y_i%7D)%20%5C%5C%0A&amp;=%20log(p)%5Csum_%7Bi=1%7D%5Eny_i%20+%20log(1-p)(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%0A%5Cend%7Bsplit%7D%0A%5Cend%7Bequation%7D%0A"> Next, we need to differentiate with respect to <img src="https://latex.codecogs.com/png.latex?p">.</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Bequation%7D%0A%5Cbegin%7Bsplit%7D%0A%5Cfrac%7Bd%7D%7Bdp%7Dlog(L(p))%0A&amp;=%20%5Cfrac%7Bd%7D%7Bdp%7D%20log(p)%5Csum_%7Bi=1%7D%5Eny_i%20+%20log(1-p)(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7Bd%7D%7Bdp%7D%20log(p)%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7Bd%7D%7Bdp%7D%20log(1-p)%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7B1%7D%7Bp%7D%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7B1%7D%7B1-p%7D%20%5Cfrac%7Bd%7D%7Bdp%7D%20(1-p)%20%5C%5C%0A%5Cend%7Bsplit%7D%0A%5Cend%7Bequation%7D%0A"> This is where my problem was. I forgot about the <a href="https://en.wikipedia.org/wiki/Chain_rule">chain rule</a> when taking a derivative, so I wasn’t doing the additional step of taking multiplying by the derivative of <img src="https://latex.codecogs.com/png.latex?1-p">, thus things weren’t cancelling appropriately when solving for <img src="https://latex.codecogs.com/png.latex?p">. It should reduce to:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7B1%7D%7Bp%7D%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7B-1%7D%7B1-p%7D"> Finally, we just set that equal to zero:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7B1%7D%7Bp%7D%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7B-1%7D%7B1-p%7D%20=%200"> After some algebra:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%5Chat%7Bp%7D%20=%20%5Cfrac%7B%5Csum_%7Bi=1%7D%5Eny_i%7D%7Bn%7D"></p>
-
-
-<!-- -->
-
-
- ]]></description>
-  <category>Estimation</category>
-  <guid>https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/</guid>
-  <pubDate>Thu, 12 Jan 2023 06:00:00 GMT</pubDate>
-  <media:content url="https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/feature.png" medium="image" type="image/png" height="142" width="144"/>
 </item>
 </channel>
 </rss>
