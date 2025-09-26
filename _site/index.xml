@@ -10,52 +10,7 @@
 <atom:link href="https://www.zajichekstats.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>Statistician/data scientist in Central Wisconsin.</description>
 <generator>quarto-1.7.33</generator>
-<lastBuildDate>Thu, 25 Sep 2025 05:00:00 GMT</lastBuildDate>
-<item>
-  <title>This Tylenol thing is out of hand</title>
-  <dc:creator>Alex Zajichek</dc:creator>
-  <link>https://www.zajichekstats.com/post/this-tylenol-thing-is-out-of-hand/</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>I’ll be the first to admit that I don’t know much about the medical/pharmacological aspects of Tylenol (acetaminophen). I’m just a statistician after all. But what I’ve observed is that the response to <a href="https://www.nbcnews.com/video/shorts/trump-on-tylenol-use-for-pregnant-women-248104517849">Trump’s message</a> is clearly not about science.</p>
-<p>First, it literally says <a href="https://www.accessdata.fda.gov/drugsatfda_docs/label/2019/019872Orig1s048lbl.pdf">on the label</a> for who knows how long (for its entire existence maybe?): <em><strong>If pregnant or breast feeding</strong>: ask a health professional before use</em>. So clearly there is <em>some</em> reason to be hesitant to take it if you’re pregnant versus if you are not.</p>
-<p>So when the <a href="https://www.fda.gov/about-fda/fda-commissioner">FDA Commissioner</a> puts out <a href="https://www.fda.gov/media/188843/download?attachment">a statement</a> giving a seemingly fair and balanced recommendation:</p>
-<blockquote class="blockquote">
-<p>“In the spirit of patient safety and prudent medicine, clinicians should consider minimizing the use of acetaminophen during pregnancy for routine low-grade fevers. This consideration should also be balanced with the fact that acetaminophen is the safest over-the-counter alternative in pregnancy among all analgesics and antipyretics; aspirin and ibuprofen have well-documented adverse impacts on the fetus.”</p>
-</blockquote>
-<p>You’d think it’d be no big deal, right? Just be prudent when you take it, like any medication hopefully. There are benefits <em>and</em> risks.</p>
-<p>Wrong.</p>
-<p>You then get half the internet all of sudden adamantly defending the drug as if this recommendation could not possibly be justified and Tylenol is the safest thing you can ingest. And then presumably another share saying to never take it again in your life. Even a <a href="https://www.newsweek.com/pregnant-women-tylenol-videos-trump-10478949">string of pregnant women</a> were purposely filming themselves taking it just to show Trump who is boss. Does anyone think that’s perfectly safe?</p>
-<p>Now this is where the stats comes in.</p>
-<p>There’s a lot of focus on this part of <a href="https://www.fda.gov/media/188843/download?attachment">the statement</a>:</p>
-<blockquote class="blockquote">
-<p>“To be clear, while an association between acetaminophen and autism has been described in many studies, a causal relationship has not been established and there are contrary studies in the scientific literature.”</p>
-</blockquote>
-<p>Apparently, the widely held belief across news sources and social media is that any of the research that shows <em>no association</em> is gold standard (like <a href="https://jamanetwork.com/journals/jama/fullarticle/2817406">this JAMA paper</a>), but any research that shows <em>an association</em> is flawed (like <a href="https://ehjournal.biomedcentral.com/articles/10.1186/s12940-025-01208-0">this systematic review</a>). For example, in <a href="https://www.acog.org/news/news-releases/2025/09/acog-affirms-safety-benefits-acetaminophen-pregnancy">this statement</a> from the <a href="https://www.acog.org/">American College of Obstetricians and Gynecologists</a>, it states:</p>
-<blockquote class="blockquote">
-<p>“In more than two decades of research on the use of acetaminophen in pregnancy, not a single reputable study has successfully concluded that the use of acetaminophen in any trimester of pregnancy causes neurodevelopmental disorders in children. In fact, the two highest-quality studies on this subject—one of which was published in JAMA last year—found no significant associations between use of acetaminophen during pregnancy and children’s risk of autism, ADHD, or intellectual disability. The studies that are frequently pointed to as evidence of a causal relationship, including the latest systematic review released in August, include the same methodological limitations—for example, lack of a control for confounding factors or use of unreliable self-reported data—that are prevalent in the majority of studies on this topic.”</p>
-</blockquote>
-<p>This is the general sentiment I’m getting all over: No limitations about the <a href="https://jamanetwork.com/journals/jama/fullarticle/2817406">JAMA paper</a> (referenced above) are discussed (which just like any observational study, or <em>any</em> study for that matter, there are many), but <em>only</em> limitations about the rest are what completely discount them. Thus, you have tons of people just scoffing at the recommendations, claiming misinformation, etc. And we all know it is solely because of <em>who</em> released the statement, not the substance of it. This prevents any sort of honest, objective inquiry that <em>should</em> take place on important topics like this. Nothing is black and white (in either direction).</p>
-<p>To be clear, my stance is not to say there <em>is</em> a causal association (and I think it would be irresponsible to declare this). But I’m not saying there absolutely <em>isn’t</em> either. Like almost every scientific question, the evidence is mixed, nuanced, flawed, and depends on specific individuals and circumstances. This is more so a complaint of how people misuse statistics and studies as absolute proof, assuming that it aligns with “their side”, and don’t account for any of the nuances or limitations.</p>
-<p>To conclude, I thought this video gave a good critique of the issue:</p>
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/W8qscelfEBc" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-
-
-<!-- -->
-
-
- ]]></description>
-  <category>Healthcare</category>
-  <category>Research</category>
-  <category>Statistical Significance</category>
-  <category>Communication</category>
-  <guid>https://www.zajichekstats.com/post/this-tylenol-thing-is-out-of-hand/</guid>
-  <pubDate>Thu, 25 Sep 2025 05:00:00 GMT</pubDate>
-  <media:content url="https://www.zajichekstats.com/post/this-tylenol-thing-is-out-of-hand/feature.png" medium="image" type="image/png" height="100" width="144"/>
-</item>
+<lastBuildDate>Fri, 23 May 2025 05:00:00 GMT</lastBuildDate>
 <item>
   <title>Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}</title>
   <dc:creator>Alex Zajichek</dc:creator>
@@ -12451,6 +12406,35 @@ font-style: inherit;">2</span>))</span></code></pre></div>
   <guid>https://www.zajichekstats.com/post/the-evasive-spline/</guid>
   <pubDate>Fri, 13 Jan 2023 06:00:00 GMT</pubDate>
   <media:content url="https://www.zajichekstats.com/post/the-evasive-spline/feature.png" medium="image" type="image/png" height="145" width="144"/>
+</item>
+<item>
+  <title>(Re)deriving a Bernoulli MLE</title>
+  <dc:creator>Alex Zajichek</dc:creator>
+  <link>https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>Over time, I’ve found myself constantly learning new things or having new ideas, only to later forget them, then trying to relearn the same thing at a later date. So I thought it might be worthwhile to try to create a knowledge base for myself that I continually add to so that I can refer back when needed to maintain intuition. These might be little programming tricks, math and/or statistics concepts, general thoughts or ideas, etc.</p>
+<p>I tried to derive the MLE for a set of Bernoulli responses just to see if I still could, and got stuck. The <em>probability mass function (PMF)</em> is</p>
+<p><img src="https://latex.codecogs.com/png.latex?P(Y_i%20=%20y)%20=%20p%5Ey(1-p)%5E%7B1-y%7D"> First, we need to define the likelihood function:</p>
+<p><img src="https://latex.codecogs.com/png.latex?L(p)%20=%20%5Cprod_%7Bi=1%7D%5EnP(Y_i=y)"> Then, convert ot a log likelihood:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Bequation%7D%0A%5Cbegin%7Bsplit%7D%0Alog(L(p))%0A&amp;=%20log(%5Cprod_%7Bi=1%7D%5EnP(Y_i=y))%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Enlog(P(Y_i=y))%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Enlog(p%5E%7By_i%7D(1-p)%5E%7B1-y_i%7D)%20%5C%5C%0A&amp;=%20log(p)%5Csum_%7Bi=1%7D%5Eny_i%20+%20log(1-p)(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%0A%5Cend%7Bsplit%7D%0A%5Cend%7Bequation%7D%0A"> Next, we need to differentiate with respect to <img src="https://latex.codecogs.com/png.latex?p">.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Cbegin%7Bequation%7D%0A%5Cbegin%7Bsplit%7D%0A%5Cfrac%7Bd%7D%7Bdp%7Dlog(L(p))%0A&amp;=%20%5Cfrac%7Bd%7D%7Bdp%7D%20log(p)%5Csum_%7Bi=1%7D%5Eny_i%20+%20log(1-p)(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7Bd%7D%7Bdp%7D%20log(p)%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7Bd%7D%7Bdp%7D%20log(1-p)%20%5C%5C%0A&amp;=%20%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7B1%7D%7Bp%7D%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7B1%7D%7B1-p%7D%20%5Cfrac%7Bd%7D%7Bdp%7D%20(1-p)%20%5C%5C%0A%5Cend%7Bsplit%7D%0A%5Cend%7Bequation%7D%0A"> This is where my problem was. I forgot about the <a href="https://en.wikipedia.org/wiki/Chain_rule">chain rule</a> when taking a derivative, so I wasn’t doing the additional step of taking multiplying by the derivative of <img src="https://latex.codecogs.com/png.latex?1-p">, thus things weren’t cancelling appropriately when solving for <img src="https://latex.codecogs.com/png.latex?p">. It should reduce to:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7B1%7D%7Bp%7D%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7B-1%7D%7B1-p%7D"> Finally, we just set that equal to zero:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Csum_%7Bi=1%7D%5Eny_i%20%5Cfrac%7B1%7D%7Bp%7D%20+%20(n%20-%20%5Csum_%7Bi=1%7D%5Eny_i)%20%5Cfrac%7B-1%7D%7B1-p%7D%20=%200"> After some algebra:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%5Chat%7Bp%7D%20=%20%5Cfrac%7B%5Csum_%7Bi=1%7D%5Eny_i%7D%7Bn%7D"></p>
+
+
+<!-- -->
+
+
+ ]]></description>
+  <category>Estimation</category>
+  <guid>https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/</guid>
+  <pubDate>Thu, 12 Jan 2023 06:00:00 GMT</pubDate>
+  <media:content url="https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/feature.png" medium="image" type="image/png" height="142" width="144"/>
 </item>
 </channel>
 </rss>
