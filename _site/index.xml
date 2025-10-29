@@ -10,7 +10,231 @@
 <atom:link href="https://www.zajichekstats.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>Statistician/data scientist in Central Wisconsin.</description>
 <generator>quarto-1.7.33</generator>
-<lastBuildDate>Fri, 26 Sep 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 29 Oct 2025 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Trying AI-assisted development in the Positron IDE</title>
+  <dc:creator>Alex Zajichek</dc:creator>
+  <link>https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/</link>
+  <description><![CDATA[ 
+
+
+
+
+<p><em>This article builds off a <a href="https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/">prior post</a> that demos how to integrate LLM-powered components into a <a href="https://shiny.posit.co/">Shiny</a> application.</em></p>
+<p>The new <a href="https://positron.posit.co/">Positron IDE</a> is amazing for doing and developing data science output/workflows. Although I’ll always love <a href="https://posit.co/download/rstudio-desktop/">RStudio</a>, I’m making the full-time switch to Positron because it’s the future of how data science work should be done, and the <a href="https://posit.co/products/ide/positron/">AI capabilities</a> being built in is a big part of that.</p>
+<p>In a <a href="https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/">prior post</a> I showed how to use packages like <a href="https://ellmer.tidyverse.org/"><code>ellmer</code></a> and <a href="https://posit-dev.github.io/querychat/"><code>querychat</code></a> to integrate LLM’s into a <a href="https://shiny.posit.co/">Shiny</a> web application. Now I’m just starting to get the “AI stuff” started in <a href="https://positron.posit.co/">Positron</a>, so with that same app wanted to add a few features to get a sense of how it all works while using <a href="https://positron.posit.co/assistant.html">Positron Assistant</a> for help.</p>
+<section id="setup" class="level1">
+<h1>Setup</h1>
+<p>To get <a href="https://positron.posit.co/assistant.html">Positron Assitant</a> setup initially, I followed the steps <a href="https://positron.posit.co/assistant.html">here</a> to get it configured, which amounted to <a href="https://positron.posit.co/updating.html">updating Positron</a> and enabling it in the settings (as the directions say).</p>
+<section id="purchasing-api-credits" class="level2">
+<h2 class="anchored" data-anchor-id="purchasing-api-credits">Purchasing API credits</h2>
+<p>After configuration, I see the chat pane available in the left sidebar.</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/chatpane.png" class="img-fluid"></p>
+<p>In order for it to work, I need to get an API key from <a href="https://www.anthropic.com/">Anthropic</a> (though as mentioned in a <a href="https://www.youtube.com/watch?v=TrN-FMcOsOA">recent webinar</a>, more models will become supported). This means I need to purchase API credits for <a href="https://claude.ai/">Claude</a>, which I can do so on the platform <a href="https://platform.claude.com/dashboard">here</a>. When I click the <em>Get API Key</em> button, it tells me to pay $5, so I just went ahead and did that.</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/claudepurchase.png" class="img-fluid"></p>
+<p>Once I submitted, it prompted me to name my API key (which it was done by default).</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/createkey.png" class="img-fluid"></p>
+<p>Another thing I did was go into my Claude console and change the <a href="https://platform.claude.com/settings/limits">limit</a> to a lower amount, because it defaulted to $100 per month. But I don’t actually know how much cost will be incurred by using this in Positron, so wanted to be safe.</p>
+</section>
+<section id="authenticating-in-positron" class="level2">
+<h2 class="anchored" data-anchor-id="authenticating-in-positron">Authenticating in Positron</h2>
+<p>Now that we have a key, we can supply it to Positron. I clicked the <em>Add Anthropic as a Chat Provider</em> button (see screenshot above).</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/authenticate.png" class="img-fluid"></p>
+<p>I pasted my API key and it looks like we are set.</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/finalsetup.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="codebase" class="level1">
+<h1>Supplying the code base</h1>
+<p>The code base we are going to be working with is located <a href="https://github.com/centralstatz/hospital_readmissions_explorer">here</a> (note that <a href="https://github.com/centralstatz/hospital_readmissions_explorer/commit/a0eec2e86664cf261dcd0b03e43ede78773c9e44">this commit</a> was the last one <em>before</em> the changes in this article were made). It is a <a href="https://shiny.posit.co/">Shiny</a> application exploring <a href="https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/">hospital readmissions</a> that contains a toggle capability for the user to switch between “traditional” data filters and a natural language chat interface to interact with the data. In either case, the interactive map and visuals update accordingly:</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/readmit_app.gif" class="img-fluid"></p>
+<p>There is also a video of how this was done:</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/YlLcxuAjgJw" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<p>The live application is located on <a href="https://connect.posit.cloud/">Posit Connect Cloud</a> <a href="https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/">here</a>.</p>
+</section>
+<section id="whats-the-goal-here-then" class="level1">
+<h1>What’s the goal here then?</h1>
+<p>I want Positron Assistant to interact directly with my code and make changes on my behalf <em>with my supervision and approval</em>. The actual feature I want to change is simple: in the bottom-right corner of <a href="https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/">the app</a> there is a table from the <a href="https://rstudio.github.io/DT/"><code>DT</code></a> package showing the hospitals currently being plotted on the map (just basically a list view of the map data).</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/dataview.png" class="img-fluid"></p>
+<p><br></p>
+<section id="desired-change" class="level2">
+<h2 class="anchored" data-anchor-id="desired-change">Desired Change</h2>
+<p>The headers in the table have pretty ugly names, so I’d like the assistant to make those nicer.</p>
+</section>
+</section>
+<section id="trying-it-out" class="level1">
+<h1>Trying it out</h1>
+<p>With everything configured, I opened up the code base in a new Positron session. Note I had to re-authenticate my API key after closing Positron, and then I chose Claude Sonnet 3.7.</p>
+<p>I know that <a href="https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/server.R"><code>server.R</code></a> is where this change will need to be made because that is where my dynamic dataset is fed into the <a href="https://rstudio.github.io/DT/shiny.html"><code>DT::renderDataTable</code></a> function. So I opened that file as well as the Positron Assistant chat pane:</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/context.png" class="img-fluid"></p>
+<p>The one really cool thing already is the <em>Add Context</em> button on the bottom. This means that you can add various files that the AI should consider in context to the conversation you are about to have with it. In this case, <code>server.R</code> is already attached (because it’s open), so I can just talk about this file as if it already knows what is in there.</p>
+<p>The prompt I’m using is as follows:</p>
+<p><em>“I don’t like the display column names in the hospital_table output table, can you make these column names cleaner, but just at the last step before it gets displayed.”</em></p>
+<p>It gave a pretty good response to start.</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/prompt11.png" class="img-fluid"></p>
+<p>This was the code snippet it provided.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Show data with cleaner column names</span></span>
+<span id="cb1-2">output<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hospital_table <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> DT<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">renderDataTable</span>({</span>
+<span id="cb1-3">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create a mapping of current names to cleaner names</span></span>
+<span id="cb1-4">  clean_names <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb1-5">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"FacilityName"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hospital Name"</span>,</span>
+<span id="cb1-6">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"FacilityID"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hospital ID"</span>,</span>
+<span id="cb1-7">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"City"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"City"</span>,</span>
+<span id="cb1-8">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"County"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"County"</span>,</span>
+<span id="cb1-9">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Zip"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ZIP Code"</span>,</span>
+<span id="cb1-10">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"DiagnosisCategory"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Diagnosis Group"</span>,</span>
+<span id="cb1-11">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Excess"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Excess Readmission Ratio"</span>,</span>
+<span id="cb1-12">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Predicted"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Predicted Rate (%)"</span>,</span>
+<span id="cb1-13">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Expected"</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Expected Rate (%)"</span></span>
+<span id="cb1-14">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Add any other columns you want to rename</span></span>
+<span id="cb1-15">  )</span>
+<span id="cb1-16">  </span>
+<span id="cb1-17">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Apply the column renaming only at display time</span></span>
+<span id="cb1-18">  DT<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">datatable</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">current_hospitals</span>(), </span>
+<span id="cb1-19">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colnames =</span> clean_names[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">names</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">current_hospitals</span>())[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">names</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">current_hospitals</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">names</span>(clean_names)]])</span>
+<span id="cb1-20">})</span></code></pre></div>
+</details>
+</div>
+<p>Seems to basically give me what I want. I’d need to copy/paste into the code to enact the changes. This is because, if you notice in the bottom of the screenshot above, it is in <em>Ask</em> mode (one other useful thing to note is that after that one question I went back to my Claude console and saw my balance was $4.93, so that just costed me $0.07).</p>
+<p>I changed it to <em>Agent</em> mode and tried again:</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/agentmode.png" class="img-fluid"></p>
+<p>To no avail. I just basically got the same output in the chat (and charged another $0.08). So I guess I’ll have to mess with that a little more.</p>
+<section id="inline-prompting" class="level2">
+<h2 class="anchored" data-anchor-id="inline-prompting">Inline prompting</h2>
+<p>Although it basically gave me what I wanted and I could easily update the code, I want to test the other way to interact with the LLM: inline prompting. You just hover over the line in your code you want ask specifically about, and then right click -&gt; Copilot -&gt; “Editor Inline Chat”.</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/inlineprompt.png" class="img-fluid"></p>
+<p>Here I entered the same prompt again, and there it did what I initially wanted: actually edit the code itself.</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/inlinepromptfix.png" class="img-fluid"></p>
+<p>The coolest part? You get a <strong>validation</strong> step built in where you can accept the changes that were made (and even run the result of the change before accepting), or revert and cancel what was done. <em>This</em> is how you should be interacting with AI + coding.</p>
+<p>I reran my application after saving the changes it made (with no additional edits on my end). It worked perfect.</p>
+<p><img src="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/editedheaders.png" class="img-fluid"></p>
+<p>I then just <a href="https://github.com/centralstatz/hospital_readmissions_explorer/commit/876f157e8b717fa9729af744906b5c1283d2ce63">committed my code</a> to <a href="https://github.com/">GitHub</a> which in turn automatically updated the <a href="https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/">live application</a> on <a href="https://connect.posit.cloud/">Posit Connect Cloud</a>.</p>
+<p>Now the app used AI for developing the code <em>and</em> the application itself uses AI while it is running for user interaction. Many ways to use it.</p>
+</section>
+</section>
+<section id="analysis-of-the-result" class="level1">
+<h1>Analysis of the result</h1>
+<p>The really interesting/impressive part here is that I only used that one prompt and supplied the <code>server.R</code> file (and R environment). Yes it was a simple fix conceptually (i.e., just change the names of the columns). But I didn’t actually specify the column names explicitly in the place where the table is built within the code. They are implied by all the rest of the code and datasets that ship with the app. And it really only edited the columns that <em>needed</em> editing (which wasn’t all of them). So to be clear, it had to:</p>
+<ol type="1">
+<li>Connect the dots throughout the code base to infer what the <em>current</em> names of the columns in that table would actually be at the time the table is rendered</li>
+<li>Determine (on its own) which of those <em>current</em> columns were not in a “nice” format (whatever that means, but it got it right)</li>
+<li>Assign a <em>new</em> name to those columns that <em>is</em> in a “nice” format (which it did)</li>
+<li>Place the correct code edits to make this happen in the right spot to effect the changes and not break the app (it ran fine).</li>
+</ol>
+<p>This. Is. Impressive. I can imagine how powerful this would be if you used this with more than 1 prompt and for more than 10 minutes. Very fun times ahead.</p>
+<p><br></p>
+<p>Now I don’t think I’m really scratching the surface of what possibilities this brings to efficiently streamline data science workflows, assist in app development, and more. This was just the baseline integration of Positron Assitant and it’s already awesome. In this application, AI was now used for both <em>development</em> of the code, and in the live application itself. I didn’t even start trying to use <a href="https://positron.posit.co/databot.html">DataBot</a> yet, which is another add-on to Positron by <a href="https://posit.co/">Posit</a> that will enable it to actually build analysis and explore your data with you. This, among other things, makes me very excited to be in this field.</p>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>AI</category>
+  <category>Shiny</category>
+  <category>Web Applications</category>
+  <guid>https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/</guid>
+  <pubDate>Wed, 29 Oct 2025 05:00:00 GMT</pubDate>
+  <media:content url="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/feature.png" medium="image" type="image/png" height="95" width="144"/>
+</item>
 <item>
   <title>The question is not if, but how much</title>
   <dc:creator>Alex Zajichek</dc:creator>
@@ -12076,370 +12300,6 @@ font-style: inherit;">flatten_dbl</span>()</span>
   <guid>https://www.zajichekstats.com/post/some-takeaways-from-effective-data-storytelling/</guid>
   <pubDate>Sat, 14 Jan 2023 06:00:00 GMT</pubDate>
   <media:content url="https://www.zajichekstats.com/post/some-takeaways-from-effective-data-storytelling/feature.png" medium="image" type="image/png" height="175" width="144"/>
-</item>
-<item>
-  <title>The Evasive Spline</title>
-  <dc:creator>Alex Zajichek</dc:creator>
-  <link>https://www.zajichekstats.com/post/the-evasive-spline/</link>
-  <description><![CDATA[ 
-
-
-
-
-<p>This one always gets me. I’ve learned and forgot how splines work many times over the years, and when I need to relearn it, I read the <em>Moving Beyond Linearity</em> chapter of <a href="https://www.statlearning.com/">An Introduction to Statistical Learning</a>.</p>
-<p><strong>Basis Functions</strong> are just a general approach for transforming a simple model like:</p>
-<p><img src="https://latex.codecogs.com/png.latex?Y_i%20=%20%5Cbeta_0%20+%20%5Cbeta_1X_i%20+%20%5Cepsilon_i"> into a linear combination of transformations of the <img src="https://latex.codecogs.com/png.latex?X_i"> of the form:</p>
-<p><img src="https://latex.codecogs.com/png.latex?Y_i%20=%20%5Cbeta_0%20+%20%5Cbeta_1b_1(X_i)%20+%20%5Cbeta_2b_2(X_i)%20+%20...%20+%20%5Cbeta_Kb_k(X_i)%20+%20%5Cepsilon_i"> where <img src="https://latex.codecogs.com/png.latex?b_i"> is a known function that transforms the predictor variable. <em>Note: <img src="https://latex.codecogs.com/png.latex?%5Cbeta_1"> is not the same in both of these, they are just placeholders for an arbitrary parameter.</em> For example, in the case of a piecewise regression where the model is of the form:</p>
-<p><img src="https://latex.codecogs.com/png.latex?Y_i%20=%20%5Cbeta_0%20+%20%5Cbeta_1I(X_i%20%3C%20c_1)%20+%20%5Cbeta_2I(c_1%20%3C%20X_i%20%3C%20c_2)%20+%20...%20+%20%5Cbeta_kI(c_%7Bk-1%7D%20%3C%20X_i%20%3C%20c_k)%20+%20%5Cepsilon_i"> the indicators are <em>basis functions</em> such that:</p>
-<p><img src="https://latex.codecogs.com/png.latex?b_j(X_i)%20=%20I(c_%7Bj-1%7D%20%3C%20X_i%20%3C%20c_j)%20%5Chskip.1in%20%5Ctext%7Bfor%20j=1,..,k%7D"> or in a polynomial model, the basis functions are <img src="https://latex.codecogs.com/png.latex?b_j(X_i)%20=%20X_i%5Ej">.</p>
-<p><strong>Knots</strong> are points (cutoffs) along <img src="https://latex.codecogs.com/png.latex?X_i"> that a <em>local</em> regression starts/ends. For example, we might fit a cubic model (e.g., with parameters <img src="https://latex.codecogs.com/png.latex?%5Cbeta_1,%20%5Cbeta_2,%20%5Cbeta_3">) where <img src="https://latex.codecogs.com/png.latex?X_i%20%3C%20C">, and another model (with a <em>separate</em> set of <img src="https://latex.codecogs.com/png.latex?%5Cbeta_1,%20%5Cbeta_2,%20%5Cbeta_3">) where <img src="https://latex.codecogs.com/png.latex?X_i%20%5Cgeq%20C">. <img src="https://latex.codecogs.com/png.latex?C"> is a <em>knot</em>. In this sense, the piecewise regression above was also a polynomial regression with degree 0, and knots at each value of <img src="https://latex.codecogs.com/png.latex?c_j">.</p>
-<p>The general problem with an unconstrained polynomial model is that there are no restrictions that force a smooth function across <img src="https://latex.codecogs.com/png.latex?X">, so there are discontinuities. Thus, restrictions need to be put in place such as (1) making it continuous at the knot(s), and/or even further, (2) making the first and second derivatives continuous at the knots. These restrictions reduce the complexity of the model (i.e., the number of parameters we estimate).</p>
-<section id="cubic-splines" class="level1">
-<h1>Cubic Splines</h1>
-<p>A cubic spline with <img src="https://latex.codecogs.com/png.latex?K"> knots uses <img src="https://latex.codecogs.com/png.latex?K+4"> parameters. The best way to do this is to use (1) the basis of a cubic polynomial (<img src="https://latex.codecogs.com/png.latex?x,%20x%5E2,%20x%5E3">) and (2) a truncated power basis <em>for each knot</em>:</p>
-<p><img src="https://latex.codecogs.com/png.latex?h(x,%5Cnu)%20=%20%7B(x-%5Cnu)%7D_+%5E3"> where <img src="https://latex.codecogs.com/png.latex?%5Cnu"> is the knot location. Thus, a <em>one-knot</em> model looks like:</p>
-<p><img src="https://latex.codecogs.com/png.latex?Y_i%20=%20%5Cbeta_0%20+%20%5Cbeta_1X_i%20+%20%5Cbeta_2X_i%5E2%20+%20%5Cbeta_3X_i%5E3%20+%20%5Cbeta_4h(X_i,%5Cnu_1)%20+%20%5Cepsilon_i"> We can add more knots as needed, and it simply adds <img src="https://latex.codecogs.com/png.latex?h(x,%5Cnu)"> terms only (so 1 more parameter per knot). A function of this form is guaranteed to have continuous first and second derivatives.</p>
-<p><strong>So how does this relate to what is produced in the <code>rcs</code> function from the <code>rms</code> package?</strong></p>
-<p>Well, the package actually fits a <em>restricted</em> cubic spline, which is a <em>natural spline</em>. This adds even more restrictions that the general cubic spline by forcing it to be <em>linear</em> where <img src="https://latex.codecogs.com/png.latex?X"> is less than the smallest knot and where <img src="https://latex.codecogs.com/png.latex?X"> is larger than the largest not (i.e., the boundaries). These add an additional <em>two</em> constraints at <em>each</em> boundary. So if we have a regular cubic spline model above with 3 knots (i.e., 7 parameters), then a <em>restricted</em> cubic spline model with 3 knots should have only 3 parameters.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">123</span>)</span>
-<span id="cb1-2">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)</span>
-<span id="cb1-3">y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>x<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">75</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span>x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)</span>
-<span id="cb1-4">x_trans <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> rms<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rcs</span>(x, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>)</span>
-<span id="cb1-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(x_trans)</span></code></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>               x         x'
-[1,] -0.56047565 0.02405534
-[2,] -0.23017749 0.10816181
-[3,]  1.55870831 2.14013743
-[4,]  0.07050839 0.27135366
-[5,]  0.12928774 0.31547103
-[6,]  1.71506499 2.36735648
-attr(,"class")
-[1] "rms"
-attr(,"name")
-[1] "x"
-attr(,"label")
-[1] "x"
-attr(,"assume")
-[1] "rcspline"
-attr(,"assume.code")
-[1] 4
-attr(,"parms")
-[1] -1.06822046  0.06175631  1.26449867
-attr(,"nonlinear")
-[1] FALSE  TRUE
-attr(,"colnames")
-[1] "x"  "x'"</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summary</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">lm</span>(y<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span>x_trans))</span></code></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = y ~ x_trans)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--1.9888 -0.7341 -0.0803  0.6900  3.2215 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -0.3838     0.1842  -2.084   0.0398 *  
-x_transx     -1.6552     0.2449  -6.758 1.04e-09 ***
-x_transx'     1.2922     0.2925   4.417 2.61e-05 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.9823 on 97 degrees of freedom
-Multiple R-squared:  0.3805,    Adjusted R-squared:  0.3677 
-F-statistic: 29.79 on 2 and 97 DF,  p-value: 8.214e-11</code></pre>
-</div>
-</div>
-<p>We can see this model contains three estimated parameters as expected. The actual transformation completed for the restricted cubic spline in producing, in general, the <img src="https://latex.codecogs.com/png.latex?K-2"> additional predictors is more complex than the cubic spline (although similar). In this case, the 3 knot positions were selected to be:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">knots <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">attr</span>(x_trans, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"parms"</span>)</span>
-<span id="cb5-2">knots</span></code></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -1.06822046  0.06175631  1.26449867</code></pre>
-</div>
-</div>
-<p>Note, these are just the <img src="https://latex.codecogs.com/png.latex?10%5E%7Bth%7D,%2050%5E%7Bth%7D,%2090%5E%7Bth%7D"> percentiles:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">quantile</span>(x, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(.<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,.<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>,.<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>))</span></code></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>        10%         50%         90% 
--1.06822046  0.06175631  1.26449867 </code></pre>
-</div>
-</div>
-<p>The following transformation is made (general solution <a href="https://support.sas.com/resources/papers/proceedings16/5621-2016.pdf">here</a>):</p>
-<p><img src="https://latex.codecogs.com/png.latex?X_%7Btrans%7D%20=%20(x-%5Cnu_1)_+%5E3%20-%20(x-%5Cnu_2)_+%5E3%5Cfrac%7B%5Cnu_3-%5Cnu_1%7D%7B%5Cnu_3-%5Cnu_2%7D%20+%20(x-%5Cnu_3)_+%5E3%5Cfrac%7B%5Cnu_2-%5Cnu_1%7D%7B%5Cnu_3-%5Cnu_2%7D"> Let’s check out that transformation on our data:</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">tibble<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tibble</span>(</span>
-<span id="cb9-2">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(x_trans[,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"x"</span>]),</span>
-<span id="cb9-3">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x_trans_actual =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(x_trans[,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"x'"</span>]),</span>
-<span id="cb9-4">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x_trans_calculated =</span> </span>
-<span id="cb9-5">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pmax</span>((x<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>])<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span></span>
-<span id="cb9-6">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pmax</span>((x<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>])<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> ((knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>]) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> (knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>])) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb9-7">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pmax</span>((x<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>])<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> ((knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>])<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>(knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>]<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>knots[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]))</span>
-<span id="cb9-8">)</span></code></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 100 × 3
-         x x_trans_actual x_trans_calculated
-     &lt;dbl&gt;          &lt;dbl&gt;              &lt;dbl&gt;
- 1 -0.560          0.0241             0.131 
- 2 -0.230          0.108              0.589 
- 3  1.56           2.14              11.6   
- 4  0.0705         0.271              1.48  
- 5  0.129          0.315              1.72  
- 6  1.72           2.37              12.9   
- 7  0.461          0.634              3.45  
- 8 -1.27           0                  0     
- 9 -0.687          0.0102             0.0555
-10 -0.446          0.0443             0.241 
-# ℹ 90 more rows</code></pre>
-</div>
-</div>
-<p>For some reason this is close but off by a factor close to 5? Looking into the documentation/code, it is because of the <code>norm</code> argument in the <code>Hmisc::rcspline.eval</code> function. When we run this, we get the same result that we calculated (which is the original restricted cubic spline calculation):</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(Hmisc<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rcspline.eval</span>(x,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">nk=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">norm =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>))</span></code></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>          [,1]
-[1,]  0.130899
-[2,]  0.588571
-[3,] 11.645726
-[4,]  1.476592
-[5,]  1.716660
-[6,] 12.882156</code></pre>
-</div>
-</div>
-<p>By default, this function uses <code>norm=2</code>, which <em>“normalizes by the square of the spacing between the first and last knots…has the advantage of making all nonlinear terms be on the x-scale”</em>.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(Hmisc<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rcspline.eval</span>(x,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">nk=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">norm =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>))</span></code></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>           [,1]
-[1,] 0.02405534
-[2,] 0.10816181
-[3,] 2.14013743
-[4,] 0.27135366
-[5,] 0.31547103
-[6,] 2.36735648</code></pre>
-</div>
-</div>
-
-
-<!-- -->
-
-</section>
-
- ]]></description>
-  <category>Estimation</category>
-  <category>Modeling</category>
-  <guid>https://www.zajichekstats.com/post/the-evasive-spline/</guid>
-  <pubDate>Fri, 13 Jan 2023 06:00:00 GMT</pubDate>
-  <media:content url="https://www.zajichekstats.com/post/the-evasive-spline/feature.png" medium="image" type="image/png" height="145" width="144"/>
 </item>
 </channel>
 </rss>
