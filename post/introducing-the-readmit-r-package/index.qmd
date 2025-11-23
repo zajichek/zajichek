@@ -1,0 +1,24 @@
+---
+title: "Introducing the {readmit} R package"
+description: "Tools for navigating, managing, and analyzing hospital readmissions"
+author: "Alex Zajichek"
+date: "10/29/2025"
+image: "feature.png"
+categories:
+  - Software Development
+  - Healthcare
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+draft: true
+---
+
+* Basically copy README
+* Link to package website
+* Package introduction
+    + Background info
+    + Purpose/users
+    + How to install
+

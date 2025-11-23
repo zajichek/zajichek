@@ -1,0 +1,9 @@
+---
+title: "readmit: An R package for navigating, managing, and analyzing hospital readmissions"
+author: Alex Zajichek
+date: "2025-11-23"
+---
+
+[Link to package website](https://centralstatz.github.io/readmit/)
+
+[Link to source code](https://github.com/centralstatz/readmit)

@@ -1,0 +1,39 @@
+---
+title: "Why I joined Athlyticz"
+description: "Helping to bring you hands-on statistical education through a state of the art platform"
+author: "Alex Zajichek"
+date: "11/3/2025"
+image: "feature.png"
+categories:
+  - Education
+  - Bayesian Statistics
+  - Shiny
+  - Web Applications
+  - Deployment
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---
+
+Over the years I've found there to be issues with the way statistics gets taught, especially at the introductory level, focusing on mechanistic formulas and boilerplate conclusions, rather than critical thinking, common sense, and reasoning with data/information. 
+* Whether its [statistical significance]()
+* Talking about why you should [be a Bayesian]()
+* Or practical tutorials on [bulding R Shiny apps]()
+
+If you've followed my [blog]() or [LinkedIn]() posts, you'll know that I tend to write
+
+# Enter Ahtlyticz
+
+[Athlyticz]() is a 
+
+Offerings:
+* Bayesian
+* Shiny
+* ML
+* Other initiatives
+
+https://athlyticz.substack.com/p/welcome-to-creators-corner
+
+Message me for demo: alex@athlyticz.com

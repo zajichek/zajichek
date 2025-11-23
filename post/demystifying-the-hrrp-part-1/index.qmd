@@ -1,0 +1,18 @@
+---
+title: "Demystifying the HRRP (Part I): Computing the Penalty"
+description: "Hospitals get penalized for excess readmissions, but how is it calculated?"
+author: "Alex Zajichek"
+date: "10/29/2025"
+image: "feature.png"
+categories:
+  - Healthcare
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+draft: true
+---
+
+* Link to prior intro to readmit article
+* Go through steps to calculate, using the package functions to support

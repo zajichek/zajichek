@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Alex Zajichek">
+<meta name="dcterms.date" content="2025-11-23">
 
-<title>Projects &amp; Presentations – Zajichek Stats</title>
+<title>readmit: An R package for navigating, managing, and analyzing hospital readmissions – Zajichek Stats</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,35 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9MW3W3RQD9"></script>
 
 <script type="text/javascript">
@@ -109,37 +80,9 @@ gtag('js', new Date());
 gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<meta property="og:title" content="Projects &amp; Presentations – Zajichek Stats">
+<meta property="og:title" content="readmit: An R package for navigating, managing, and analyzing hospital readmissions – Zajichek Stats">
+<meta property="og:description" content="Statistician/data scientist in Central Wisconsin.">
 <meta property="og:site_name" content="Zajichek Stats">
 </head>
 
@@ -150,8 +93,8 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./logo.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -161,11 +104,11 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./presentations.html" aria-current="page"> 
+    <a class="nav-link" href="../../presentations.html"> 
 <span class="menu-text">Projects &amp; Presentations</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./publications.html"> 
+    <a class="nav-link" href="../../publications.html"> 
 <span class="menu-text">Publications</span></a>
   </li>  
   <li class="nav-item">
@@ -173,7 +116,7 @@ window.Quarto = {
 <span class="menu-text">Consultancy</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
@@ -203,7 +146,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -224,14 +167,26 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Projects &amp; Presentations</h1>
+<h1 class="title">readmit: An R package for navigating, managing, and analyzing hospital readmissions</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex Zajichek </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 23, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -241,281 +196,12 @@ window.Quarto = {
 </header>
 
 
+<p><a href="https://centralstatz.github.io/readmit/">Link to package website</a></p>
+<p><a href="https://github.com/centralstatz/readmit">Link to source code</a></p>
 
 
 
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-date-sort" data-direction="asc">
-        Date - Oldest
-      </option>
-      <option value="listing-date-sort" data-direction="desc">
-        Date - Newest
-      </option>
-      <option value="listing-title-sort" data-direction="asc">
-        Title
-      </option>
-      <option value="listing-author" data-direction="asc">
-        Author
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
-</div>
-<table class="quarto-listing-table table">
-<thead>
-<tr>
-
-<th>
-<a class="sort" data-sort="listing-date-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Date</a>
-</th>
-
-<th>
-<a class="sort" data-sort="listing-title-sort" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Title</a>
-</th>
-
-<th>
-<a class="sort" data-sort="listing-author" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Author</a>
-</th>
-
-</tr>
-</thead>
-<tbody class="list">
-
-<tr data-index="0" data-listing-date-sort="1763877600000" data-listing-file-modified-sort="1763910846330" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="7" data-listing-title-sort="readmit: An R package for navigating, managing, and analyzing hospital readmissions" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Nov 23, 2025</span>
-</td>
-<td>
-<a href="./presentations/readmit/index.html" class="title listing-title">readmit: An R package for navigating, managing, and analyzing hospital readmissions</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="1" data-listing-date-sort="1749704400000" data-listing-file-modified-sort="1750942421861" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="22" data-listing-title-sort="riskcalc.org: A Repository of Risk Calculators for Medical Decision Making" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Jun 12, 2025</span>
-</td>
-<td>
-<a href="./presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/index.html" class="title listing-title">riskcalc.org: A Repository of Risk Calculators for Medical Decision Making</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="2" data-listing-date-sort="1740636000000" data-listing-file-modified-sort="1742394860358" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="14" data-listing-title-sort="The value of open-source: Leveraging free, code-first tools to iterate toward advanced analytics" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Feb 27, 2025</span>
-</td>
-<td>
-<a href="./presentations/the-value-of-open-source/index.html" class="title listing-title">The value of open-source: Leveraging free, code-first tools to iterate toward advanced analytics</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="3" data-listing-date-sort="1736488800000" data-listing-file-modified-sort="1742317451894" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="7" data-listing-title-sort="A journey through Statistical Rethinking" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Jan 10, 2025</span>
-</td>
-<td>
-<a href="./presentations/journey-through-statistical-rethinking/index.html" class="title listing-title">A journey through Statistical Rethinking</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="4" data-listing-date-sort="1728018000000" data-listing-file-modified-sort="1743077647220" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="7" data-listing-title-sort="riskcalc: An R package for building risk calculators" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Oct 4, 2024</span>
-</td>
-<td>
-<a href="./presentations/riskcalc/index.html" class="title listing-title">riskcalc: An R package for building risk calculators</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="5" data-listing-date-sort="1725339600000" data-listing-file-modified-sort="1742317775046" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="4" data-listing-title-sort="carecompare: An R package to enable hospitals and health systems to access, explore, and analyze performance in quality measures and payment programs" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Sep 3, 2024</span>
-</td>
-<td>
-<a href="./presentations/carecompare/index.html" class="title listing-title">carecompare: An R package to enable hospitals and health systems to access, explore, and analyze performance in quality measures and payment programs</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="6" data-listing-date-sort="1689656400000" data-listing-file-modified-sort="1743077517735" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="7" data-listing-title-sort="cheese: An R package for statistical analysis workflows" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Jul 18, 2023</span>
-</td>
-<td>
-<a href="./presentations/cheese/index.html" class="title listing-title">cheese: An R package for statistical analysis workflows</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="7" data-listing-date-sort="1688101200000" data-listing-file-modified-sort="1742317779329" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="4" data-listing-title-sort="zildge: An R package containing functions that I frequently use" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Jun 30, 2023</span>
-</td>
-<td>
-<a href="./presentations/zildge/index.html" class="title listing-title">zildge: An R package containing functions that I frequently use</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="8" data-listing-date-sort="1518415200000" data-listing-file-modified-sort="1735587296542" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="11" data-listing-title-sort="An assessment of non-traditional regression models for count data" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Feb 12, 2018</span>
-</td>
-<td>
-<a href="./presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html" class="title listing-title">An assessment of non-traditional regression models for count data</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="9" data-listing-date-sort="1493960400000" data-listing-file-modified-sort="1742313677954" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="21" data-listing-title-sort="Midwest home price index vs. national average from 1991-2016" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">May 5, 2017</span>
-</td>
-<td>
-<a href="./presentations/midwest-home-price-index/index.html" class="title listing-title">Midwest home price index vs.&nbsp;national average from 1991-2016</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="10" data-listing-date-sort="1493701200000" data-listing-file-modified-sort="1742318074193" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="15" data-listing-title-sort="JNaiveBayes: An R package implementing the Naive Bayes text classifier in Java" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">May 2, 2017</span>
-</td>
-<td>
-<a href="./presentations/JNaiveBayes/index.html" class="title listing-title">JNaiveBayes: An R package implementing the Naive Bayes text classifier in Java</a>
-</td>
-<td>
-<span class="listing-author">Tyler Olson, Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="11" data-listing-date-sort="1490331600000" data-listing-file-modified-sort="1742562805579" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="14" data-listing-title-sort="Estimating player contribution in hockey with regularized logistic regression" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Mar 24, 2017</span>
-</td>
-<td>
-<a href="./presentations/estimating-player-contribution-in-hockey/index.html" class="title listing-title">Estimating player contribution in hockey with regularized logistic regression</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="12" data-listing-date-sort="1486706400000" data-listing-file-modified-sort="1742317107807" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="27" data-listing-title-sort="Modeling the probability of an NHL goal for player placement strategy: A naive (Bayes') approach" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Feb 10, 2017</span>
-</td>
-<td>
-<a href="./presentations/modeling-probability-of-nhl-goal/index.html" class="title listing-title">Modeling the probability of an NHL goal for player placement strategy: A naive (Bayes’) approach</a>
-</td>
-<td>
-<span class="listing-author">Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="13" data-listing-date-sort="1481176800000" data-listing-file-modified-sort="1742316921725" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="11" data-listing-title-sort="An analysis of binary classification methods via simulation and application" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Dec 8, 2016</span>
-</td>
-<td>
-<a href="./presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html" class="title listing-title">An analysis of binary classification methods via simulation and application</a>
-</td>
-<td>
-<span class="listing-author">Brandon Bergerud, Jeff Hajewski, Sam Justice, Tyler Olson, Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="14" data-listing-date-sort="1480917600000" data-listing-file-modified-sort="1742315209477" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="21" data-listing-title-sort="Gibbs sampler in Python with R and OpenBUGS comparisons" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Dec 5, 2016</span>
-</td>
-<td>
-<a href="./presentations/gibbs-sampler-in-python/index.html" class="title listing-title">Gibbs sampler in Python with R and OpenBUGS comparisons</a>
-</td>
-<td>
-<span class="listing-author">Tyler Olson, Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="15" data-listing-date-sort="1462424400000" data-listing-file-modified-sort="1742315225715" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="21" data-listing-title-sort="Predicting the 2016 NCAA men's basketball tournament" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">May 5, 2016</span>
-</td>
-<td>
-<a href="./presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html" class="title listing-title">Predicting the 2016 NCAA men’s basketball tournament</a>
-</td>
-<td>
-<span class="listing-author">Tyler Olson, Tom Tran, Alex Zajichek</span>
-</td>
-
-</tr>
-
-<tr data-index="16" data-listing-date-sort="1446267600000" data-listing-file-modified-sort="1742315396041" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="11" data-listing-title-sort="An introduction to SQL Server, RODBC, and ggplot2 with PITCHf/x data" data-listing-filename-sort="index.qmd">
-<td>
-<span class="listing-date">Oct 31, 2015</span>
-</td>
-<td>
-<a href="./presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html" class="title listing-title">An introduction to SQL Server, RODBC, and ggplot2 with PITCHf/x data</a>
-</td>
-<td>
-<span class="listing-author">Sam Justice, Tyler Olson, Alex Zajichek</span>
-</td>
-
-</tr>
-
-</tbody>
-</table>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
