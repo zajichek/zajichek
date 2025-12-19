@@ -1,0 +1,21 @@
+---
+title: "Investigating a Hospital-Specific Report (HSR)"
+description: "Analysis strategies to gain insight into HRRP program results"
+author: "Alex Zajichek"
+date: "10/29/2025"
+image: "feature.png"
+categories:
+  - Software Development
+  - Healthcare
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+draft: true
+---
+
+_This article is a copy of the [`readmit`](https://centralstatz.github.io/readmit/index.html) package tutorial. See it on the package website [here[(https://centralstatz.github.io/readmit/articles/investigating-an-hsr.html)._
+
+
+_Don't forget to [subscribe](https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share) to receive email updates when new articles drop!_

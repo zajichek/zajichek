@@ -1,0 +1,46 @@
+---
+title: "Conceptualizing the readmission risk pool"
+description: "Thinking in terms of what is actionable"
+author: "Alex Zajichek"
+date: "10/29/2025"
+image: "feature.png"
+categories:
+  - Software Development
+  - Healthcare
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+draft: true
+---
+
+In a [prior article](https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/) the _readmission risk pool_ was briefly described in the context of a building a prediction framework for managing hospital readmissions. I wanted to go a bit more in depth about why this concept is important, especially when trying to seamlessly wrangle the data/reporting side with the day-to-day, operational side of preventing and managing readmissions.
+
+# What is the _readmission risk pool_?
+
+In its simplest form, I define it as _all patients *currently* at risk for readmission_. 
+
+Typically, we think of 30 days as the important time window for readmissions (although that's arbitrary). But if we're working in that context, then anyone who is currently (meaning as of _now_) at risk for a 30-day readmission is part of the risk. Some specific examples:
+
+* A patient was discharged 29 days ago and not yet readmitted, then they are in the risk pool (for 1 more day)
+* A patient was discharged yesterday, then they are in the risk for 29 more days
+* A patient was discharged 14 days ago, but were readmitted 7 days ago. They are _no longer_ in the risk pool, since they were already readmitted as of now (at least for that initial discharge)
+
+It all has to do with which patients have a theoretically non-zero probability of still being readmitted, as of _right now_.
+
+# Why is it important?
+
+This is a very important concept to think about because it has all sorts of implications, particularly when trying to monitor/report data, and even more, trying to facilitate actual care teams with data to intervene and prevent subsequent readmissions. 
+
+The key word is _action_. The patients in the risk pool are those that we are still able to (even theoretically, if not practically) _still_ intervene on to prevent the future event of another hospital admission.
+
+It also matters for doing things like predictive analytics. When we're trying marry models we've built into systems and clinical workflows, we need to define which patients _should_ receive risk scores from our models at which particular times. We may be able to "plug in" data to our models, but if its not in the right context, the output may be junk. This also includes the retrospective datasets we build to actually _train_ such models: even if we're extracting data to build a training dataset, we need it to reflect the nature of the thing we are going to try to predict in the future, so this concept _currently at risk for readmission_ needs to be applied from the lens of the data timepoints we are extracting as well.
+
+That's not to say this is a concrete, universal definition. There are many conceivable nuances that may make definitions of these things vary depending on your context:
+
+* We may be interested in something other than 30 day readmissions (e.g., 60 or 90), or want to be agnostic to the specific time frame, generalizing what a readmission _is_. This will make our risk pool definition differ.
+
+* The thing we are seeking to measure may impact it. For example, we said above that a patient who has already been readmitted is no longer in the risk pool. But readmitted where? What if they were readmitted to an outside hospital, but we didn't know that? According to us, they haven't been readmitted, but in reality they have been (and if a Medicare patient in the HRRP, they _will_ be counted). How should handle this? How should we _model_ this? Do we want to explicitly account for outside readmission risk in our models, metrics, analytics? Or are we going to define readmissions only in terms of what we measure with _our_ systems?
+
+All of these things depend on the context of the problem we're trying to solve, the trade-offs involved in our interventions, and how things are going to be monitored and reported. Ultimately we want to create a well-oiled machine where the lineage from high level readmission rates down to individual patient intervention is clear, and how we conceptualize the readmission risk pool is certainly part of that.

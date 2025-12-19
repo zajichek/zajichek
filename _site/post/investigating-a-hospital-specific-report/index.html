@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Alex Zajichek">
-<meta name="dcterms.date" content="2025-11-03">
-<meta name="description" content="Helping to bring you hands-on statistical education through a state of the art platform">
+<meta name="dcterms.date" content="2025-10-29">
+<meta name="description" content="Analysis strategies to gain insight into HRRP program results">
 
-<title>Why I joined Athlyticz – Zajichek Stats</title>
+<title>Investigating a Hospital-Specific Report (HSR) – Zajichek Stats</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -118,13 +118,13 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <meta name="quarto:status" content="draft">
 
 
-<meta property="og:title" content="Why I joined Athlyticz – Zajichek Stats">
-<meta property="og:description" content="Helping to bring you hands-on statistical education through a state of the art platform">
-<meta property="og:image" content="https://www.zajichekstats.com/post/why-i-joined-athlyticz/feature.png">
+<meta property="og:title" content="Investigating a Hospital-Specific Report (HSR) – Zajichek Stats">
+<meta property="og:description" content="Analysis strategies to gain insight into HRRP program results">
+<meta property="og:image" content="https://www.zajichekstats.com/post/investigating-a-hospital-specific-report/feature.png">
 <meta property="og:site_name" content="Zajichek Stats">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
@@ -199,25 +199,24 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Why I joined Athlyticz</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Investigating a Hospital-Specific Report (HSR)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
   <div class="quarto-categories">
-    <div class="quarto-category">Education</div>
-    <div class="quarto-category">Bayesian Statistics</div>
-    <div class="quarto-category">Shiny</div>
-    <div class="quarto-category">Web Applications</div>
-    <div class="quarto-category">Deployment</div>
+    <div class="quarto-category">Software Development</div>
+    <div class="quarto-category">Healthcare</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Helping to bring you hands-on statistical education through a state of the art platform
+    Analysis strategies to gain insight into HRRP program results
   </div>
 </div>
 
@@ -234,7 +233,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 3, 2025</p>
+      <p class="date">October 29, 2025</p>
     </div>
   </div>
   
@@ -246,19 +245,12 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 </header>
 
 
-<p>Over the years I’ve found there to be issues with the way statistics gets taught, especially at the introductory level, focusing on mechanistic formulas and boilerplate conclusions, rather than critical thinking, common sense, and reasoning with data/information. * Whether its <a href="">statistical significance</a> * Talking about why you should <a href="">be a Bayesian</a> * Or practical tutorials on <a href="">bulding R Shiny apps</a></p>
-<p>If you’ve followed my <a href="">blog</a> or <a href="">LinkedIn</a> posts, you’ll know that I tend to write</p>
-<section id="enter-ahtlyticz" class="level1">
-<h1>Enter Ahtlyticz</h1>
-<p><a href="">Athlyticz</a> is a</p>
-<p>Offerings: * Bayesian * Shiny * ML * Other initiatives</p>
-<p>https://athlyticz.substack.com/p/welcome-to-creators-corner</p>
-<p>Message me for demo: alex@athlyticz.com</p>
+<p><em>This article is a copy of the <a href="https://centralstatz.github.io/readmit/index.html"><code>readmit</code></a> package tutorial. See it on the package website [here[(https://centralstatz.github.io/readmit/articles/investigating-an-hsr.html).</em></p>
+<p><em>Don’t forget to <a href="https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share">subscribe</a> to receive email updates when new articles drop!</em></p>
 
 
 <!-- -->
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -712,44 +704,26 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Why I joined Athlyticz"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Helping to bring you hands-on statistical education through a state of the art platform"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Investigating a Hospital-Specific Report (HSR)"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "Analysis strategies to gain insight into HRRP program results"</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "11/3/2025"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "10/29/2025"</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Education</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Bayesian Statistics</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Shiny</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Web Applications</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  - Deployment</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> true</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Software Development</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Healthcare</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> true</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>_This article is a copy of the [`readmit`](https://centralstatz.github.io/readmit/index.html) package tutorial. See it on the package website [here[(https://centralstatz.github.io/readmit/articles/investigating-an-hsr.html)._</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Over the years I've found there to be issues with the way statistics gets taught, especially at the introductory level, focusing on mechanistic formulas and boilerplate conclusions, rather than critical thinking, common sense, and reasoning with data/information. </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Whether its <span class="co">[</span><span class="ot">statistical significance</span><span class="co">]()</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Talking about why you should <span class="co">[</span><span class="ot">be a Bayesian</span><span class="co">]()</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Or practical tutorials on <span class="co">[</span><span class="ot">bulding R Shiny apps</span><span class="co">]()</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>If you've followed my <span class="co">[</span><span class="ot">blog</span><span class="co">]()</span> or <span class="co">[</span><span class="ot">LinkedIn</span><span class="co">]()</span> posts, you'll know that I tend to write</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu"># Enter Ahtlyticz</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Athlyticz</span><span class="co">]()</span> is a </span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>Offerings:</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Bayesian</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Shiny</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>ML</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Other initiatives</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>https://athlyticz.substack.com/p/welcome-to-creators-corner</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>Message me for demo: alex@athlyticz.com</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>_Don't forget to [subscribe](https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share) to receive email updates when new articles drop!_</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
