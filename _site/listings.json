@@ -24,6 +24,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/investigating-a-hospital-specific-report/index.html",
       "/post/introducing-the-readmit-r-package/index.html",
       "/post/ai-assisted-shiny-development-in-positron/index.html",
       "/post/the-question-is-not-if-but-how-much/index.html",
