@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alex Zajichek">
+<meta name="dcterms.date" content="2025-12-31">
+
+<title>Bernoulli’s Fallacy (of the Transposed Conditional) – Zajichek Stats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9MW3W3RQD9"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
+</script>
+<meta name="quarto:status" content="draft">
+
+
+<meta property="og:title" content="Bernoulli’s Fallacy (of the Transposed Conditional) – Zajichek Stats">
+<meta property="og:description" content="Statistician/data scientist in Central Wisconsin.">
+<meta property="og:image" content="https://www.zajichekstats.com/post/bernoullis-fallacy-of-the-transposed-conditional/feature.png">
+<meta property="og:site_name" content="Zajichek Stats">
+</head>
+
+<body class="nav-fixed fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../presentations.html"> 
+<span class="menu-text">Projects &amp; Presentations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/"> 
+<span class="menu-text">Consultancy</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share"> 
+<span class="menu-text">Subscribe</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:alex@centralstatz.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/alexzajichek"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/zajichek"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@centralstatz"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Bernoulli’s Fallacy (of the Transposed Conditional)</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">History</div>
+    <div class="quarto-category">Philosophy</div>
+    <div class="quarto-category">Research</div>
+    <div class="quarto-category">Statistical Significance</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex Zajichek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 31, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<ul>
+<li>Previously talked about and read about Fallacy of the Transposed Conditional</li>
+<li>Reading this book, turns out that is what “Bernoulli’s Fallacy” is</li>
+</ul>
+<section id="favoritequotes" class="level1">
+<h1>My favorite quotes</h1>
+<p>These are my favorite quotes and passages from <a href="https://cup.columbia.edu/book/bernoullis-fallacy/9780231199957/">the book</a>:</p>
+<ul>
+<li><em>“…the ‘statistics wars’ (at least on the frequentist versus Bayesian front) are best described as a dispute about the nature of the origins of probability: whether it comes from ‘outside us’ in the form of uncontrollable random noise in observations, or ‘inside us’ as our uncertainty given limited information on the state of the world.”</em> (Preface, page X) <br><br></li>
+<li><em>“Bayesian statistics provides natural protection against these issues and, in most circumstances, renders them non-issues. The safeguard, missing completely from the standard template, is the prior probability for the hypothesis, meaning the probability we assign it before considering the data, based on past experience and what we consider established theory.”</em> (Preface, page XI) <br><br></li>
+<li><em>“In the Bayesian mode, hypotheses are never definitively accepted or rejected, nor are single estimates of model parameters taken as gospel truth. Instead, uncertainty can change incrementally as more data is collected; a single observation can be useful, two observations more so, etc.”</em> (Preface, page XII) <br><br></li>
+<li><em>“Science is largely not a process of falsifying claims definitively, but rather assigning them probabilities and updating those probabilities in light of observation. This process is endless. No proposition apart from a logical contradiction should ever get assigned probability 0, and nothing short of a logical tautology should get probability 1.”</em> (Preface, page XIV) <br><br></li>
+<li><em>“Is it possible to judge hypotheses based solely on how likely or unlikely an observation would be if those hypotheses were true? Those who answer in the affirmative, whether they be Fisherians, neo-Fisherians, Neyman-Pearsonians, equivalence testers, ‘severe testers’, and so on, commit the fallacy that is our subject. THose who answer in the negative have at least avoided that trap, though they may fall into others.”</em> (Preface, page XV) <br><br></li>
+<li><em>“I first got a feeling that something was amiss when as a graduate student I tried to use statistics to make money gambling on basketball. I was about halfway toward finishing my PhD in mathematics at the University of California, Berkeley, when I realized I had no idea what I was doing.”</em> (Introduction, page 2) <br><br></li>
+<li><em>“Techniques like significance testing are supposed to tell you whether a phenomenon you observe in the data is real or just the product of chance. They never answer the question definitively one way or the other, but there are certain rules of thumb…To my mathematical brain, these tests always felt a little off. Why should I care about how often I might have observed the result I actually did observe? I could see it staring back at me from my spreadsheet, so I knew for a fact it had happened. Where did this magical 5 percent threshold of significance come from? And if my data did pass the threshold and I rejected the chance hypothesis, so what? What I cared about was whether I could make money gambling. The conventional explanations I found in my stats textbooks were never ultimately that satisfying and seemed to be deliberately obscured by jargon about Type I and Type II error rates and so on. My training had told me not to trust any idea I couldn’t derive for myself from first principles, and no matter how hard I tried, I just couldn’t prove the statistics tests were right.”</em> (Introduction, page 4-5) <br><br></li>
+<li><em>“The problem with Bernoulli’s answer to his question is that the arrow is pointing in the wrong direction. He wanted to answer a question about the probability of a hypothesis, but he did so by thinking only about the probability of an observation. The confusion of the two–and the general idea that one can settle questions of inference using only sampling probabilities–is what I call Bernoulli’s Fallacy.”</em> (Introduction, page 9) <br><br></li>
+<li><em>“Most disturbing of all, though, once you can recognize Bernoulli’s Fallacy in the wild, is that you’ll start to see that it forms the basis for all of frequentist statistics–and therefore a good portion of modern science.”</em> (Introduction, page 11) <br><br></li>
+<li><em>“…rate of incidence of the disease in the population…Forgetting to account for this fact is such a well-known statistical mistake it has a name: base rate neglect…The problem with statistical methods in science is that they commit the same conceptual mistake as base rate neglect. The standard methods as used almost everywhere give no consideration to the prior probability of a scientific theory being true before considering the data. In fact, they don’t even allow for that kind of probability at all.”</em> (Introduction, page 11) <br><br></li>
+<li><em>“…the arguments behind the standard statistical methods can, if expressed in the right kind of sloppy and sophistic language, sound extremely convincing…But anyone, particularly a scientist in a rush to interpret their data, could be forgiven for not taking the time to wade through the details. They may reasonably decide to either accept what they’ve been taught as standard because it’s always been that way or jump to the end and confirm the orthodox methods give the right answer for a simple thought experiment.”</em> (Introduction, page 13) <br><br></li>
+<li><em>“The main point of concern is the question of how exactly to turn background knowledge into a numerical probability…Different starting points would seem to produce different conclusions based on the data…An outsized philisophical concern with these problems was another key factor in the victory of the standard school of statistics. From a certain perspective, Bernoulli’s Fallacy may have appeared the lesser of two evils. (It’s not.) However, it would also be a mistake to divorce that choice from its historical context or to pretend that statistics exists somehow outside of history; the debate has been judged not by neutral third-party observers but by people motivated to prefer one answer over the other because it supported their agenda.”</em> (Introduction, page 13) <br><br></li>
+<li><em>“Galton, in addition to being a statistcal pioneer, famously coined the term eugenics and was an early advocate of using evolution to shape humanity’s future by encouraging breeding among the ‘right’ people. Pearson and Fisher were also devotees to the cause of eugenics and used their newly minted statistical tools with great success to support the eugenics agenda. For these early statisticians, the proper function of statistics was often to detect significant differences between races, like a supposed difference in intelligence or moral character. ‘Objective’ assessments of this kind were used to support discriminatory immigration policies, forced sterilization laws, and, in their natural logical extension, the murder of millions in the Holocaust. Sadly the eugenics programs of Nazi Germany were linked in disturbingly close ways with the work of these early statisticians and their eugenicist colleagues in the United States.”</em> (Introduction, page 14) <br><br></li>
+<li><em>“It would be impossible to study the great works of history without engaging with authors who were not ‘pure’ by our standards. Meanwhile, if we ignored that intellectual context and focused only on their abstract ideas instead, we would sacrifice valuable understanding. As Pearson himself once wrote, ‘It is impossible to understand a man’s work unless you understand something of his character and unless you understand something of his environment. And his environment means the state of affairs social and political of his own age’…In many ways, eugenicist ideas animated their entire intellectual projects, as we’ll see. What’s most important of all, though, is how a desire for authority–understandable as it was given the circumstances–affected their statistical philosophy.”</em> (Introduction, page 15) <br><br></li>
+<li><em>“Like any human institution, statistics is and was largely a product of its times. In the late 19th and early 20th centuries, scientific inquiry demanded a theory free from even a whiff of subjectivity, which led its practitioners to claim inference based solely on data without interpretation was possible. They were mistaken. But their mistake was so powerfully appealing, and these first statisticians so prolific and domineering, that it quickly took hold and became the industry standard.”</em> (Introduction, page 15) <br><br></li>
+<li><em>“While it may sound like good objective science to measure all theories with the same yardstick, meaning the sampling probability of the data, this practice has all but guaranteed the published literature is polluted by false positives, theories having no basis in reality and backed by data that only passed the necessary statistical thresholds by chance…So scientists now have to choose: either accept this result and others like it as legitimate, or call all other published research using the same methods into question. As difficult as it is, many have chosen the latter.”</em> (Introduction, page 16) <br><br></li>
+<li><em>“A widespread feeling of panic is emerging among scientists across disparate specialties who fear that many published results in their fields are simply false and that their statistical methods are to blame…Statistical orthodoxy tells them what tools to use, but the methods don’t follow a coherent logical process–so whether a result is deemed publication worthy is largely a random decision…statistics is both much easier and much harder than we have been led to believe.”</em> (Introduction, page 17) <br><br></li>
+<li><em>“This isn’t just about protecting scientists from the embarrassment of a failed replication, though. We all have a stake in scientific truth. From small individual decisions about what foods to eat or what health risks to worry about to public policies about education, health care, the environment, and more, we all pay a price when the body of scientific research is polluted by false positives. Given infinite time and money, replication studies could perhaps eventually sort the true science from the noise, but in the meantime, we can expect to be constantly deceived by statistical phantoms.”</em> (Introduction, page 17-18) <br><br></li>
+<li><em>“Sampling probabilities are attractive entities for educational purposes because they can appear to be backed up by experimental frequencies; there’s always a ‘right answer’. But they’re only a part of the complete inferential picture. Requiring all probability statements to refer only to frequencies means avoiding the most sensible probability question in science, ‘How likely is my theory to be true based on what I have observed?’.”</em> (Introduction, page 18) <br><br></li>
+<li><em>“This book is the story of a mistake: a wrong idea of the relationship between observation and probabilistic inference so tempting it has ensnared some of history’s greatest mathematical minds…The story is simultaneously about people calling out that mistake over and over when it’s cropped up in various new guises, only to see their concerns dismissed and the resistance stamped out.”</em> (Introduction, page 18) <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> () <br><br></li>
+<li><em>““</em> ()</li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.zajichekstats\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Bernoulli's Fallacy (of the Transposed Conditional)"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> ""</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "12/31/2025"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - History</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Philosophy</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Research</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Statistical Significance</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> true</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Previously talked about and read about Fallacy of the Transposed Conditional</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Reading this book, turns out that is what "Bernoulli's Fallacy" is</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu"># My favorite quotes {#favoritequotes}</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>These are my favorite quotes and passages from <span class="co">[</span><span class="ot">the book</span><span class="co">](https://cup.columbia.edu/book/bernoullis-fallacy/9780231199957/)</span>:</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"...the 'statistics wars' (at least on the frequentist versus Bayesian front) are best described as a dispute about the nature of the origins of probability: whether it comes from 'outside us' in the form of uncontrollable random noise in observations, or 'inside us' as our uncertainty given limited information on the state of the world."_ (Preface, page X)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Bayesian statistics provides natural protection against these issues and, in most circumstances, renders them non-issues. The safeguard, missing completely from the standard template, is the prior probability for the hypothesis, meaning the probability we assign it before considering the data, based on past experience and what we consider established theory."_ (Preface, page XI)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"In the Bayesian mode, hypotheses are never definitively accepted or rejected, nor are single estimates of model parameters taken as gospel truth. Instead, uncertainty can change incrementally as more data is collected; a single observation can be useful, two observations more so, etc."_ (Preface, page XII)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Science is largely not a process of falsifying claims definitively, but rather assigning them probabilities and updating those probabilities in light of observation. This process is endless. No proposition apart from a logical contradiction should ever get assigned probability 0, and nothing short of a logical tautology should get probability 1."_ (Preface, page XIV)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Is it possible to judge hypotheses based solely on how likely or unlikely an observation would be if those hypotheses were true? Those who answer in the affirmative, whether they be Fisherians, neo-Fisherians, Neyman-Pearsonians, equivalence testers, 'severe testers', and so on, commit the fallacy that is our subject. THose who answer in the negative have at least avoided that trap, though they may fall into others."_ (Preface, page XV)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"I first got a feeling that something was amiss when as a graduate student I tried to use statistics to make money gambling on basketball. I was about halfway toward finishing my PhD in mathematics at the University of California, Berkeley, when I realized I had no idea what I was doing."_ (Introduction, page 2)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Techniques like significance testing are supposed to tell you whether a phenomenon you observe in the data is real or just the product of chance. They never answer the question definitively one way or the other, but there are certain rules of thumb...To my mathematical brain, these tests always felt a little off. Why should I care about how often I might have observed the result I actually did observe? I could see it staring back at me from my spreadsheet, so I knew for a fact it had happened. Where did this magical 5 percent threshold of significance come from? And if my data did pass the threshold and I rejected the chance hypothesis, so what? What I cared about was whether I could make money gambling. The conventional explanations I found in my stats textbooks were never ultimately that satisfying and seemed to be deliberately obscured by jargon about Type I and Type II error rates and so on. My training had told me not to trust any idea I couldn't derive for myself from first principles, and no matter how hard I tried, I just couldn't prove the statistics tests were right."_ (Introduction, page 4-5)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"The problem with Bernoulli's answer to his question is that the arrow is pointing in the wrong direction. He wanted to answer a question about the probability of a hypothesis, but he did so by thinking only about the probability of an observation. The confusion of the two--and the general idea that one can settle questions of inference using only sampling probabilities--is what I call Bernoulli's Fallacy."_ (Introduction, page 9)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Most disturbing of all, though, once you can recognize Bernoulli's Fallacy in the wild, is that you'll start to see that it forms the basis for all of frequentist statistics--and therefore a good portion of modern science."_ (Introduction, page 11)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"...rate of incidence of the disease in the population...Forgetting to account for this fact is such a well-known statistical mistake it has a name: base rate neglect...The problem with statistical methods in science is that they commit the same conceptual mistake as base rate neglect. The standard methods as used almost everywhere give no consideration to the prior probability of a scientific theory being true before considering the data. In fact, they don't even allow for that kind of probability at all."_ (Introduction, page 11)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"...the arguments behind the standard statistical methods can, if expressed in the right kind of sloppy and sophistic language, sound extremely convincing...But anyone, particularly a scientist in a rush to interpret their data, could be forgiven for not taking the time to wade through the details. They may reasonably decide to either accept what they've been taught as standard because it's always been that way or jump to the end and confirm the orthodox methods give the right answer for a simple thought experiment."_ (Introduction, page 13)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"The main point of concern is the question of how exactly to turn background knowledge into a numerical probability...Different starting points would seem to produce different conclusions based on the data...An outsized philisophical concern with these problems was another key factor in the victory of the standard school of statistics. From a certain perspective, Bernoulli's Fallacy may have appeared the lesser of two evils. (It's not.) However, it would also be a mistake to divorce that choice from its historical context or to pretend that statistics exists somehow outside of history; the debate has been judged not by neutral third-party observers but by people motivated to prefer one answer over the other because it supported their agenda."_ (Introduction, page 13)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Galton, in addition to being a statistcal pioneer, famously coined the term eugenics and was an early advocate of using evolution to shape humanity's future by encouraging breeding among the 'right' people. Pearson and Fisher were also devotees to the cause of eugenics and used their newly minted statistical tools with great success to support the eugenics agenda. For these early statisticians, the proper function of statistics was often to detect significant differences between races, like a supposed difference in intelligence or moral character. 'Objective' assessments of this kind were used to support discriminatory immigration policies, forced sterilization laws, and, in their natural logical extension, the murder of millions in the Holocaust. Sadly the eugenics programs of Nazi Germany were linked in disturbingly close ways with the work of these early statisticians and their eugenicist colleagues in the United States."_ (Introduction, page 14)</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"It would be impossible to study the great works of history without engaging with authors who were not 'pure' by our standards. Meanwhile, if we ignored that intellectual context and focused only on their abstract ideas instead, we would sacrifice valuable understanding. As Pearson himself once wrote, 'It is impossible to understand a man's work unless you understand something of his character and unless you understand something of his environment. And his environment means the state of affairs social and political of his own age'...In many ways, eugenicist ideas animated their entire intellectual projects, as we'll see. What's most important of all, though, is how a desire for authority--understandable as it was given the circumstances--affected their statistical philosophy."_ (Introduction, page 15)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Like any human institution, statistics is and was largely a product of its times. In the late 19th and early 20th centuries, scientific inquiry demanded a theory free from even a whiff of subjectivity, which led its practitioners to claim inference based solely on data without interpretation was possible. They were mistaken. But their mistake was so powerfully appealing, and these first statisticians so prolific and domineering, that it quickly took hold and became the industry standard."_ (Introduction, page 15)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"While it may sound like good objective science to measure all theories with the same yardstick, meaning the sampling probability of the data, this practice has all but guaranteed the published literature is polluted by false positives, theories having no basis in reality and backed by data that only passed the necessary statistical thresholds by chance...So scientists now have to choose: either accept this result and others like it as legitimate, or call all other published research using the same methods into question. As difficult as it is, many have chosen the latter."_ (Introduction, page 16)</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"A widespread feeling of panic is emerging among scientists across disparate specialties who fear that many published results in their fields are simply false and that their statistical methods are to blame...Statistical orthodoxy tells them what tools to use, but the methods don't follow a coherent logical process--so whether a result is deemed publication worthy is largely a random decision...statistics is both much easier and much harder than we have been led to believe."_ (Introduction, page 17)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"This isn't just about protecting scientists from the embarrassment of a failed replication, though. We all have a stake in scientific truth. From small individual decisions about what foods to eat or what health risks to worry about to public policies about education, health care, the environment, and more, we all pay a price when the body of scientific research is polluted by false positives. Given infinite time and money, replication studies could perhaps eventually sort the true science from the noise, but in the meantime, we can expect to be constantly deceived by statistical phantoms."_ (Introduction, page 17-18)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"Sampling probabilities are attractive entities for educational purposes because they can appear to be backed up by experimental frequencies; there's always a 'right answer'. But they're only a part of the complete inferential picture. Requiring all probability statements to refer only to frequencies means avoiding the most sensible probability question in science, 'How likely is my theory to be true based on what I have observed?'."_ (Introduction, page 18)</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"This book is the story of a mistake: a wrong idea of the relationship between observation and probabilistic inference so tempting it has ensnared some of history's greatest mathematical minds...The story is simultaneously about people calling out that mistake over and over when it's cropped up in various new guises, only to see their concerns dismissed and the resistance stamped out."_ (Introduction, page 18)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_""_ ()</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2025 Zajichek Stats</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

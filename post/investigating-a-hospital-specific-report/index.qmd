@@ -7,6 +7,7 @@ image: "feature.png"
 categories:
   - Software Development
   - Healthcare
+  - Readmissions
 format:
   html:
     code-fold: show

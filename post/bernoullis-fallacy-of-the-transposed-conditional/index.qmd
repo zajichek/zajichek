@@ -1,0 +1,82 @@
+---
+title: "Bernoulli's Fallacy (of the Transposed Conditional)"
+description: ""
+author: "Alex Zajichek"
+date: "12/31/2025"
+image: "feature.png"
+categories:
+  - History
+  - Philosophy
+  - Research
+  - Statistical Significance
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---
+
+* Previously talked about and read about Fallacy of the Transposed Conditional
+* Reading this book, turns out that is what "Bernoulli's Fallacy" is
+
+# My favorite quotes {#favoritequotes}
+
+These are my favorite quotes and passages from [the book](https://cup.columbia.edu/book/bernoullis-fallacy/9780231199957/):
+
+* _"...the 'statistics wars' (at least on the frequentist versus Bayesian front) are best described as a dispute about the nature of the origins of probability: whether it comes from 'outside us' in the form of uncontrollable random noise in observations, or 'inside us' as our uncertainty given limited information on the state of the world."_ (Preface, page X)
+<br><br>
+* _"Bayesian statistics provides natural protection against these issues and, in most circumstances, renders them non-issues. The safeguard, missing completely from the standard template, is the prior probability for the hypothesis, meaning the probability we assign it before considering the data, based on past experience and what we consider established theory."_ (Preface, page XI)
+<br><br>
+* _"In the Bayesian mode, hypotheses are never definitively accepted or rejected, nor are single estimates of model parameters taken as gospel truth. Instead, uncertainty can change incrementally as more data is collected; a single observation can be useful, two observations more so, etc."_ (Preface, page XII)
+<br><br>
+* _"Science is largely not a process of falsifying claims definitively, but rather assigning them probabilities and updating those probabilities in light of observation. This process is endless. No proposition apart from a logical contradiction should ever get assigned probability 0, and nothing short of a logical tautology should get probability 1."_ (Preface, page XIV)
+<br><br>
+* _"Is it possible to judge hypotheses based solely on how likely or unlikely an observation would be if those hypotheses were true? Those who answer in the affirmative, whether they be Fisherians, neo-Fisherians, Neyman-Pearsonians, equivalence testers, 'severe testers', and so on, commit the fallacy that is our subject. THose who answer in the negative have at least avoided that trap, though they may fall into others."_ (Preface, page XV)
+<br><br>
+* _"I first got a feeling that something was amiss when as a graduate student I tried to use statistics to make money gambling on basketball. I was about halfway toward finishing my PhD in mathematics at the University of California, Berkeley, when I realized I had no idea what I was doing."_ (Introduction, page 2)
+<br><br>
+* _"Techniques like significance testing are supposed to tell you whether a phenomenon you observe in the data is real or just the product of chance. They never answer the question definitively one way or the other, but there are certain rules of thumb...To my mathematical brain, these tests always felt a little off. Why should I care about how often I might have observed the result I actually did observe? I could see it staring back at me from my spreadsheet, so I knew for a fact it had happened. Where did this magical 5 percent threshold of significance come from? And if my data did pass the threshold and I rejected the chance hypothesis, so what? What I cared about was whether I could make money gambling. The conventional explanations I found in my stats textbooks were never ultimately that satisfying and seemed to be deliberately obscured by jargon about Type I and Type II error rates and so on. My training had told me not to trust any idea I couldn't derive for myself from first principles, and no matter how hard I tried, I just couldn't prove the statistics tests were right."_ (Introduction, page 4-5)
+<br><br>
+* _"The problem with Bernoulli's answer to his question is that the arrow is pointing in the wrong direction. He wanted to answer a question about the probability of a hypothesis, but he did so by thinking only about the probability of an observation. The confusion of the two--and the general idea that one can settle questions of inference using only sampling probabilities--is what I call Bernoulli's Fallacy."_ (Introduction, page 9)
+<br><br>
+* _"Most disturbing of all, though, once you can recognize Bernoulli's Fallacy in the wild, is that you'll start to see that it forms the basis for all of frequentist statistics--and therefore a good portion of modern science."_ (Introduction, page 11)
+<br><br>
+* _"...rate of incidence of the disease in the population...Forgetting to account for this fact is such a well-known statistical mistake it has a name: base rate neglect...The problem with statistical methods in science is that they commit the same conceptual mistake as base rate neglect. The standard methods as used almost everywhere give no consideration to the prior probability of a scientific theory being true before considering the data. In fact, they don't even allow for that kind of probability at all."_ (Introduction, page 11)
+<br><br>
+* _"...the arguments behind the standard statistical methods can, if expressed in the right kind of sloppy and sophistic language, sound extremely convincing...But anyone, particularly a scientist in a rush to interpret their data, could be forgiven for not taking the time to wade through the details. They may reasonably decide to either accept what they've been taught as standard because it's always been that way or jump to the end and confirm the orthodox methods give the right answer for a simple thought experiment."_ (Introduction, page 13)
+<br><br>
+* _"The main point of concern is the question of how exactly to turn background knowledge into a numerical probability...Different starting points would seem to produce different conclusions based on the data...An outsized philisophical concern with these problems was another key factor in the victory of the standard school of statistics. From a certain perspective, Bernoulli's Fallacy may have appeared the lesser of two evils. (It's not.) However, it would also be a mistake to divorce that choice from its historical context or to pretend that statistics exists somehow outside of history; the debate has been judged not by neutral third-party observers but by people motivated to prefer one answer over the other because it supported their agenda."_ (Introduction, page 13)
+<br><br>
+* _"Galton, in addition to being a statistcal pioneer, famously coined the term eugenics and was an early advocate of using evolution to shape humanity's future by encouraging breeding among the 'right' people. Pearson and Fisher were also devotees to the cause of eugenics and used their newly minted statistical tools with great success to support the eugenics agenda. For these early statisticians, the proper function of statistics was often to detect significant differences between races, like a supposed difference in intelligence or moral character. 'Objective' assessments of this kind were used to support discriminatory immigration policies, forced sterilization laws, and, in their natural logical extension, the murder of millions in the Holocaust. Sadly the eugenics programs of Nazi Germany were linked in disturbingly close ways with the work of these early statisticians and their eugenicist colleagues in the United States."_ (Introduction, page 14)
+<br><br>
+* _"It would be impossible to study the great works of history without engaging with authors who were not 'pure' by our standards. Meanwhile, if we ignored that intellectual context and focused only on their abstract ideas instead, we would sacrifice valuable understanding. As Pearson himself once wrote, 'It is impossible to understand a man's work unless you understand something of his character and unless you understand something of his environment. And his environment means the state of affairs social and political of his own age'...In many ways, eugenicist ideas animated their entire intellectual projects, as we'll see. What's most important of all, though, is how a desire for authority--understandable as it was given the circumstances--affected their statistical philosophy."_ (Introduction, page 15)
+<br><br>
+* _"Like any human institution, statistics is and was largely a product of its times. In the late 19th and early 20th centuries, scientific inquiry demanded a theory free from even a whiff of subjectivity, which led its practitioners to claim inference based solely on data without interpretation was possible. They were mistaken. But their mistake was so powerfully appealing, and these first statisticians so prolific and domineering, that it quickly took hold and became the industry standard."_ (Introduction, page 15)
+<br><br>
+* _"While it may sound like good objective science to measure all theories with the same yardstick, meaning the sampling probability of the data, this practice has all but guaranteed the published literature is polluted by false positives, theories having no basis in reality and backed by data that only passed the necessary statistical thresholds by chance...So scientists now have to choose: either accept this result and others like it as legitimate, or call all other published research using the same methods into question. As difficult as it is, many have chosen the latter."_ (Introduction, page 16)
+<br><br>
+* _"A widespread feeling of panic is emerging among scientists across disparate specialties who fear that many published results in their fields are simply false and that their statistical methods are to blame...Statistical orthodoxy tells them what tools to use, but the methods don't follow a coherent logical process--so whether a result is deemed publication worthy is largely a random decision...statistics is both much easier and much harder than we have been led to believe."_ (Introduction, page 17)
+<br><br>
+* _"This isn't just about protecting scientists from the embarrassment of a failed replication, though. We all have a stake in scientific truth. From small individual decisions about what foods to eat or what health risks to worry about to public policies about education, health care, the environment, and more, we all pay a price when the body of scientific research is polluted by false positives. Given infinite time and money, replication studies could perhaps eventually sort the true science from the noise, but in the meantime, we can expect to be constantly deceived by statistical phantoms."_ (Introduction, page 17-18)
+<br><br>
+* _"Sampling probabilities are attractive entities for educational purposes because they can appear to be backed up by experimental frequencies; there's always a 'right answer'. But they're only a part of the complete inferential picture. Requiring all probability statements to refer only to frequencies means avoiding the most sensible probability question in science, 'How likely is my theory to be true based on what I have observed?'."_ (Introduction, page 18)
+<br><br>
+* _"This book is the story of a mistake: a wrong idea of the relationship between observation and probabilistic inference so tempting it has ensnared some of history's greatest mathematical minds...The story is simultaneously about people calling out that mistake over and over when it's cropped up in various new guises, only to see their concerns dismissed and the resistance stamped out."_ (Introduction, page 18)
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()

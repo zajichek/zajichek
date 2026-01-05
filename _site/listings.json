@@ -24,6 +24,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/conceptualizing-the-readmission-risk-pool/index.html",
       "/post/investigating-a-hospital-specific-report/index.html",
       "/post/introducing-the-readmit-r-package/index.html",
       "/post/ai-assisted-shiny-development-in-positron/index.html",

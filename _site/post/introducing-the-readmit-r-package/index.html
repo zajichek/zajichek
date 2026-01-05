@@ -231,6 +231,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
   <div class="quarto-categories">
     <div class="quarto-category">Software Development</div>
     <div class="quarto-category">Healthcare</div>
+    <div class="quarto-category">Readmissions</div>
   </div>
   </div>
 
@@ -1145,208 +1146,209 @@ dbl  (1): Footnote
 <span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
 <span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Software Development</span></span>
 <span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Healthcare</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>_This article is a copy of the package's `README` file. See the package website [here](https://centralstatz.github.io/readmit/index.html)._</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="in">`readmit`</span> is an evolving R package that contains tools for working with and analyzing hospital readmissions data. Currently, it provides utilities for components of the <span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program (HRRP)</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span>, including program timeline functions, <span class="co">[</span><span class="ot">Hospital-Specific Report (HSR)</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/reports)</span> helpers, and general importing tools for the <span class="co">[</span><span class="ot">Provider Data Catalog (PDC)</span><span class="co">](https://data.cms.gov/provider-data/)</span>.</span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## Installation</span></span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>You can install <span class="in">`readmit`</span> from CRAN:</span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pak")</span></span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"readmit"</span>)</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>Or the development version from <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/)</span> with:</span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pak")</span></span>
-<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"centralstatz/readmit"</span>)</span>
-<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="fu"># Background</span></span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>A _readmission_ occurs when a patient is admitted to the hospital, again, after they were recently discharged (where 30 days is the typical time frame used between hospitalizations). First and foremost, it is an obvious burden to patients for multiple reasons (i.e., psychologically, financially, etc.). </span>
-<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>Additionally, hospitals across the United States are <span class="co">[</span><span class="ot">penalized</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/methodology)</span> by the <span class="co">[</span><span class="ot">Centers for Medicare &amp; Medicaid Services (CMS)</span><span class="co">](https://www.cms.gov/)</span> on an annual basis in what is called the <span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program (HRRP)</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span>. In this program, up to 3% of Medicare reimbursement is witheld from hospitals for the duration of a <span class="co">[</span><span class="ot">fiscal year</span><span class="co">](https://www.usa.gov/federal-budget-process)</span> depending on the volume of <span class="co">[</span><span class="ot">excess readmissions</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/measures#:~:text=Planned%20Readmission%20Algorithm.-,Excess%20Readmission%20Ratio,-The%20excess%20readmission)</span> in <span class="co">[</span><span class="ot">select patient populations</span><span class="co">](https://www.cms.gov/medicare/quality/value-based-programs/hospital-readmissions#:~:text=What%20measures%20are%20included%20in%20the%20Hospital%20Readmissions%20Reduction%20Program%3F)</span> during a preceding <span class="co">[</span><span class="ot">performance period</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/resources)</span>. Readmissions also show up in other payer contracts, such as commericial insurers. Thus, it is a key area of focus for hospitals and part of the general measure of overall health of clinical and financial operations.</span>
-<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>Typically, cross-functional teams are deployed within health systems to monitor and develop initiatives, interventions, and overall strategy to manage and prevent readmissions. This includes things like care coordination and patient outreach, as well as how to incorporate technology such as predictive analytics to identify high-risk patients and prevent readmissions before they occur.</span>
-<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Problems</span></span>
-<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>The issues in doing this flawlessly are multi-factorial, but we'll list a few that we see relevant to (and motivators for) this package:</span>
-<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Reporting lineage**: It is often difficult to have seamless line of sight and reconcile hospital-wide metrics (e.g., overall readmission rates, penalty amounts, etc.) down to individual patients and their associated impact. There are many reasons for this: some may be technical (e.g., reporting tools, data collection, systems/personnel constraints), but some are due to complexities of hospital operations: varying definitions of metrics (e.g., how do we define readmissions?), diverse patient populations (e.g., which patients should/should not be included in the rates?), differential impact on outcomes (e.g., only Medicare patients contribute to the penalty but the hospital cares about readmissions for all patients).</span>
-<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
-<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Payor Contracts/Reimbursement**: Readmissions have different implications depending on whose paying for the service (among other things). It is difficult to disentangle and account for these nuances (especially in reporting/metrics) when developing readmission prevention strategies while optimizing financial health.</span>
-<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
-<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Oversaturation of research**: Readmissions has a <span class="co">[</span><span class="ot">large body of research</span><span class="co">](https://pubmed.ncbi.nlm.nih.gov/?term=predicting+readmissions)</span>. As a result, hospitals are thrown all kinds of "evidence" about how they should prevent readmissions, but it's difficult to confidently translate and distill that to a localized, optimized, actionable program for any one hospital, especially when it's conflicting.</span>
-<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
-<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Over-reliance of risk tools**: Especially in the hype of AI, machine learning (ML), etc., there are various vendor platforms and risk tools that purport to predict readmissions. The issue comes with how they are implemented into clinical workflows. These models may be good _statistically_, but must be implemented with intention and cross-functional teamwork for them to actually be useful. AI is not magic! Additionally, many out-of-the-box models focus on predicting readmission risk at the time of discharge. These may be good markers of baseline clinical risk but can quickly grow stale as the patient enters the post-discharge phase where the real drivers of readmissions occur.</span>
-<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
-<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Complexity of government programs**: The <span class="co">[</span><span class="ot">HRRP</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span> has many moving parts and details that make it difficult to track what's really going on. This includes the timing of the discharges that are actually counted in the program relative to when payment penalties are applied, the diagnosis codes and claims documentation used to identify patients to include, the statistical methodology behind the scenes that power program metrics, and the way all of that rolls up into a penalty percentage amount administered to the hospital, among other things. Each of these details have deep nuances that have tangible impact.</span>
-<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
-<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a>This package is meant to provide tools to help with components of these issues. In particular, the current state of the package focuses on the last item, making it easier to analyze information related to the <span class="co">[</span><span class="ot">HRRP</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span>. Over time, we hope this scope widens.</span>
-<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a><span class="fu"># Examples</span></span>
-<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a>Here are a few ways to use the package.</span>
-<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readmit)</span>
-<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a><span class="fu">## Extracting key dates from the HRRP</span></span>
-<span id="cb34-78"><a href="#cb34-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a>An important piece of the <span class="co">[</span><span class="ot">HRRP</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span> is to understand the timelines and dates associated with the program. We provide built-in datasets to conveniently access these dates (see <span class="in">`?hrrp_keydates`</span>). For example, <span class="in">`hrrp_performance_periods`</span> provides the date ranges for discharges that are included in each program year:</span>
-<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a>hrrp_performance_periods</span>
-<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a>And <span class="in">`hrrp_snapshot_dates`</span> provides the date that CMS took the extract of claims data for each program year:</span>
-<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a>hrrp_snapshot_dates</span>
-<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-94"><a href="#cb34-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-95"><a href="#cb34-95" aria-hidden="true" tabindex="-1"></a>Or, all of the individual <span class="in">`hrrp_*`</span> datasets are pre-joined in <span class="in">`hrrp_keydates`</span>:</span>
-<span id="cb34-96"><a href="#cb34-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Readmissions</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>_This article is a copy of the package's `README` file. See the package website [here](https://centralstatz.github.io/readmit/index.html)._</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="in">`readmit`</span> is an evolving R package that contains tools for working with and analyzing hospital readmissions data. Currently, it provides utilities for components of the <span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program (HRRP)</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span>, including program timeline functions, <span class="co">[</span><span class="ot">Hospital-Specific Report (HSR)</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/reports)</span> helpers, and general importing tools for the <span class="co">[</span><span class="ot">Provider Data Catalog (PDC)</span><span class="co">](https://data.cms.gov/provider-data/)</span>.</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## Installation</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>You can install <span class="in">`readmit`</span> from CRAN:</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pak")</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"readmit"</span>)</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>Or the development version from <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/)</span> with:</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="in">``` r</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pak")</span></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"centralstatz/readmit"</span>)</span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a><span class="fu"># Background</span></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>A _readmission_ occurs when a patient is admitted to the hospital, again, after they were recently discharged (where 30 days is the typical time frame used between hospitalizations). First and foremost, it is an obvious burden to patients for multiple reasons (i.e., psychologically, financially, etc.). </span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>Additionally, hospitals across the United States are <span class="co">[</span><span class="ot">penalized</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/methodology)</span> by the <span class="co">[</span><span class="ot">Centers for Medicare &amp; Medicaid Services (CMS)</span><span class="co">](https://www.cms.gov/)</span> on an annual basis in what is called the <span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program (HRRP)</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span>. In this program, up to 3% of Medicare reimbursement is witheld from hospitals for the duration of a <span class="co">[</span><span class="ot">fiscal year</span><span class="co">](https://www.usa.gov/federal-budget-process)</span> depending on the volume of <span class="co">[</span><span class="ot">excess readmissions</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/measures#:~:text=Planned%20Readmission%20Algorithm.-,Excess%20Readmission%20Ratio,-The%20excess%20readmission)</span> in <span class="co">[</span><span class="ot">select patient populations</span><span class="co">](https://www.cms.gov/medicare/quality/value-based-programs/hospital-readmissions#:~:text=What%20measures%20are%20included%20in%20the%20Hospital%20Readmissions%20Reduction%20Program%3F)</span> during a preceding <span class="co">[</span><span class="ot">performance period</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/resources)</span>. Readmissions also show up in other payer contracts, such as commericial insurers. Thus, it is a key area of focus for hospitals and part of the general measure of overall health of clinical and financial operations.</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>Typically, cross-functional teams are deployed within health systems to monitor and develop initiatives, interventions, and overall strategy to manage and prevent readmissions. This includes things like care coordination and patient outreach, as well as how to incorporate technology such as predictive analytics to identify high-risk patients and prevent readmissions before they occur.</span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Problems</span></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>The issues in doing this flawlessly are multi-factorial, but we'll list a few that we see relevant to (and motivators for) this package:</span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Reporting lineage**: It is often difficult to have seamless line of sight and reconcile hospital-wide metrics (e.g., overall readmission rates, penalty amounts, etc.) down to individual patients and their associated impact. There are many reasons for this: some may be technical (e.g., reporting tools, data collection, systems/personnel constraints), but some are due to complexities of hospital operations: varying definitions of metrics (e.g., how do we define readmissions?), diverse patient populations (e.g., which patients should/should not be included in the rates?), differential impact on outcomes (e.g., only Medicare patients contribute to the penalty but the hospital cares about readmissions for all patients).</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Payor Contracts/Reimbursement**: Readmissions have different implications depending on whose paying for the service (among other things). It is difficult to disentangle and account for these nuances (especially in reporting/metrics) when developing readmission prevention strategies while optimizing financial health.</span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Oversaturation of research**: Readmissions has a <span class="co">[</span><span class="ot">large body of research</span><span class="co">](https://pubmed.ncbi.nlm.nih.gov/?term=predicting+readmissions)</span>. As a result, hospitals are thrown all kinds of "evidence" about how they should prevent readmissions, but it's difficult to confidently translate and distill that to a localized, optimized, actionable program for any one hospital, especially when it's conflicting.</span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Over-reliance of risk tools**: Especially in the hype of AI, machine learning (ML), etc., there are various vendor platforms and risk tools that purport to predict readmissions. The issue comes with how they are implemented into clinical workflows. These models may be good _statistically_, but must be implemented with intention and cross-functional teamwork for them to actually be useful. AI is not magic! Additionally, many out-of-the-box models focus on predicting readmission risk at the time of discharge. These may be good markers of baseline clinical risk but can quickly grow stale as the patient enters the post-discharge phase where the real drivers of readmissions occur.</span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Complexity of government programs**: The <span class="co">[</span><span class="ot">HRRP</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span> has many moving parts and details that make it difficult to track what's really going on. This includes the timing of the discharges that are actually counted in the program relative to when payment penalties are applied, the diagnosis codes and claims documentation used to identify patients to include, the statistical methodology behind the scenes that power program metrics, and the way all of that rolls up into a penalty percentage amount administered to the hospital, among other things. Each of these details have deep nuances that have tangible impact.</span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>This package is meant to provide tools to help with components of these issues. In particular, the current state of the package focuses on the last item, making it easier to analyze information related to the <span class="co">[</span><span class="ot">HRRP</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span>. Over time, we hope this scope widens.</span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a><span class="fu"># Examples</span></span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a>Here are a few ways to use the package.</span>
+<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readmit)</span>
+<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-78"><a href="#cb34-78" aria-hidden="true" tabindex="-1"></a><span class="fu">## Extracting key dates from the HRRP</span></span>
+<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a>An important piece of the <span class="co">[</span><span class="ot">HRRP</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span> is to understand the timelines and dates associated with the program. We provide built-in datasets to conveniently access these dates (see <span class="in">`?hrrp_keydates`</span>). For example, <span class="in">`hrrp_performance_periods`</span> provides the date ranges for discharges that are included in each program year:</span>
+<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a>hrrp_performance_periods</span>
+<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a>And <span class="in">`hrrp_snapshot_dates`</span> provides the date that CMS took the extract of claims data for each program year:</span>
+<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a>hrrp_snapshot_dates</span>
+<span id="cb34-94"><a href="#cb34-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-95"><a href="#cb34-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-96"><a href="#cb34-96" aria-hidden="true" tabindex="-1"></a>Or, all of the individual <span class="in">`hrrp_*`</span> datasets are pre-joined in <span class="in">`hrrp_keydates`</span>:</span>
 <span id="cb34-97"><a href="#cb34-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-100"><a href="#cb34-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-101"><a href="#cb34-101" aria-hidden="true" tabindex="-1"></a>hrrp_keydates</span>
-<span id="cb34-102"><a href="#cb34-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-103"><a href="#cb34-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-104"><a href="#cb34-104" aria-hidden="true" tabindex="-1"></a><span class="fu">### Finding relevant program dates</span></span>
-<span id="cb34-105"><a href="#cb34-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-106"><a href="#cb34-106" aria-hidden="true" tabindex="-1"></a>We can also use the <span class="in">`hrrp_get_dates()`</span> function to extract relevant time periods for an inputted date. For example:</span>
-<span id="cb34-107"><a href="#cb34-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-108"><a href="#cb34-108" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"What is the performance period for payments my hospital is currently being penalized for?"_</span>
-<span id="cb34-109"><a href="#cb34-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-112"><a href="#cb34-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-113"><a href="#cb34-113" aria-hidden="true" tabindex="-1"></a><span class="fu">hrrp_get_dates</span>(<span class="fu">Sys.Date</span>(), <span class="st">"performance"</span>, <span class="at">discharge =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb34-114"><a href="#cb34-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-115"><a href="#cb34-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-116"><a href="#cb34-116" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"What payment periods did a discharge from 1/1/2022 impact?"_</span>
-<span id="cb34-117"><a href="#cb34-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-120"><a href="#cb34-120" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-121"><a href="#cb34-121" aria-hidden="true" tabindex="-1"></a><span class="fu">hrrp_get_dates</span>(<span class="fu">as.Date</span>(<span class="st">"2022-01-01"</span>), <span class="st">"payment"</span>, <span class="at">discharge =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb34-122"><a href="#cb34-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-123"><a href="#cb34-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-124"><a href="#cb34-124" aria-hidden="true" tabindex="-1"></a>We can see that not only are the discharges that impact _today's_ payment reductions multiple years old, but also individual discharges (and their associated readmissions) can impact the program result for three (3) years in a row.</span>
-<span id="cb34-125"><a href="#cb34-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-126"><a href="#cb34-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## Analyzing hospital reports</span></span>
-<span id="cb34-127"><a href="#cb34-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-128"><a href="#cb34-128" aria-hidden="true" tabindex="-1"></a>_**Note**: CMS changed the format of Hospital-Specific Reports (HSRs) for FY2026 (see [here](https://qualitynet.cms.gov/inpatient/hrrp/reports#tab2)). The current HSR functions support Excel-based formats through FY2025._</span>
-<span id="cb34-129"><a href="#cb34-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-130"><a href="#cb34-130" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">CMS</span><span class="co">](https://www.cms.gov/)</span> sends out <span class="co">[</span><span class="ot">Hospital-Specific Reports (HSR)</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/reports)</span> each program year detailing the calculations of the payment reduction for the upcoming fiscal year (hospitals are given a 1-month period to review and submit corrections, the dates of which can be accessed with <span class="in">`hrrp_review_periods`</span>). These reports contain the penalty amount down to the individual, line-item discharges that were included in the program. The package functions prefixed like <span class="in">`hsr_*`</span> are meant to be used with them. For example, we can use the <span class="in">`hsr_discharges`</span> function to extract discharge-level data for the heart failure cohort included in the readmission denominator into a clean data frame:</span>
-<span id="cb34-131"><a href="#cb34-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-134"><a href="#cb34-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-135"><a href="#cb34-135" aria-hidden="true" tabindex="-1"></a><span class="co"># Mock report from QualityNet</span></span>
-<span id="cb34-136"><a href="#cb34-136" aria-hidden="true" tabindex="-1"></a>my_hsr <span class="ot">&lt;-</span> <span class="fu">hsr_mock_reports</span>(<span class="st">"FY2025_HRRP_MockHSR.xlsx"</span>)</span>
-<span id="cb34-137"><a href="#cb34-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-138"><a href="#cb34-138" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_discharges</span>(</span>
-<span id="cb34-139"><a href="#cb34-139" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
-<span id="cb34-140"><a href="#cb34-140" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span>,</span>
-<span id="cb34-141"><a href="#cb34-141" aria-hidden="true" tabindex="-1"></a>  <span class="at">eligible_only =</span> <span class="cn">TRUE</span></span>
-<span id="cb34-142"><a href="#cb34-142" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-143"><a href="#cb34-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-144"><a href="#cb34-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-145"><a href="#cb34-145" aria-hidden="true" tabindex="-1"></a>We could also extract the risk factors for each patient used in the statistical models developed by CMS to estimate adjusted readmission risk:</span>
-<span id="cb34-146"><a href="#cb34-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-149"><a href="#cb34-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-150"><a href="#cb34-150" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_discharges</span>(</span>
-<span id="cb34-151"><a href="#cb34-151" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
-<span id="cb34-152"><a href="#cb34-152" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span>,</span>
-<span id="cb34-153"><a href="#cb34-153" aria-hidden="true" tabindex="-1"></a>  <span class="at">eligible_only =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb34-154"><a href="#cb34-154" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk_factors =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb34-155"><a href="#cb34-155" aria-hidden="true" tabindex="-1"></a>  <span class="at">discharge_phi =</span> <span class="cn">FALSE</span></span>
-<span id="cb34-156"><a href="#cb34-156" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-157"><a href="#cb34-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-158"><a href="#cb34-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-159"><a href="#cb34-159" aria-hidden="true" tabindex="-1"></a>We could then choose to extract the actual model coefficients (weights) that get applied to the patient risk factors:</span>
-<span id="cb34-160"><a href="#cb34-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-163"><a href="#cb34-163" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-164"><a href="#cb34-164" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_coefficients</span>(</span>
-<span id="cb34-165"><a href="#cb34-165" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
-<span id="cb34-166"><a href="#cb34-166" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span></span>
-<span id="cb34-167"><a href="#cb34-167" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-168"><a href="#cb34-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-169"><a href="#cb34-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-170"><a href="#cb34-170" aria-hidden="true" tabindex="-1"></a>These tables can be joined together and each patient's readmission risk that CMS used can be computed and analyzed. Or, we can use the <span class="in">`hsr_readmission_risks()`</span> function to do this for us:</span>
-<span id="cb34-171"><a href="#cb34-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-174"><a href="#cb34-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-175"><a href="#cb34-175" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_readmission_risks</span>(</span>
-<span id="cb34-176"><a href="#cb34-176" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
-<span id="cb34-177"><a href="#cb34-177" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span></span>
-<span id="cb34-178"><a href="#cb34-178" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-179"><a href="#cb34-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-180"><a href="#cb34-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-181"><a href="#cb34-181" aria-hidden="true" tabindex="-1"></a>As you can see, there are many ways to use the information in these reports to gain insight into readmissions at your hospital. Further analysis strategies can be explored in the <span class="co">[</span><span class="ot">associated article</span><span class="co">](https://centralstatz.github.io/readmit/articles/investigating-an-hsr.html)</span>.</span>
-<span id="cb34-182"><a href="#cb34-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-183"><a href="#cb34-183" aria-hidden="true" tabindex="-1"></a><span class="fu">## Importing data from the Provider Data Catalog</span></span>
-<span id="cb34-184"><a href="#cb34-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-185"><a href="#cb34-185" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">CMS</span><span class="co">](https://www.cms.gov/)</span> provides access to a large repository of datasets in the <span class="co">[</span><span class="ot">Provider Data Catalog (PDC)</span><span class="co">](https://data.cms.gov/provider-data/)</span>, which includes, among many other datasets, readmission measures and HRRP program results for hospitals around the United States. The package functions prefixed like <span class="in">`pdc_*`</span> are general functions to explore and import metadata/datasets straight from the website into clean datasets in <span class="in">`R`</span> (see <span class="in">`?pdc_read`</span>). For example, we can use <span class="in">`pdc_topics()`</span> to get the collection of topics seen <span class="co">[</span><span class="ot">here</span><span class="co">](https://data.cms.gov/provider-data/)</span>:</span>
-<span id="cb34-186"><a href="#cb34-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-189"><a href="#cb34-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-190"><a href="#cb34-190" aria-hidden="true" tabindex="-1"></a><span class="fu">pdc_topics</span>()</span>
-<span id="cb34-191"><a href="#cb34-191" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-192"><a href="#cb34-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-193"><a href="#cb34-193" aria-hidden="true" tabindex="-1"></a>Then we can choose a topic (or topics) we want to find datasets for, and extract their metadata with <span class="in">`pdc_datasets()`</span>:</span>
-<span id="cb34-194"><a href="#cb34-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-197"><a href="#cb34-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-198"><a href="#cb34-198" aria-hidden="true" tabindex="-1"></a>hospital_data <span class="ot">&lt;-</span> <span class="fu">pdc_datasets</span>(<span class="st">"Hospitals"</span>)</span>
-<span id="cb34-199"><a href="#cb34-199" aria-hidden="true" tabindex="-1"></a>hospital_data</span>
-<span id="cb34-200"><a href="#cb34-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-201"><a href="#cb34-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-202"><a href="#cb34-202" aria-hidden="true" tabindex="-1"></a>This result contains information on all datasets included under the _Hospitals_ topic. We can then explore this list to find a dataset we want to import. For example, we can search the titles of the datasets relevant to readmissions:</span>
-<span id="cb34-203"><a href="#cb34-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-206"><a href="#cb34-206" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-207"><a href="#cb34-207" aria-hidden="true" tabindex="-1"></a>readmission_data <span class="ot">&lt;-</span> </span>
-<span id="cb34-208"><a href="#cb34-208" aria-hidden="true" tabindex="-1"></a>  hospital_data <span class="sc">|&gt;</span></span>
-<span id="cb34-209"><a href="#cb34-209" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
-<span id="cb34-210"><a href="#cb34-210" aria-hidden="true" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_detect</span>(</span>
-<span id="cb34-211"><a href="#cb34-211" aria-hidden="true" tabindex="-1"></a>        title,</span>
-<span id="cb34-212"><a href="#cb34-212" aria-hidden="true" tabindex="-1"></a>        <span class="at">pattern =</span> <span class="st">"(?i)readmission"</span></span>
-<span id="cb34-213"><a href="#cb34-213" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb34-214"><a href="#cb34-214" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb34-215"><a href="#cb34-215" aria-hidden="true" tabindex="-1"></a>readmission_data</span>
-<span id="cb34-216"><a href="#cb34-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-217"><a href="#cb34-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-218"><a href="#cb34-218" aria-hidden="true" tabindex="-1"></a>Once we find the dataset we want, we can take note of the <span class="in">`datasetid`</span>, and use the <span class="in">`pdc_read()`</span> function to import it:</span>
-<span id="cb34-219"><a href="#cb34-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-222"><a href="#cb34-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-223"><a href="#cb34-223" aria-hidden="true" tabindex="-1"></a>hrrp_data <span class="ot">&lt;-</span> <span class="fu">pdc_read</span>(readmission_data<span class="sc">$</span>datasetid)</span>
-<span id="cb34-224"><a href="#cb34-224" aria-hidden="true" tabindex="-1"></a>hrrp_data</span>
-<span id="cb34-225"><a href="#cb34-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-226"><a href="#cb34-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-227"><a href="#cb34-227" aria-hidden="true" tabindex="-1"></a>And then we can use this dataset for further analysis. For example:</span>
-<span id="cb34-228"><a href="#cb34-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-229"><a href="#cb34-229" aria-hidden="true" tabindex="-1"></a>_"How many hospitals in this dataset are located in Wisconsin?"_</span>
-<span id="cb34-230"><a href="#cb34-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-233"><a href="#cb34-233" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb34-234"><a href="#cb34-234" aria-hidden="true" tabindex="-1"></a>hrrp_data <span class="sc">|&gt;</span></span>
-<span id="cb34-235"><a href="#cb34-235" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(State <span class="sc">==</span> <span class="st">"WI"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb34-236"><a href="#cb34-236" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="at">data =</span> _, dplyr<span class="sc">::</span><span class="fu">n_distinct</span>(<span class="st">`</span><span class="at">Facility ID</span><span class="st">`</span>))</span>
-<span id="cb34-237"><a href="#cb34-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb34-238"><a href="#cb34-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-239"><a href="#cb34-239" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
-<span id="cb34-240"><a href="#cb34-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-241"><a href="#cb34-241" aria-hidden="true" tabindex="-1"></a>_Don't forget to [subscribe](https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share) to receive email updates when new articles drop!_</span>
+<span id="cb34-98"><a href="#cb34-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-101"><a href="#cb34-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-102"><a href="#cb34-102" aria-hidden="true" tabindex="-1"></a>hrrp_keydates</span>
+<span id="cb34-103"><a href="#cb34-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-104"><a href="#cb34-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-105"><a href="#cb34-105" aria-hidden="true" tabindex="-1"></a><span class="fu">### Finding relevant program dates</span></span>
+<span id="cb34-106"><a href="#cb34-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-107"><a href="#cb34-107" aria-hidden="true" tabindex="-1"></a>We can also use the <span class="in">`hrrp_get_dates()`</span> function to extract relevant time periods for an inputted date. For example:</span>
+<span id="cb34-108"><a href="#cb34-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-109"><a href="#cb34-109" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"What is the performance period for payments my hospital is currently being penalized for?"_</span>
+<span id="cb34-110"><a href="#cb34-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-113"><a href="#cb34-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-114"><a href="#cb34-114" aria-hidden="true" tabindex="-1"></a><span class="fu">hrrp_get_dates</span>(<span class="fu">Sys.Date</span>(), <span class="st">"performance"</span>, <span class="at">discharge =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb34-115"><a href="#cb34-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-116"><a href="#cb34-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-117"><a href="#cb34-117" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>_"What payment periods did a discharge from 1/1/2022 impact?"_</span>
+<span id="cb34-118"><a href="#cb34-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-121"><a href="#cb34-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-122"><a href="#cb34-122" aria-hidden="true" tabindex="-1"></a><span class="fu">hrrp_get_dates</span>(<span class="fu">as.Date</span>(<span class="st">"2022-01-01"</span>), <span class="st">"payment"</span>, <span class="at">discharge =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-123"><a href="#cb34-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-124"><a href="#cb34-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-125"><a href="#cb34-125" aria-hidden="true" tabindex="-1"></a>We can see that not only are the discharges that impact _today's_ payment reductions multiple years old, but also individual discharges (and their associated readmissions) can impact the program result for three (3) years in a row.</span>
+<span id="cb34-126"><a href="#cb34-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-127"><a href="#cb34-127" aria-hidden="true" tabindex="-1"></a><span class="fu">## Analyzing hospital reports</span></span>
+<span id="cb34-128"><a href="#cb34-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-129"><a href="#cb34-129" aria-hidden="true" tabindex="-1"></a>_**Note**: CMS changed the format of Hospital-Specific Reports (HSRs) for FY2026 (see [here](https://qualitynet.cms.gov/inpatient/hrrp/reports#tab2)). The current HSR functions support Excel-based formats through FY2025._</span>
+<span id="cb34-130"><a href="#cb34-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-131"><a href="#cb34-131" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">CMS</span><span class="co">](https://www.cms.gov/)</span> sends out <span class="co">[</span><span class="ot">Hospital-Specific Reports (HSR)</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/reports)</span> each program year detailing the calculations of the payment reduction for the upcoming fiscal year (hospitals are given a 1-month period to review and submit corrections, the dates of which can be accessed with <span class="in">`hrrp_review_periods`</span>). These reports contain the penalty amount down to the individual, line-item discharges that were included in the program. The package functions prefixed like <span class="in">`hsr_*`</span> are meant to be used with them. For example, we can use the <span class="in">`hsr_discharges`</span> function to extract discharge-level data for the heart failure cohort included in the readmission denominator into a clean data frame:</span>
+<span id="cb34-132"><a href="#cb34-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-135"><a href="#cb34-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-136"><a href="#cb34-136" aria-hidden="true" tabindex="-1"></a><span class="co"># Mock report from QualityNet</span></span>
+<span id="cb34-137"><a href="#cb34-137" aria-hidden="true" tabindex="-1"></a>my_hsr <span class="ot">&lt;-</span> <span class="fu">hsr_mock_reports</span>(<span class="st">"FY2025_HRRP_MockHSR.xlsx"</span>)</span>
+<span id="cb34-138"><a href="#cb34-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-139"><a href="#cb34-139" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_discharges</span>(</span>
+<span id="cb34-140"><a href="#cb34-140" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
+<span id="cb34-141"><a href="#cb34-141" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span>,</span>
+<span id="cb34-142"><a href="#cb34-142" aria-hidden="true" tabindex="-1"></a>  <span class="at">eligible_only =</span> <span class="cn">TRUE</span></span>
+<span id="cb34-143"><a href="#cb34-143" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-144"><a href="#cb34-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-145"><a href="#cb34-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-146"><a href="#cb34-146" aria-hidden="true" tabindex="-1"></a>We could also extract the risk factors for each patient used in the statistical models developed by CMS to estimate adjusted readmission risk:</span>
+<span id="cb34-147"><a href="#cb34-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-150"><a href="#cb34-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-151"><a href="#cb34-151" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_discharges</span>(</span>
+<span id="cb34-152"><a href="#cb34-152" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
+<span id="cb34-153"><a href="#cb34-153" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span>,</span>
+<span id="cb34-154"><a href="#cb34-154" aria-hidden="true" tabindex="-1"></a>  <span class="at">eligible_only =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-155"><a href="#cb34-155" aria-hidden="true" tabindex="-1"></a>  <span class="at">risk_factors =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb34-156"><a href="#cb34-156" aria-hidden="true" tabindex="-1"></a>  <span class="at">discharge_phi =</span> <span class="cn">FALSE</span></span>
+<span id="cb34-157"><a href="#cb34-157" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-158"><a href="#cb34-158" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-159"><a href="#cb34-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-160"><a href="#cb34-160" aria-hidden="true" tabindex="-1"></a>We could then choose to extract the actual model coefficients (weights) that get applied to the patient risk factors:</span>
+<span id="cb34-161"><a href="#cb34-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-164"><a href="#cb34-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-165"><a href="#cb34-165" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_coefficients</span>(</span>
+<span id="cb34-166"><a href="#cb34-166" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
+<span id="cb34-167"><a href="#cb34-167" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span></span>
+<span id="cb34-168"><a href="#cb34-168" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-169"><a href="#cb34-169" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-170"><a href="#cb34-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-171"><a href="#cb34-171" aria-hidden="true" tabindex="-1"></a>These tables can be joined together and each patient's readmission risk that CMS used can be computed and analyzed. Or, we can use the <span class="in">`hsr_readmission_risks()`</span> function to do this for us:</span>
+<span id="cb34-172"><a href="#cb34-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-175"><a href="#cb34-175" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-176"><a href="#cb34-176" aria-hidden="true" tabindex="-1"></a><span class="fu">hsr_readmission_risks</span>(</span>
+<span id="cb34-177"><a href="#cb34-177" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> my_hsr,</span>
+<span id="cb34-178"><a href="#cb34-178" aria-hidden="true" tabindex="-1"></a>  <span class="at">cohort =</span> <span class="st">"HF"</span></span>
+<span id="cb34-179"><a href="#cb34-179" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-180"><a href="#cb34-180" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-181"><a href="#cb34-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-182"><a href="#cb34-182" aria-hidden="true" tabindex="-1"></a>As you can see, there are many ways to use the information in these reports to gain insight into readmissions at your hospital. Further analysis strategies can be explored in the <span class="co">[</span><span class="ot">associated article</span><span class="co">](https://centralstatz.github.io/readmit/articles/investigating-an-hsr.html)</span>.</span>
+<span id="cb34-183"><a href="#cb34-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-184"><a href="#cb34-184" aria-hidden="true" tabindex="-1"></a><span class="fu">## Importing data from the Provider Data Catalog</span></span>
+<span id="cb34-185"><a href="#cb34-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-186"><a href="#cb34-186" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">CMS</span><span class="co">](https://www.cms.gov/)</span> provides access to a large repository of datasets in the <span class="co">[</span><span class="ot">Provider Data Catalog (PDC)</span><span class="co">](https://data.cms.gov/provider-data/)</span>, which includes, among many other datasets, readmission measures and HRRP program results for hospitals around the United States. The package functions prefixed like <span class="in">`pdc_*`</span> are general functions to explore and import metadata/datasets straight from the website into clean datasets in <span class="in">`R`</span> (see <span class="in">`?pdc_read`</span>). For example, we can use <span class="in">`pdc_topics()`</span> to get the collection of topics seen <span class="co">[</span><span class="ot">here</span><span class="co">](https://data.cms.gov/provider-data/)</span>:</span>
+<span id="cb34-187"><a href="#cb34-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-190"><a href="#cb34-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-191"><a href="#cb34-191" aria-hidden="true" tabindex="-1"></a><span class="fu">pdc_topics</span>()</span>
+<span id="cb34-192"><a href="#cb34-192" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-193"><a href="#cb34-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-194"><a href="#cb34-194" aria-hidden="true" tabindex="-1"></a>Then we can choose a topic (or topics) we want to find datasets for, and extract their metadata with <span class="in">`pdc_datasets()`</span>:</span>
+<span id="cb34-195"><a href="#cb34-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-198"><a href="#cb34-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-199"><a href="#cb34-199" aria-hidden="true" tabindex="-1"></a>hospital_data <span class="ot">&lt;-</span> <span class="fu">pdc_datasets</span>(<span class="st">"Hospitals"</span>)</span>
+<span id="cb34-200"><a href="#cb34-200" aria-hidden="true" tabindex="-1"></a>hospital_data</span>
+<span id="cb34-201"><a href="#cb34-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-202"><a href="#cb34-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-203"><a href="#cb34-203" aria-hidden="true" tabindex="-1"></a>This result contains information on all datasets included under the _Hospitals_ topic. We can then explore this list to find a dataset we want to import. For example, we can search the titles of the datasets relevant to readmissions:</span>
+<span id="cb34-204"><a href="#cb34-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-207"><a href="#cb34-207" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-208"><a href="#cb34-208" aria-hidden="true" tabindex="-1"></a>readmission_data <span class="ot">&lt;-</span> </span>
+<span id="cb34-209"><a href="#cb34-209" aria-hidden="true" tabindex="-1"></a>  hospital_data <span class="sc">|&gt;</span></span>
+<span id="cb34-210"><a href="#cb34-210" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb34-211"><a href="#cb34-211" aria-hidden="true" tabindex="-1"></a>      stringr<span class="sc">::</span><span class="fu">str_detect</span>(</span>
+<span id="cb34-212"><a href="#cb34-212" aria-hidden="true" tabindex="-1"></a>        title,</span>
+<span id="cb34-213"><a href="#cb34-213" aria-hidden="true" tabindex="-1"></a>        <span class="at">pattern =</span> <span class="st">"(?i)readmission"</span></span>
+<span id="cb34-214"><a href="#cb34-214" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb34-215"><a href="#cb34-215" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb34-216"><a href="#cb34-216" aria-hidden="true" tabindex="-1"></a>readmission_data</span>
+<span id="cb34-217"><a href="#cb34-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-218"><a href="#cb34-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-219"><a href="#cb34-219" aria-hidden="true" tabindex="-1"></a>Once we find the dataset we want, we can take note of the <span class="in">`datasetid`</span>, and use the <span class="in">`pdc_read()`</span> function to import it:</span>
+<span id="cb34-220"><a href="#cb34-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-223"><a href="#cb34-223" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-224"><a href="#cb34-224" aria-hidden="true" tabindex="-1"></a>hrrp_data <span class="ot">&lt;-</span> <span class="fu">pdc_read</span>(readmission_data<span class="sc">$</span>datasetid)</span>
+<span id="cb34-225"><a href="#cb34-225" aria-hidden="true" tabindex="-1"></a>hrrp_data</span>
+<span id="cb34-226"><a href="#cb34-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-227"><a href="#cb34-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-228"><a href="#cb34-228" aria-hidden="true" tabindex="-1"></a>And then we can use this dataset for further analysis. For example:</span>
+<span id="cb34-229"><a href="#cb34-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-230"><a href="#cb34-230" aria-hidden="true" tabindex="-1"></a>_"How many hospitals in this dataset are located in Wisconsin?"_</span>
+<span id="cb34-231"><a href="#cb34-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-234"><a href="#cb34-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-235"><a href="#cb34-235" aria-hidden="true" tabindex="-1"></a>hrrp_data <span class="sc">|&gt;</span></span>
+<span id="cb34-236"><a href="#cb34-236" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(State <span class="sc">==</span> <span class="st">"WI"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb34-237"><a href="#cb34-237" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(<span class="at">data =</span> _, dplyr<span class="sc">::</span><span class="fu">n_distinct</span>(<span class="st">`</span><span class="at">Facility ID</span><span class="st">`</span>))</span>
+<span id="cb34-238"><a href="#cb34-238" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-239"><a href="#cb34-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-240"><a href="#cb34-240" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb34-241"><a href="#cb34-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-242"><a href="#cb34-242" aria-hidden="true" tabindex="-1"></a>_Don't forget to [subscribe](https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share) to receive email updates when new articles drop!_</span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

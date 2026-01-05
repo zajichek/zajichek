@@ -8,6 +8,7 @@ categories:
   - Healthcare
   - Modeling
   - Prediction
+  - Readmissions
 format:
   html:
     code-fold: true
