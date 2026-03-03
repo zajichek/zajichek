@@ -17,7 +17,9 @@ draft: true
 ---
 
 * Previously talked about and read about Fallacy of the Transposed Conditional
-* Reading this book, turns out that is what "Bernoulli's Fallacy" is
+* Reading this book, turns out that is what "Bernoulli's Fallacy" is the fallacy of transposed conditional
+
+* Statistician Belief surveys (embed survey, show responses). Give links. Describe motivation for it. This book prompted me to be interested in these things.
 
 # My favorite quotes {#favoritequotes}
 
@@ -62,6 +64,98 @@ These are my favorite quotes and passages from [the book](https://cup.columbia.e
 * _"Sampling probabilities are attractive entities for educational purposes because they can appear to be backed up by experimental frequencies; there's always a 'right answer'. But they're only a part of the complete inferential picture. Requiring all probability statements to refer only to frequencies means avoiding the most sensible probability question in science, 'How likely is my theory to be true based on what I have observed?'."_ (Introduction, page 18)
 <br><br>
 * _"This book is the story of a mistake: a wrong idea of the relationship between observation and probabilistic inference so tempting it has ensnared some of history's greatest mathematical minds...The story is simultaneously about people calling out that mistake over and over when it's cropped up in various new guises, only to see their concerns dismissed and the resistance stamped out."_ (Introduction, page 18)
+<br><br>
+* _"Often, Aristotle observed, pure logic won't suffice on its own because some links in the chain are missing or uncertain...'the true and the approximately true are apprehended by the same faculty; it may also be noted that men have a sufficient natural instinct for what is true, and usually do arrive at the truth. Hence the man who makes a good guess at truth is likely to make a good guess at probabilities.'"_ (Chapter 1, page 22)
+<br><br>
+* _"It was in this sense that Cicero, writing about the nature of the gods, advised that probability 'should guide the life of a wise person'."_ (Chapter 1, page 23)
+<br><br>
+* _"The implicit understanding present in the classical definition of probability was that the enumeration of outcomes must be done in such a way that they are equiprobable, or equally likely to occur. These are the tiny atoms from which all probabilities are then built. But, of course, this couldn't be an explicit requirement because then the definition would be circular: probability depends on probability."_ (Chapter 1, page 26)
+<br><br>
+* _"If the frequency is the only available means of calculating the probability, it may as well serve as the definition. As we'll see later, this interpretation especially gained traction after probability took hold in social science."_ (Chapter 1, page 29)
+<br><br>
+* _"[John] Venn argued we need to consider the limit as the number of trials goes to infinity. That limiting frequency is the precise probability of the event. However, this, of course, presents a practical impossibility: we can't flip a coin an infinite number of times. Furthermore, even flipping a real coin a very large number of times introduces with near certainty the fact that the characteristics of the coin will change over time--it will gradually get dented, scratched up, or bent out of shape. Venn's answer was that one should imagine repeating the infinite series of trials with no change to the relevant underlying factors. That is, we should imagine flipping an imaginary coin. Yet somehow the results of this are still held to be materially meaningful and, according to Venn, the only acceptable definition of probability."_ (Chapter 1, page 30)
+<br><br>
+* _"If asked for, say, the probability of being dealt all 13 spades in a hand of bridge, any well-trained frequentist would no doubt begin with the calculation (13/52)(12/51)(11/50)...(1/40), reasoning there are 13 spades out of 52 cards available for the first card dealt, 12 spades out of 51 cards remaining for the second card, and so on. The frequentist would then ultimately arrive (hopefully with the aid of a computer) at the extremely small probability of 1 in 635,013,559,600. However, there is no empirical evidence for this value as the limiting frequency of the event, nor will there ever be, since this is several orders of magnitude greater than the number of bridge hands ever dealt. Assuming we could deal one complete hand per minute and record the results, to get through one cycle of over 635 billion hands would require 1.2 million years. And, remember, in all that time our expected number of occurrences of the all-spades hand in question would be one! What if we saw two or none? Presumably, to establish the above probability as correct with any accuracy, we would need many more observations, taking perhaps billions or trillions of years. Even that may not satisy the frequentist. Imagine that after our impossibly long process of shuffling and dealing out trillions of bridge hands was complete, we arrived at a different limiting frequency than the one predicted--say we got something like twice as many perfect all-spades hands as expected. In that case, the frequentist would certainly claim something had gone wrong with the shuffling and dealing of the cards, so they were not truly 'randomized' or had not been independent of one another! So there's an inherent circularity in the definition of probability in terms of frequency: the probability is the frequency we would get--but only if the conditions of the experiment were managed correctly, which we could discern only by the frequency coming out to be nearly equal to the probability."_ (Chapter 1, page 33)
+<br><br>
+* _"The question of what exactly counts as an independent trial and what characteristics these trials need to share becomes especially complicated when applying the frequency model to social science. It's easy to recognize a legitimate trial of a coin toss when we see one, but what if we wanted to estimate, say, the probability that a given person will live to be 90, as an actuary would need to do for a mortality table? In principle, the frequentist interpretation would tell us to estimate this probability by finding a large collection of similar people--as in Bernoulli's 'same age and complexion' requirement--and counting the proportion among them who live past 90. But similar in exactly what ways? The more identifying characteristics we include--male, age 40, nonsmoker, overweight, family history of diabetes, etc.--the smaller the reference class becomes until we're necessarily left with only the one person with whom we started. So are these probabilities only ever 0 or 1? Too large a reference class would also pose a problem because it might give us accurate estimates of frequency that are practically useless. For example, here is a way to give very accurate weather forecasts for, say, the chance of rain in your local area without any meteorological training or equipment: simply look up the long-run historical frequency of rain for that area, and give this number as your predicted chance of rain every day. After a few years or so have gone by, the observed frequency will closely match your prediction, assuming the climate on the whole continues roughly as it was. But from day to day, your predictions won't incorporate any new information that would actually be useful for people trying to decide whether they need to bring an umbrella that day."_ (Chapter 1, page 34)
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
+<br><br>
+* _""_ ()
 <br><br>
 * _""_ ()
 <br><br>
