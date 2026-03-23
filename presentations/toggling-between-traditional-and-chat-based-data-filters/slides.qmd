@@ -1,0 +1,53 @@
+---
+draft: true
+title: "Toggling Between Traditional and Chat-Based Data Filters in Shiny"
+subtitle: "R Medicine 2026 Lightning Talk"
+author:
+  - name: "Alex Zajichek"
+    affiliation:
+      - "Department of Quantitative Health Sciences<br>Cleveland Clinic"
+date: "2026-05-07"
+date-format: "MMMM D, YYYY"
+format:
+  revealjs:
+    theme: 
+      - default
+      - slides.scss
+    title-slide-attributes:
+      data-background-image: "img/rmed_background.png"
+      data-background-size: cover
+      data-background-opacity: "50"
+    fontsize: 2em
+    html-math-method: mathjax
+    slide-number: c/t
+    show-slide-number: all
+    highlight-style: rstudio_default-light.theme
+    logo: "img/rmed.png"
+    footer: "[https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/](https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters){target='_blank'}"
+    include-after-body: "img/clean_title_page.html"
+include-in-header:
+  text: |
+    <link rel="shortcut icon" href="img/rmed.ico"/>
+embed-resources: true   # true = a single file, false = multiple files
+knitr:
+  opts_chunk:      ########## set global options ############
+    collapse: true # keep code from blocks together (if shown)
+    echo: false    # don't show code
+    message: true  # show messages
+    warning: true  # show warnings
+    error: true    # show error messages
+    comment: ""    # don't show ## with printed output
+    R.options:   
+      digits: 3    # round to three digits
+editor_options:
+  chunk_output_type: console
+editor: source
+highlight-style: rstudio_default-light.theme
+---
+ 
+# Introduction
+
+* Show GIF or live demo of the app right away
+* Then go into the tools in the background
+* Talk about the philosophy of querychat, why it's useful
+* Unpack how the toggle was implemented

@@ -1,0 +1,19 @@
+{
+  "hash": "f8276f8832ebc85f604b37f754763134",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ndraft: true\ntitle: \"Toggling Between Traditional and Chat-Based Data Filters in Shiny\"\nsubtitle: \"R Medicine 2026 Lightning Talk\"\nauthor:\n  - name: \"Alex Zajichek\"\n    affiliation:\n      - \"Department of Quantitative Health Sciences<br>Cleveland Clinic\"\ndate: \"2026-05-07\"\ndate-format: \"MMMM D, YYYY\"\nformat:\n  revealjs:\n    theme: \n      - default\n      - slides.scss\n    title-slide-attributes:\n      data-background-image: \"img/rmed_background.png\"\n      data-background-size: cover\n      data-background-opacity: \"50\"\n    fontsize: 2em\n    html-math-method: mathjax\n    slide-number: c/t\n    show-slide-number: all\n    highlight-style: rstudio_default-light.theme\n    logo: \"img/rmed.png\"\n    footer: \"[https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/](https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters){target='_blank'}\"\n    include-after-body: \"img/clean_title_page.html\"\ninclude-in-header:\n  text: |\n    <link rel=\"shortcut icon\" href=\"img/rmed.ico\"/>\nembed-resources: true   # true = a single file, false = multiple files\nknitr:\n  opts_chunk:      ########## set global options ############\n    collapse: true # keep code from blocks together (if shown)\n    echo: false    # don't show code\n    message: true  # show messages\n    warning: true  # show warnings\n    error: true    # show error messages\n    comment: \"\"    # don't show ## with printed output\n    R.options:   \n      digits: 3    # round to three digits\neditor_options:\n  chunk_output_type: console\neditor: source\nhighlight-style: rstudio_default-light.theme\n---\n \n# Introduction\n\n* Show GIF or live demo of the app right away\n* Then go into the tools in the background\n* Talk about the philosophy of querychat, why it's useful\n* Unpack how the toggle was implemented",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\n<script>\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\n  // slide changes (different for each slide format).\n  (function () {\n    // dispatch for htmlwidgets\n    function fireSlideEnter() {\n      const event = window.document.createEvent(\"Event\");\n      event.initEvent(\"slideenter\", true, true);\n      window.document.dispatchEvent(event);\n    }\n\n    function fireSlideChanged(previousSlide, currentSlide) {\n      fireSlideEnter();\n\n      // dispatch for shiny\n      if (window.jQuery) {\n        if (previousSlide) {\n          window.jQuery(previousSlide).trigger(\"hidden\");\n        }\n        if (currentSlide) {\n          window.jQuery(currentSlide).trigger(\"shown\");\n        }\n      }\n    }\n\n    // hookup for slidy\n    if (window.w3c_slidy) {\n      window.w3c_slidy.add_observer(function (slide_num) {\n        // slide_num starts at position 1\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\n      });\n    }\n\n  })();\n</script>\n\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

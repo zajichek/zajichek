@@ -1,0 +1,16 @@
+---
+draft: true
+title: "Finding the best bracket for the Men's NCAA March Madness Tournament"
+author: Alex Zajichek
+date: "2027-03-10"
+---
+
+* Formulating a Bayesian model to identify the best bracket
+
+Main questions:
+
+1. Which bracket has the highest posterior probability (of all combinations)?
+
+2. What is the _effective_ number of bracket combinations?
+    + Based on finding the reduced set of bracket possibilities that account for nearly 100% of the posteriod probability space. 
+    + What are the commonalities in those brackets?
