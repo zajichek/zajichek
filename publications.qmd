@@ -2,6 +2,10 @@
 title: "Publications"
 ---
 
+# 2026
+
+* Supraja Swamy, Jean-Paul Achkar, Stacey Ehrenberg, <strong>Alex Zajichek</strong>, Alex Milinovich, Ravi S. Shah, Jessica Barry, Sandra C. Kim, Jacob A. Kurowski. [Neonatal and Pregnancy Outcomes in Pregnant Adults with Pediatric- Onset Crohn’s Disease](https://www.sciencedirect.com/science/article/pii/S2772572326000804). Gastro Hep Advances (2026). https://doi.org/10.1016/j.gastha.2026.100959.
+
 # 2025
 
 * Gasoyan, H., Alavi, M.H., <strong>Zajichek, A.</strong> et al. [Macrovascular and microvascular outcomes of metabolic surgery versus GLP-1 receptor agonists in patients with diabetes and obesity](https://www.nature.com/articles/s41591-025-03893-3). Nat Med (2025). https://doi.org/10.1038/s41591-025-03893-3

@@ -45,35 +45,41 @@ editor: source
 highlight-style: rstudio_default-light.theme
 ---
  
-# Overview
+# Case study
 
-- **App Goal**: Allow users to toggle between using traditional data filters and a natural language chat interface to update reactive output in an exploratory Shiny app
+- **Context**: We want to build a Shiny application to explore results from the [Hospital Readmissions Reduction Program (HRRP)](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp) across the state of Wisconsin.
 
 <br>
 
-- **Data Context**: We want to explore hospital-level results from the [Hospital Readmissions Reduction Program (HRRP)](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp) across the state of Wisconsin.
+- **Key functionality**: Enable the user to toggle between traditional data filters and a natural language chat interface to update reactive output
 
-# The app
+# First, the app
 
 ![](readmit_app.gif)
 
 Live app is hosted on Posit Connect Cloud [here](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/). 
+
+::: {.notes}
+Query: "Show me the top 10 hospitals with most excess readmissions for heart failure"
+:::
 
 # SQL queries?
 
 Why did it write this?
 
 ```
-SELECT * FROM master_dat WHERE DiagnosisCategory = 'HF' ORDER BY Excess DESC LIMIT 5
+SELECT * FROM master_dat WHERE DiagnosisCategory = 'HF' ORDER BY Excess DESC LIMIT 10
 ```
 
 - Comes from the [`querychat`](https://posit-dev.github.io/querychat/) R package
-- Provides a _clever_ way to manipulate your app content through natural language while maintaining data security
+
 - Conceptual flow:
   1. User asks a question
   2. LLM generates a SQL query based on _metadata_
   3. Query is executed on your dataset _locally_
   4. Filtered data can be consumed by downstream reactives as normal
+
+- Provides a _clever_ way to manipulate your app content through natural language while maintaining data security
 
 # How the code looks
 
@@ -129,7 +135,7 @@ output$hospital_count <-
 
 ::::
 
-# The Key to success
+# The key to success
 
 :::: {.columns}
 
@@ -167,7 +173,7 @@ View source document [here](https://github.com/centralstatz/hospital_readmission
 
 How do we make this work?
 
-# Using conditional panels
+# Using conditional panels!
 
 :::: {.columns}
 
@@ -230,3 +236,21 @@ current_hospitals <- reactive({
 :::
 
 ::::
+
+# Summary
+
+- Use the [`querychat`](https://posit-dev.github.io/querychat/) package to build the chat interface and server connection
+  + It's _key_ to specify the `data_description` argument thoroughly for better chat experience
+
+- The `bslib::input_switch()` function creates the toggle, and `conditionalPanel()` renders the set of filters displayed to the user, depending on what is selected
+
+- `reactive()` objects on the server side help pick the right dataset depending on the state of the toggle
+  + _Keep things upstream_: Recommend designing/pre-processing your data in a sensisble way to allow congruency among filtered data output regardless of method (so downstream content doesn't care about source)
+
+# Thank you!
+
+**Links**:
+
+- Live app: [https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)
+- App source code: [https://github.com/centralstatz/hospital_readmissions_explorer](https://github.com/centralstatz/hospital_readmissions_explorer)
+- Slides: [https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/](https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/)

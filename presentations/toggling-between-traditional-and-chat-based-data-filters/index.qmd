@@ -14,7 +14,7 @@ Presented at the [R/Medicine 2026](https://rconsortium.github.io/RMedicine_websi
 </center>
 ```
 
-[Full screen slideshow](slides.qmd)
+[Full screen slideshow](slides.html)
 
 ### Conference Presentation
 
