@@ -1,5 +1,4 @@
 ---
-draft: true
 title: "Toggling Between Traditional and Chat-Based Data Filters in Shiny"
 subtitle: "R Medicine 2026 Lightning Talk"
 author:
@@ -68,7 +67,7 @@ Query: "Show me the top 10 hospitals with most excess readmissions for heart fai
 Why did it write this?
 
 ```
-SELECT * FROM master_dat WHERE DiagnosisCategory = 'HF' ORDER BY Excess DESC LIMIT 10
+SELECT * FROM master_dat WHERE DiagnosisCategory = 'HF' ORDER BY Excess DESC LIMIT 10 
 ```
 
 - Comes from the [`querychat`](https://posit-dev.github.io/querychat/) R package

@@ -1,5 +1,4 @@
 ---
-draft: true
 title: "Toggling Between Traditional and Chat-Based Data Filters in Shiny"
 author: Alex Zajichek
 date: "2026-05-07"
@@ -18,4 +17,4 @@ Presented at the [R/Medicine 2026](https://rconsortium.github.io/RMedicine_websi
 
 ### Conference Presentation
 
-_To be added_
+{{< video https://www.youtube.com/embed/fcTKGXL7tNM >}}
