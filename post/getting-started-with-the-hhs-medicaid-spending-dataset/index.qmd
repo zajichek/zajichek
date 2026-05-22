@@ -971,10 +971,10 @@ dbGetQuery(
   kableExtra::kable_styling(full_width = FALSE)
 ```
 
-## Total spend by month for a given city
+## Total spend by month
 
 _Hover over the plot to see detail_
-```{r}
+```{r, warning = FALSE, message = FALSE}
 library(highcharter)
 dbGetQuery(
   my_db,
