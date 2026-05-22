@@ -25,6 +25,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
       "/post/conceptualizing-the-readmission-risk-pool/index.html",
       "/post/investigating-a-hospital-specific-report/index.html",
       "/post/introducing-the-readmit-r-package/index.html",
