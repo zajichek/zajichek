@@ -1,0 +1,31 @@
+---
+title: "Is 3-0 the worst lead in hockey?"
+description: "We focus on a binary that doesn't exist."
+author: "Alex Zajichek"
+date: "9/26/2025"
+image: "feature.png"
+categories:
+  - Hockey
+format:
+  html:
+    code-fold: true
+    code-tools: true
+draft: true
+---
+
+Everytime a team in an NHL game goes up 3-0 in the first period, I always think: _"The worst lead in hockey_", because I've seen it so many times now that the other team comes back to at least tie it up. Look what happened to the [Colorado Avalance in Game 3 against the Golden Knights](https://www.nhl.com/news/colorado-avalanche-vegas-golden-knights-game-3-recap-may-24-2026), and what the same [Avalanche team did to the Minnesota Wild in Game 5 of the last round](https://www.espn.com/nhl/story/_/id/48765895/wild-feeling-empty-series-ending-collapse-game-5). The key is _first period_--the timing of it is what matters most. And I think generally that the earlier in the period the lead is achieved the greater the likelihood they'll lose it.
+
+Now, you might think, _"Duh, of course this is the case, because the earlier they get the lead, the more time the other team now has to catch back up."_ That is definitely true, but I think there is more to it. Specifically, 
+
+* 1-0 lead means 1 goal ties it up; more balanced
+* The metric is more than just "did the team comeback?" because that's sort of confounded by the 
+    + Maybe it's "did they win?"
+* Maybe it's just _perceived_ to be like that because it's such a big swing whereas closer scores keep it more balanced looking
+* Something to do with the inertia, momentum, and COMPLACENCY
+    + 3-0 is a sweetspot; may get less complacency with smaller lead; may get more complacent but too big to overcome
+* How would we provide evidence for this? 
+    + Hard to provide universal evidence; I think it's different depending on the matchup, but we can examine trends
+    + Comback rate by time lead was achieved
+    + Win rate rate by time lead was achieved
+    + Evidence of complacency (harder to get at)
+    + Basically, just need to unravel a story starting with large buckets, untangle it gradually

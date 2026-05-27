@@ -17,6 +17,8 @@ format:
     toc-location: right
 ---
 
+{{< video https://www.youtube.com/embed/w-WCl5TlwgU >}}
+
 In February 2026, the [US Department of Health & Human Services](https://www.hhs.gov/) (HHS) released a [data file](https://opendata.hhs.gov/datasets/medicaid-provider-spending/) containing [Medicaid](https://www.medicaid.gov/) monthly spending for outpatient and professional claims by provider and [HCPCS code](https://www.cms.gov/medicare/coding-billing/healthcare-common-procedure-system) from 2018-2024 across the entire United States. It's a pretty massive dataset (~238M rows), so being able to set it up to efficiently explore it on your own machine takes a little bit of care. This article is meant to show you how to set up a basic data model from a few different important sources to be able to conduct useful analysis using some cool frameworks I was first exposed to along the way. Specifically, this guide is more so scoped around the assumption that you want to conduct analysis for a specific state (in my case, Wisconsin) as to reduce the data size you have to work with. But you could apply this to any state of your choosing, or try to build the data model for the entire country. 
 
 > _Note that all code will be written in the R environment._
