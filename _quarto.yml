@@ -24,7 +24,7 @@ website:
   twitter-card:
     site: "@zajichekstats"
     creator: "@zajichekstats"
-  draft-mode: unlinked
+  draft-mode: gone
   navbar:
     logo: "logo.png"
     title: false

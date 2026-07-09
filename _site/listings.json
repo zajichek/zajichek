@@ -33,12 +33,9 @@
   {
     "listing": "/index.html",
     "items": [
-      "/post/why-an-estimand-for-flux/index.html",
-      "/post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.html",
       "/post/the-worst-lead-in-hockey/index.html",
       "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
       "/post/conceptualizing-the-readmission-risk-pool/index.html",
-      "/post/bernoullis-fallacy-of-the-transposed-conditional/index.html",
       "/post/investigating-a-hospital-specific-report/index.html",
       "/post/introducing-the-readmit-r-package/index.html",
       "/post/ai-assisted-shiny-development-in-positron/index.html",
@@ -46,11 +43,6 @@
       "/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html",
       "/post/making-an-ai-statistical-consultant/index.html",
       "/post/what-decision-are-we-trying-to-make/index.html",
-      "/post/subtle-mistranslations-and-their-aggregated-impact/index.html",
-      "/post/tips-on-creating-your-own-shiny-server/index.html",
-      "/post/effective-research-data-science/index.html",
-      "/post/i-am-not-data-driven/index.html",
-      "/post/objectifying-statistics/index.html",
       "/post/reconciling-regression-equation-spline-terms/index.html",
       "/post/can-you-have-a-model-without-data/index.html",
       "/post/you-should-have-a-data-science-blog/index.html",
@@ -78,7 +70,6 @@
   {
     "listing": "/presentations.html",
     "items": [
-      "/presentations/finding-the-best-bracket/index.html",
       "/presentations/toggling-between-traditional-and-chat-based-data-filters/index.html",
       "/presentations/readmit/index.html",
       "/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/index.html",
