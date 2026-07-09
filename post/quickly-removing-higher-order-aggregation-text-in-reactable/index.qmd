@@ -4,8 +4,9 @@ author: "Alex Zajichek"
 date: "6/29/2023"
 image: "feature.png"
 categories:
+  - Data Science Infrastructure
   - Tables
-  - Javascript
+  - JavaScript
 format:
   html:
     code-fold: true

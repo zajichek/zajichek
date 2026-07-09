@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "7/26/2024"
 image: "feature.png"
 categories:
+  - Healthcare Analytics
   - Healthcare
   - Modeling
   - Prediction

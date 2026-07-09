@@ -1,0 +1,44 @@
+---
+title: "R / Shiny Applications"
+description: "Articles on R, Shiny, interactive analytics, deployment, and analytical web applications."
+listing:
+  id: topic-listing
+  contents:
+    - ../post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.qmd
+    - ../post/making-an-ai-statistical-consultant/index.qmd
+    - ../post/ai-assisted-shiny-development-in-positron/index.qmd
+    - ../post/low-cost-ways-to-build-and-deploy-apps/index.qmd
+    - ../post/filterable-maps/index.qmd
+    - ../post/getting-started-with-the-hhs-medicaid-spending-dataset/index.qmd
+  type: default
+  sort: "date desc"
+  image-align: left
+  categories: false
+---
+
+::: {.page-hero}
+::: {.placeholder-note}
+ADD TEXT ABOUT R, Shiny, interactive analytics, application development, and deployment.
+:::
+:::
+
+::: {.section-panel}
+## Start With These
+
+:::: {.link-grid}
+::: {.link-card}
+### [Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}](../post/building-an-llm-powered-shiny-app-for-hospital-readmissions/)
+:::
+::: {.link-card}
+### [Making an AI statistical consultant](../post/making-an-ai-statistical-consultant/)
+:::
+::: {.link-card}
+### [Low cost ways to build and deploy analytical web apps](../post/low-cost-ways-to-build-and-deploy-apps/)
+:::
+::::
+:::
+
+## Articles
+
+::: {#topic-listing}
+:::

@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f0ac9edcc0eceb94931262426d51e472.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,6 +123,14 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <meta property="og:site_name" content="Zajichek Stats">
 <meta property="og:image:height" content="1192">
 <meta property="og:image:width" content="1802">
+<meta name="twitter:title" content="Trying AI-assisted development in the Positron IDE – Zajichek Stats">
+<meta name="twitter:description" content="The ultimate setup for using an AI-companion for data science development.">
+<meta name="twitter:image" content="https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/feature.png">
+<meta name="twitter:creator" content="@zajichekstats">
+<meta name="twitter:site" content="@zajichekstats">
+<meta name="twitter:image-height" content="1192">
+<meta name="twitter:image-width" content="1802">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -142,6 +150,37 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html"> 
+<span class="menu-text">Start Here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
+        <li>
+    <a class="dropdown-item" href="../../topics/healthcare-analytics.html">
+ <span class="dropdown-text">Healthcare Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/statistical-thinking.html">
+ <span class="dropdown-text">Statistical Thinking</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/reproducible-analytics.html">
+ <span class="dropdown-text">Reproducible Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/r-shiny-applications.html">
+ <span class="dropdown-text">R / Shiny Applications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/ai-for-analytics.html">
+ <span class="dropdown-text">AI for Analytics</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../../presentations.html"> 
 <span class="menu-text">Projects &amp; Presentations</span></a>
@@ -230,6 +269,8 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">Trying AI-assisted development in the Positron IDE</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
   <div class="quarto-categories">
+    <div class="quarto-category">AI for Analytics</div>
+    <div class="quarto-category">R / Shiny</div>
     <div class="quarto-category">AI</div>
     <div class="quarto-category">Shiny</div>
     <div class="quarto-category">Web Applications</div>
@@ -838,174 +879,198 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "10/29/2025"</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - AI</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Shiny</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Web Applications</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>_This article builds off a [prior post](https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/) that demos how to integrate LLM-powered components into a [Shiny](https://shiny.posit.co/) application._</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - AI for Analytics</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - "R / Shiny"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - AI</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Shiny</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">  - Web Applications</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>The new <span class="co">[</span><span class="ot">Positron IDE</span><span class="co">](https://positron.posit.co/)</span> is amazing for doing and developing data science output/workflows. Although I'll always love <span class="co">[</span><span class="ot">RStudio</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>, I'm making the full-time switch to Positron because it's the future of how data science work should be done, and the <span class="co">[</span><span class="ot">AI capabilities</span><span class="co">](https://posit.co/products/ide/positron/)</span> being built in is a big part of that.  </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>_This article builds off a [prior post](https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/) that demos how to integrate LLM-powered components into a [Shiny](https://shiny.posit.co/) application._</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>In a <span class="co">[</span><span class="ot">prior post</span><span class="co">](https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/)</span> I showed how to use packages like <span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span> and <span class="co">[</span><span class="ot">`querychat`</span><span class="co">](https://posit-dev.github.io/querychat/)</span> to integrate LLM's into a <span class="co">[</span><span class="ot">Shiny</span><span class="co">](https://shiny.posit.co/)</span> web application. Now I'm just starting to get the "AI stuff" started in <span class="co">[</span><span class="ot">Positron</span><span class="co">](https://positron.posit.co/)</span>, so with that same app wanted to add a few features to get a sense of how it all works while using <span class="co">[</span><span class="ot">Positron Assistant</span><span class="co">](https://positron.posit.co/assistant.html)</span> for help.</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>The new <span class="co">[</span><span class="ot">Positron IDE</span><span class="co">](https://positron.posit.co/)</span> is amazing for doing and developing data science output/workflows. Although I'll always love <span class="co">[</span><span class="ot">RStudio</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span>, I'm making the full-time switch to Positron because it's the future of how data science work should be done, and the <span class="co">[</span><span class="ot">AI capabilities</span><span class="co">](https://posit.co/products/ide/positron/)</span> being built in is a big part of that.  </span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setup</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>In a <span class="co">[</span><span class="ot">prior post</span><span class="co">](https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/)</span> I showed how to use packages like <span class="co">[</span><span class="ot">`ellmer`</span><span class="co">](https://ellmer.tidyverse.org/)</span> and <span class="co">[</span><span class="ot">`querychat`</span><span class="co">](https://posit-dev.github.io/querychat/)</span> to integrate LLM's into a <span class="co">[</span><span class="ot">Shiny</span><span class="co">](https://shiny.posit.co/)</span> web application. Now I'm just starting to get the "AI stuff" started in <span class="co">[</span><span class="ot">Positron</span><span class="co">](https://positron.posit.co/)</span>, so with that same app wanted to add a few features to get a sense of how it all works while using <span class="co">[</span><span class="ot">Positron Assistant</span><span class="co">](https://positron.posit.co/assistant.html)</span> for help.</span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>To get <span class="co">[</span><span class="ot">Positron Assitant</span><span class="co">](https://positron.posit.co/assistant.html)</span> setup initially, I followed the steps <span class="co">[</span><span class="ot">here</span><span class="co">](https://positron.posit.co/assistant.html)</span> to get it configured, which amounted to <span class="co">[</span><span class="ot">updating Positron</span><span class="co">](https://positron.posit.co/updating.html)</span> and enabling it in the settings (as the directions say). </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu"># Setup</span></span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purchasing API credits</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>To get <span class="co">[</span><span class="ot">Positron Assitant</span><span class="co">](https://positron.posit.co/assistant.html)</span> setup initially, I followed the steps <span class="co">[</span><span class="ot">here</span><span class="co">](https://positron.posit.co/assistant.html)</span> to get it configured, which amounted to <span class="co">[</span><span class="ot">updating Positron</span><span class="co">](https://positron.posit.co/updating.html)</span> and enabling it in the settings (as the directions say). </span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>After configuration, I see the chat pane available in the left sidebar.</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purchasing API credits</span></span>
 <span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="al">![](chatpane.png)</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>After configuration, I see the chat pane available in the left sidebar.</span>
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>In order for it to work, I need to get an API key from <span class="co">[</span><span class="ot">Anthropic</span><span class="co">](https://www.anthropic.com/)</span> (though as mentioned in a <span class="co">[</span><span class="ot">recent webinar</span><span class="co">](https://www.youtube.com/watch?v=TrN-FMcOsOA)</span>, more models will become supported). This means I need to purchase API credits for <span class="co">[</span><span class="ot">Claude</span><span class="co">](https://claude.ai/)</span>, which I can do so on the platform <span class="co">[</span><span class="ot">here</span><span class="co">](https://platform.claude.com/dashboard)</span>. When I click the _Get API Key_ button, it tells me to pay $5, so I just went ahead and did that.</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="al">![](chatpane.png)</span></span>
 <span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="al">![](claudepurchase.png)</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>In order for it to work, I need to get an API key from <span class="co">[</span><span class="ot">Anthropic</span><span class="co">](https://www.anthropic.com/)</span> (though as mentioned in a <span class="co">[</span><span class="ot">recent webinar</span><span class="co">](https://www.youtube.com/watch?v=TrN-FMcOsOA)</span>, more models will become supported). This means I need to purchase API credits for <span class="co">[</span><span class="ot">Claude</span><span class="co">](https://claude.ai/)</span>, which I can do so on the platform <span class="co">[</span><span class="ot">here</span><span class="co">](https://platform.claude.com/dashboard)</span>. When I click the _Get API Key_ button, it tells me to pay $5, so I just went ahead and did that.</span>
 <span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>Once I submitted, it prompted me to name my API key (which it was done by default).</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="al">![](claudepurchase.png)</span></span>
 <span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="al">![](createkey.png)</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>Once I submitted, it prompted me to name my API key (which it was done by default).</span>
 <span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>Another thing I did was go into my Claude console and change the <span class="co">[</span><span class="ot">limit</span><span class="co">](https://platform.claude.com/settings/limits)</span> to a lower amount, because it defaulted to $100 per month. But I don't actually know how much cost will be incurred by using this in Positron, so wanted to be safe.</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="al">![](createkey.png)</span></span>
 <span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Authenticating in Positron</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>Another thing I did was go into my Claude console and change the <span class="co">[</span><span class="ot">limit</span><span class="co">](https://platform.claude.com/settings/limits)</span> to a lower amount, because it defaulted to $100 per month. But I don't actually know how much cost will be incurred by using this in Positron, so wanted to be safe.</span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>Now that we have a key, we can supply it to Positron. I clicked the _Add Anthropic as a Chat Provider_ button (see screenshot above).</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="fu">## Authenticating in Positron</span></span>
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="al">![](authenticate.png)</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>Now that we have a key, we can supply it to Positron. I clicked the _Add Anthropic as a Chat Provider_ button (see screenshot above).</span>
 <span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>I pasted my API key and it looks like we are set.</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="al">![](authenticate.png)</span></span>
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="al">![](finalsetup.png)</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>I pasted my API key and it looks like we are set.</span>
 <span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="fu"># Supplying the code base {#codebase}</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="al">![](finalsetup.png)</span></span>
 <span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>The code base we are going to be working with is located <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer)</span> (note that <span class="co">[</span><span class="ot">this commit</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/commit/a0eec2e86664cf261dcd0b03e43ede78773c9e44)</span> was the last one _before_ the changes in this article were made). It is a <span class="co">[</span><span class="ot">Shiny</span><span class="co">](https://shiny.posit.co/)</span> application exploring <span class="co">[</span><span class="ot">hospital readmissions</span><span class="co">](https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/)</span> that contains a toggle capability for the user to switch between "traditional" data filters and a natural language chat interface to interact with the data. In either case, the interactive map and visuals update accordingly:</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="fu"># Supplying the code base {#codebase}</span></span>
 <span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="al">![](readmit_app.gif)</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>The code base we are going to be working with is located <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer)</span> (note that <span class="co">[</span><span class="ot">this commit</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/commit/a0eec2e86664cf261dcd0b03e43ede78773c9e44)</span> was the last one _before_ the changes in this article were made). It is a <span class="co">[</span><span class="ot">Shiny</span><span class="co">](https://shiny.posit.co/)</span> application exploring <span class="co">[</span><span class="ot">hospital readmissions</span><span class="co">](https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/)</span> that contains a toggle capability for the user to switch between "traditional" data filters and a natural language chat interface to interact with the data. In either case, the interactive map and visuals update accordingly:</span>
 <span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>There is also a video of how this was done:</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="al">![](readmit_app.gif)</span></span>
 <span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://www.youtube.com/embed/YlLcxuAjgJw &gt;}}</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>There is also a video of how this was done:</span>
 <span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>The live application is located on <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span> <span class="co">[</span><span class="ot">here</span><span class="co">](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)</span>.</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://www.youtube.com/embed/YlLcxuAjgJw &gt;}}</span>
 <span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="fu"># What's the goal here then?</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>The live application is located on <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span> <span class="co">[</span><span class="ot">here</span><span class="co">](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)</span>.</span>
 <span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>I want Positron Assistant to interact directly with my code and make changes on my behalf _with my supervision and approval_. The actual feature I want to change is simple: in the bottom-right corner of <span class="co">[</span><span class="ot">the app</span><span class="co">](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)</span> there is a table from the <span class="co">[</span><span class="ot">`DT`</span><span class="co">](https://rstudio.github.io/DT/)</span> package showing the hospitals currently being plotted on the map (just basically a list view of the map data).</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="fu"># What's the goal here then?</span></span>
 <span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="al">![](dataview.png)</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>I want Positron Assistant to interact directly with my code and make changes on my behalf _with my supervision and approval_. The actual feature I want to change is simple: in the bottom-right corner of <span class="co">[</span><span class="ot">the app</span><span class="co">](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)</span> there is a table from the <span class="co">[</span><span class="ot">`DT`</span><span class="co">](https://rstudio.github.io/DT/)</span> package showing the hospitals currently being plotted on the map (just basically a list view of the map data).</span>
 <span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="al">![](dataview.png)</span></span>
 <span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="fu">## Desired Change</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
 <span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>The headers in the table have pretty ugly names, so I'd like the assistant to make those nicer.</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## Desired Change</span></span>
 <span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="fu"># Trying it out</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>The headers in the table have pretty ugly names, so I'd like the assistant to make those nicer.</span>
 <span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>With everything configured, I opened up the <span class="co">[</span><span class="ot">code base</span><span class="co">](#codebase)</span> in a new Positron session. Note I had to re-authenticate my API key after closing Positron, and then I chose Claude Sonnet 3.7.</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="fu"># Trying it out</span></span>
 <span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>I know that <span class="co">[</span><span class="ot">`server.R`</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/server.R)</span> is where this change will need to be made because that is where my dynamic dataset is fed into the <span class="co">[</span><span class="ot">`DT::renderDataTable`</span><span class="co">](https://rstudio.github.io/DT/shiny.html)</span> function. So I opened that file as well as the Positron Assistant chat pane:</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>With everything configured, I opened up the <span class="co">[</span><span class="ot">code base</span><span class="co">](#codebase)</span> in a new Positron session. Note I had to re-authenticate my API key after closing Positron, and then I chose Claude Sonnet 3.7.</span>
 <span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="al">![](context.png)</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>I know that <span class="co">[</span><span class="ot">`server.R`</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/blob/main/server.R)</span> is where this change will need to be made because that is where my dynamic dataset is fed into the <span class="co">[</span><span class="ot">`DT::renderDataTable`</span><span class="co">](https://rstudio.github.io/DT/shiny.html)</span> function. So I opened that file as well as the Positron Assistant chat pane:</span>
 <span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>The one really cool thing already is the _Add Context_ button on the bottom. This means that you can add various files that the AI should consider in context to the conversation you are about to have with it. In this case, <span class="in">`server.R`</span> is already attached (because it's open), so I can just talk about this file as if it already knows what is in there.</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="al">![](context.png)</span></span>
 <span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>The prompt I'm using is as follows:</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>The one really cool thing already is the _Add Context_ button on the bottom. This means that you can add various files that the AI should consider in context to the conversation you are about to have with it. In this case, <span class="in">`server.R`</span> is already attached (because it's open), so I can just talk about this file as if it already knows what is in there.</span>
 <span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>_"I don't like the display column names in the hospital_table output table, can you make these column names cleaner, but just at the last step before it gets displayed."_</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>The prompt I'm using is as follows:</span>
 <span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>It gave a pretty good response to start.</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>_"I don't like the display column names in the hospital_table output table, can you make these column names cleaner, but just at the last step before it gets displayed."_</span>
 <span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="al">![](prompt11.png)</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>It gave a pretty good response to start.</span>
 <span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>This was the code snippet it provided.</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="al">![](prompt11.png)</span></span>
 <span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>This was the code snippet it provided.</span>
 <span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a><span class="co"># Show data with cleaner column names</span></span>
-<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>output<span class="sc">$</span>hospital_table <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">renderDataTable</span>({</span>
-<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a mapping of current names to cleaner names</span></span>
-<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>  clean_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FacilityName"</span> <span class="ot">=</span> <span class="st">"Hospital Name"</span>,</span>
-<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FacilityID"</span> <span class="ot">=</span> <span class="st">"Hospital ID"</span>,</span>
-<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    <span class="st">"City"</span> <span class="ot">=</span> <span class="st">"City"</span>,</span>
-<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>    <span class="st">"County"</span> <span class="ot">=</span> <span class="st">"County"</span>,</span>
-<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Zip"</span> <span class="ot">=</span> <span class="st">"ZIP Code"</span>,</span>
-<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>    <span class="st">"DiagnosisCategory"</span> <span class="ot">=</span> <span class="st">"Diagnosis Group"</span>,</span>
-<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Excess"</span> <span class="ot">=</span> <span class="st">"Excess Readmission Ratio"</span>,</span>
-<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Predicted"</span> <span class="ot">=</span> <span class="st">"Predicted Rate (%)"</span>,</span>
-<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Expected"</span> <span class="ot">=</span> <span class="st">"Expected Rate (%)"</span></span>
-<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add any other columns you want to rename</span></span>
-<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Apply the column renaming only at display time</span></span>
-<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>  DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="fu">current_hospitals</span>(), </span>
-<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>                <span class="at">colnames =</span> clean_names[<span class="fu">names</span>(<span class="fu">current_hospitals</span>())[<span class="fu">names</span>(<span class="fu">current_hospitals</span>()) <span class="sc">%in%</span> <span class="fu">names</span>(clean_names)]])</span>
-<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>Seems to basically give me what I want. I'd need to copy/paste into the code to enact the changes. This is because, if you notice in the bottom of the screenshot above, it is in _Ask_ mode (one other useful thing to note is that after that one question I went back to my Claude console and saw my balance was $4.93, so that just costed me $0.07).</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r, eval = FALSE}</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="co"># Show data with cleaner column names</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>output<span class="sc">$</span>hospital_table <span class="ot">&lt;-</span> DT<span class="sc">::</span><span class="fu">renderDataTable</span>({</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create a mapping of current names to cleaner names</span></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>  clean_names <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FacilityName"</span> <span class="ot">=</span> <span class="st">"Hospital Name"</span>,</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>    <span class="st">"FacilityID"</span> <span class="ot">=</span> <span class="st">"Hospital ID"</span>,</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>    <span class="st">"City"</span> <span class="ot">=</span> <span class="st">"City"</span>,</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>    <span class="st">"County"</span> <span class="ot">=</span> <span class="st">"County"</span>,</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Zip"</span> <span class="ot">=</span> <span class="st">"ZIP Code"</span>,</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>    <span class="st">"DiagnosisCategory"</span> <span class="ot">=</span> <span class="st">"Diagnosis Group"</span>,</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Excess"</span> <span class="ot">=</span> <span class="st">"Excess Readmission Ratio"</span>,</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Predicted"</span> <span class="ot">=</span> <span class="st">"Predicted Rate (%)"</span>,</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Expected"</span> <span class="ot">=</span> <span class="st">"Expected Rate (%)"</span></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add any other columns you want to rename</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Apply the column renaming only at display time</span></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>  DT<span class="sc">::</span><span class="fu">datatable</span>(<span class="fu">current_hospitals</span>(), </span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>                <span class="at">colnames =</span> clean_names[<span class="fu">names</span>(<span class="fu">current_hospitals</span>())[<span class="fu">names</span>(<span class="fu">current_hospitals</span>()) <span class="sc">%in%</span> <span class="fu">names</span>(clean_names)]])</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>I changed it to _Agent_ mode and tried again:</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>Seems to basically give me what I want. I'd need to copy/paste into the code to enact the changes. This is because, if you notice in the bottom of the screenshot above, it is in _Ask_ mode (one other useful thing to note is that after that one question I went back to my Claude console and saw my balance was $4.93, so that just costed me $0.07).</span>
 <span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a><span class="al">![](agentmode.png)</span></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>I changed it to _Agent_ mode and tried again:</span>
 <span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>To no avail. I just basically got the same output in the chat (and charged another $0.08). So I guess I'll have to mess with that a little more.</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a><span class="al">![](agentmode.png)</span></span>
 <span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inline prompting</span></span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>To no avail. I just basically got the same output in the chat (and charged another $0.08). So I guess I'll have to mess with that a little more.</span>
 <span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>Although it basically gave me what I wanted and I could easily update the code, I want to test the other way to interact with the LLM: inline prompting. You just hover over the line in your code you want ask specifically about, and then right click -&gt; Copilot -&gt; "Editor Inline Chat".</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a><span class="fu">## Inline prompting</span></span>
 <span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a><span class="al">![](inlineprompt.png)</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>Although it basically gave me what I wanted and I could easily update the code, I want to test the other way to interact with the LLM: inline prompting. You just hover over the line in your code you want ask specifically about, and then right click -&gt; Copilot -&gt; "Editor Inline Chat".</span>
 <span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>Here I entered the same prompt again, and there it did what I initially wanted: actually edit the code itself.</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a><span class="al">![](inlineprompt.png)</span></span>
 <span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a><span class="al">![](inlinepromptfix.png)</span></span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>Here I entered the same prompt again, and there it did what I initially wanted: actually edit the code itself.</span>
 <span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>The coolest part? You get a **validation** step built in where you can accept the changes that were made (and even run the result of the change before accepting), or revert and cancel what was done. _This_ is how you should be interacting with AI + coding.</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a><span class="al">![](inlinepromptfix.png)</span></span>
 <span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>I reran my application after saving the changes it made (with no additional edits on my end). It worked perfect.</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>The coolest part? You get a **validation** step built in where you can accept the changes that were made (and even run the result of the change before accepting), or revert and cancel what was done. _This_ is how you should be interacting with AI + coding.</span>
 <span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a><span class="al">![](editedheaders.png)</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>I reran my application after saving the changes it made (with no additional edits on my end). It worked perfect.</span>
 <span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>I then just <span class="co">[</span><span class="ot">committed my code</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/commit/876f157e8b717fa9729af744906b5c1283d2ce63)</span> to <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/)</span> which in turn automatically updated the <span class="co">[</span><span class="ot">live application</span><span class="co">](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)</span> on <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span>.</span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a><span class="al">![](editedheaders.png)</span></span>
 <span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>Now the app used AI for developing the code _and_ the application itself uses AI while it is running for user interaction. Many ways to use it.</span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>I then just <span class="co">[</span><span class="ot">committed my code</span><span class="co">](https://github.com/centralstatz/hospital_readmissions_explorer/commit/876f157e8b717fa9729af744906b5c1283d2ce63)</span> to <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/)</span> which in turn automatically updated the <span class="co">[</span><span class="ot">live application</span><span class="co">](https://0196f590-15b7-8b36-3010-eb5a0d8a6d94.share.connect.posit.cloud/)</span> on <span class="co">[</span><span class="ot">Posit Connect Cloud</span><span class="co">](https://connect.posit.cloud/)</span>.</span>
 <span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a><span class="fu"># Analysis of the result</span></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>Now the app used AI for developing the code _and_ the application itself uses AI while it is running for user interaction. Many ways to use it.</span>
 <span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>The really interesting/impressive part here is that I only used that one prompt and supplied the <span class="in">`server.R`</span> file (and R environment). Yes it was a simple fix conceptually (i.e., just change the names of the columns). But I didn't actually specify the column names explicitly in the place where the table is built within the code. They are implied by all the rest of the code and datasets that ship with the app. And it really only edited the columns that _needed_ editing (which wasn't all of them). So to be clear, it had to:</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a><span class="fu"># Analysis of the result</span></span>
 <span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Connect the dots throughout the code base to infer what the _current_ names of the columns in that table would actually be at the time the table is rendered</span>
-<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Determine (on its own) which of those _current_ columns were not in a "nice" format (whatever that means, but it got it right)</span>
-<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Assign a _new_ name to those columns that _is_ in a "nice" format (which it did)</span>
-<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Place the correct code edits to make this happen in the right spot to effect the changes and not break the app (it ran fine).</span>
-<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>This. Is. Impressive. I can imagine how powerful this would be if you used this with more than 1 prompt and for more than 10 minutes. Very fun times ahead.</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>The really interesting/impressive part here is that I only used that one prompt and supplied the <span class="in">`server.R`</span> file (and R environment). Yes it was a simple fix conceptually (i.e., just change the names of the columns). But I didn't actually specify the column names explicitly in the place where the table is built within the code. They are implied by all the rest of the code and datasets that ship with the app. And it really only edited the columns that _needed_ editing (which wasn't all of them). So to be clear, it had to:</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Connect the dots throughout the code base to infer what the _current_ names of the columns in that table would actually be at the time the table is rendered</span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Determine (on its own) which of those _current_ columns were not in a "nice" format (whatever that means, but it got it right)</span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Assign a _new_ name to those columns that _is_ in a "nice" format (which it did)</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Place the correct code edits to make this happen in the right spot to effect the changes and not break the app (it ran fine).</span>
 <span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>This. Is. Impressive. I can imagine how powerful this would be if you used this with more than 1 prompt and for more than 10 minutes. Very fun times ahead.</span>
 <span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>Now I don't think I'm really scratching the surface of what possibilities this brings to efficiently streamline data science workflows, assist in app development, and more. This was just the baseline integration of Positron Assitant and it's already awesome. In this application, AI was now used for both _development_ of the code, and in the live application itself. I didn't even start trying to use <span class="co">[</span><span class="ot">DataBot</span><span class="co">](https://positron.posit.co/databot.html)</span> yet, which is another add-on to Positron by <span class="co">[</span><span class="ot">Posit</span><span class="co">](https://posit.co/)</span> that will enable it to actually build analysis and explore your data with you. This, among other things, makes me very excited to be in this field.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>Now I don't think I'm really scratching the surface of what possibilities this brings to efficiently streamline data science workflows, assist in app development, and more. This was just the baseline integration of Positron Assitant and it's already awesome. In this application, AI was now used for both _development_ of the code, and in the live application itself. I didn't even start trying to use <span class="co">[</span><span class="ot">DataBot</span><span class="co">](https://positron.posit.co/databot.html)</span> yet, which is another add-on to Positron by <span class="co">[</span><span class="ot">Posit</span><span class="co">](https://posit.co/)</span> that will enable it to actually build analysis and explore your data with you. This, among other things, makes me very excited to be in this field.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
-    <div class="nav-footer-center">
 <p>© 2026 Zajichek Stats</p>
-</div>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html">
+<p>Start Here</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../topics/index.html">
+<p>Topics</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../index.xml">
+<p>RSS</p>
+</a>
+  </li>  
+</ul>
+    </div>
     <div class="nav-footer-right">
-      &nbsp;
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/">
+<p>CentralStatz</p>
+</a>
+  </li>  
+</ul>
     </div>
   </div>
 </footer>

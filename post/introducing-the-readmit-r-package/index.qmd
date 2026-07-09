@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "12/19/2025"
 image: "feature.png"
 categories:
+  - Healthcare Analytics
   - Software Development
   - Healthcare
   - Readmissions

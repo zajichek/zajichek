@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f0ac9edcc0eceb94931262426d51e472.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -152,6 +152,14 @@ window.Quarto = {
 <meta property="og:site_name" content="Zajichek Stats">
 <meta property="og:image:height" content="1000">
 <meta property="og:image:width" content="996">
+<meta name="twitter:title" content="The Evasive Spline – Zajichek Stats">
+<meta name="twitter:description" content="Basis Functions &amp; Splines">
+<meta name="twitter:image" content="https://www.zajichekstats.com/post/the-evasive-spline/feature.png">
+<meta name="twitter:creator" content="@zajichekstats">
+<meta name="twitter:site" content="@zajichekstats">
+<meta name="twitter:image-height" content="1000">
+<meta name="twitter:image-width" content="996">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -171,6 +179,37 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html"> 
+<span class="menu-text">Start Here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
+        <li>
+    <a class="dropdown-item" href="../../topics/healthcare-analytics.html">
+ <span class="dropdown-text">Healthcare Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/statistical-thinking.html">
+ <span class="dropdown-text">Statistical Thinking</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/reproducible-analytics.html">
+ <span class="dropdown-text">Reproducible Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/r-shiny-applications.html">
+ <span class="dropdown-text">R / Shiny Applications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/ai-for-analytics.html">
+ <span class="dropdown-text">AI for Analytics</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../../presentations.html"> 
 <span class="menu-text">Projects &amp; Presentations</span></a>
@@ -237,6 +276,7 @@ window.Quarto = {
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">The Evasive Spline</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
   <div class="quarto-categories">
+    <div class="quarto-category">Statistical Thinking</div>
     <div class="quarto-category">Estimation</div>
     <div class="quarto-category">Modeling</div>
   </div>
@@ -897,109 +937,132 @@ F-statistic: 29.79 on 2 and 97 DF,  p-value: 8.214e-11</code></pre>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "1/13/2023"</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Estimation</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Modeling</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>This one always gets me. I've learned and forgot how splines work many times over the years, and when I need to relearn it, I read the _Moving Beyond Linearity_ chapter of <span class="co">[</span><span class="ot">An Introduction to Statistical Learning</span><span class="co">](https://www.statlearning.com/)</span>. </span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>**Basis Functions** are just a general approach for transforming a simple model like:</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1X_i + \epsilon_i$$</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>into a linear combination of transformations of the $X_i$ of the form:</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1b_1(X_i) + \beta_2b_2(X_i) + ... + \beta_Kb_k(X_i) + \epsilon_i$$</span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>where $b_i$ is a known function that transforms the predictor variable. _Note: $\beta_1$ is not the same in both of these, they are just placeholders for an arbitrary parameter._ For example, in the case of a piecewise regression where the model is of the form:</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1I(X_i &lt; c_1) + \beta_2I(c_1 &lt; X_i &lt; c_2) + ... + \beta_kI(c_{k-1} &lt; X_i &lt; c_k) + \epsilon_i$$</span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>the indicators are _basis functions_ such that:</span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>$$b_j(X_i) = I(c_{j-1} &lt; X_i &lt; c_j) \hskip.1in \text{for j=1,..,k}$$</span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>or in a polynomial model, the basis functions are $b_j(X_i) = X_i^j$.</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>**Knots** are points (cutoffs) along $X_i$ that a _local_ regression starts/ends. For example, we might fit a cubic model (e.g., with parameters $\beta_1, \beta_2, \beta_3$) where $X_i &lt; C$, and another model (with a _separate_ set of $\beta_1, \beta_2, \beta_3$) where $X_i \geq C$. $C$ is a _knot_. In this sense, the piecewise regression above was also a polynomial regression with degree 0, and knots at each value of $c_j$.</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>The general problem with an unconstrained polynomial model is that there are no restrictions that force a smooth function across $X$, so there are discontinuities. Thus, restrictions need to be put in place such as (1) making it continuous at the knot(s), and/or even further, (2) making the first and second derivatives continuous at the knots. These restrictions reduce the complexity of the model (i.e., the number of parameters we estimate). </span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a><span class="fu"># Cubic Splines</span></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>A cubic spline with $K$ knots uses $K+4$ parameters. The best way to do this is to use (1) the basis of a cubic polynomial ($x, x^2, x^3$) and (2) a truncated power basis _for each knot_:</span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>$$h(x,\nu) = {(x-\nu)}_+^3$$</span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>where $\nu$ is the knot location. Thus, a _one-knot_ model looks like:</span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1X_i + \beta_2X_i^2 + \beta_3X_i^3 + \beta_4h(X_i,\nu_1) + \epsilon_i$$</span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>We can add more knots as needed, and it simply adds $h(x,\nu)$ terms only (so 1 more parameter per knot). A function of this form is guaranteed to have continuous first and second derivatives.</span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>**So how does this relate to what is produced in the `rcs` function from the `rms` package?**</span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>Well, the package actually fits a _restricted_ cubic spline, which is a _natural spline_. This adds even more restrictions that the general cubic spline by forcing it to be _linear_ where $X$ is less than the smallest knot and where $X$ is larger than the largest not (i.e., the boundaries). These add an additional _two_ constraints at _each_ boundary. So if we have a regular cubic spline model above with 3 knots (i.e., 7 parameters), then a _restricted_ cubic spline model with 3 knots should have only 3 parameters.</span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> .<span class="dv">5</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> .<span class="dv">75</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>x_trans <span class="ot">&lt;-</span> rms<span class="sc">::</span><span class="fu">rcs</span>(x, <span class="dv">3</span>)</span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(x_trans)</span>
-<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(y<span class="sc">~</span>x_trans))</span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>We can see this model contains three estimated parameters as expected. The actual transformation completed for the restricted cubic spline in producing, in general, the $K-2$ additional predictors is more complex than the cubic spline (although similar). In this case, the 3 knot positions were selected to be:</span>
-<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>knots <span class="ot">&lt;-</span> <span class="fu">attr</span>(x_trans, <span class="st">"parms"</span>)</span>
-<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>knots</span>
-<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>Note, these are just the $10^{th}, 50^{th}, 90^{th}$ percentiles:</span>
-<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(x, <span class="fu">c</span>(.<span class="dv">1</span>,.<span class="dv">5</span>,.<span class="dv">9</span>))</span>
-<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>The following transformation is made (general solution <span class="co">[</span><span class="ot">here</span><span class="co">](https://support.sas.com/resources/papers/proceedings16/5621-2016.pdf)</span>):</span>
-<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>$$X_{trans} = (x-\nu_1)_+^3 - (x-\nu_2)_+^3\frac{\nu_3-\nu_1}{\nu_3-\nu_2} + (x-\nu_3)_+^3\frac{\nu_2-\nu_1}{\nu_3-\nu_2}$$</span>
-<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>Let's check out that transformation on our data:</span>
-<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
-<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">as.numeric</span>(x_trans[,<span class="st">"x"</span>]),</span>
-<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_trans_actual =</span> <span class="fu">as.numeric</span>(x_trans[,<span class="st">"x'"</span>]),</span>
-<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_trans_calculated =</span> </span>
-<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pmax</span>((x<span class="sc">-</span>knots[<span class="dv">1</span>])<span class="sc">^</span><span class="dv">3</span>, <span class="dv">0</span>) <span class="sc">-</span></span>
-<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pmax</span>((x<span class="sc">-</span>knots[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">3</span>, <span class="dv">0</span>) <span class="sc">*</span> ((knots[<span class="dv">3</span>]<span class="sc">-</span>knots[<span class="dv">1</span>]) <span class="sc">/</span> (knots[<span class="dv">3</span>]<span class="sc">-</span>knots[<span class="dv">2</span>])) <span class="sc">+</span></span>
-<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pmax</span>((x<span class="sc">-</span>knots[<span class="dv">3</span>])<span class="sc">^</span><span class="dv">3</span>, <span class="dv">0</span>) <span class="sc">*</span> ((knots[<span class="dv">2</span>]<span class="sc">-</span>knots[<span class="dv">1</span>])<span class="sc">/</span>(knots[<span class="dv">3</span>]<span class="sc">-</span>knots[<span class="dv">2</span>]))</span>
-<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>For some reason this is close but off by a factor close to 5? Looking into the documentation/code, it is because of the <span class="in">`norm`</span> argument in the <span class="in">`Hmisc::rcspline.eval`</span> function. When we run this, we get the same result that we calculated (which is the original restricted cubic spline calculation):</span>
-<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Hmisc<span class="sc">::</span><span class="fu">rcspline.eval</span>(x,<span class="at">nk=</span><span class="dv">3</span>, <span class="at">norm =</span> <span class="dv">0</span>))</span>
-<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>By default, this function uses <span class="in">`norm=2`</span>, which _"normalizes by the square of the spacing between the first and last knots...has the advantage of making all nonlinear terms be on the x-scale"_.</span>
-<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Hmisc<span class="sc">::</span><span class="fu">rcspline.eval</span>(x,<span class="at">nk=</span><span class="dv">3</span>, <span class="at">norm =</span> <span class="dv">2</span>))</span>
-<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Statistical Thinking</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Estimation</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Modeling</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>This one always gets me. I've learned and forgot how splines work many times over the years, and when I need to relearn it, I read the _Moving Beyond Linearity_ chapter of <span class="co">[</span><span class="ot">An Introduction to Statistical Learning</span><span class="co">](https://www.statlearning.com/)</span>. </span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>**Basis Functions** are just a general approach for transforming a simple model like:</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1X_i + \epsilon_i$$</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>into a linear combination of transformations of the $X_i$ of the form:</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1b_1(X_i) + \beta_2b_2(X_i) + ... + \beta_Kb_k(X_i) + \epsilon_i$$</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>where $b_i$ is a known function that transforms the predictor variable. _Note: $\beta_1$ is not the same in both of these, they are just placeholders for an arbitrary parameter._ For example, in the case of a piecewise regression where the model is of the form:</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1I(X_i &lt; c_1) + \beta_2I(c_1 &lt; X_i &lt; c_2) + ... + \beta_kI(c_{k-1} &lt; X_i &lt; c_k) + \epsilon_i$$</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>the indicators are _basis functions_ such that:</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>$$b_j(X_i) = I(c_{j-1} &lt; X_i &lt; c_j) \hskip.1in \text{for j=1,..,k}$$</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>or in a polynomial model, the basis functions are $b_j(X_i) = X_i^j$.</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>**Knots** are points (cutoffs) along $X_i$ that a _local_ regression starts/ends. For example, we might fit a cubic model (e.g., with parameters $\beta_1, \beta_2, \beta_3$) where $X_i &lt; C$, and another model (with a _separate_ set of $\beta_1, \beta_2, \beta_3$) where $X_i \geq C$. $C$ is a _knot_. In this sense, the piecewise regression above was also a polynomial regression with degree 0, and knots at each value of $c_j$.</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>The general problem with an unconstrained polynomial model is that there are no restrictions that force a smooth function across $X$, so there are discontinuities. Thus, restrictions need to be put in place such as (1) making it continuous at the knot(s), and/or even further, (2) making the first and second derivatives continuous at the knots. These restrictions reduce the complexity of the model (i.e., the number of parameters we estimate). </span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="fu"># Cubic Splines</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>A cubic spline with $K$ knots uses $K+4$ parameters. The best way to do this is to use (1) the basis of a cubic polynomial ($x, x^2, x^3$) and (2) a truncated power basis _for each knot_:</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>$$h(x,\nu) = {(x-\nu)}_+^3$$</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>where $\nu$ is the knot location. Thus, a _one-knot_ model looks like:</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>$$Y_i = \beta_0 + \beta_1X_i + \beta_2X_i^2 + \beta_3X_i^3 + \beta_4h(X_i,\nu_1) + \epsilon_i$$</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>We can add more knots as needed, and it simply adds $h(x,\nu)$ terms only (so 1 more parameter per knot). A function of this form is guaranteed to have continuous first and second derivatives.</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>**So how does this relate to what is produced in the `rcs` function from the `rms` package?**</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>Well, the package actually fits a _restricted_ cubic spline, which is a _natural spline_. This adds even more restrictions that the general cubic spline by forcing it to be _linear_ where $X$ is less than the smallest knot and where $X$ is larger than the largest not (i.e., the boundaries). These add an additional _two_ constraints at _each_ boundary. So if we have a regular cubic spline model above with 3 knots (i.e., 7 parameters), then a _restricted_ cubic spline model with 3 knots should have only 3 parameters.</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> .<span class="dv">5</span><span class="sc">*</span>x<span class="sc">^</span><span class="dv">2</span> <span class="sc">-</span> .<span class="dv">75</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>x_trans <span class="ot">&lt;-</span> rms<span class="sc">::</span><span class="fu">rcs</span>(x, <span class="dv">3</span>)</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(x_trans)</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(y<span class="sc">~</span>x_trans))</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>We can see this model contains three estimated parameters as expected. The actual transformation completed for the restricted cubic spline in producing, in general, the $K-2$ additional predictors is more complex than the cubic spline (although similar). In this case, the 3 knot positions were selected to be:</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>knots <span class="ot">&lt;-</span> <span class="fu">attr</span>(x_trans, <span class="st">"parms"</span>)</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>knots</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>Note, these are just the $10^{th}, 50^{th}, 90^{th}$ percentiles:</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(x, <span class="fu">c</span>(.<span class="dv">1</span>,.<span class="dv">5</span>,.<span class="dv">9</span>))</span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>The following transformation is made (general solution <span class="co">[</span><span class="ot">here</span><span class="co">](https://support.sas.com/resources/papers/proceedings16/5621-2016.pdf)</span>):</span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>$$X_{trans} = (x-\nu_1)_+^3 - (x-\nu_2)_+^3\frac{\nu_3-\nu_1}{\nu_3-\nu_2} + (x-\nu_3)_+^3\frac{\nu_2-\nu_1}{\nu_3-\nu_2}$$</span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>Let's check out that transformation on our data:</span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">as.numeric</span>(x_trans[,<span class="st">"x"</span>]),</span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_trans_actual =</span> <span class="fu">as.numeric</span>(x_trans[,<span class="st">"x'"</span>]),</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_trans_calculated =</span> </span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pmax</span>((x<span class="sc">-</span>knots[<span class="dv">1</span>])<span class="sc">^</span><span class="dv">3</span>, <span class="dv">0</span>) <span class="sc">-</span></span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pmax</span>((x<span class="sc">-</span>knots[<span class="dv">2</span>])<span class="sc">^</span><span class="dv">3</span>, <span class="dv">0</span>) <span class="sc">*</span> ((knots[<span class="dv">3</span>]<span class="sc">-</span>knots[<span class="dv">1</span>]) <span class="sc">/</span> (knots[<span class="dv">3</span>]<span class="sc">-</span>knots[<span class="dv">2</span>])) <span class="sc">+</span></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pmax</span>((x<span class="sc">-</span>knots[<span class="dv">3</span>])<span class="sc">^</span><span class="dv">3</span>, <span class="dv">0</span>) <span class="sc">*</span> ((knots[<span class="dv">2</span>]<span class="sc">-</span>knots[<span class="dv">1</span>])<span class="sc">/</span>(knots[<span class="dv">3</span>]<span class="sc">-</span>knots[<span class="dv">2</span>]))</span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>For some reason this is close but off by a factor close to 5? Looking into the documentation/code, it is because of the <span class="in">`norm`</span> argument in the <span class="in">`Hmisc::rcspline.eval`</span> function. When we run this, we get the same result that we calculated (which is the original restricted cubic spline calculation):</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Hmisc<span class="sc">::</span><span class="fu">rcspline.eval</span>(x,<span class="at">nk=</span><span class="dv">3</span>, <span class="at">norm =</span> <span class="dv">0</span>))</span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>By default, this function uses <span class="in">`norm=2`</span>, which _"normalizes by the square of the spacing between the first and last knots...has the advantage of making all nonlinear terms be on the x-scale"_.</span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Hmisc<span class="sc">::</span><span class="fu">rcspline.eval</span>(x,<span class="at">nk=</span><span class="dv">3</span>, <span class="at">norm =</span> <span class="dv">2</span>))</span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
-    <div class="nav-footer-center">
 <p>© 2026 Zajichek Stats</p>
-</div>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html">
+<p>Start Here</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../topics/index.html">
+<p>Topics</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../index.xml">
+<p>RSS</p>
+</a>
+  </li>  
+</ul>
+    </div>
     <div class="nav-footer-right">
-      &nbsp;
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/">
+<p>CentralStatz</p>
+</a>
+  </li>  
+</ul>
     </div>
   </div>
 </footer>

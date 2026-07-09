@@ -1,88 +1,104 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.zajichekstats.com/presentations.html</loc>
-    <lastmod>2025-03-18T17:11:48.278Z</lastmod>
+    <loc>https://www.zajichekstats.com/topics/ai-for-analytics.html</loc>
+    <lastmod>2026-07-09T13:40:17.784Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html</loc>
-    <lastmod>2025-03-18T16:27:05.715Z</lastmod>
+    <loc>https://www.zajichekstats.com/topics/reproducible-analytics.html</loc>
+    <lastmod>2026-07-09T13:40:18.121Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/modeling-probability-of-nhl-goal/index.html</loc>
-    <lastmod>2025-03-18T16:58:27.807Z</lastmod>
+    <loc>https://www.zajichekstats.com/topics/healthcare-analytics.html</loc>
+    <lastmod>2026-07-09T13:40:17.898Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/carecompare/index.html</loc>
-    <lastmod>2025-03-18T17:09:35.046Z</lastmod>
+    <loc>https://www.zajichekstats.com/start-here.html</loc>
+    <lastmod>2026-07-09T13:32:22.579Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/index.html</loc>
-    <lastmod>2025-06-26T12:53:41.861Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/journey-through-statistical-rethinking/index.html</loc>
+    <lastmod>2025-03-18T17:04:11.894Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/JNaiveBayes/index.html</loc>
-    <lastmod>2025-03-18T17:14:34.193Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html</loc>
+    <lastmod>2025-03-18T16:29:56.041Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/slides.html</loc>
-    <lastmod>2026-04-14T22:00:14.969Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/zildge/index.html</loc>
+    <lastmod>2025-03-18T17:09:39.329Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/readmit/index.html</loc>
-    <lastmod>2025-11-23T15:14:06.330Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html</loc>
+    <lastmod>2025-03-18T16:55:21.725Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/midwest-home-price-index/index.html</loc>
-    <lastmod>2025-03-18T16:01:17.954Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/estimating-player-contribution-in-hockey/index.html</loc>
+    <lastmod>2025-03-21T13:13:25.579Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/riskcalc/index.html</loc>
-    <lastmod>2025-03-27T12:14:07.220Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/slides.html</loc>
+    <lastmod>2025-05-08T16:04:35.251Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/the-value-of-open-source/slides.html</loc>
-    <lastmod>2025-02-05T15:36:06.819Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/index.html</loc>
+    <lastmod>2026-04-14T21:59:50.512Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/publications.html</loc>
-    <lastmod>2026-05-22T14:01:37.211Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/cheese/index.html</loc>
+    <lastmod>2025-03-27T12:11:57.735Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/index.html</loc>
-    <lastmod>2024-11-04T22:03:55.569Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html</loc>
+    <lastmod>2024-12-30T19:34:56.542Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/statistical-significance-is-insignificant/index.html</loc>
-    <lastmod>2025-09-26T16:14:22.813Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/gibbs-sampler-in-python/index.html</loc>
+    <lastmod>2025-03-18T16:26:49.477Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/index.html</loc>
-    <lastmod>2026-01-05T19:13:42.308Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/the-value-of-open-source/index.html</loc>
+    <lastmod>2025-03-19T14:34:20.358Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/low-cost-ways-to-build-and-deploy-apps/index.html</loc>
-    <lastmod>2024-11-30T21:58:27.652Z</lastmod>
+    <loc>https://www.zajichekstats.com/about.html</loc>
+    <lastmod>2026-07-09T13:28:33.259Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/the-overlap-weight/index.html</loc>
-    <lastmod>2024-11-05T00:09:21.991Z</lastmod>
+    <loc>https://www.zajichekstats.com/index.html</loc>
+    <lastmod>2026-07-09T13:40:17.672Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/com-poisson-regression/index.html</loc>
-    <lastmod>2024-11-04T20:58:03.527Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/statistical-rethinking-2023-class-notes/index.html</loc>
+    <lastmod>2024-11-04T21:57:15.640Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/a-look-at-collider-bias/index.html</loc>
-    <lastmod>2025-01-30T20:47:17.379Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html</loc>
+    <lastmod>2026-07-09T12:46:37.889Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/what-decision-are-we-trying-to-make/index.html</loc>
-    <lastmod>2025-04-23T20:54:42.348Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/making-an-ai-statistical-consultant/index.html</loc>
+    <lastmod>2026-07-09T12:46:39.361Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/simple-example-why-statistical-significance-is-insufficient/index.html</loc>
-    <lastmod>2024-11-30T22:05:39.744Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/the-evasive-spline/index.html</loc>
+    <lastmod>2026-07-09T12:46:39.135Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/nesting-with-tidyr/index.html</loc>
+    <lastmod>2026-07-09T12:46:39.923Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/introducing-the-readmit-r-package/index.html</loc>
+    <lastmod>2026-07-09T12:46:37.663Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/conceptualizing-the-readmission-risk-pool/index.html</loc>
+    <lastmod>2026-07-09T12:46:37.436Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/how-to-assess-the-proportional-odds-assumption/index.html</loc>
+    <lastmod>2026-07-09T12:46:38.793Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/quantum-entanglement-from-statistical-perspective/index.html</loc>
@@ -90,15 +106,15 @@
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/reactable-javascript/index.html</loc>
-    <lastmod>2024-11-04T21:29:22.796Z</lastmod>
+    <lastmod>2026-07-09T12:46:38.003Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html</loc>
-    <lastmod>2025-05-23T17:13:56.252Z</lastmod>
+    <lastmod>2026-07-09T12:46:39.248Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html</loc>
-    <lastmod>2024-11-05T00:02:10.065Z</lastmod>
+    <lastmod>2026-07-09T12:46:39.811Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/the-question-is-not-if-but-how-much/index.html</loc>
@@ -114,15 +130,15 @@
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/you-should-have-a-data-science-blog/index.html</loc>
-    <lastmod>2024-11-30T21:54:43.615Z</lastmod>
+    <lastmod>2026-07-09T12:46:39.697Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/can-you-have-a-model-without-data/index.html</loc>
-    <lastmod>2024-12-31T14:27:02.555Z</lastmod>
+    <lastmod>2026-07-09T12:46:38.454Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/index.html</loc>
-    <lastmod>2025-10-29T20:51:31.622Z</lastmod>
+    <lastmod>2026-07-09T12:46:39.473Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/the-worst-lead-in-hockey/index.html</loc>
@@ -130,7 +146,7 @@
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/filterable-maps/index.html</loc>
-    <lastmod>2024-11-04T21:16:09.275Z</lastmod>
+    <lastmod>2026-07-09T12:46:37.776Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/some-takeaways-from-effective-data-storytelling/index.html</loc>
@@ -138,94 +154,110 @@
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/reconciling-regression-equation-spline-terms/index.html</loc>
-    <lastmod>2024-12-31T14:26:06.678Z</lastmod>
+    <lastmod>2026-07-09T12:46:38.907Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/investigating-a-hospital-specific-report/index.html</loc>
-    <lastmod>2026-01-05T19:12:42.181Z</lastmod>
+    <lastmod>2026-07-09T12:46:37.550Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/how-to-assess-the-proportional-odds-assumption/index.html</loc>
-    <lastmod>2024-12-31T14:26:37.812Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/simple-example-why-statistical-significance-is-insufficient/index.html</loc>
+    <lastmod>2026-07-09T12:46:38.227Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/conceptualizing-the-readmission-risk-pool/index.html</loc>
-    <lastmod>2026-01-05T19:14:19.032Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/what-decision-are-we-trying-to-make/index.html</loc>
+    <lastmod>2026-07-09T12:46:38.116Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/introducing-the-readmit-r-package/index.html</loc>
-    <lastmod>2026-01-05T19:12:31.159Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/a-look-at-collider-bias/index.html</loc>
+    <lastmod>2026-07-09T12:46:38.566Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/nesting-with-tidyr/index.html</loc>
-    <lastmod>2024-11-04T23:55:47.740Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/com-poisson-regression/index.html</loc>
+    <lastmod>2026-07-09T12:46:39.022Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/the-evasive-spline/index.html</loc>
-    <lastmod>2024-11-04T22:09:03.790Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/the-overlap-weight/index.html</loc>
+    <lastmod>2026-07-09T12:46:38.680Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/making-an-ai-statistical-consultant/index.html</loc>
-    <lastmod>2025-05-13T20:48:20.207Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/low-cost-ways-to-build-and-deploy-apps/index.html</loc>
+    <lastmod>2026-07-09T12:46:39.584Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html</loc>
-    <lastmod>2026-05-27T19:47:56.565Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/index.html</loc>
+    <lastmod>2026-07-09T12:46:37.324Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/statistical-rethinking-2023-class-notes/index.html</loc>
-    <lastmod>2024-11-04T21:57:15.640Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/statistical-significance-is-insignificant/index.html</loc>
+    <lastmod>2026-07-09T12:46:38.341Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/index.html</loc>
-    <lastmod>2025-05-15T14:30:53.972Z</lastmod>
+    <loc>https://www.zajichekstats.com/post/deriving-a-bernoulli-mle/index.html</loc>
+    <lastmod>2024-11-04T22:03:55.569Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/about.html</loc>
-    <lastmod>2025-05-13T17:39:06.789Z</lastmod>
+    <loc>https://www.zajichekstats.com/publications.html</loc>
+    <lastmod>2026-05-22T14:01:37.211Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/the-value-of-open-source/index.html</loc>
-    <lastmod>2025-03-19T14:34:20.358Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/the-value-of-open-source/slides.html</loc>
+    <lastmod>2025-02-05T15:36:06.819Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/gibbs-sampler-in-python/index.html</loc>
-    <lastmod>2025-03-18T16:26:49.477Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/riskcalc/index.html</loc>
+    <lastmod>2025-03-27T12:14:07.220Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html</loc>
-    <lastmod>2024-12-30T19:34:56.542Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/midwest-home-price-index/index.html</loc>
+    <lastmod>2025-03-18T16:01:17.954Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/cheese/index.html</loc>
-    <lastmod>2025-03-27T12:11:57.735Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/readmit/index.html</loc>
+    <lastmod>2025-11-23T15:14:06.330Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/index.html</loc>
-    <lastmod>2026-04-14T21:59:50.512Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/toggling-between-traditional-and-chat-based-data-filters/slides.html</loc>
+    <lastmod>2026-04-14T22:00:14.969Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/slides.html</loc>
-    <lastmod>2025-05-08T16:04:35.251Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/JNaiveBayes/index.html</loc>
+    <lastmod>2025-03-18T17:14:34.193Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/estimating-player-contribution-in-hockey/index.html</loc>
-    <lastmod>2025-03-21T13:13:25.579Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/index.html</loc>
+    <lastmod>2025-06-26T12:53:41.861Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html</loc>
-    <lastmod>2025-03-18T16:55:21.725Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/carecompare/index.html</loc>
+    <lastmod>2025-03-18T17:09:35.046Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/zildge/index.html</loc>
-    <lastmod>2025-03-18T17:09:39.329Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/modeling-probability-of-nhl-goal/index.html</loc>
+    <lastmod>2025-03-18T16:58:27.807Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html</loc>
-    <lastmod>2025-03-18T16:29:56.041Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html</loc>
+    <lastmod>2025-03-18T16:27:05.715Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/presentations/journey-through-statistical-rethinking/index.html</loc>
-    <lastmod>2025-03-18T17:04:11.894Z</lastmod>
+    <loc>https://www.zajichekstats.com/presentations.html</loc>
+    <lastmod>2025-03-18T17:11:48.278Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/topics/statistical-thinking.html</loc>
+    <lastmod>2026-07-09T13:40:18.232Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/topics/index.html</loc>
+    <lastmod>2026-07-09T13:32:22.692Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/topics/r-shiny-applications.html</loc>
+    <lastmod>2026-07-09T13:40:18.009Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/presentations/finding-the-best-bracket/index.html</loc>
+    <lastmod>2026-03-23T20:58:34.709Z</lastmod>
   </url>
 </urlset>

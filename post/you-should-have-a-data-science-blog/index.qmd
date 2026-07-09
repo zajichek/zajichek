@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "9/25/2024"
 image: "feature.png"
 categories:
+  - Data Science Infrastructure
   - Deployment
   - Learning
   - Software Development

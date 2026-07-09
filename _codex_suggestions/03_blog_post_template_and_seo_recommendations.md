@@ -8,6 +8,8 @@ AI search systems and readers both benefit from direct, concise answers near the
 ### Current issue
 Several posts begin conversationally or with background. For example, `post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.qmd` starts with a video and exploratory context before a direct answer to what the post teaches. That tone is engaging, but the page could be easier for AI/search systems to summarize.
 
+As of the July 2026 review, there are also newer AI/data-science workflow drafts, including `post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.qmd` and `post/why-an-estimand-for-flux/index.qmd`, that should receive this treatment before publication.
+
 ### Suggested change
 For cornerstone posts, add a short "In brief" or direct-answer paragraph after the front matter and before long background, videos, or code.
 
@@ -182,13 +184,24 @@ FAQ sections can feel artificial if overused. Add them only to posts where they 
 ### How to verify
 Read the final section of the post and confirm the FAQ answers common reader questions without repeating the whole article.
 
-## Recommendation 6: Review Future-Dated And Draft Posts Before Publishing
+## Recommendation 6: Review Draft Status And Publication Metadata Before Publishing
 
 ### Purpose
-Dates affect RSS feeds, listings, sitemap timing, and reader trust. Draft and future-dated posts should be intentional.
+Dates affect RSS feeds, listings, sitemap timing, and reader trust. Draft status, publication date, and descriptions should be intentional before a post becomes public.
 
 ### Current issue
-Several posts have dates after the current project date context or are marked `draft: true`, including files such as `post/the-worst-lead-in-hockey/index.qmd`, `post/bernoullis-fallacy-of-the-transposed-conditional/index.qmd`, and several healthcare/readmissions posts dated in late 2025 or 2026. This may be intentional scheduling, but it should be checked before public rendering.
+As of July 9, 2026, the sampled post dates are not future-dated, but several posts are still marked `draft: true`, including:
+
+- `post/bernoullis-fallacy-of-the-transposed-conditional/index.qmd`
+- `post/effective-research-data-science/index.qmd`
+- `post/i-am-not-data-driven/index.qmd`
+- `post/objectifying-statistics/index.qmd`
+- `post/subtle-mistranslations-and-their-aggregated-impact/index.qmd`
+- `post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.qmd`
+- `post/tips-on-creating-your-own-shiny-server/index.qmd`
+- `post/why-an-estimand-for-flux/index.qmd`
+
+The older recommendation named `post/the-worst-lead-in-hockey/index.qmd` as a draft, but it now appears to be published with a June 4, 2026 date.
 
 ### Suggested change
 Maintain a quick publication checklist for date, draft status, description, image, categories, and links before publishing a post.
@@ -211,11 +224,11 @@ Publication checklist:
 ### Sequential implementation steps
 1. Before publishing, inspect the target post's front matter.
 2. Confirm the rendered page appears or stays hidden as intended.
-3. Check the homepage listing and RSS feed after rendering.
-4. Check sitemap output if the post should be public.
+3. Check the homepage listing, RSS feed, sitemap, and any `llms.txt` output after rendering.
+4. Check that draft posts remain excluded from public discovery outputs.
 
 ### Risk / possible site issues
-Changing dates can reorder the homepage and RSS feed. Removing `draft: true` can publish unfinished content.
+Changing dates can reorder the homepage and RSS feed. Removing `draft: true` can publish unfinished content and make it eligible for generated discovery files.
 
 ### How to verify
-Render the site and inspect the homepage listing, `index.xml`, and `_site/sitemap.xml`.
+Render the site and inspect the homepage listing, `index.xml`, `_site/sitemap.xml`, and `_site/llms.txt` if LLM output is enabled.

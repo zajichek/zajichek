@@ -1,0 +1,48 @@
+---
+title: "Statistical Thinking"
+description: "Articles on statistical reasoning, decision-making, modeling, inference, and interpretation."
+listing:
+  id: topic-listing
+  contents:
+    - ../post/what-decision-are-we-trying-to-make/index.qmd
+    - ../post/simple-example-why-statistical-significance-is-insufficient/index.qmd
+    - ../post/statistical-significance-is-insignificant/index.qmd
+    - ../post/can-you-have-a-model-without-data/index.qmd
+    - ../post/a-look-at-collider-bias/index.qmd
+    - ../post/the-overlap-weight/index.qmd
+    - ../post/how-to-assess-the-proportional-odds-assumption/index.qmd
+    - ../post/reconciling-regression-equation-spline-terms/index.qmd
+    - ../post/com-poisson-regression/index.qmd
+    - ../post/the-evasive-spline/index.qmd
+  type: default
+  sort: "date desc"
+  image-align: left
+  categories: false
+---
+
+::: {.page-hero}
+::: {.placeholder-note}
+ADD TEXT ABOUT statistical thinking, decision-making, inference, modeling, and interpretation.
+:::
+:::
+
+::: {.section-panel}
+## Start With These
+
+:::: {.link-grid}
+::: {.link-card}
+### [What decision are we trying to make, anyway?](../post/what-decision-are-we-trying-to-make/)
+:::
+::: {.link-card}
+### [A simple example why statistical significance is insufficient for action](../post/simple-example-why-statistical-significance-is-insufficient/)
+:::
+::: {.link-card}
+### [Can you have a model without data?](../post/can-you-have-a-model-without-data/)
+:::
+::::
+:::
+
+## Articles
+
+::: {#topic-listing}
+:::

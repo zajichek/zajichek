@@ -1,0 +1,44 @@
+---
+title: "Reproducible Analytics"
+description: "Articles on reproducible workflows, data tools, deployment, tables, and analytics infrastructure."
+listing:
+  id: topic-listing
+  contents:
+    - ../post/you-should-have-a-data-science-blog/index.qmd
+    - ../post/low-cost-ways-to-build-and-deploy-apps/index.qmd
+    - ../post/getting-started-with-the-hhs-medicaid-spending-dataset/index.qmd
+    - ../post/reactable-javascript/index.qmd
+    - ../post/quickly-removing-higher-order-aggregation-text-in-reactable/index.qmd
+    - ../post/nesting-with-tidyr/index.qmd
+  type: default
+  sort: "date desc"
+  image-align: left
+  categories: false
+---
+
+::: {.page-hero}
+::: {.placeholder-note}
+ADD TEXT ABOUT reproducible analytics, deployment, data tooling, and infrastructure for analytical work.
+:::
+:::
+
+::: {.section-panel}
+## Start With These
+
+:::: {.link-grid}
+::: {.link-card}
+### [You should have a data science blog](../post/you-should-have-a-data-science-blog/)
+:::
+::: {.link-card}
+### [Low cost ways to build and deploy analytical web apps](../post/low-cost-ways-to-build-and-deploy-apps/)
+:::
+::: {.link-card}
+### [Getting Started with the HHS Medicaid Provider Spending Dataset](../post/getting-started-with-the-hhs-medicaid-spending-dataset/)
+:::
+::::
+:::
+
+## Articles
+
+::: {#topic-listing}
+:::

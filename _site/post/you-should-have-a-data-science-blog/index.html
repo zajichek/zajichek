@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f0ac9edcc0eceb94931262426d51e472.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../../site_libs/quarto-contrib/bluesky-comments-1.0.0/bluesky-comments.js"></script>
 <link href="../../site_libs/quarto-contrib/bluesky-comments-1.0.0/styles.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -154,6 +154,14 @@ window.Quarto = {
 <meta property="og:site_name" content="Zajichek Stats">
 <meta property="og:image:height" content="319">
 <meta property="og:image:width" content="316">
+<meta name="twitter:title" content="You should have a data science blog – Zajichek Stats">
+<meta name="twitter:description" content="Easy and free are only a couple benefits.">
+<meta name="twitter:image" content="https://www.zajichekstats.com/post/you-should-have-a-data-science-blog/feature.png">
+<meta name="twitter:creator" content="@zajichekstats">
+<meta name="twitter:site" content="@zajichekstats">
+<meta name="twitter:image-height" content="319">
+<meta name="twitter:image-width" content="316">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -173,6 +181,37 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html"> 
+<span class="menu-text">Start Here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
+        <li>
+    <a class="dropdown-item" href="../../topics/healthcare-analytics.html">
+ <span class="dropdown-text">Healthcare Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/statistical-thinking.html">
+ <span class="dropdown-text">Statistical Thinking</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/reproducible-analytics.html">
+ <span class="dropdown-text">Reproducible Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/r-shiny-applications.html">
+ <span class="dropdown-text">R / Shiny Applications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/ai-for-analytics.html">
+ <span class="dropdown-text">AI for Analytics</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../../presentations.html"> 
 <span class="menu-text">Projects &amp; Presentations</span></a>
@@ -239,6 +278,7 @@ window.Quarto = {
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">You should have a data science blog</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
   <div class="quarto-categories">
+    <div class="quarto-category">Data Science Infrastructure</div>
     <div class="quarto-category">Deployment</div>
     <div class="quarto-category">Learning</div>
     <div class="quarto-category">Software Development</div>
@@ -785,72 +825,95 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "9/25/2024"</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Deployment</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Learning</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Software Development</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>One thing I would highly recommend to anyone with an interest in statistics/data science, whether you're a student just starting out or a professional increasing your skills, is to create a blog. In _this_ blog post, we'll cover some of the benefits of doing so and touch on our preferred workflow to get one up and running (for free).</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu"># Benefits</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Software development/deployment</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>You might think that the logistics/maintenance of a blog sounds cumbersome. You just want to stick to the content. However, learning how to create, develop, maintain, and deploy the blog, regardless of its content, provides in itself exposure to essential skills for data science: software development and deployment. Simply knowing the math or the R/Python commands to run a model is one thing, but if you want to deliver effective analytical solutions, those results probably need to be delivered to the end user in a useful way. Building a blog (website) forces you to learn about things such as <span class="co">[</span><span class="ot">version control</span><span class="co">](https://www.atlassian.com/git/tutorials/what-is-version-control)</span>, <span class="co">[</span><span class="ot">CI/CD</span><span class="co">](https://www.synopsys.com/glossary/what-is-cicd.html)</span>, <span class="co">[</span><span class="ot">web hosting</span><span class="co">](https://en.wikipedia.org/wiki/Web_hosting_service)</span>, <span class="co">[</span><span class="ot">DNS records</span><span class="co">](https://www.cloudflare.com/learning/dns/dns-records/)</span>, <span class="co">[</span><span class="ot">web development</span><span class="co">](https://www.geeksforgeeks.org/web-development/)</span>...the list goes on, which are all components of creating a data science _product_. Marrying these things to the content creation itself provides you an arsenal of tools that can be exploited in all sorts of contexts.</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Solidify concepts</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>There are a lot of topics to keep track of when you're learning statistics/data science, and one very effective way to solidify your understanding is to write it out coherently. For example, you may be learning about <span class="co">[</span><span class="ot">linear regression</span><span class="co">]()</span> but there may be nuances surrounding it that are fuzzy, such as why a $\beta$ parameter is interpreted the way that it is. So, you may opt to write a blog post that goes through this derivation in an applied example with a coherent, structured narrative--by the end, you'll generally grasp the thing you set out for. You just need to start with an outline of thing you want to understand and then learn it as you write. This is exactly the type of thing I do as well when I want to fully vet my understanding of something, such as in <span class="co">[</span><span class="ot">this post</span><span class="co">](https://www.zajichekstats.com/post/the-evasive-spline/)</span>. Not only does this help with becoming a better writer, which is a great skill in and of itself, but it forces you to articulate a topic thoroughly, as if someone else is going to read it (which they hopefully will!). More importantly, it allows you to have permanent, easily accessible place to put your work.</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Reference repository</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>On a related note of conceptual understanding: your blog posts are now just public web pages on the internet. That means you can use your collection of articles simply as an accessible repository for you to refer back to when you need them. If you took the time to write an article to help yourself solidify a concept (#2), then it was probably (a) tricky enough that over time you may lose your intuition on it occasionally, and (b) important enough that it was worth writing out. So, having a place where you've written out your thought process about a topic, in your own words, is an invaluable resource for you to refer back to. I can't tell you the number of times I've referred back to articles I've written to remember little things. The beauty of it is that when my curiosity comes at a random part of the day, I know exactly where to look, and I can whip out my phone, remember the thing, and then stop thinking about it.</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Portfolio to showcase</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>The fact that you even have a website is impressive. It shows that you can figure out how to do things, but more importantly, that you have the drive/initiative to create projects related to your craft. The skills in creating and maintaining the website are undoubtedly transferable to the work you'd do in data science. Add in interesting content you are producing in the blog posts themselves, such as code tutorials, analyses, method exploration, whatever it may be, then you have something that can prove your capabilities, and set you apart from other candidates. The convenience and security of having that all accessible through a simple web URL that you can quickly share with someone is a real advantage, as if someone asks you for work samples or something like that, you can confidently respond knowing the work was already done.</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Engaging in public discourse</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>Having your own blog means you can write about whatever you'd like, however you want to say it, providing an avenue to contribute your own unique thoughts and perspectives. You may read a book or another article on some data science (or other) topic, and have strong thoughts, questions, or opinions about what was said. Or you just want to dig a little deeper into a certain aspect of it. Or reframe it in a way that is more understandable for yourself. Write it out and share it! Others may find your take interesting (or not, who cares). It only adds thought diversity, and makes you more connected to your field, as a peer.</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu"># A blog workflow</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>In short, my preferred approach is based on the <span class="co">[</span><span class="ot">Quarto</span><span class="co">](https://quarto.org/)</span> framework, and you can see a step-by-step tutorial <span class="co">[</span><span class="ot">here</span><span class="co">](https://quarto.org/docs/websites/website-blog.html)</span>. That's actually how this very website is built/maintained, which you can find the source code for <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/centralstatz)</span>. I'll just touch on some of the steps involved:</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Install software</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>I prefer to use <span class="co">[</span><span class="ot">RStudio</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span> as my IDE for developing my websites, so you'll also need to <span class="co">[</span><span class="ot">install R</span><span class="co">](https://www.r-project.org/)</span>. Then, you can <span class="co">[</span><span class="ot">install Quarto</span><span class="co">](https://quarto.org/docs/get-started/)</span> and you'll have what you need. </span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Store code on GitHub</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>The source code for the blog should be <span class="co">[</span><span class="ot">version controlled</span><span class="co">](https://www.atlassian.com/git/tutorials/what-is-version-control)</span> and stored in a remote repository. I prefer <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://www.github.com/)</span>. It's not actually necessary to do this, but creates a much cleaner workflow and promotes better software development practices, as it retains all history to your code changes. As you develop your website locally, you'll commit and push changes as you get to good stopping points, and GitHub will serve as your website's source of truth. </span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Host your site on Netlify</span></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>Your code is on GitHub, but you need a server that will actually host the live application. That is where <span class="co">[</span><span class="ot">Netlify</span><span class="co">](https://www.netlify.com/)</span> comes in, where you can host your website for free. To make it very easy, you can configure Netlify to update your website everytime code changes are made to GitHub (#2), automatically. So when I develop my website (like this very blog post), I just commit and push my changes to GitHub (from RStudio) and that will automatically trigger Netlify to grab changes from the repository and update the live website. By default, your website URL will be something like <span class="in">`website.netlify.app`</span>, but Netlify also has a great domain management system where you can point your website to a custom URL that you own (which you'll likely have to pay for). Nevertheless, if you don't mind the default URL, it is completely free.</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu"># Get started</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>My advice is to get your website workflow up and running first: create the local (default) application, push the code to GitHub, configure Netlify to host the website, and, if you choose, set up your custom domain (again, this last part costs money). Then you can start to make tweaks to your website and make sure everything operates as expected for general maintenance. From there, you can then focus on customizing your website in any way you want, and more importantly, developing the actual content for your blog.</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>{{&lt; bluesky-comments uri="at://did<span class="sc">:plc:</span>sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lc73hlfqyk2t" &gt;}}</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Data Science Infrastructure</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Deployment</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Learning</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Software Development</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>One thing I would highly recommend to anyone with an interest in statistics/data science, whether you're a student just starting out or a professional increasing your skills, is to create a blog. In _this_ blog post, we'll cover some of the benefits of doing so and touch on our preferred workflow to get one up and running (for free).</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># Benefits</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Software development/deployment</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>You might think that the logistics/maintenance of a blog sounds cumbersome. You just want to stick to the content. However, learning how to create, develop, maintain, and deploy the blog, regardless of its content, provides in itself exposure to essential skills for data science: software development and deployment. Simply knowing the math or the R/Python commands to run a model is one thing, but if you want to deliver effective analytical solutions, those results probably need to be delivered to the end user in a useful way. Building a blog (website) forces you to learn about things such as <span class="co">[</span><span class="ot">version control</span><span class="co">](https://www.atlassian.com/git/tutorials/what-is-version-control)</span>, <span class="co">[</span><span class="ot">CI/CD</span><span class="co">](https://www.synopsys.com/glossary/what-is-cicd.html)</span>, <span class="co">[</span><span class="ot">web hosting</span><span class="co">](https://en.wikipedia.org/wiki/Web_hosting_service)</span>, <span class="co">[</span><span class="ot">DNS records</span><span class="co">](https://www.cloudflare.com/learning/dns/dns-records/)</span>, <span class="co">[</span><span class="ot">web development</span><span class="co">](https://www.geeksforgeeks.org/web-development/)</span>...the list goes on, which are all components of creating a data science _product_. Marrying these things to the content creation itself provides you an arsenal of tools that can be exploited in all sorts of contexts.</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Solidify concepts</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>There are a lot of topics to keep track of when you're learning statistics/data science, and one very effective way to solidify your understanding is to write it out coherently. For example, you may be learning about <span class="co">[</span><span class="ot">linear regression</span><span class="co">]()</span> but there may be nuances surrounding it that are fuzzy, such as why a $\beta$ parameter is interpreted the way that it is. So, you may opt to write a blog post that goes through this derivation in an applied example with a coherent, structured narrative--by the end, you'll generally grasp the thing you set out for. You just need to start with an outline of thing you want to understand and then learn it as you write. This is exactly the type of thing I do as well when I want to fully vet my understanding of something, such as in <span class="co">[</span><span class="ot">this post</span><span class="co">](https://www.zajichekstats.com/post/the-evasive-spline/)</span>. Not only does this help with becoming a better writer, which is a great skill in and of itself, but it forces you to articulate a topic thoroughly, as if someone else is going to read it (which they hopefully will!). More importantly, it allows you to have permanent, easily accessible place to put your work.</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Reference repository</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>On a related note of conceptual understanding: your blog posts are now just public web pages on the internet. That means you can use your collection of articles simply as an accessible repository for you to refer back to when you need them. If you took the time to write an article to help yourself solidify a concept (#2), then it was probably (a) tricky enough that over time you may lose your intuition on it occasionally, and (b) important enough that it was worth writing out. So, having a place where you've written out your thought process about a topic, in your own words, is an invaluable resource for you to refer back to. I can't tell you the number of times I've referred back to articles I've written to remember little things. The beauty of it is that when my curiosity comes at a random part of the day, I know exactly where to look, and I can whip out my phone, remember the thing, and then stop thinking about it.</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Portfolio to showcase</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>The fact that you even have a website is impressive. It shows that you can figure out how to do things, but more importantly, that you have the drive/initiative to create projects related to your craft. The skills in creating and maintaining the website are undoubtedly transferable to the work you'd do in data science. Add in interesting content you are producing in the blog posts themselves, such as code tutorials, analyses, method exploration, whatever it may be, then you have something that can prove your capabilities, and set you apart from other candidates. The convenience and security of having that all accessible through a simple web URL that you can quickly share with someone is a real advantage, as if someone asks you for work samples or something like that, you can confidently respond knowing the work was already done.</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Engaging in public discourse</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>Having your own blog means you can write about whatever you'd like, however you want to say it, providing an avenue to contribute your own unique thoughts and perspectives. You may read a book or another article on some data science (or other) topic, and have strong thoughts, questions, or opinions about what was said. Or you just want to dig a little deeper into a certain aspect of it. Or reframe it in a way that is more understandable for yourself. Write it out and share it! Others may find your take interesting (or not, who cares). It only adds thought diversity, and makes you more connected to your field, as a peer.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu"># A blog workflow</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>In short, my preferred approach is based on the <span class="co">[</span><span class="ot">Quarto</span><span class="co">](https://quarto.org/)</span> framework, and you can see a step-by-step tutorial <span class="co">[</span><span class="ot">here</span><span class="co">](https://quarto.org/docs/websites/website-blog.html)</span>. That's actually how this very website is built/maintained, which you can find the source code for <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/centralstatz)</span>. I'll just touch on some of the steps involved:</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Install software</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>I prefer to use <span class="co">[</span><span class="ot">RStudio</span><span class="co">](https://posit.co/download/rstudio-desktop/)</span> as my IDE for developing my websites, so you'll also need to <span class="co">[</span><span class="ot">install R</span><span class="co">](https://www.r-project.org/)</span>. Then, you can <span class="co">[</span><span class="ot">install Quarto</span><span class="co">](https://quarto.org/docs/get-started/)</span> and you'll have what you need. </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Store code on GitHub</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>The source code for the blog should be <span class="co">[</span><span class="ot">version controlled</span><span class="co">](https://www.atlassian.com/git/tutorials/what-is-version-control)</span> and stored in a remote repository. I prefer <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://www.github.com/)</span>. It's not actually necessary to do this, but creates a much cleaner workflow and promotes better software development practices, as it retains all history to your code changes. As you develop your website locally, you'll commit and push changes as you get to good stopping points, and GitHub will serve as your website's source of truth. </span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Host your site on Netlify</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>Your code is on GitHub, but you need a server that will actually host the live application. That is where <span class="co">[</span><span class="ot">Netlify</span><span class="co">](https://www.netlify.com/)</span> comes in, where you can host your website for free. To make it very easy, you can configure Netlify to update your website everytime code changes are made to GitHub (#2), automatically. So when I develop my website (like this very blog post), I just commit and push my changes to GitHub (from RStudio) and that will automatically trigger Netlify to grab changes from the repository and update the live website. By default, your website URL will be something like <span class="in">`website.netlify.app`</span>, but Netlify also has a great domain management system where you can point your website to a custom URL that you own (which you'll likely have to pay for). Nevertheless, if you don't mind the default URL, it is completely free.</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="fu"># Get started</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>My advice is to get your website workflow up and running first: create the local (default) application, push the code to GitHub, configure Netlify to host the website, and, if you choose, set up your custom domain (again, this last part costs money). Then you can start to make tweaks to your website and make sure everything operates as expected for general maintenance. From there, you can then focus on customizing your website in any way you want, and more importantly, developing the actual content for your blog.</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>{{&lt; bluesky-comments uri="at://did<span class="sc">:plc:</span>sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lc73hlfqyk2t" &gt;}}</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
-    <div class="nav-footer-center">
 <p>© 2026 Zajichek Stats</p>
-</div>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html">
+<p>Start Here</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../topics/index.html">
+<p>Topics</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../index.xml">
+<p>RSS</p>
+</a>
+  </li>  
+</ul>
+    </div>
     <div class="nav-footer-right">
-      &nbsp;
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/">
+<p>CentralStatz</p>
+</a>
+  </li>  
+</ul>
     </div>
   </div>
 </footer>

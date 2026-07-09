@@ -5,6 +5,9 @@ author: "Alex Zajichek"
 date: "5/22/2026"
 image: "feature.png"
 categories:
+  - Healthcare Analytics
+  - Data Science Infrastructure
+  - "R / Shiny"
   - Healthcare
   - DuckDB
   - Shiny

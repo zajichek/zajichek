@@ -1,21 +1,104 @@
 ---
 listing:
+  id: latest-listing
   contents: post
   sort: "date desc"
   type: default
-  filter-ui: true
-  sort-ui: true
+  filter-ui: false
+  sort-ui: false
   image-align: left
   image-placeholder: "icon.png"
-  categories: true
+  categories: false
   feed: true
 ---
 
-```{=html}
-<center><p style = 'font-size:20px; font-family: Copperplate, fantasy;'><b>A blog on statistical practice, programming, history, philosophy, and data science.</b<</p></center>
-<br>
-```
+::: {.home-hero}
+# Practical Statistics, Healthcare Analytics, and Data Science Tools
 
-```{=html}
-<center><iframe src="subscribe.html" height="300" width="300"></iframe></center>
-```
+::: {.placeholder-note}
+ADD TEXT ABOUT who this site is for, what topics it covers, and why readers should start here.
+:::
+
+[Start Here](start-here.qmd){.btn .btn-primary}
+[Browse Topics](topics/index.qmd){.btn .btn-outline-light}
+:::
+
+::: {.section-panel}
+## Topics
+
+::: {.placeholder-note}
+ADD TEXT ABOUT how the topic hubs organize the archive.
+:::
+
+:::: {.topic-grid}
+::: {.topic-card}
+### [Healthcare Analytics](topics/healthcare-analytics.qmd)
+ADD TEXT ABOUT this topic hub.
+:::
+
+::: {.topic-card}
+### [Statistical Thinking](topics/statistical-thinking.qmd)
+ADD TEXT ABOUT this topic hub.
+:::
+
+::: {.topic-card}
+### [Reproducible Analytics](topics/reproducible-analytics.qmd)
+ADD TEXT ABOUT this topic hub.
+:::
+
+::: {.topic-card}
+### [R / Shiny Applications](topics/r-shiny-applications.qmd)
+ADD TEXT ABOUT this topic hub.
+:::
+
+::: {.topic-card}
+### [AI for Analytics](topics/ai-for-analytics.qmd)
+ADD TEXT ABOUT this topic hub.
+:::
+::::
+:::
+
+::: {.section-panel}
+## Featured
+
+::: {.placeholder-note}
+ADD TEXT ABOUT why these are good starting points.
+:::
+
+:::: {.feature-grid}
+::: {.feature-card}
+### [What decision are we trying to make, anyway?](post/what-decision-are-we-trying-to-make/)
+ADD TEXT ABOUT why this post is featured.
+:::
+
+::: {.feature-card}
+### [A prediction system for managing the hospital readmission risk pool](post/managing-the-readmission-risk-pool/)
+ADD TEXT ABOUT why this post is featured.
+:::
+
+::: {.feature-card}
+### [Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}](post/building-an-llm-powered-shiny-app-for-hospital-readmissions/)
+ADD TEXT ABOUT why this post is featured.
+:::
+
+::: {.feature-card}
+### [You should have a data science blog](post/you-should-have-a-data-science-blog/)
+ADD TEXT ABOUT why this post is featured.
+:::
+::::
+:::
+
+## Latest Articles
+
+::: {#latest-listing}
+:::
+
+::: {.subscribe-panel}
+## Subscribe
+
+::: {.placeholder-note}
+ADD TEXT ABOUT what readers get by subscribing.
+:::
+
+[Subscribe by email](https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share){.btn .btn-outline-primary}
+:::

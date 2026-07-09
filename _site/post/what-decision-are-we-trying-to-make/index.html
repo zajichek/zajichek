@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-f0ac9edcc0eceb94931262426d51e472.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -123,6 +123,14 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <meta property="og:site_name" content="Zajichek Stats">
 <meta property="og:image:height" content="1398">
 <meta property="og:image:width" content="1512">
+<meta name="twitter:title" content="What decision are we trying to make, anyway? – Zajichek Stats">
+<meta name="twitter:description" content="The crux of the statistical significance issue.">
+<meta name="twitter:image" content="https://www.zajichekstats.com/post/what-decision-are-we-trying-to-make/feature.png">
+<meta name="twitter:creator" content="@zajichekstats">
+<meta name="twitter:site" content="@zajichekstats">
+<meta name="twitter:image-height" content="1398">
+<meta name="twitter:image-width" content="1512">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-fixed fullcontent quarto-light">
@@ -142,6 +150,37 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html"> 
+<span class="menu-text">Start Here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
+        <li>
+    <a class="dropdown-item" href="../../topics/healthcare-analytics.html">
+ <span class="dropdown-text">Healthcare Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/statistical-thinking.html">
+ <span class="dropdown-text">Statistical Thinking</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/reproducible-analytics.html">
+ <span class="dropdown-text">Reproducible Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/r-shiny-applications.html">
+ <span class="dropdown-text">R / Shiny Applications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/ai-for-analytics.html">
+ <span class="dropdown-text">AI for Analytics</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../../presentations.html"> 
 <span class="menu-text">Projects &amp; Presentations</span></a>
@@ -208,6 +247,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">What decision are we trying to make, anyway?</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
   <div class="quarto-categories">
+    <div class="quarto-category">Statistical Thinking</div>
     <div class="quarto-category">Philosophy</div>
     <div class="quarto-category">Statistical Significance</div>
     <div class="quarto-category">Decision Making</div>
@@ -730,58 +770,81 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "4/23/2025"</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Philosophy</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Statistical Significance</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Decision Making</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>Everyone acknowledges, or even agrees with, the issues and limitations of <span class="co">[</span><span class="ot">statistical significance</span><span class="co">](https://www.ncbi.nlm.nih.gov/books/NBK459346/#:~:text=A%20study%20is%20statistically%20significant,not%20a%20statistically%20significant%20result.)</span> (which I previously wrote about <span class="co">[</span><span class="ot">here</span><span class="co">](https://www.zajichekstats.com/post/statistical-significance-is-insignificant/)</span>): the effect size is ignored, you'll get it with a really large sample, it doesn't account for practical importance, and so on...</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>Yet it is still used all the time, and life goes on. People debate these nuances back and forth as to when and where it is or isn't valid, etc. But just recently in a <span class="co">[</span><span class="ot">conversation on LinkedIn</span><span class="co">](https://www.linkedin.com/feed/update/urn:li:activity:7319500623299653633?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7319500623299653633%2C7319674842163621888%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287319674842163621888%2Curn%3Ali%3Aactivity%3A7319500623299653633%29)</span>, I had a realization of the fundamental reason on why it is an issue, and why there are many <span class="co">[</span><span class="ot">calls to ban</span><span class="co">](https://www.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#d1e167)</span> p-values and statistical significance entirely. </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "Except experimental field, like randomized clinical trials, where both statistical and practical significance are necessary and when combined, answer the question of interest."</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>It's _not_ that a p-value, or statistical significance itself even, is inherently bad or wrong. **It _all_ has to do exclusively with how they are used, interpreted, implemented, and implicated.**</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>Take <span class="co">[</span><span class="ot">this point from Adrian Olszewski's post</span><span class="co">](https://www.linkedin.com/posts/adrianolszewski_how-to-combine-statistical-discernibility-activity-7310365190959632384-sNHs?utm_source=share&amp;utm_medium=member_desktop&amp;rcm=ACoAACwA1gEB29rAFO327bVy4fMmOqVeTbmsXA8)</span> (which was cited in the conversation above) talking about using statistical significance in combination with practical importance, but in a mathematically formal manner.</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>The key quote here is:</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "We all make BINARY decisions every day, based on some criteria."</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>And from this supporting image:</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="al">![](adrian.png)</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "Thresholds are essential in binary decision making in experimental studies..."</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>All of that is well and good, and sure, makes sense if statistical significance helps you solve a problem in that way. But the main thing that stuck out to me was the emphasis on _decisions_. </span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>**THIS** is exactly the problem with statistical significance.</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>We use it to declare there is or isn't an effect of some sort, therefore implicating decision X, Y, or Z. But in many (or most) cases, it is only a _guise_ of a decision actually being made. Think about it: in a typical academic publication, they collect data, run some statistical modeling and/or tests, and get a p-value. The "decision" being made amounts to writing the words _"there was a significant difference"_ on a page in some boilerplate fashion, not an actual action being taken. Where's the decision? </span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>Sure, you might argue that a published statistical test result could _lead_ to many decisions being made by those consuming the analysis. That's exactly the point. We have no idea what these decisions are. It is intractable. Those subsequent decisions are not actually related to or reflected in the statistical setup and testing done in the original analysis. We don't know who is using the results, how they are using them, or what they are using them for. It's just words on a page.</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>Contrast this with, say, <span class="co">[</span><span class="ot">William Sealy Gosset</span><span class="co">](https://en.wikipedia.org/wiki/William_Sealy_Gosset)</span> (the inventor of the <span class="co">[</span><span class="ot">t-test</span><span class="co">](https://en.wikipedia.org/wiki/Student%27s_t-test)</span>, and who I <span class="co">[</span><span class="ot">wrote about previously</span><span class="co">](https://www.zajichekstats.com/post/on-the-creation-of-classical-statistics/)</span>), whose primary goal was to brew better beer. His statistical testing methodology, and the use of statistical significance, was directly tailored to the problem at hand and the decisions he was trying to make in order to produce higher quality product. It was tangible. He could _see_ the impact with his own two eyes of using significance testing for decisions he was actually making. And in his case, it provided value. Kind of like the way a tape measure is as useful as the context it is applied and the tolerance needed for making a decision. It's not just the fact that a tape measure was used that creates its importance, it's that the information happens to be useful in that situation so subsequent action can be taken.</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>So when we say statistical significance or p-values should be banned, what we really mean is that they shouldn't be used the way they are. If we could just find better uses for them, then sure, they can stay. The problem is that incentive structures, education, etc. are poorly designed around these concepts, and they are so deeply ingrained that it's difficult to dig our way out.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Statistical Thinking</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Philosophy</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Statistical Significance</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Decision Making</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>Everyone acknowledges, or even agrees with, the issues and limitations of <span class="co">[</span><span class="ot">statistical significance</span><span class="co">](https://www.ncbi.nlm.nih.gov/books/NBK459346/#:~:text=A%20study%20is%20statistically%20significant,not%20a%20statistically%20significant%20result.)</span> (which I previously wrote about <span class="co">[</span><span class="ot">here</span><span class="co">](https://www.zajichekstats.com/post/statistical-significance-is-insignificant/)</span>): the effect size is ignored, you'll get it with a really large sample, it doesn't account for practical importance, and so on...</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Yet it is still used all the time, and life goes on. People debate these nuances back and forth as to when and where it is or isn't valid, etc. But just recently in a <span class="co">[</span><span class="ot">conversation on LinkedIn</span><span class="co">](https://www.linkedin.com/feed/update/urn:li:activity:7319500623299653633?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7319500623299653633%2C7319674842163621888%29&amp;dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287319674842163621888%2Curn%3Ali%3Aactivity%3A7319500623299653633%29)</span>, I had a realization of the fundamental reason on why it is an issue, and why there are many <span class="co">[</span><span class="ot">calls to ban</span><span class="co">](https://www.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#d1e167)</span> p-values and statistical significance entirely. </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "Except experimental field, like randomized clinical trials, where both statistical and practical significance are necessary and when combined, answer the question of interest."</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>It's _not_ that a p-value, or statistical significance itself even, is inherently bad or wrong. **It _all_ has to do exclusively with how they are used, interpreted, implemented, and implicated.**</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>Take <span class="co">[</span><span class="ot">this point from Adrian Olszewski's post</span><span class="co">](https://www.linkedin.com/posts/adrianolszewski_how-to-combine-statistical-discernibility-activity-7310365190959632384-sNHs?utm_source=share&amp;utm_medium=member_desktop&amp;rcm=ACoAACwA1gEB29rAFO327bVy4fMmOqVeTbmsXA8)</span> (which was cited in the conversation above) talking about using statistical significance in combination with practical importance, but in a mathematically formal manner.</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>The key quote here is:</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "We all make BINARY decisions every day, based on some criteria."</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>And from this supporting image:</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="al">![](adrian.png)</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "Thresholds are essential in binary decision making in experimental studies..."</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>All of that is well and good, and sure, makes sense if statistical significance helps you solve a problem in that way. But the main thing that stuck out to me was the emphasis on _decisions_. </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>**THIS** is exactly the problem with statistical significance.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>We use it to declare there is or isn't an effect of some sort, therefore implicating decision X, Y, or Z. But in many (or most) cases, it is only a _guise_ of a decision actually being made. Think about it: in a typical academic publication, they collect data, run some statistical modeling and/or tests, and get a p-value. The "decision" being made amounts to writing the words _"there was a significant difference"_ on a page in some boilerplate fashion, not an actual action being taken. Where's the decision? </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>Sure, you might argue that a published statistical test result could _lead_ to many decisions being made by those consuming the analysis. That's exactly the point. We have no idea what these decisions are. It is intractable. Those subsequent decisions are not actually related to or reflected in the statistical setup and testing done in the original analysis. We don't know who is using the results, how they are using them, or what they are using them for. It's just words on a page.</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>Contrast this with, say, <span class="co">[</span><span class="ot">William Sealy Gosset</span><span class="co">](https://en.wikipedia.org/wiki/William_Sealy_Gosset)</span> (the inventor of the <span class="co">[</span><span class="ot">t-test</span><span class="co">](https://en.wikipedia.org/wiki/Student%27s_t-test)</span>, and who I <span class="co">[</span><span class="ot">wrote about previously</span><span class="co">](https://www.zajichekstats.com/post/on-the-creation-of-classical-statistics/)</span>), whose primary goal was to brew better beer. His statistical testing methodology, and the use of statistical significance, was directly tailored to the problem at hand and the decisions he was trying to make in order to produce higher quality product. It was tangible. He could _see_ the impact with his own two eyes of using significance testing for decisions he was actually making. And in his case, it provided value. Kind of like the way a tape measure is as useful as the context it is applied and the tolerance needed for making a decision. It's not just the fact that a tape measure was used that creates its importance, it's that the information happens to be useful in that situation so subsequent action can be taken.</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>So when we say statistical significance or p-values should be banned, what we really mean is that they shouldn't be used the way they are. If we could just find better uses for them, then sure, they can stay. The problem is that incentive structures, education, etc. are poorly designed around these concepts, and they are so deeply ingrained that it's difficult to dig our way out.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
-    <div class="nav-footer-center">
 <p>© 2026 Zajichek Stats</p>
-</div>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../start-here.html">
+<p>Start Here</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../topics/index.html">
+<p>Topics</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../index.xml">
+<p>RSS</p>
+</a>
+  </li>  
+</ul>
+    </div>
     <div class="nav-footer-right">
-      &nbsp;
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/">
+<p>CentralStatz</p>
+</a>
+  </li>  
+</ul>
     </div>
   </div>
 </footer>

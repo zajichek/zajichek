@@ -5,6 +5,8 @@ author: "Alex Zajichek"
 date: "5/23/2025"
 image: "feature.png"
 categories:
+  - AI for Analytics
+  - "R / Shiny"
   - AI
   - Shiny
   - Web Applications
@@ -245,4 +247,3 @@ As mentioned previously, the app was deployed to [Posit Connect Cloud](https://c
 * Add your `GOOGLE_API_KEY` (or whatever API you're using) to the environment variable list while you are configuring your deployment on [Posit Connect Cloud](https://connect.posit.cloud/)
 
 Other than that, things will likely run smooth.
-

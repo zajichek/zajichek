@@ -5,9 +5,11 @@ author: "Alex Zajichek"
 date: "6/18/2022"
 image: "feature.png"
 categories:
+  - Healthcare Analytics
+  - "R / Shiny"
   - Healthcare
   - Maps
-  - Javascript
+  - JavaScript
 format:
   html:
     code-fold: true

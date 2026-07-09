@@ -1,33 +1,44 @@
 [
   {
-    "listing": "/presentations.html",
+    "listing": "/topics/ai-for-analytics.html",
     "items": [
-      "/presentations/toggling-between-traditional-and-chat-based-data-filters/index.html",
-      "/presentations/readmit/index.html",
-      "/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/index.html",
-      "/presentations/the-value-of-open-source/index.html",
-      "/presentations/journey-through-statistical-rethinking/index.html",
-      "/presentations/riskcalc/index.html",
-      "/presentations/carecompare/index.html",
-      "/presentations/cheese/index.html",
-      "/presentations/zildge/index.html",
-      "/presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
-      "/presentations/midwest-home-price-index/index.html",
-      "/presentations/JNaiveBayes/index.html",
-      "/presentations/estimating-player-contribution-in-hockey/index.html",
-      "/presentations/modeling-probability-of-nhl-goal/index.html",
-      "/presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html",
-      "/presentations/gibbs-sampler-in-python/index.html",
-      "/presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html",
-      "/presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html"
+      "/post/ai-assisted-shiny-development-in-positron/index.html",
+      "/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html",
+      "/post/making-an-ai-statistical-consultant/index.html"
+    ]
+  },
+  {
+    "listing": "/topics/reproducible-analytics.html",
+    "items": [
+      "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
+      "/post/you-should-have-a-data-science-blog/index.html",
+      "/post/low-cost-ways-to-build-and-deploy-apps/index.html",
+      "/post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html",
+      "/post/nesting-with-tidyr/index.html",
+      "/post/reactable-javascript/index.html"
+    ]
+  },
+  {
+    "listing": "/topics/healthcare-analytics.html",
+    "items": [
+      "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
+      "/post/conceptualizing-the-readmission-risk-pool/index.html",
+      "/post/investigating-a-hospital-specific-report/index.html",
+      "/post/introducing-the-readmit-r-package/index.html",
+      "/post/managing-the-readmission-risk-pool/index.html",
+      "/post/reactable-javascript/index.html",
+      "/post/filterable-maps/index.html"
     ]
   },
   {
     "listing": "/index.html",
     "items": [
+      "/post/why-an-estimand-for-flux/index.html",
+      "/post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.html",
       "/post/the-worst-lead-in-hockey/index.html",
       "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
       "/post/conceptualizing-the-readmission-risk-pool/index.html",
+      "/post/bernoullis-fallacy-of-the-transposed-conditional/index.html",
       "/post/investigating-a-hospital-specific-report/index.html",
       "/post/introducing-the-readmit-r-package/index.html",
       "/post/ai-assisted-shiny-development-in-positron/index.html",
@@ -35,6 +46,11 @@
       "/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html",
       "/post/making-an-ai-statistical-consultant/index.html",
       "/post/what-decision-are-we-trying-to-make/index.html",
+      "/post/subtle-mistranslations-and-their-aggregated-impact/index.html",
+      "/post/tips-on-creating-your-own-shiny-server/index.html",
+      "/post/effective-research-data-science/index.html",
+      "/post/i-am-not-data-driven/index.html",
+      "/post/objectifying-statistics/index.html",
       "/post/reconciling-regression-equation-spline-terms/index.html",
       "/post/can-you-have-a-model-without-data/index.html",
       "/post/you-should-have-a-data-science-blog/index.html",
@@ -57,6 +73,56 @@
       "/post/filterable-maps/index.html",
       "/post/com-poisson-regression/index.html",
       "/post/a-look-at-collider-bias/index.html"
+    ]
+  },
+  {
+    "listing": "/presentations.html",
+    "items": [
+      "/presentations/finding-the-best-bracket/index.html",
+      "/presentations/toggling-between-traditional-and-chat-based-data-filters/index.html",
+      "/presentations/readmit/index.html",
+      "/presentations/riskcalc-a-repository-of-risk-calculators-for-medical-decision-making/index.html",
+      "/presentations/the-value-of-open-source/index.html",
+      "/presentations/journey-through-statistical-rethinking/index.html",
+      "/presentations/riskcalc/index.html",
+      "/presentations/carecompare/index.html",
+      "/presentations/cheese/index.html",
+      "/presentations/zildge/index.html",
+      "/presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
+      "/presentations/midwest-home-price-index/index.html",
+      "/presentations/JNaiveBayes/index.html",
+      "/presentations/estimating-player-contribution-in-hockey/index.html",
+      "/presentations/modeling-probability-of-nhl-goal/index.html",
+      "/presentations/an-analysis-of-binary-classification-methods-via-simulation-and-application/index.html",
+      "/presentations/gibbs-sampler-in-python/index.html",
+      "/presentations/predicting-the-2016-ncaa-mens-basketball-tournament/index.html",
+      "/presentations/introduction-to-sql-server-rodbc-ggplot2-with-pitchfx-data/index.html"
+    ]
+  },
+  {
+    "listing": "/topics/statistical-thinking.html",
+    "items": [
+      "/post/what-decision-are-we-trying-to-make/index.html",
+      "/post/reconciling-regression-equation-spline-terms/index.html",
+      "/post/can-you-have-a-model-without-data/index.html",
+      "/post/how-to-assess-the-proportional-odds-assumption/index.html",
+      "/post/simple-example-why-statistical-significance-is-insufficient/index.html",
+      "/post/statistical-significance-is-insignificant/index.html",
+      "/post/the-overlap-weight/index.html",
+      "/post/the-evasive-spline/index.html",
+      "/post/com-poisson-regression/index.html",
+      "/post/a-look-at-collider-bias/index.html"
+    ]
+  },
+  {
+    "listing": "/topics/r-shiny-applications.html",
+    "items": [
+      "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
+      "/post/ai-assisted-shiny-development-in-positron/index.html",
+      "/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html",
+      "/post/making-an-ai-statistical-consultant/index.html",
+      "/post/low-cost-ways-to-build-and-deploy-apps/index.html",
+      "/post/filterable-maps/index.html"
     ]
   }
 ]

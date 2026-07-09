@@ -9,7 +9,7 @@ The homepage should immediately communicate who the site is for, what topics it 
 `index.qmd` currently has a listing and two raw HTML blocks: a centered paragraph with a Copperplate/fantasy style and an embedded `subscribe.html` iframe. The intro also appears to have a typo: `<b<</p>` instead of a closing bold tag.
 
 ### Suggested change
-Use normal Markdown headings and short paragraphs before the post listing. Keep the listing, but add a "Start Here" and topic-card area above it.
+Use normal Markdown headings and short paragraphs before the post listing. Keep the listing, but add a "Start Here" and topic-card area above it. Do this after creating the destination pages, or use temporary links only to pages that already exist.
 
 ### Where to implement
 - `index.qmd`
@@ -28,7 +28,7 @@ Zajichek Stats is a technical blog for analysts, statisticians, researchers, and
 
 ### Sequential implementation steps
 1. Draft a 2 to 3 sentence homepage intro in Markdown.
-2. Add two primary links: `Start Here` and `Healthcare Analytics`.
+2. Add two primary links: `Start Here` and `Healthcare Analytics` after those pages exist.
 3. Keep the existing listing below the intro.
 4. Move the newsletter iframe lower on the page or replace it with a text link if it visually crowds the first viewport.
 5. Preview on desktop and mobile.
@@ -138,7 +138,7 @@ Add a small "Featured" section above the listing with 3 or 4 cornerstone article
 ```
 
 ### Sequential implementation steps
-1. Pick 3 or 4 posts that best represent the site.
+1. Pick 3 or 4 published posts that best represent the site.
 2. Add one-sentence descriptions for each.
 3. Put this section before the listing.
 4. Refresh featured links quarterly or after major new posts.

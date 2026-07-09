@@ -1,0 +1,45 @@
+---
+title: "Healthcare Analytics"
+description: "Articles on healthcare data, hospital readmissions, risk adjustment, and practical analytics workflows."
+listing:
+  id: topic-listing
+  contents:
+    - ../post/managing-the-readmission-risk-pool/index.qmd
+    - ../post/conceptualizing-the-readmission-risk-pool/index.qmd
+    - ../post/investigating-a-hospital-specific-report/index.qmd
+    - ../post/introducing-the-readmit-r-package/index.qmd
+    - ../post/filterable-maps/index.qmd
+    - ../post/getting-started-with-the-hhs-medicaid-spending-dataset/index.qmd
+    - ../post/reactable-javascript/index.qmd
+  type: default
+  sort: "date desc"
+  image-align: left
+  categories: false
+---
+
+::: {.page-hero}
+::: {.placeholder-note}
+ADD TEXT ABOUT healthcare analytics, hospital readmissions, risk adjustment, and practical data workflows.
+:::
+:::
+
+::: {.section-panel}
+## Start With These
+
+:::: {.link-grid}
+::: {.link-card}
+### [A prediction system for managing the hospital readmission risk pool](../post/managing-the-readmission-risk-pool/)
+:::
+::: {.link-card}
+### [Conceptualizing the readmission risk pool](../post/conceptualizing-the-readmission-risk-pool/)
+:::
+::: {.link-card}
+### [Investigating a Hospital-Specific Report (HSR)](../post/investigating-a-hospital-specific-report/)
+:::
+::::
+:::
+
+## Articles
+
+::: {#topic-listing}
+:::

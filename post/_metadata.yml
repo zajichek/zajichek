@@ -3,3 +3,6 @@
 # freeze computational output
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)
 freeze: true
+
+# default author for posts
+author: "Alex Zajichek"

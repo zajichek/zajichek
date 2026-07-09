@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-f0ac9edcc0eceb94931262426d51e472.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,21 +73,21 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    const listingTargetEl = window.document.querySelector('#listing-latest-listing .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       page: 25,
     pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+    window['quarto-listings']['listing-latest-listing'] = new List('listing-latest-listing', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -141,13 +141,18 @@ window.Quarto = {
 </script>
 
 <link rel="alternate" type="application/rss+xml" title="Zajichek Stats" href="index.xml" data-external="1"><meta property="og:title" content="Zajichek Stats">
-<meta property="og:image" content="https://www.zajichekstats.com/post/the-worst-lead-in-hockey/feature.png">
+<meta property="og:description" content="ADD TEXT ABOUT Zajichek Stats, practical statistics, healthcare analytics, R/Shiny, reproducible analytics, and AI for analytics.">
+<meta property="og:image" content="https://www.zajichekstats.com/post/why-an-estimand-for-flux/feature.png">
 <meta property="og:site_name" content="Zajichek Stats">
-<meta property="og:image:height" content="1342">
-<meta property="og:image:width" content="2012">
+<meta name="twitter:title" content="Zajichek Stats">
+<meta name="twitter:description" content="ADD TEXT ABOUT Zajichek Stats, practical statistics, healthcare analytics, R/Shiny, reproducible analytics, and AI for analytics.">
+<meta name="twitter:image" content="https://www.zajichekstats.com/post/why-an-estimand-for-flux/feature.png">
+<meta name="twitter:creator" content="@zajichekstats">
+<meta name="twitter:site" content="@zajichekstats">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -164,6 +169,37 @@ window.Quarto = {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./start-here.html"> 
+<span class="menu-text">Start Here</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
+        <li>
+    <a class="dropdown-item" href="./topics/healthcare-analytics.html">
+ <span class="dropdown-text">Healthcare Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./topics/statistical-thinking.html">
+ <span class="dropdown-text">Statistical Thinking</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./topics/reproducible-analytics.html">
+ <span class="dropdown-text">Reproducible Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./topics/r-shiny-applications.html">
+ <span class="dropdown-text">R / Shiny Applications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./topics/ai-for-analytics.html">
+ <span class="dropdown-text">AI for Analytics</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="./presentations.html"> 
 <span class="menu-text">Projects &amp; Presentations</span></a>
@@ -222,50 +258,127 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(32)</span></div><div class="category" data-category="QUk=">AI <span class="quarto-category-count">(3)</span></div><div class="category" data-category="QmF5ZXNpYW4lMjBTdGF0aXN0aWNz">Bayesian Statistics <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Q2F1c2FsJTIwSW5mZXJlbmNl">Causal Inference <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Q29tbXVuaWNhdGlvbg==">Communication <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGF0YSUyMFdyYW5nbGluZw==">Data Wrangling <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVjaXNpb24lMjBNYWtpbmc=">Decision Making <span class="quarto-category-count">(3)</span></div><div class="category" data-category="RGVwbG95bWVudA==">Deployment <span class="quarto-category-count">(2)</span></div><div class="category" data-category="RHVja0RC">DuckDB <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RXN0aW1hdGlvbg==">Estimation <span class="quarto-category-count">(2)</span></div><div class="category" data-category="SGVhbHRoY2FyZQ==">Healthcare <span class="quarto-category-count">(7)</span></div><div class="category" data-category="SGlzdG9yeQ==">History <span class="quarto-category-count">(2)</span></div><div class="category" data-category="SG9ja2V5">Hockey <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SmF2YXNjcmlwdA==">Javascript <span class="quarto-category-count">(3)</span></div><div class="category" data-category="TGVhcm5pbmc=">Learning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWFwcw==">Maps <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TW9kZWxpbmc=">Modeling <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UGhpbG9zb3BoeQ==">Philosophy <span class="quarto-category-count">(4)</span></div><div class="category" data-category="UHJlZGljdGlvbg==">Prediction <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJvYmFiaWxpdHk=">Probability <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJvamVjdCUyME1hbmFnZW1lbnQ=">Project Management <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJvcGVuc2l0eSUyMFNjb3Jlcw==">Propensity Scores <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UXVhbnR1bQ==">Quantum <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UmVhZG1pc3Npb25z">Readmissions <span class="quarto-category-count">(4)</span></div><div class="category" data-category="UmVncmVzc2lvbg==">Regression <span class="quarto-category-count">(3)</span></div><div class="category" data-category="UmVzZWFyY2g=">Research <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2hpbnk=">Shiny <span class="quarto-category-count">(4)</span></div><div class="category" data-category="U29mdHdhcmUlMjBEZXZlbG9wbWVudA==">Software Development <span class="quarto-category-count">(3)</span></div><div class="category" data-category="U3RhdGlzdGljYWwlMjBTaWduaWZpY2FuY2U=">Statistical Significance <span class="quarto-category-count">(4)</span></div><div class="category" data-category="U3Vydml2YWwlMjBBbmFseXNpcw==">Survival Analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGFibGVz">Tables <span class="quarto-category-count">(2)</span></div><div class="category" data-category="V2ViJTIwQXBwbGljYXRpb25z">Web Applications <span class="quarto-category-count">(3)</span></div><div class="category" data-category="V2ViJTIwYXBwbGljYXRpb25z">Web applications <span class="quarto-category-count">(1)</span></div><div class="category" data-category="V2VpZ2h0aW5n">Weighting <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
 
-<center><p style="font-size:20px; font-family: Copperplate, fantasy;"><b>A blog on statistical practice, programming, history, philosophy, and data science.</b></p></center><b>
-<br>
-<center><iframe src="subscribe.html" height="300" width="300"></iframe></center>
-
-
-
-
-</b><div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="listing-actions-group">
-   <div class="input-group input-group-sm quarto-listing-sort">
-    <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
-    <select id="listing-listing-sort" class="form-select" aria-label="Order By" onchange="window['quarto-listings']['listing-listing'].sort(this.options[this.selectedIndex].value, { order: this.options[this.selectedIndex].getAttribute('data-direction')})">
-      <option value="" disabled="" selected="" hidden="">Order By</option>
-      <option value="index" data-direction="asc">Default</option>
-      <option value="listing-title" data-direction="asc">
-        Title
-      </option>
-      <option value="listing-date-sort" data-direction="asc">
-        Date - Oldest
-      </option>
-      <option value="listing-date-sort" data-direction="desc">
-        Date - Newest
-      </option>
-      <option value="listing-author" data-direction="asc">
-        Author
-      </option>
-    </select>
-  </div>
-    <div class="input-group input-group-sm quarto-listing-filter">
-      <span class="input-group-text"><i class="bi bi-search"></i></span>
-      <input type="text" class="search form-control" placeholder="Filter">
-    </div>
+<section id="practical-statistics-healthcare-analytics-and-data-science-tools" class="level1 home-hero">
+<h1>Practical Statistics, Healthcare Analytics, and Data Science Tools</h1>
+<div class="placeholder-note">
+<p>ADD TEXT ABOUT who this site is for, what topics it covers, and why readers should start here.</p>
 </div>
+<p><a href="./start-here.html" class="btn btn-primary">Start Here</a> <a href="./topics/index.html" class="btn btn-outline-light">Browse Topics</a></p>
+</section>
+<section id="topics" class="level2 section-panel">
+<h2 class="anchored" data-anchor-id="topics">Topics</h2>
+<div class="placeholder-note">
+<p>ADD TEXT ABOUT how the topic hubs organize the archive.</p>
+</div>
+<div class="topic-grid">
+<section id="healthcare-analytics" class="level3 topic-card">
+<h3 class="anchored" data-anchor-id="healthcare-analytics"><a href="./topics/healthcare-analytics.html">Healthcare Analytics</a></h3>
+<p>ADD TEXT ABOUT this topic hub.</p>
+</section>
+<section id="statistical-thinking" class="level3 topic-card">
+<h3 class="anchored" data-anchor-id="statistical-thinking"><a href="./topics/statistical-thinking.html">Statistical Thinking</a></h3>
+<p>ADD TEXT ABOUT this topic hub.</p>
+</section>
+<section id="reproducible-analytics" class="level3 topic-card">
+<h3 class="anchored" data-anchor-id="reproducible-analytics"><a href="./topics/reproducible-analytics.html">Reproducible Analytics</a></h3>
+<p>ADD TEXT ABOUT this topic hub.</p>
+</section>
+<section id="r-shiny-applications" class="level3 topic-card">
+<h3 class="anchored" data-anchor-id="r-shiny-applications"><a href="./topics/r-shiny-applications.html">R / Shiny Applications</a></h3>
+<p>ADD TEXT ABOUT this topic hub.</p>
+</section>
+<section id="ai-for-analytics" class="level3 topic-card">
+<h3 class="anchored" data-anchor-id="ai-for-analytics"><a href="./topics/ai-for-analytics.html">AI for Analytics</a></h3>
+<p>ADD TEXT ABOUT this topic hub.</p>
+</section>
+</div>
+</section>
+<section id="featured" class="level2 section-panel">
+<h2 class="anchored" data-anchor-id="featured">Featured</h2>
+<div class="placeholder-note">
+<p>ADD TEXT ABOUT why these are good starting points.</p>
+</div>
+<div class="feature-grid">
+<section id="what-decision-are-we-trying-to-make-anyway" class="level3 feature-card">
+<h3 class="anchored" data-anchor-id="what-decision-are-we-trying-to-make-anyway"><a href="post/what-decision-are-we-trying-to-make/">What decision are we trying to make, anyway?</a></h3>
+<p>ADD TEXT ABOUT why this post is featured.</p>
+</section>
+<section id="a-prediction-system-for-managing-the-hospital-readmission-risk-pool" class="level3 feature-card">
+<h3 class="anchored" data-anchor-id="a-prediction-system-for-managing-the-hospital-readmission-risk-pool"><a href="post/managing-the-readmission-risk-pool/">A prediction system for managing the hospital readmission risk pool</a></h3>
+<p>ADD TEXT ABOUT why this post is featured.</p>
+</section>
+<section id="building-a-custom-llm-powered-shiny-app-for-hospital-readmissions-with-querychat" class="level3 feature-card">
+<h3 class="anchored" data-anchor-id="building-a-custom-llm-powered-shiny-app-for-hospital-readmissions-with-querychat"><a href="post/building-an-llm-powered-shiny-app-for-hospital-readmissions/">Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}</a></h3>
+<p>ADD TEXT ABOUT why this post is featured.</p>
+</section>
+<section id="you-should-have-a-data-science-blog" class="level3 feature-card">
+<h3 class="anchored" data-anchor-id="you-should-have-a-data-science-blog"><a href="post/you-should-have-a-data-science-blog/">You should have a data science blog</a></h3>
+<p>ADD TEXT ABOUT why this post is featured.</p>
+</section>
+</div>
+</section>
+<section id="latest-articles" class="level2">
+<h2 class="anchored" data-anchor-id="latest-articles">Latest Articles</h2>
+<div id="listing-latest-listing" class="quarto-listing quarto-listing-container-default">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-left" data-index="0" data-categories="SG9ja2V5" data-listing-date-sort="1780549200000" data-listing-file-modified-sort="1780605606245" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="54" data-listing-word-count-sort="10668">
+<div class="quarto-post image-left" data-index="0" data-categories="U2ltdWxhdGlvbiUyQ01vZGVsaW5nJTJDQ2F1c2FsJTIwSW5mZXJlbmNl" data-listing-date-sort="1783486800000" data-listing-file-modified-sort="1783547864653" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1798">
+<div class="thumbnail"><a href="./post/why-an-estimand-for-flux/index.html" class="no-external">
+
+<img loading="lazy" src="./post/why-an-estimand-for-flux/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/why-an-estimand-for-flux/index.html" class="no-external">Why an estimand framework for {flux}?</a>
+</h3>
+<div class="delink listing-description"><a href="./post/why-an-estimand-for-flux/index.html" class="no-external">
+<p>I quickly realized that simulating a system leads to an infinite loop.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/why-an-estimand-for-flux/index.html" class="no-external">
+<div class="listing-date">
+Jul 8, 2026
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="1" data-categories="QUklMkNTb2Z0d2FyZSUyMERldmVsb3BtZW50JTJDUHJvamVjdCUyME1hbmFnZW1lbnQ=" data-listing-date-sort="1780808400000" data-listing-file-modified-sort="1780682549817" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="542">
+<div class="thumbnail"><a href="./post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.html" class="no-external">
+
+<img loading="lazy" src="./post/sweet-spot-for-ai-coding-assistants-in-data-science-work/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.html" class="no-external">The sweet spot for AI coding assistants in data science work</a>
+</h3>
+<div class="delink listing-description"><a href="./post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.html" class="no-external">
+<p>A real efficiency gain while maintaining your role and train of thought.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/sweet-spot-for-ai-coding-assistants-in-data-science-work/index.html" class="no-external">
+<div class="listing-date">
+Jun 7, 2026
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="2" data-categories="SG9ja2V5" data-listing-date-sort="1780549200000" data-listing-file-modified-sort="1780605606245" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="54" data-listing-word-count-sort="10668">
 <div class="thumbnail"><a href="./post/the-worst-lead-in-hockey/index.html" class="no-external">
 
 <img loading="lazy" src="./post/the-worst-lead-in-hockey/feature.png" class="thumbnail-image">
@@ -275,11 +388,6 @@ window.Quarto = {
 <h3 class="no-anchor listing-title">
 <a href="./post/the-worst-lead-in-hockey/index.html" class="no-external">Is 3-0 the worst lead in hockey?</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SG9ja2V5'); return false;">Hockey</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/the-worst-lead-in-hockey/index.html" class="no-external">
 <p>Evaluating something I observe far too often.</p>
 </a></div>
@@ -295,7 +403,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="1" data-categories="SGVhbHRoY2FyZSUyQ0R1Y2tEQiUyQ1NoaW55" data-listing-date-sort="1779426000000" data-listing-file-modified-sort="1779911276565" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="32" data-listing-word-count-sort="6349">
+<div class="quarto-post image-left" data-index="3" data-categories="SGVhbHRoY2FyZSUyMEFuYWx5dGljcyUyQ0RhdGElMjBTY2llbmNlJTIwSW5mcmFzdHJ1Y3R1cmUlMkNSJTIwJTJGJTIwU2hpbnklMkNIZWFsdGhjYXJlJTJDRHVja0RCJTJDU2hpbnk=" data-listing-date-sort="1779426000000" data-listing-file-modified-sort="1783601197889" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="32" data-listing-word-count-sort="6349">
 <div class="thumbnail"><a href="./post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html" class="no-external">
 
 <img loading="lazy" src="./post/getting-started-with-the-hhs-medicaid-spending-dataset/feature.png" class="thumbnail-image">
@@ -305,15 +413,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html" class="no-external">Getting Started with the HHS Medicaid Provider Spending Dataset</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZQ=='); return false;">Healthcare</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RHVja0RC'); return false;">DuckDB</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2hpbnk='); return false;">Shiny</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html" class="no-external">
 <p>How to setup your own local database</p>
 </a></div>
@@ -329,7 +428,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="2" data-categories="UmVhZG1pc3Npb25zJTJDSGVhbHRoY2FyZQ==" data-listing-date-sort="1767592800000" data-listing-file-modified-sort="1767640459032" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="826">
+<div class="quarto-post image-left" data-index="4" data-categories="SGVhbHRoY2FyZSUyMEFuYWx5dGljcyUyQ1JlYWRtaXNzaW9ucyUyQ0hlYWx0aGNhcmU=" data-listing-date-sort="1767592800000" data-listing-file-modified-sort="1783601197436" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="826">
 <div class="thumbnail"><a href="./post/conceptualizing-the-readmission-risk-pool/index.html" class="no-external">
 
 <img loading="lazy" src="./post/conceptualizing-the-readmission-risk-pool/feature.png" class="thumbnail-image">
@@ -339,13 +438,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/conceptualizing-the-readmission-risk-pool/index.html" class="no-external">Conceptualizing the readmission risk pool</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVhZG1pc3Npb25z'); return false;">Readmissions</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZQ=='); return false;">Healthcare</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/conceptualizing-the-readmission-risk-pool/index.html" class="no-external">
 <p>Thinking in terms of what is actionable</p>
 </a></div>
@@ -361,7 +453,32 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="3" data-categories="U29mdHdhcmUlMjBEZXZlbG9wbWVudCUyQ0hlYWx0aGNhcmUlMkNSZWFkbWlzc2lvbnM=" data-listing-date-sort="1766728800000" data-listing-file-modified-sort="1767640362181" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="37" data-listing-word-count-sort="7326">
+<div class="quarto-post image-left" data-index="5" data-categories="SGlzdG9yeSUyQ1BoaWxvc29waHklMkNSZXNlYXJjaCUyQ1N0YXRpc3RpY2FsJTIwU2lnbmlmaWNhbmNl" data-listing-date-sort="1767160800000" data-listing-file-modified-sort="1769636350204" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2821">
+<div class="thumbnail"><a href="./post/bernoullis-fallacy-of-the-transposed-conditional/index.html" class="no-external">
+
+<img loading="lazy" src="./post/bernoullis-fallacy-of-the-transposed-conditional/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/bernoullis-fallacy-of-the-transposed-conditional/index.html" class="no-external">Bernoulli’s Fallacy (of the Transposed Conditional)</a>
+</h3>
+<div class="delink listing-description"><a href="./post/bernoullis-fallacy-of-the-transposed-conditional/index.html" class="no-external">
+Previously talked about and read about Fallacy of the Transposed Conditional
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/bernoullis-fallacy-of-the-transposed-conditional/index.html" class="no-external">
+<div class="listing-date">
+Dec 31, 2025
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="6" data-categories="SGVhbHRoY2FyZSUyMEFuYWx5dGljcyUyQ1NvZnR3YXJlJTIwRGV2ZWxvcG1lbnQlMkNIZWFsdGhjYXJlJTJDUmVhZG1pc3Npb25z" data-listing-date-sort="1766728800000" data-listing-file-modified-sort="1783601197550" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="37" data-listing-word-count-sort="7326">
 <div class="thumbnail"><a href="./post/investigating-a-hospital-specific-report/index.html" class="no-external">
 
 <img loading="lazy" src="./post/investigating-a-hospital-specific-report/feature.png" class="thumbnail-image">
@@ -371,15 +488,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/investigating-a-hospital-specific-report/index.html" class="no-external">Investigating a Hospital-Specific Report (HSR)</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBEZXZlbG9wbWVudA=='); return false;">Software Development</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZQ=='); return false;">Healthcare</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVhZG1pc3Npb25z'); return false;">Readmissions</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/investigating-a-hospital-specific-report/index.html" class="no-external">
 <p>Analysis strategies to gain insight into HRRP program results</p>
 </a></div>
@@ -395,7 +503,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="4" data-categories="U29mdHdhcmUlMjBEZXZlbG9wbWVudCUyQ0hlYWx0aGNhcmUlMkNSZWFkbWlzc2lvbnM=" data-listing-date-sort="1766124000000" data-listing-file-modified-sort="1767640351159" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1428">
+<div class="quarto-post image-left" data-index="7" data-categories="SGVhbHRoY2FyZSUyMEFuYWx5dGljcyUyQ1NvZnR3YXJlJTIwRGV2ZWxvcG1lbnQlMkNIZWFsdGhjYXJlJTJDUmVhZG1pc3Npb25z" data-listing-date-sort="1766124000000" data-listing-file-modified-sort="1783601197663" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1428">
 <div class="thumbnail"><a href="./post/introducing-the-readmit-r-package/index.html" class="no-external">
 
 <img loading="lazy" src="./post/introducing-the-readmit-r-package/feature.png" class="thumbnail-image">
@@ -405,15 +513,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/introducing-the-readmit-r-package/index.html" class="no-external">Introducing the {readmit} R package</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBEZXZlbG9wbWVudA=='); return false;">Software Development</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZQ=='); return false;">Healthcare</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVhZG1pc3Npb25z'); return false;">Readmissions</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/introducing-the-readmit-r-package/index.html" class="no-external">
 <p>Tools for analyzing hospital readmissions data</p>
 </a></div>
@@ -429,7 +528,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="5" data-categories="QUklMkNTaGlueSUyQ1dlYiUyMEFwcGxpY2F0aW9ucw==" data-listing-date-sort="1761714000000" data-listing-file-modified-sort="1761771091622" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1451">
+<div class="quarto-post image-left" data-index="8" data-categories="QUklMjBmb3IlMjBBbmFseXRpY3MlMkNSJTIwJTJGJTIwU2hpbnklMkNBSSUyQ1NoaW55JTJDV2ViJTIwQXBwbGljYXRpb25z" data-listing-date-sort="1761714000000" data-listing-file-modified-sort="1783601199473" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1451">
 <div class="thumbnail"><a href="./post/ai-assisted-shiny-development-in-positron/index.html" class="no-external">
 
 <img loading="lazy" src="./post/ai-assisted-shiny-development-in-positron/feature.png" class="thumbnail-image">
@@ -439,15 +538,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/ai-assisted-shiny-development-in-positron/index.html" class="no-external">Trying AI-assisted development in the Positron IDE</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2hpbnk='); return false;">Shiny</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2ViJTIwQXBwbGljYXRpb25z'); return false;">Web Applications</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/ai-assisted-shiny-development-in-positron/index.html" class="no-external">
 <p>The ultimate setup for using an AI-companion for data science development.</p>
 </a></div>
@@ -463,7 +553,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="6" data-categories="UGhpbG9zb3BoeSUyQ1N0YXRpc3RpY2FsJTIwU2lnbmlmaWNhbmNlJTJDRGVjaXNpb24lMjBNYWtpbmc=" data-listing-date-sort="1758862800000" data-listing-file-modified-sort="1758904010653" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="394">
+<div class="quarto-post image-left" data-index="9" data-categories="UGhpbG9zb3BoeSUyQ1N0YXRpc3RpY2FsJTIwU2lnbmlmaWNhbmNlJTJDRGVjaXNpb24lMjBNYWtpbmc=" data-listing-date-sort="1758862800000" data-listing-file-modified-sort="1758904010653" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="394">
 <div class="thumbnail"><a href="./post/the-question-is-not-if-but-how-much/index.html" class="no-external">
 
 <img loading="lazy" src="./post/the-question-is-not-if-but-how-much/feature.png" class="thumbnail-image">
@@ -473,15 +563,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/the-question-is-not-if-but-how-much/index.html" class="no-external">The question is not if, but how much</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UGhpbG9zb3BoeQ=='); return false;">Philosophy</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBTaWduaWZpY2FuY2U='); return false;">Statistical Significance</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVjaXNpb24lMjBNYWtpbmc='); return false;">Decision Making</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/the-question-is-not-if-but-how-much/index.html" class="no-external">
 <p>We focus on a binary that doesn’t exist.</p>
 </a></div>
@@ -497,7 +578,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="7" data-categories="QUklMkNTaGlueSUyQ1dlYiUyMEFwcGxpY2F0aW9ucw==" data-listing-date-sort="1747976400000" data-listing-file-modified-sort="1748020436252" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2389">
+<div class="quarto-post image-left" data-index="10" data-categories="QUklMjBmb3IlMjBBbmFseXRpY3MlMkNSJTIwJTJGJTIwU2hpbnklMkNBSSUyQ1NoaW55JTJDV2ViJTIwQXBwbGljYXRpb25z" data-listing-date-sort="1747976400000" data-listing-file-modified-sort="1783601199248" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2389">
 <div class="thumbnail"><a href="./post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html" class="no-external">
 
 <img loading="lazy" src="./post/building-an-llm-powered-shiny-app-for-hospital-readmissions/feature.png" class="thumbnail-image">
@@ -507,15 +588,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html" class="no-external">Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2hpbnk='); return false;">Shiny</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2ViJTIwQXBwbGljYXRpb25z'); return false;">Web Applications</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html" class="no-external">
 <p>How we can use natural language to interact with and manipulate app content.</p>
 </a></div>
@@ -531,7 +603,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="8" data-categories="QUklMkNTaGlueSUyQ1dlYiUyMEFwcGxpY2F0aW9ucw==" data-listing-date-sort="1747112400000" data-listing-file-modified-sort="1747169300207" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1672">
+<div class="quarto-post image-left" data-index="11" data-categories="QUklMjBmb3IlMjBBbmFseXRpY3MlMkNSJTIwJTJGJTIwU2hpbnklMkNBSSUyQ1NoaW55JTJDV2ViJTIwQXBwbGljYXRpb25z" data-listing-date-sort="1747112400000" data-listing-file-modified-sort="1783601199361" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1672">
 <div class="thumbnail"><a href="./post/making-an-ai-statistical-consultant/index.html" class="no-external">
 
 <img loading="lazy" src="./post/making-an-ai-statistical-consultant/feature.png" class="thumbnail-image">
@@ -541,15 +613,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/making-an-ai-statistical-consultant/index.html" class="no-external">Making an AI statistical consultant</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QUk='); return false;">AI</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U2hpbnk='); return false;">Shiny</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2ViJTIwQXBwbGljYXRpb25z'); return false;">Web Applications</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/making-an-ai-statistical-consultant/index.html" class="no-external">
 <p>Exploring some new R packages for AI.</p>
 </a></div>
@@ -565,7 +628,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="9" data-categories="UGhpbG9zb3BoeSUyQ1N0YXRpc3RpY2FsJTIwU2lnbmlmaWNhbmNlJTJDRGVjaXNpb24lMjBNYWtpbmc=" data-listing-date-sort="1745384400000" data-listing-file-modified-sort="1745441682348" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="642">
+<div class="quarto-post image-left" data-index="12" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ1BoaWxvc29waHklMkNTdGF0aXN0aWNhbCUyMFNpZ25pZmljYW5jZSUyQ0RlY2lzaW9uJTIwTWFraW5n" data-listing-date-sort="1745384400000" data-listing-file-modified-sort="1783601198116" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="642">
 <div class="thumbnail"><a href="./post/what-decision-are-we-trying-to-make/index.html" class="no-external">
 
 <img loading="lazy" src="./post/what-decision-are-we-trying-to-make/feature.png" class="thumbnail-image">
@@ -575,15 +638,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/what-decision-are-we-trying-to-make/index.html" class="no-external">What decision are we trying to make, anyway?</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UGhpbG9zb3BoeQ=='); return false;">Philosophy</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBTaWduaWZpY2FuY2U='); return false;">Statistical Significance</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVjaXNpb24lMjBNYWtpbmc='); return false;">Decision Making</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/what-decision-are-we-trying-to-make/index.html" class="no-external">
 <p>The crux of the statistical significance issue.</p>
 </a></div>
@@ -599,7 +653,132 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="10" data-categories="UmVncmVzc2lvbg==" data-listing-date-sort="1732514400000" data-listing-file-modified-sort="1735655166678" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1497">
+<div class="quarto-post image-left" data-index="13" data-categories="UGhpbG9zb3BoeQ==" data-listing-date-sort="1736488800000" data-listing-file-modified-sort="1748539779307" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="551">
+<div class="thumbnail"><a href="./post/subtle-mistranslations-and-their-aggregated-impact/index.html" class="no-external">
+
+<img loading="lazy" src="./post/subtle-mistranslations-and-their-aggregated-impact/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/subtle-mistranslations-and-their-aggregated-impact/index.html" class="no-external">Subtle mistranslations of clinical research in media</a>
+</h3>
+<div class="delink listing-description"><a href="./post/subtle-mistranslations-and-their-aggregated-impact/index.html" class="no-external">
+<p>What’s the aggregate effect?</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/subtle-mistranslations-and-their-aggregated-impact/index.html" class="no-external">
+<div class="listing-date">
+Jan 10, 2025
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="14" data-categories="UGhpbG9zb3BoeQ==" data-listing-date-sort="1736488800000" data-listing-file-modified-sort="1747655628323" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="1">
+<div class="thumbnail"><a href="./post/tips-on-creating-your-own-shiny-server/index.html" class="no-external">
+
+<img loading="lazy" src="./post/tips-on-creating-your-own-shiny-server/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/tips-on-creating-your-own-shiny-server/index.html" class="no-external">Tips on creating your own Shiny Server</a>
+</h3>
+<div class="delink listing-description"><a href="./post/tips-on-creating-your-own-shiny-server/index.html" class="no-external">
+<p>Incolcating ambuguity and poor practice</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/tips-on-creating-your-own-shiny-server/index.html" class="no-external">
+<div class="listing-date">
+Jan 10, 2025
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="15" data-categories="UHJvamVjdCUyME1hbmFnZW1lbnQlMkNSZXNlYXJjaA==" data-listing-date-sort="1736488800000" data-listing-file-modified-sort="1747655738326" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="62">
+<div class="thumbnail"><a href="./post/effective-research-data-science/index.html" class="no-external">
+
+<img loading="lazy" src="./post/effective-research-data-science/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/effective-research-data-science/index.html" class="no-external">Operational versus research data science</a>
+</h3>
+<div class="delink listing-description"><a href="./post/effective-research-data-science/index.html" class="no-external">
+<p>These are treated differently, but they shouldn’t be.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/effective-research-data-science/index.html" class="no-external">
+<div class="listing-date">
+Jan 10, 2025
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="16" data-categories="UGhpbG9zb3BoeQ==" data-listing-date-sort="1736488800000" data-listing-file-modified-sort="1742479833127" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="598">
+<div class="thumbnail"><a href="./post/i-am-not-data-driven/index.html" class="no-external">
+
+<img loading="lazy" src="./post/i-am-not-data-driven/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/i-am-not-data-driven/index.html" class="no-external">I am not data-driven</a>
+</h3>
+<div class="delink listing-description"><a href="./post/i-am-not-data-driven/index.html" class="no-external">
+<p>The value of information precedes its generation.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/i-am-not-data-driven/index.html" class="no-external">
+<div class="listing-date">
+Jan 10, 2025
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="17" data-categories="UGhpbG9zb3BoeQ==" data-listing-date-sort="1736488800000" data-listing-file-modified-sort="1745507444719" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="231">
+<div class="thumbnail"><a href="./post/objectifying-statistics/index.html" class="no-external">
+
+<img loading="lazy" src="./post/objectifying-statistics/feature.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./post/objectifying-statistics/index.html" class="no-external">Objectifying statistics: the CS perspective</a>
+</h3>
+<div class="delink listing-description"><a href="./post/objectifying-statistics/index.html" class="no-external">
+<p>Incolcating ambuguity and poor practice</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./post/objectifying-statistics/index.html" class="no-external">
+<div class="listing-date">
+Jan 10, 2025
+</div>
+<div class="listing-author">
+Alex Zajichek
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-left" data-index="18" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ1JlZ3Jlc3Npb24=" data-listing-date-sort="1732514400000" data-listing-file-modified-sort="1783601198907" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1497">
 <div class="thumbnail"><a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external">
 
 <img loading="lazy" src="./post/reconciling-regression-equation-spline-terms/feature.png" class="thumbnail-image">
@@ -609,11 +788,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external">How to reconcile the regression equation from spline terms</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbg=='); return false;">Regression</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/reconciling-regression-equation-spline-terms/index.html" class="no-external">
 <p>Using the {rms::rcs} function</p>
 </a></div>
@@ -629,7 +803,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="11" data-categories="QmF5ZXNpYW4lMjBTdGF0aXN0aWNz" data-listing-date-sort="1730178000000" data-listing-file-modified-sort="1735655222555" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2801">
+<div class="quarto-post image-left" data-index="19" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ0JheWVzaWFuJTIwU3RhdGlzdGljcw==" data-listing-date-sort="1730178000000" data-listing-file-modified-sort="1783601198454" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2801">
 <div class="thumbnail"><a href="./post/can-you-have-a-model-without-data/index.html" class="no-external">
 
 <img loading="lazy" src="./post/can-you-have-a-model-without-data/feature.png" class="thumbnail-image">
@@ -639,11 +813,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/can-you-have-a-model-without-data/index.html" class="no-external">Can you have a model without data?</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBTdGF0aXN0aWNz'); return false;">Bayesian Statistics</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/can-you-have-a-model-without-data/index.html" class="no-external">
 <p>Yes, by being a Bayesian.</p>
 </a></div>
@@ -659,7 +828,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="12" data-categories="RGVwbG95bWVudCUyQ0xlYXJuaW5nJTJDU29mdHdhcmUlMjBEZXZlbG9wbWVudA==" data-listing-date-sort="1727240400000" data-listing-file-modified-sort="1733003683615" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1243">
+<div class="quarto-post image-left" data-index="20" data-categories="RGF0YSUyMFNjaWVuY2UlMjBJbmZyYXN0cnVjdHVyZSUyQ0RlcGxveW1lbnQlMkNMZWFybmluZyUyQ1NvZnR3YXJlJTIwRGV2ZWxvcG1lbnQ=" data-listing-date-sort="1727240400000" data-listing-file-modified-sort="1783601199697" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1243">
 <div class="thumbnail"><a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external">
 
 <img loading="lazy" src="./post/you-should-have-a-data-science-blog/feature.png" class="thumbnail-image">
@@ -669,15 +838,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external">You should have a data science blog</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVwbG95bWVudA=='); return false;">Deployment</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TGVhcm5pbmc='); return false;">Learning</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBEZXZlbG9wbWVudA=='); return false;">Software Development</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/you-should-have-a-data-science-blog/index.html" class="no-external">
 <p>Easy and free are only a couple benefits.</p>
 </a></div>
@@ -693,7 +853,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="13" data-categories="V2ViJTIwYXBwbGljYXRpb25zJTJDRGVwbG95bWVudA==" data-listing-date-sort="1724130000000" data-listing-file-modified-sort="1733003907652" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3042">
+<div class="quarto-post image-left" data-index="21" data-categories="RGF0YSUyMFNjaWVuY2UlMjBJbmZyYXN0cnVjdHVyZSUyQ1IlMjAlMkYlMjBTaGlueSUyQ1dlYiUyMEFwcGxpY2F0aW9ucyUyQ0RlcGxveW1lbnQ=" data-listing-date-sort="1724130000000" data-listing-file-modified-sort="1783601199584" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3042">
 <div class="thumbnail"><a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external">
 
 <img loading="lazy" src="./post/low-cost-ways-to-build-and-deploy-apps/feature.png" class="thumbnail-image">
@@ -703,13 +863,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external">Low cost ways to build and deploy analytical web apps</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2ViJTIwYXBwbGljYXRpb25z'); return false;">Web applications</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVwbG95bWVudA=='); return false;">Deployment</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/low-cost-ways-to-build-and-deploy-apps/index.html" class="no-external">
 <p>An overview of some server options</p>
 </a></div>
@@ -725,7 +878,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="14" data-categories="SGVhbHRoY2FyZSUyQ01vZGVsaW5nJTJDUHJlZGljdGlvbiUyQ1JlYWRtaXNzaW9ucw==" data-listing-date-sort="1721970000000" data-listing-file-modified-sort="1767640422308" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3789">
+<div class="quarto-post image-left" data-index="22" data-categories="SGVhbHRoY2FyZSUyMEFuYWx5dGljcyUyQ0hlYWx0aGNhcmUlMkNNb2RlbGluZyUyQ1ByZWRpY3Rpb24lMkNSZWFkbWlzc2lvbnM=" data-listing-date-sort="1721970000000" data-listing-file-modified-sort="1783601197324" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3789">
 <div class="thumbnail"><a href="./post/managing-the-readmission-risk-pool/index.html" class="no-external">
 
 <img loading="lazy" src="./post/managing-the-readmission-risk-pool/feature.png" class="thumbnail-image">
@@ -735,17 +888,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/managing-the-readmission-risk-pool/index.html" class="no-external">A prediction system for managing the hospital readmission risk pool</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZQ=='); return false;">Healthcare</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TW9kZWxpbmc='); return false;">Modeling</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJlZGljdGlvbg=='); return false;">Prediction</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVhZG1pc3Npb25z'); return false;">Readmissions</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/managing-the-readmission-risk-pool/index.html" class="no-external">
 <p>Proposed framework</p>
 </a></div>
@@ -761,7 +903,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="15" data-categories="UmVncmVzc2lvbg==" data-listing-date-sort="1721365200000" data-listing-file-modified-sort="1735655197812" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2640">
+<div class="quarto-post image-left" data-index="23" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ1JlZ3Jlc3Npb24=" data-listing-date-sort="1721365200000" data-listing-file-modified-sort="1783601198793" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2640">
 <div class="thumbnail"><a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external">
 
 <img loading="lazy" src="./post/how-to-assess-the-proportional-odds-assumption/feature.png" class="thumbnail-image">
@@ -771,11 +913,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external">How do you assess the proportional-odds assumption? Directly.</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbg=='); return false;">Regression</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/how-to-assess-the-proportional-odds-assumption/index.html" class="no-external">
 <p>A simple visual check.</p>
 </a></div>
@@ -791,7 +928,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="16" data-categories="U3RhdGlzdGljYWwlMjBTaWduaWZpY2FuY2UlMkNEZWNpc2lvbiUyME1ha2luZw==" data-listing-date-sort="1718773200000" data-listing-file-modified-sort="1733004339744" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2774">
+<div class="quarto-post image-left" data-index="24" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ1N0YXRpc3RpY2FsJTIwU2lnbmlmaWNhbmNlJTJDRGVjaXNpb24lMjBNYWtpbmc=" data-listing-date-sort="1718773200000" data-listing-file-modified-sort="1783601198227" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2774">
 <div class="thumbnail"><a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external">
 
 <img loading="lazy" src="./post/simple-example-why-statistical-significance-is-insufficient/feature.png" class="thumbnail-image">
@@ -801,13 +938,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external">A simple example why statistical significance is insufficient for action</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBTaWduaWZpY2FuY2U='); return false;">Statistical Significance</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGVjaXNpb24lMjBNYWtpbmc='); return false;">Decision Making</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/simple-example-why-statistical-significance-is-insufficient/index.html" class="no-external">
 <p>It ignores the basic question: “How much?”</p>
 </a></div>
@@ -823,21 +953,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="17" data-categories="UHJvamVjdCUyME1hbmFnZW1lbnQ=" data-listing-date-sort="1715835600000" data-listing-file-modified-sort="1733004536968" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1089">
+<div class="quarto-post image-left" data-index="25" data-categories="UHJvamVjdCUyME1hbmFnZW1lbnQ=" data-listing-date-sort="1715835600000" data-listing-file-modified-sort="1733004536968" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1089">
 <div class="thumbnail"><a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external">
 
-<img loading="lazy" src="./post/ways-to-ensure-success-of-statistical-project/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/ways-to-ensure-success-of-statistical-project/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external">5 ways to help ensure success of a statistical project</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvamVjdCUyME1hbmFnZW1lbnQ='); return false;">Project Management</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/ways-to-ensure-success-of-statistical-project/index.html" class="no-external">
 <p>How can we increase the likelihood that things will go as expected?</p>
 </a></div>
@@ -853,23 +978,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="18" data-categories="UXVhbnR1bSUyQ1Byb2JhYmlsaXR5" data-listing-date-sort="1708063200000" data-listing-file-modified-sort="1730766333744" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="954">
+<div class="quarto-post image-left" data-index="26" data-categories="UXVhbnR1bSUyQ1Byb2JhYmlsaXR5" data-listing-date-sort="1708063200000" data-listing-file-modified-sort="1730766333744" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="954">
 <div class="thumbnail"><a href="./post/quantum-entanglement-from-statistical-perspective/index.html" class="no-external">
 
-<img loading="lazy" src="./post/quantum-entanglement-from-statistical-perspective/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/quantum-entanglement-from-statistical-perspective/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/quantum-entanglement-from-statistical-perspective/index.html" class="no-external">Quantum entanglement from a statistician’s perspective</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UXVhbnR1bQ=='); return false;">Quantum</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvYmFiaWxpdHk='); return false;">Probability</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/quantum-entanglement-from-statistical-perspective/index.html" class="no-external">
 <p>I’m a total beginner, but this stuff is interesting</p>
 </a></div>
@@ -885,23 +1003,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="19" data-categories="SGlzdG9yeSUyQ1BoaWxvc29waHk=" data-listing-date-sort="1707544800000" data-listing-file-modified-sort="1730766077465" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1602">
+<div class="quarto-post image-left" data-index="27" data-categories="SGlzdG9yeSUyQ1BoaWxvc29waHk=" data-listing-date-sort="1707544800000" data-listing-file-modified-sort="1730766077465" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1602">
 <div class="thumbnail"><a href="./post/on-the-creation-of-classical-statistics/index.html" class="no-external">
 
-<img loading="lazy" src="./post/on-the-creation-of-classical-statistics/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/on-the-creation-of-classical-statistics/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/on-the-creation-of-classical-statistics/index.html" class="no-external">On the Creation of Classical Statistics</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGlzdG9yeQ=='); return false;">History</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UGhpbG9zb3BoeQ=='); return false;">Philosophy</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/on-the-creation-of-classical-statistics/index.html" class="no-external">
 <p>Fisher was in fact, a genius</p>
 </a></div>
@@ -917,27 +1028,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="20" data-categories="SGlzdG9yeSUyQ1BoaWxvc29waHklMkNSZXNlYXJjaCUyQ1N0YXRpc3RpY2FsJTIwU2lnbmlmaWNhbmNl" data-listing-date-sort="1703224800000" data-listing-file-modified-sort="1758903262813" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8278">
+<div class="quarto-post image-left" data-index="28" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ0hpc3RvcnklMkNQaGlsb3NvcGh5JTJDUmVzZWFyY2glMkNTdGF0aXN0aWNhbCUyMFNpZ25pZmljYW5jZQ==" data-listing-date-sort="1703224800000" data-listing-file-modified-sort="1783601198341" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8278">
 <div class="thumbnail"><a href="./post/statistical-significance-is-insignificant/index.html" class="no-external">
 
-<img loading="lazy" src="./post/statistical-significance-is-insignificant/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/statistical-significance-is-insignificant/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/statistical-significance-is-insignificant/index.html" class="no-external">Statistical significance is…insignificant</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGlzdG9yeQ=='); return false;">History</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UGhpbG9zb3BoeQ=='); return false;">Philosophy</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVzZWFyY2g='); return false;">Research</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBTaWduaWZpY2FuY2U='); return false;">Statistical Significance</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/statistical-significance-is-insignificant/index.html" class="no-external">
 <p>“A cheap way to get marketable results” -William Kruskal</p>
 </a></div>
@@ -953,27 +1053,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="21" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNlJTJDU3Vydml2YWwlMjBBbmFseXNpcyUyQ1Byb3BlbnNpdHklMjBTY29yZXMlMkNXZWlnaHRpbmc=" data-listing-date-sort="1696222800000" data-listing-file-modified-sort="1730765361991" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8301">
+<div class="quarto-post image-left" data-index="29" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ0NhdXNhbCUyMEluZmVyZW5jZSUyQ1N1cnZpdmFsJTIwQW5hbHlzaXMlMkNQcm9wZW5zaXR5JTIwU2NvcmVzJTJDV2VpZ2h0aW5n" data-listing-date-sort="1696222800000" data-listing-file-modified-sort="1783601198680" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="42" data-listing-word-count-sort="8301">
 <div class="thumbnail"><a href="./post/the-overlap-weight/index.html" class="no-external">
 
-<img loading="lazy" src="./post/the-overlap-weight/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/the-overlap-weight/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/the-overlap-weight/index.html" class="no-external">The overlap weight in survival analysis</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('U3Vydml2YWwlMjBBbmFseXNpcw=='); return false;">Survival Analysis</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('UHJvcGVuc2l0eSUyMFNjb3Jlcw=='); return false;">Propensity Scores</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('V2VpZ2h0aW5n'); return false;">Weighting</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/the-overlap-weight/index.html" class="no-external">
 <p>A simulation review</p>
 </a></div>
@@ -989,23 +1078,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="22" data-categories="VGFibGVzJTJDSmF2YXNjcmlwdA==" data-listing-date-sort="1688014800000" data-listing-file-modified-sort="1730764930065" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1761">
+<div class="quarto-post image-left" data-index="30" data-categories="RGF0YSUyMFNjaWVuY2UlMjBJbmZyYXN0cnVjdHVyZSUyQ1RhYmxlcyUyQ0phdmFTY3JpcHQ=" data-listing-date-sort="1688014800000" data-listing-file-modified-sort="1783601199811" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1761">
 <div class="thumbnail"><a href="./post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html" class="no-external">
 
-<img loading="lazy" src="./post/quickly-removing-higher-order-aggregation-text-in-reactable/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/quickly-removing-higher-order-aggregation-text-in-reactable/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html" class="no-external">Removing higher-order aggregation text in {reactable}</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGFibGVz'); return false;">Tables</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SmF2YXNjcmlwdA=='); return false;">Javascript</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html" class="no-external">
 Often when I’m building a <code>reactable</code> I have potentially many aggregation levels but only want to display data in a lower subset of those. Here is a quick way to eliminate…
 </a></div>
@@ -1021,21 +1103,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="23" data-categories="RGF0YSUyMFdyYW5nbGluZw==" data-listing-date-sort="1675317600000" data-listing-file-modified-sort="1730764547740" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="400">
+<div class="quarto-post image-left" data-index="31" data-categories="RGF0YSUyMFNjaWVuY2UlMjBJbmZyYXN0cnVjdHVyZSUyQ0RhdGElMjBXcmFuZ2xpbmc=" data-listing-date-sort="1675317600000" data-listing-file-modified-sort="1783601199923" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="400">
 <div class="thumbnail"><a href="./post/nesting-with-tidyr/index.html" class="no-external">
 
-<img loading="lazy" src="./post/nesting-with-tidyr/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/nesting-with-tidyr/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/nesting-with-tidyr/index.html" class="no-external">Nesting with {tidyr}</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RGF0YSUyMFdyYW5nbGluZw=='); return false;">Data Wrangling</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/nesting-with-tidyr/index.html" class="no-external">
 I really love the elegance of the <code>nest</code> functionality with the <code>tidyr</code> package. It really allows you to abstract the meaning of a data frame to not just contain rectangular…<em></em><code></code>
 </a></div>
@@ -1051,21 +1128,16 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="24" data-categories="Q29tbXVuaWNhdGlvbg==" data-listing-date-sort="1673676000000" data-listing-file-modified-sort="1730758429729" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="534">
+<div class="quarto-post image-left" data-index="32" data-categories="Q29tbXVuaWNhdGlvbg==" data-listing-date-sort="1673676000000" data-listing-file-modified-sort="1730758429729" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="534">
 <div class="thumbnail"><a href="./post/some-takeaways-from-effective-data-storytelling/index.html" class="no-external">
 
-<img loading="lazy" src="./post/some-takeaways-from-effective-data-storytelling/feature.png" class="thumbnail-image">
+<img loading="lazy" data-src="./post/some-takeaways-from-effective-data-storytelling/feature.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
 <a href="./post/some-takeaways-from-effective-data-storytelling/index.html" class="no-external">Some Takeaways from Effective Data Storytelling</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q29tbXVuaWNhdGlvbg=='); return false;">Communication</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/some-takeaways-from-effective-data-storytelling/index.html" class="no-external">
 I’ve been reading through the book <em>Effective Data Storytelling: How to drive change with data, narrative, and visuals</em> by Brent Dykes and just wanted to document some…
 </a></div>
@@ -1081,7 +1153,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="25" data-categories="RXN0aW1hdGlvbiUyQ01vZGVsaW5n" data-listing-date-sort="1673589600000" data-listing-file-modified-sort="1730758143790" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="718">
+<div class="quarto-post image-left" data-index="33" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ0VzdGltYXRpb24lMkNNb2RlbGluZw==" data-listing-date-sort="1673589600000" data-listing-file-modified-sort="1783601199135" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="718">
 <div class="thumbnail"><a href="./post/the-evasive-spline/index.html" class="no-external">
 
 <img loading="lazy" data-src="./post/the-evasive-spline/feature.png" class="thumbnail-image">
@@ -1091,13 +1163,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/the-evasive-spline/index.html" class="no-external">The Evasive Spline</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXN0aW1hdGlvbg=='); return false;">Estimation</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TW9kZWxpbmc='); return false;">Modeling</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/the-evasive-spline/index.html" class="no-external">
 <p>Basis Functions &amp; Splines</p>
 </a></div>
@@ -1113,7 +1178,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="26" data-categories="RXN0aW1hdGlvbg==" data-listing-date-sort="1673503200000" data-listing-file-modified-sort="1730757835569" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="240">
+<div class="quarto-post image-left" data-index="34" data-categories="RXN0aW1hdGlvbg==" data-listing-date-sort="1673503200000" data-listing-file-modified-sort="1730757835569" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="240">
 <div class="thumbnail"><a href="./post/deriving-a-bernoulli-mle/index.html" class="no-external">
 
 <img loading="lazy" data-src="./post/deriving-a-bernoulli-mle/feature.png" class="thumbnail-image">
@@ -1123,11 +1188,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/deriving-a-bernoulli-mle/index.html" class="no-external">(Re)deriving a Bernoulli MLE</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('RXN0aW1hdGlvbg=='); return false;">Estimation</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/deriving-a-bernoulli-mle/index.html" class="no-external">
 <p>Trying to remember calculus</p>
 </a></div>
@@ -1143,7 +1203,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="27" data-categories="QmF5ZXNpYW4lMjBTdGF0aXN0aWNzJTJDQ2F1c2FsJTIwSW5mZXJlbmNl" data-listing-date-sort="1672552800000" data-listing-file-modified-sort="1730757435640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="53" data-listing-word-count-sort="10421">
+<div class="quarto-post image-left" data-index="35" data-categories="QmF5ZXNpYW4lMjBTdGF0aXN0aWNzJTJDQ2F1c2FsJTIwSW5mZXJlbmNl" data-listing-date-sort="1672552800000" data-listing-file-modified-sort="1730757435640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="53" data-listing-word-count-sort="10421">
 <div class="thumbnail"><a href="./post/statistical-rethinking-2023-class-notes/index.html" class="no-external">
 
 <img loading="lazy" data-src="./post/statistical-rethinking-2023-class-notes/feature.png" class="thumbnail-image">
@@ -1153,13 +1213,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/statistical-rethinking-2023-class-notes/index.html" class="no-external">Statistical Rethinking 2023 Class Notes</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBTdGF0aXN0aWNz'); return false;">Bayesian Statistics</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/statistical-rethinking-2023-class-notes/index.html" class="no-external">
 This document is intended to be a repository for my (raw, unedited) notes, interpretations, examples, and summaries from the Statistical Rethinking 2023 course (which…
 </a></div>
@@ -1175,7 +1228,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="28" data-categories="SGVhbHRoY2FyZSUyQ1RhYmxlcyUyQ0phdmFzY3JpcHQ=" data-listing-date-sort="1659243600000" data-listing-file-modified-sort="1730755762796" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1836">
+<div class="quarto-post image-left" data-index="36" data-categories="SGVhbHRoY2FyZSUyMEFuYWx5dGljcyUyQ0RhdGElMjBTY2llbmNlJTIwSW5mcmFzdHJ1Y3R1cmUlMkNIZWFsdGhjYXJlJTJDVGFibGVzJTJDSmF2YVNjcmlwdA==" data-listing-date-sort="1659243600000" data-listing-file-modified-sort="1783601198003" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1836">
 <div class="thumbnail"><a href="./post/reactable-javascript/index.html" class="no-external">
 
 <img loading="lazy" data-src="./post/reactable-javascript/feature.png" class="thumbnail-image">
@@ -1185,15 +1238,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/reactable-javascript/index.html" class="no-external">A couple useful JavaScript aggregation and formatting functions for {reactable}</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZQ=='); return false;">Healthcare</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('VGFibGVz'); return false;">Tables</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SmF2YXNjcmlwdA=='); return false;">Javascript</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/reactable-javascript/index.html" class="no-external">
 <p>Embedding tables into your analytical HTML document</p>
 </a></div>
@@ -1209,7 +1253,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="29" data-categories="SGVhbHRoY2FyZSUyQ01hcHMlMkNKYXZhc2NyaXB0" data-listing-date-sort="1655528400000" data-listing-file-modified-sort="1730754969275" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5201">
+<div class="quarto-post image-left" data-index="37" data-categories="SGVhbHRoY2FyZSUyMEFuYWx5dGljcyUyQ1IlMjAlMkYlMjBTaGlueSUyQ0hlYWx0aGNhcmUlMkNNYXBzJTJDSmF2YVNjcmlwdA==" data-listing-date-sort="1655528400000" data-listing-file-modified-sort="1783601197776" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5201">
 <div class="thumbnail"><a href="./post/filterable-maps/index.html" class="no-external">
 
 <img loading="lazy" data-src="./post/filterable-maps/feature.png" class="thumbnail-image">
@@ -1219,15 +1263,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/filterable-maps/index.html" class="no-external">Building a filterable map with {leaflet} and {crosstalk} for hospital readmissions</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('SGVhbHRoY2FyZQ=='); return false;">Healthcare</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('TWFwcw=='); return false;">Maps</div>
-
-<div class="listing-category" onclick="window.quartoListingCategory('SmF2YXNjcmlwdA=='); return false;">Javascript</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/filterable-maps/index.html" class="no-external">
 <p>For runtime-free analytical content delivery</p>
 </a></div>
@@ -1243,7 +1278,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="30" data-categories="UmVncmVzc2lvbg==" data-listing-date-sort="1640671200000" data-listing-file-modified-sort="1730753883527" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="40" data-listing-word-count-sort="7848">
+<div class="quarto-post image-left" data-index="38" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ1JlZ3Jlc3Npb24=" data-listing-date-sort="1640671200000" data-listing-file-modified-sort="1783601199022" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="40" data-listing-word-count-sort="7848">
 <div class="thumbnail"><a href="./post/com-poisson-regression/index.html" class="no-external">
 
 <img loading="lazy" data-src="./post/com-poisson-regression/feature.png" class="thumbnail-image">
@@ -1253,11 +1288,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/com-poisson-regression/index.html" class="no-external">Exploring COM Poisson regression</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('UmVncmVzc2lvbg=='); return false;">Regression</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/com-poisson-regression/index.html" class="no-external">
 <p>A method for underdispersed count data</p>
 </a></div>
@@ -1273,7 +1303,7 @@ Alex Zajichek
 </a>
 </div>
 </div>
-<div class="quarto-post image-left" data-index="31" data-categories="Q2F1c2FsJTIwSW5mZXJlbmNl" data-listing-date-sort="1626325200000" data-listing-file-modified-sort="1738270037379" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2038">
+<div class="quarto-post image-left" data-index="39" data-categories="U3RhdGlzdGljYWwlMjBUaGlua2luZyUyQ0NhdXNhbCUyMEluZmVyZW5jZQ==" data-listing-date-sort="1626325200000" data-listing-file-modified-sort="1783601198566" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2038">
 <div class="thumbnail"><a href="./post/a-look-at-collider-bias/index.html" class="no-external">
 
 <img loading="lazy" data-src="./post/a-look-at-collider-bias/feature.png" class="thumbnail-image">
@@ -1283,11 +1313,6 @@ Alex Zajichek
 <h3 class="no-anchor listing-title">
 <a href="./post/a-look-at-collider-bias/index.html" class="no-external">A look at collider bias</a>
 </h3>
-<div class="listing-categories">
-
-<div class="listing-category" onclick="window.quartoListingCategory('Q2F1c2FsJTIwSW5mZXJlbmNl'); return false;">Causal Inference</div>
-
-</div>
 <div class="delink listing-description"><a href="./post/a-look-at-collider-bias/index.html" class="no-external">
 There has been a lot of buzz around “causal inference” and given how fundamental the name seems to statistics, I picked up <em>The Book of Why: The New Science of Cause and Effect</em>…<em></em><code></code>
 </a></div>
@@ -1305,10 +1330,23 @@ Alex Zajichek
 </div>
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
-<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
+<nav id="latest-listing-pagination" class="listing-pagination" aria-label="Page Navigation">
   <ul class="pagination"></ul>
 </nav>
-</div></main><b> <!-- /main -->
+</div>
+</section>
+<section id="subscribe" class="level2 subscribe-panel">
+<h2 class="anchored" data-anchor-id="subscribe">Subscribe</h2>
+<div class="placeholder-note">
+<p>ADD TEXT ABOUT what readers get by subscribing.</p>
+</div>
+<p><a href="https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share" class="btn btn-outline-primary">Subscribe by email</a></p>
+</section>
+
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
@@ -1708,17 +1746,39 @@ Alex Zajichek
     }
   });
   </script>
-</b></div><b> <!-- /content -->
+</div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-      &nbsp;
-    </div>   
-    <div class="nav-footer-center">
 <p>© 2026 Zajichek Stats</p>
-</div>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="./start-here.html">
+<p>Start Here</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="./topics/index.html">
+<p>Topics</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="./index.xml">
+<p>RSS</p>
+</a>
+  </li>  
+</ul>
+    </div>
     <div class="nav-footer-right">
-      &nbsp;
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/">
+<p>CentralStatz</p>
+</a>
+  </li>  
+</ul>
     </div>
   </div>
 </footer>
@@ -1726,4 +1786,4 @@ Alex Zajichek
 
 
 
-</b></body></html>
+</body></html>

@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "12/28/2021"
 image: "feature.png"
 categories:
+  - Statistical Thinking
   - Regression
 format:
   html:

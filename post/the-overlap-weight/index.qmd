@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "10/2/2023"
 image: "feature.png"
 categories:
+  - Statistical Thinking
   - Causal Inference
   - Survival Analysis
   - Propensity Scores

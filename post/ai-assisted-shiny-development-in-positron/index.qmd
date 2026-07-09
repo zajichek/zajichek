@@ -5,6 +5,8 @@ author: "Alex Zajichek"
 date: "10/29/2025"
 image: "feature.png"
 categories:
+  - AI for Analytics
+  - "R / Shiny"
   - AI
   - Shiny
   - Web Applications

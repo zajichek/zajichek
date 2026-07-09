@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "10/29/2024"
 image: "feature.png"
 categories:
+  - Statistical Thinking
   - Bayesian Statistics
 format:
   html:

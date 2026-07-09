@@ -9,7 +9,7 @@ Readable typography improves user experience, accessibility, and perceived profe
 `styles.scss` applies `font-family: Copperplate, fantasy`, larger size, and oblique style to navbar link text. `index.qmd` also uses inline HTML with `font-family: Copperplate, fantasy`. This creates a distinctive style, but it can reduce readability and make navigation feel less contemporary.
 
 ### Suggested change
-Use Quarto/Bootstrap's standard sans-serif font for navigation and reserve distinctive branding for the logo. Replace inline homepage font styling with Markdown headings and optional modest CSS classes.
+Use Quarto/Bootstrap's standard sans-serif font for navigation and reserve distinctive branding for the logo. Replace inline homepage font styling with Markdown headings and optional modest CSS classes. Also consider reducing the logo height before adding `Start Here` and `Topics` nav items, because the current `max-height: 125px` makes the navbar unusually tall.
 
 ### Where to implement
 - `styles.scss`
@@ -22,13 +22,18 @@ Use Quarto/Bootstrap's standard sans-serif font for navigation and reserve disti
   font-size: 1rem;
   font-style: normal;
 }
+
+.navbar-brand > img {
+  max-height: 72px;
+}
 ```
 
 ### Sequential implementation steps
 1. Remove the homepage inline HTML slogan and replace it with Markdown.
 2. Adjust navbar font styles in `styles.scss`.
-3. Preview the navbar with all current links.
-4. Check mobile menu readability.
+3. Test a smaller logo height, such as 72px to 90px.
+4. Preview the navbar with all current links.
+5. Check mobile menu readability.
 
 ### Risk / possible site issues
 The site may feel less branded at first if the decorative font is removed. The logo can carry most of the brand identity instead.
@@ -45,7 +50,7 @@ Fixed backgrounds can distract from long-form reading and may perform poorly on 
 `styles.scss` sets `body` to use `background.png` with `background-attachment: fixed`. This applies globally across the site.
 
 ### Suggested change
-Limit the background image to the homepage or remove the fixed attachment. Let posts use a plain reading background.
+Limit the background image to the homepage or remove the fixed attachment. Let posts use a plain reading background. If the background is retained globally, add a semi-opaque content background around article text so long posts, tables, and code remain easy to read.
 
 ### Where to implement
 - `styles.scss`
@@ -57,8 +62,8 @@ body {
   background-image: none;
 }
 
-.home-intro {
-  /* optional subtle homepage-only treatment */
+.content {
+  background: rgba(255, 255, 255, 0.96);
 }
 ```
 

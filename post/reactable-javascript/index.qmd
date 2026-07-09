@@ -5,9 +5,11 @@ author: "Alex Zajichek"
 date: "7/31/2022"
 image: "feature.png"
 categories:
+  - Healthcare Analytics
+  - Data Science Infrastructure
   - Healthcare
   - Tables
-  - Javascript
+  - JavaScript
 format:
   html:
     code-fold: true

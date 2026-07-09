@@ -6,7 +6,9 @@ date: "8/20/2024"
 image: "feature.png"
 draft: false
 categories:
-  - Web applications
+  - Data Science Infrastructure
+  - "R / Shiny"
+  - Web Applications
   - Deployment
 ---
 

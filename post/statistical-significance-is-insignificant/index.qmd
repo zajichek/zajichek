@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "12/22/2023"
 image: "feature.png"
 categories:
+  - Statistical Thinking
   - History
   - Philosophy
   - Research

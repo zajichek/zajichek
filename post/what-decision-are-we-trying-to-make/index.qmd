@@ -5,6 +5,7 @@ author: "Alex Zajichek"
 date: "4/23/2025"
 image: "feature.png"
 categories:
+  - Statistical Thinking
   - Philosophy
   - Statistical Significance
   - Decision Making

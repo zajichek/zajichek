@@ -26,17 +26,21 @@ Suggested initial hubs:
 - Existing post files only when adding cross-links manually
 
 ### Implementation sketch
+For the first version, prefer a curated hub with explicit links instead of depending on category-filtered listing YAML. Quarto listing categories are designed for sidebar filtering once a listing exists; they are not the safest way to define a topic-specific source set.
+
 ```yaml
 ---
 title: "Healthcare Analytics"
 description: "Articles on healthcare data, hospital readmissions, risk adjustment, and practical analytics workflows."
 listing:
-  contents: ../post
-  categories:
-    - Healthcare
-    - Readmissions
+  contents:
+    - ../post/managing-the-readmission-risk-pool/index.qmd
+    - ../post/conceptualizing-the-readmission-risk-pool/index.qmd
+    - ../post/investigating-a-hospital-specific-report/index.qmd
+    - ../post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.qmd
   type: default
   sort: "date desc"
+  categories: true
 ---
 ```
 
@@ -51,7 +55,7 @@ Then add 2 to 4 paragraphs above the listing explaining the pillar in plain lang
 6. Add the topic pages to the navbar only after the first 2 or 3 are ready.
 
 ### Risk / possible site issues
-Quarto category filtering inside listing pages can be sensitive to relative paths and exact category spelling. The site currently uses both `Web Applications` and `Web applications`, which may split results unexpectedly.
+Explicit listing paths require manual upkeep when new posts are published. If you later switch to a broader listing, category filtering can be sensitive to exact category spelling; the site currently uses both `Web Applications` and `Web applications`, which may split results unexpectedly.
 
 ### How to verify
 Run `quarto preview` and inspect each hub. Confirm that listings render, links work, and the page title/description appear in the rendered HTML metadata.
@@ -129,7 +133,7 @@ description: "A curated guide to the best Zajichek Stats articles on healthcare 
 ```
 
 ### Sequential implementation steps
-1. Choose 12 to 18 cornerstone posts.
+1. Choose 12 to 18 cornerstone posts that are published, not drafts.
 2. Group them under 4 to 5 topic headings.
 3. Add one sentence under each link explaining why it is a good starting point.
 4. Add `Start Here` to the navbar after `Projects & Presentations` or before it.

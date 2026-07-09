@@ -18,18 +18,64 @@ about:
 
 Statistician and data scientist in Central Wisconsin interested in statistical analysis and software development. Need statistical help? Visit my [consultancy page](https://www.centralstatz.com/).
 
+::: {.section-panel}
+## What I Write About
+
+::: {.placeholder-note}
+ADD TEXT ABOUT the main themes of the site, including healthcare analytics, statistical thinking, reproducible analytics, R/Shiny, and AI for analytics.
+:::
+:::
+
+::: {.section-panel}
+## Start Here
+
+::: {.placeholder-note}
+ADD TEXT ABOUT where new readers should begin and how the topic hubs relate to the broader site.
+:::
+
+See [Start Here](start-here.qmd) and [Topics](topics/index.qmd).
+:::
+
+::: {.section-panel}
+## CentralStatz
+
+::: {.placeholder-note}
+ADD TEXT ABOUT the relationship between Zajichek Stats, Alex Zajichek, and CentralStatz.
+:::
+:::
+
+::: {.section-panel}
 ## Experience
 
+:::: {.link-grid}
+::: {.link-card}
 Cleveland Clinic | Research Data Scientist | Feb 2023 - Present
+:::
 
+::: {.link-card}
 Aspirus Health | Data Scientist | Nov 2020 - Jun 2023
+:::
 
+::: {.link-card}
 Sentry Insurance | Advanced Analytics Modeler | Dec 2019 - Nov 2020
+:::
 
+::: {.link-card}
 Cleveland Clinic | Biostatistician | Aug 2017 - Dec 2019
+:::
+::::
+:::
 
+::: {.section-panel}
 ## Education
 
+:::: {.link-grid}
+::: {.link-card}
 University of Iowa | MS in Statistics | Iowa City, IA | Aug 2015 - May 2017
+:::
 
+::: {.link-card}
 University of Wisconsin - La Crosse | BS in Statistics | La Crosse, WI | Sep 2011 - Jun 2015
+:::
+::::
+:::
