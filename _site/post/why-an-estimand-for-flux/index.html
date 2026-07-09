@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alex Zajichek">
+<meta name="dcterms.date" content="2026-07-08">
+<meta name="description" content="I quickly realized that simulating a system leads to an infinite loop.">
+
+<title>Why an estimand framework for {flux}? – Zajichek Stats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-30fa53df0fffa09c950be6b35001b9c1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9MW3W3RQD9"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
+</script>
+<meta name="quarto:status" content="draft">
+
+
+<meta property="og:title" content="Why an estimand framework for {flux}? – Zajichek Stats">
+<meta property="og:description" content="I quickly realized that simulating a system leads to an infinite loop.">
+<meta property="og:image" content="https://www.zajichekstats.com/post/why-an-estimand-for-flux/feature.png">
+<meta property="og:site_name" content="Zajichek Stats">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../presentations.html"> 
+<span class="menu-text">Projects &amp; Presentations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/"> 
+<span class="menu-text">Consultancy</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share"> 
+<span class="menu-text">Subscribe</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:alex@centralstatz.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/alexzajichek"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/zajichek"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@centralstatz"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#simulating-the-system" id="toc-simulating-the-system" class="nav-link" data-scroll-target="#simulating-the-system">Simulating the system</a>
+  <ul class="collapse">
+  <li><a href="#making-a-game" id="toc-making-a-game" class="nav-link" data-scroll-target="#making-a-game">Making a game</a></li>
+  <li><a href="#adding-more-detail" id="toc-adding-more-detail" class="nav-link" data-scroll-target="#adding-more-detail">Adding more detail</a></li>
+  <li><a href="#the-infinite-loop" id="toc-the-infinite-loop" class="nav-link" data-scroll-target="#the-infinite-loop">The infinite loop</a></li>
+  </ul></li>
+  <li><a href="#simulating-an-answer-instead" id="toc-simulating-an-answer-instead" class="nav-link" data-scroll-target="#simulating-an-answer-instead">Simulating an <em>answer</em> (instead)</a>
+  <ul class="collapse">
+  <li><a href="#invoking-the-estimand-concept" id="toc-invoking-the-estimand-concept" class="nav-link" data-scroll-target="#invoking-the-estimand-concept">Invoking the “estimand” concept</a></li>
+  <li><a href="#counterfactuals-and-potential-outcomes" id="toc-counterfactuals-and-potential-outcomes" class="nav-link" data-scroll-target="#counterfactuals-and-potential-outcomes">Counterfactuals and potential outcomes</a></li>
+  <li><a href="#applying-this-to-a-hockey-game" id="toc-applying-this-to-a-hockey-game" class="nav-link" data-scroll-target="#applying-this-to-a-hockey-game">Applying this to a hockey game</a></li>
+  </ul></li>
+  <li><a href="#formalizing-the-flux-estimand" id="toc-formalizing-the-flux-estimand" class="nav-link" data-scroll-target="#formalizing-the-flux-estimand">Formalizing the Flux Estimand</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Why an estimand framework for {flux}?</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">Simulation</div>
+    <div class="quarto-category">Modeling</div>
+    <div class="quarto-category">Causal Inference</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    I quickly realized that simulating a system leads to an infinite loop.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex Zajichek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 8, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Have you heard of the <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> ecosystem yet? It’s a new R framework (Python planned) for developing dynamic, event-driven probabilistic models via simulation. Highly recommend you check it out, starting with the first tutorial <a href="https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md">here</a>.</em></p>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>When I began learning about <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a>, I started reading the documentation to figure out not only what it <em>is</em> but also how to use it. I spent a lot of time in the <a href="https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md">tutorials</a> trying to understand concepts, how the code maps to those concepts, and submitting nit-picky issues to GitHub to try to make the code and documentation row together more seamlessly. Then I began trying to apply the framework to a project, manually defining schemas and event processes. I definitely made a lot of progress compared to when I started (i.e., when I knew absolutely nothing about it), but something still didn’t click–I could only get so far without knowing what to do next. I didn’t have any intuition about what the states should be, what processes and events were important, or what outcomes mattered. So trying to <em>learn</em> the <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> framework <em>while</em> trying to implement it on a project was rather difficult.</p>
+<p>Then it hit me: <strong><em>In order to learn it, I need to work on developing a model for a system that I actually understand.</em></strong></p>
+<p>I had an epiphany: a <strong>hockey game</strong>.</p>
+<p>In that moment not only did I see my path to learning <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> become more clear, I already felt like I’d gained intuition about the framework more broadly because I could immediately envision all the components, states, events, and processes that make up a hockey game. The <em>idea</em> of <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> became much more valuable.</p>
+</section>
+<section id="simulating-the-system" class="level1">
+<h1>Simulating the system</h1>
+<p>And so I began going to down the road of using <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> to <em>simulate a hockey game</em> (the codebase is <a href="https://github.com/zajichek/hockey-flux">here</a>). I could immediately see some fascinating places you could take this:</p>
+<ul>
+<li>Games themselves are the foundation of the system</li>
+<li>Players could become independent entities in the system that live within the game</li>
+<li>You could even add a Coach entity in order to create policies around the most glaring decision points, like pulling the goalie</li>
+<li>…and so on</li>
+</ul>
+<p>But, we need to start somewhere, so I just started small.</p>
+<section id="making-a-game" class="level2">
+<h2 class="anchored" data-anchor-id="making-a-game">Making a game</h2>
+<p>I began thinking about the simplest foundation I could start building for this model. Namely, it was a <em>game</em> (and more specifically, I narrowed it to an NHL playoff game). So what attributes or <em>states</em> does this type of hockey game have? Some of the obvious things come to mind: game clock, scoreboard, whether play is active or it’s in between whistles/intermission, whether the game is in overtime, how many players are on the ice for each team, where the puck currently is, etc. So I began manually encoding those things in <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> syntax.</p>
+<p>Then you start to think about <em>events</em>. What sort of things <em>happen</em> during the game? Stuff like: goals are scored, whistles are blown (e.g., icing, penalty, offsides, etc.), the period ends, etc. Similarly, I began encoding these into event-process definitions using quick but reasonable logic. For example, goals are scored through a Poisson process with a default, sensible rate, like this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>goal_event <span class="ot">&lt;-</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(entity) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">time_next =</span> entity<span class="sc">$</span>last_time <span class="sc">+</span> <span class="fu">rexp</span>(<span class="dv">1</span>, <span class="at">rate =</span> <span class="dv">6</span> <span class="sc">/</span> <span class="dv">3600</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">event_type =</span> <span class="fu">sample</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="st">"goal_home"</span>, <span class="st">"goal_away"</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">52</span>, .<span class="dv">48</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You then define the stoppage criteria for the simulation: the game ends after the third period if the game is not tied, otherwise you keep the simulation going in 20-minute intervals until a goal is scored. Easy enough.</p>
+<p>And shortly thereafter I had a “working” simulation: I could create a game entity, set some initial states (like who the teams were) and a simulation would run, accumulating goals and whistles until the game ended and we had a winner. Great!</p>
+</section>
+<section id="adding-more-detail" class="level2">
+<h2 class="anchored" data-anchor-id="adding-more-detail">Adding more detail</h2>
+<p>Naturally, as I looked at the simulation output, despite it actually producing a “real” shell of a hockey game, there was <em>so</em> much that was <em>not</em> accounted for:</p>
+<ul>
+<li>Intermissions should contribute to simulation time but <em>not</em> game time.</li>
+<li>Puck drops are events. They start the game, each period, and occur after every whistle.</li>
+<li>When penalties occur, the rate of goals should change. Futher, we need to track how long the player(s) are in the penalty box for, and know what the strength is of each team at any given time.</li>
+<li>…the list goes on</li>
+</ul>
+<p>So, I invoked an assistant to start rapidly plucking away at these: <a href="https://openai.com/codex/">Codex</a> (if you’re not familiar, it is an AI coding assistant which comes with your $20/month <a href="https://chatgpt.com/">ChatGPT</a> subscription, and I could use it straight in <a href="https://positron.posit.co/">Positron</a>).</p>
+<p>It went on for a while. I went back and forth, creating strategies of features I want to add next, asking Codex to build a plan for it, reviewed the plan, had it implement the plan, and then reviewed the implementation so I could follow/understand/validate what is happening as I go (it actually was a pretty good experience overall, feeling like you’re in the drivers seat provided you can maintain that understanding of what’s happening).</p>
+<p>And after a bunch of iterations I had an even <em>better</em> model of an NHL playoff game. It now accounted for penalities (and the change in goal scoring rates when they happen), appropriately managed the game clock across all periods, stoppages, intermissions, and overtime <em>separate</em> from simulation time, updated the game status as different events occurred, added puck drops after whistles, etc. I even generated a cool <a href="https://shiny.posit.co/">Shiny</a> app that provides an interface to simulate specific matchups and explore results:</p>
+<p><img src="hockeyfluxapp.gif" class="img-fluid"></p>
+<p>I was amazed how fast I could get to this point, and it all seemed like a reasonable representation of a hockey game.</p>
+</section>
+<section id="the-infinite-loop" class="level2">
+<h2 class="anchored" data-anchor-id="the-infinite-loop">The infinite loop</h2>
+<p>However, my list of every small nuance kept getting bigger. Even though I had the clock structure and a seemingly reasonable hockey game being simulated, it <em>just wasn’t enough</em>. Different matchups probably need different goal scoring rates, <em>who</em> is on the ice affects what events will occur, where the puck is matters as to whether or not a goal might be scored, and we didn’t even consider yet the concept of a goalie being pulled. There was a <em>long</em> way to go.</p>
+<p>And then I realized: <strong><em>The number of nuances that I would need to implement to be satisfied with the simulation was going to be never-ending.</em></strong></p>
+<p>I was in an infinite loop of trying to model the system of an NHL playoff game, with no end in sight.</p>
+<p><br></p>
+</section>
+</section>
+<section id="simulating-an-answer-instead" class="level1">
+<h1>Simulating an <em>answer</em> (instead)</h1>
+<p>After a while of hopelessly going back and forth of what detail I wanted to build out in my next model iteration, I’d reached a point of demotivation where I’d just be doing this endlessly. At that point I didn’t even feel like working on it anymore.</p>
+<p>It was in that ponderance where I thought of the most fundamental question I should have asked myself right away: <strong><em>What am I actually trying to do with this model?</em></strong></p>
+<p>I realized that I was trying to create the perfect model of a <em>system</em> (i.e, a hockey game) without any sort of direction about what I want to do with it. What question did I want to answer? Did I just want to simulate a hockey game for the hell of it? What’s the actual point? It was essentially a fool’s errand.</p>
+<section id="invoking-the-estimand-concept" class="level2">
+<h2 class="anchored" data-anchor-id="invoking-the-estimand-concept">Invoking the “estimand” concept</h2>
+<p>So I thought, <em>“How can we start to add some <strong>structure</strong>, not around the system we’re modeling, but around the actual purpose of <strong>why</strong> we’re building it in the first place?”</em>. The idea of <a href="https://en.wikipedia.org/wiki/Estimand">estimands</a> came to mind.</p>
+<p>In this paradigm, we specify the specific quantity we want to estimate, and build our analytic workflow around answering that specific question. This includes modeling design, structure, assumptions, etc. And if we want to answer a slightly different question, even if related to the same topic/context, we might need to adjust the entire thing. So I started excitedly asking myself:</p>
+<ul>
+<li><p><strong>Can this be applied to Flux models?</strong></p></li>
+<li><p><strong>What if we started with the question we’re trying to answer and then specifically design a simulation model to answer it?</strong></p></li>
+<li><p><strong>What if it’s not a single hockey game simulator to answer every question about hockey, but rather a model designed to answer a specific hockey question?</strong></p></li>
+</ul>
+<p>These are what led me to see light at the end of the tunnel. Depending on the <em>specific</em> question(s) being asked, we may not need to design the most sophisticated model of the system, but rather a <strong>model only complex enough to provide an answer to the question(s)</strong>.</p>
+</section>
+<section id="counterfactuals-and-potential-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="counterfactuals-and-potential-outcomes">Counterfactuals and potential outcomes</h2>
+<p>In the same light, I saw an additional benefit of doing this in <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a>. The entire premise of the <a href="https://en.wikipedia.org/wiki/Rubin_causal_model">potential outcomes</a> framework is that we can only observe, for example, a single patient undergo a single treatment path. That’s the world we live in. There’s an alternate world that exists where the patient didn’t take that treatment at that time (or took another one). But we didn’t observe that one. If we <em>could</em> observe both, then in order estimate the causal effect of the treatment, we’d literally just look at the difference between the two worlds. Since we can’t observe both, we need all of the fancy methods that make up <a href="https://en.wikipedia.org/wiki/Causal_inference">causal inference</a> to try to deduce what this difference would be <em>had</em> we observed both worlds.</p>
+<p>But in <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a>, we <em>can</em> look at both worlds!</p>
+<p>The concepts of <a href="https://github.com/jarrod-dalton/flux/blob/main/tutorials/03_decisions_policy.md">decisions, policies, and actions</a> are native to the <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> framework. A main feature of it is that you are able to evaluate different decision policies at particular points in time and view the downstream differences in outcomes. From the <a href="https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md#4-policy-evaluation-and-counterfactual-analysis">tutorial</a>:</p>
+<blockquote class="blockquote">
+<p>“Run the same cohort of entities through alternative policies with matched seeds. The only difference between runs is the policy — stochastic paths are identical. Compare trajectory records to quantify the effect of policy changes.”</p>
+</blockquote>
+<p>This is pretty much exactly the idea of <a href="https://en.wikipedia.org/wiki/Rubin_causal_model">potential outcomes</a>.</p>
+<p>So with the ideas of estimands + counterfactuals in mind, it seemed that integrating these concepts into <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> model development could be very useful. For my brain at least.</p>
+</section>
+<section id="applying-this-to-a-hockey-game" class="level2">
+<h2 class="anchored" data-anchor-id="applying-this-to-a-hockey-game">Applying this to a hockey game</h2>
+<ul>
+<li>Specific question: goalie pull</li>
+<li>Realizing through this structured thinking that goalie’s are really only pulled in the last 10 minutes (though they could be earlier)</li>
+<li>Defining the denominator, means my simulation only needs to start in the last 10 minutes of a game to get <em>an</em> answer to my question</li>
+<li>Not to say you <em>couldn’t</em> do something more complex. But this gets at the idea of model sufficiency.</li>
+</ul>
+</section>
+</section>
+<section id="formalizing-the-flux-estimand" class="level1">
+<h1>Formalizing the Flux Estimand</h1>
+<p>I started going down the rabbit hole of formalizing these ideas into a more concrete framework.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.zajichekstats\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Why an estimand framework for {flux}?"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "I quickly realized that simulating a system leads to an infinite loop."</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "7/8/2026"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Simulation</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Modeling</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Causal Inference</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: right</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> true</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>_Have you heard of the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) ecosystem yet? It's a new R framework (Python planned) for developing dynamic, event-driven probabilistic models via simulation. Highly recommend you check it out, starting with the first tutorial [here](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md)._</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu"># Background</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>When I began learning about <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span>, I started reading the documentation to figure out not only what it _is_ but also how to use it. I spent a lot of time in the [tutorials](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md) trying to understand concepts, how the code maps to those concepts, and submitting nit-picky issues to GitHub to try to make the code and documentation row together more seamlessly. Then I began trying to apply the framework to a project, manually defining schemas and event processes. I definitely made a lot of progress compared to when I started (i.e., when I knew absolutely nothing about it), but something still didn't click--I could only get so far without knowing what to do next. I didn't have any intuition about what the states should be, what processes and events were important, or what outcomes mattered. So trying to _learn_ the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) framework _while_ trying to implement it on a project was rather difficult.</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>Then it hit me: **_In order to learn it, I need to work on developing a model for a system that I actually understand._** </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>I had an epiphany: a **hockey game**.</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>In that moment not only did I see my path to learning <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span> become more clear, I already felt like I'd gained intuition about the framework more broadly because I could immediately envision all the components, states, events, and processes that make up a hockey game. The _idea_ of <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span> became much more valuable.</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu"># Simulating the system</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>And so I began going to down the road of using <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span> to _simulate a hockey game_ (the codebase is <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/zajichek/hockey-flux)</span>). I could immediately see some fascinating places you could take this:</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Games themselves are the foundation of the system</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Players could become independent entities in the system that live within the game</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>You could even add a Coach entity in order to create policies around the most glaring decision points, like pulling the goalie</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>...and so on</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>But, we need to start somewhere, so I just started small.</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Making a game</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>I began thinking about the simplest foundation I could start building for this model. Namely, it was a _game_ (and more specifically, I narrowed it to an NHL playoff game). So what attributes or _states_ does this type of hockey game have? Some of the obvious things come to mind: game clock, scoreboard, whether play is active or it's in between whistles/intermission, whether the game is in overtime, how many players are on the ice for each team, where the puck currently is, etc. So I began manually encoding those things in <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span> syntax.</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>Then you start to think about _events_. What sort of things _happen_ during the game? Stuff like: goals are scored, whistles are blown (e.g., icing, penalty, offsides, etc.), the period ends, etc. Similarly, I began encoding these into event-process definitions using quick but reasonable logic. For example, goals are scored through a Poisson process with a default, sensible rate, like this:</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>goal_event <span class="ot">&lt;-</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(entity) {</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>      <span class="at">time_next =</span> entity<span class="sc">$</span>last_time <span class="sc">+</span> <span class="fu">rexp</span>(<span class="dv">1</span>, <span class="at">rate =</span> <span class="dv">6</span> <span class="sc">/</span> <span class="dv">3600</span>),</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">event_type =</span> <span class="fu">sample</span>(</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">c</span>(<span class="st">"goal_home"</span>, <span class="st">"goal_away"</span>),</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">52</span>, .<span class="dv">48</span>)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>You then define the stoppage criteria for the simulation: the game ends after the third period if the game is not tied, otherwise you keep the simulation going in 20-minute intervals until a goal is scored. Easy enough. </span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>And shortly thereafter I had a "working" simulation: I could create a game entity, set some initial states (like who the teams were) and a simulation would run, accumulating goals and whistles until the game ended and we had a winner. Great!</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## Adding more detail</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>Naturally, as I looked at the simulation output, despite it actually producing a "real" shell of a hockey game, there was _so_ much that was _not_ accounted for:</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Intermissions should contribute to simulation time but _not_ game time.</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Puck drops are events. They start the game, each period, and occur after every whistle.</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>When penalties occur, the rate of goals should change. Futher, we need to track how long the player(s) are in the penalty box for, and know what the strength is of each team at any given time.</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>...the list goes on</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>So, I invoked an assistant to start rapidly plucking away at these: <span class="co">[</span><span class="ot">Codex</span><span class="co">](https://openai.com/codex/)</span> (if you're not familiar, it is an AI coding assistant which comes with your $20/month <span class="co">[</span><span class="ot">ChatGPT</span><span class="co">](https://chatgpt.com/)</span> subscription, and I could use it straight in <span class="co">[</span><span class="ot">Positron</span><span class="co">](https://positron.posit.co/)</span>).</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>It went on for a while. I went back and forth, creating strategies of features I want to add next, asking Codex to build a plan for it, reviewed the plan, had it implement the plan, and then reviewed the implementation so I could follow/understand/validate what is happening as I go (it actually was a pretty good experience overall, feeling like you're in the drivers seat provided you can maintain that understanding of what's happening). </span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>And after a bunch of iterations I had an even _better_ model of an NHL playoff game. It now accounted for penalities (and the change in goal scoring rates when they happen), appropriately managed the game clock across all periods, stoppages, intermissions, and overtime _separate_ from simulation time, updated the game status as different events occurred, added puck drops after whistles, etc. I even generated a cool <span class="co">[</span><span class="ot">Shiny</span><span class="co">](https://shiny.posit.co/)</span> app that provides an interface to simulate specific matchups and explore results:</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="al">![](hockeyfluxapp.gif)</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>I was amazed how fast I could get to this point, and it all seemed like a reasonable representation of a hockey game.</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## The infinite loop</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>However, my list of every small nuance kept getting bigger. Even though I had the clock structure and a seemingly reasonable hockey game being simulated, it _just wasn't enough_. Different matchups probably need different goal scoring rates, _who_ is on the ice affects what events will occur, where the puck is matters as to whether or not a goal might be scored, and we didn't even consider yet the concept of a goalie being pulled. There was a _long_ way to go.</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>And then I realized: **_The number of nuances that I would need to implement to be satisfied with the simulation was going to be never-ending._**</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>I was in an infinite loop of trying to model the system of an NHL playoff game, with no end in sight.</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="fu"># Simulating an _answer_ (instead)</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>After a while of hopelessly going back and forth of what detail I wanted to build out in my next model iteration, I'd reached a point of demotivation where I'd just be doing this endlessly. At that point I didn't even feel like working on it anymore. </span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>It was in that ponderance where I thought of the most fundamental question I should have asked myself right away: **_What am I actually trying to do with this model?_**</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>I realized that I was trying to create the perfect model of a _system_ (i.e, a hockey game) without any sort of direction about what I want to do with it. What question did I want to answer? Did I just want to simulate a hockey game for the hell of it? What's the actual point? It was essentially a fool's errand.</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a><span class="fu">## Invoking the "estimand" concept</span></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>So I thought, _"How can we start to add some **structure**, not around the system we're modeling, but around the actual purpose of **why** we're building it in the first place?"_. The idea of <span class="co">[</span><span class="ot">estimands</span><span class="co">](https://en.wikipedia.org/wiki/Estimand)</span> came to mind.</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>In this paradigm, we specify the specific quantity we want to estimate, and build our analytic workflow around answering that specific question. This includes modeling design, structure, assumptions, etc. And if we want to answer a slightly different question, even if related to the same topic/context, we might need to adjust the entire thing. So I started excitedly asking myself:</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Can this be applied to Flux models?**</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**What if we started with the question we're trying to answer and then specifically design a simulation model to answer it?**</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**What if it's not a single hockey game simulator to answer every question about hockey, but rather a model designed to answer a specific hockey question?**</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>These are what led me to see light at the end of the tunnel. Depending on the _specific_ question(s) being asked, we may not need to design the most sophisticated model of the system, but rather a **model only complex enough to provide an answer to the question(s)**.</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a><span class="fu">## Counterfactuals and potential outcomes</span></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>In the same light, I saw an additional benefit of doing this in <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span>. The entire premise of the <span class="co">[</span><span class="ot">potential outcomes</span><span class="co">](https://en.wikipedia.org/wiki/Rubin_causal_model)</span> framework is that we can only observe, for example, a single patient undergo a single treatment path. That's the world we live in. There's an alternate world that exists where the patient didn't take that treatment at that time (or took another one). But we didn't observe that one. If we _could_ observe both, then in order estimate the causal effect of the treatment, we'd literally just look at the difference between the two worlds. Since we can't observe both, we need all of the fancy methods that make up [causal inference](https://en.wikipedia.org/wiki/Causal_inference) to try to deduce what this difference would be _had_ we observed both worlds.</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>But in <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span>, we _can_ look at both worlds!</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>The concepts of <span class="co">[</span><span class="ot">decisions, policies, and actions</span><span class="co">](https://github.com/jarrod-dalton/flux/blob/main/tutorials/03_decisions_policy.md)</span> are native to the <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span> framework. A main feature of it is that you are able to evaluate different decision policies at particular points in time and view the downstream differences in outcomes. From the <span class="co">[</span><span class="ot">tutorial</span><span class="co">](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md#4-policy-evaluation-and-counterfactual-analysis)</span>:</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; "Run the same cohort of entities through alternative policies with matched seeds. The only difference between runs is the policy — stochastic paths are identical. Compare trajectory records to quantify the effect of policy changes."</span></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>This is pretty much exactly the idea of <span class="co">[</span><span class="ot">potential outcomes</span><span class="co">](https://en.wikipedia.org/wiki/Rubin_causal_model)</span>. </span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>So with the ideas of estimands + counterfactuals in mind, it seemed that integrating these concepts into <span class="co">[</span><span class="ot">`flux`</span><span class="co">](https://github.com/jarrod-dalton/flux/tree/main)</span> model development could be very useful. For my brain at least.</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a><span class="fu">## Applying this to a hockey game</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Specific question: goalie pull</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Realizing through this structured thinking that goalie's are really only pulled in the last 10 minutes (though they could be earlier)</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Defining the denominator, means my simulation only needs to start in the last 10 minutes of a game to get _an_ answer to my question</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>Not to say you _couldn't_ do something more complex. But this gets at the idea of model sufficiency.</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a><span class="fu"># Formalizing the Flux Estimand</span></span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>I started going down the rabbit hole of formalizing these ideas into a more concrete framework.</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Zajichek Stats</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

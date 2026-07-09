@@ -1,0 +1,45 @@
+---
+title: "The sweet spot for AI coding assistants in data science work"
+description: "A real efficiency gain while maintaining your role and train of thought."
+author: "Alex Zajichek"
+date: "6/7/2026"
+image: "feature.png"
+categories:
+  - AI
+  - Software Development
+  - Project Management
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+    toc-depth: 3
+    toc-location: right
+draft: true
+---
+
+# An initial package
+
+Back in December 2025 I released the [first version](https://github.com/centralstatz/readmit/releases/tag/v0.0.1) of the [`readmit`](https://github.com/centralstatz/readmit) R package which was built to be a toolkit for working with and analyzing hospital readmissions data. I manually wrote the entire thing.
+
+Although I used ChatGPT to address little bugs, quirks, errors, etc., every line of code was written by me. Carefully built the package structure, developed the [website](https://centralstatz.github.io/readmit/), wrote out detailed documentation, constructed basic unit-tests, following [r-pkgs.org](https://r-pkgs.org/) to a tee. The point is, I _knew_ every file, every line of code, what each package component was doing, and _why_ it was there in the first place. Whether it was _optimal_ in terms of software quality (it wasn't) was secondary. It did what I wanted it to do, I knew how it worked, and although it was likely flawed (or "could be better"), it was _defensible_ and I could speak to it.
+
+After getting to a clear stopping point that covered the intial objectives, it was suitable for an [0.0.1 realease](https://github.com/centralstatz/readmit/releases/tag/v0.0.1) (which you can install from [CRAN](https://cran.r-project.org/) with `install.packages("readmit")`). However, I already had planned the next level of functionality that I wanted to implement. 
+
+# New features needed
+
+One of the main limitations of the existing package was that functions were built to directly ingest the [Hospital-Specific Reports (HSR)](https://qualitynet.cms.gov/inpatient/hrrp/reports) that hospitals receive detailing their results from the [Hospital Readmissions Reduction Program (HRRP)](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp) for that year. These are Excel workbooks that contain details (in various sheets) about the total penalty amount, the contributions of each disease cohort to that penalty, and the line-item, discharge-level data of the patients that contributed to the penalty for each disease cohort, among other things. This had been the standard format for how these reports were produced for many program years. So, the package functions depended explicitly on this format to properly import the various tabs from this workbook, all the way down to field names, row gaps, etc. It seemed to be reliable and worked well for a collection of sample reports spanning multiple program years (these sample reports can be found [here](https://github.com/centralstatz/readmit/tree/main/inst/extdata)). The problem?
+
+Basically right as I had finished up developing the code, [CMS](https://www.cms.gov/) completely _changed_ the way these reports were formatted, how they were structured, and how hospitals would access them. Starting in FY2026, the information in these reports was to be retrieved in various CSV files that hospitals could only download from within the [Hospital Quality Reporting (HQR)](https://hqr.cms.gov/hqrng/login) portal (which you need a login to access). The [sample report page](https://qualitynet.cms.gov/inpatient/hrrp/reports#tab2), which the initial package version depended on for developing the right structure, no longer contained examples of the actual data files. I was blind. So even though the package was still useful for analyzing historical program results, the functions were obsolete to analyze future reports, and now I had this baggage of carrying around multiple reporting standards and trying to determine if I should try to accomodate both, or just forget about the old versions and try to work towards implementing for the future. In any case, this was going to be the thing to sort out in the next package iteration.
+
+# Invoking an assistant
+
+Two levels:
+
+1. Back and forth with ChatGPT for prompt development, feed to Codex
+2. Designate where to make changes
+
+The latter is where the good part happens
+
+# Realizing my role has changed
+
