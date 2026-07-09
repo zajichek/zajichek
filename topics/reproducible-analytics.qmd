@@ -18,7 +18,7 @@ listing:
 
 ::: {.page-hero}
 ::: {.placeholder-note}
-ADD TEXT ABOUT reproducible analytics, deployment, data tooling, and infrastructure for analytical work.
+Reproducible analytics, deployment, data tooling, and infrastructure for analytical work.
 :::
 :::
 

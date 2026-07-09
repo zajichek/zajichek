@@ -13,47 +13,45 @@ listing:
 ---
 
 ::: {.home-hero}
-# Practical Statistics, Healthcare Analytics, and Data Science Tools
+# Statistics. Software. Context.
 
 ::: {.placeholder-note}
-ADD TEXT ABOUT who this site is for, what topics it covers, and why readers should start here.
+Opinionated articles covering topics in statistical thinking, R development, healthcare analytics, reproducibility, (causal) modeling, and more.
 :::
-
-[Start Here](start-here.qmd){.btn .btn-primary}
-[Browse Topics](topics/index.qmd){.btn .btn-outline-light}
+[Browse Topics](#topics){.btn .btn-outline-light}
 :::
 
 ::: {.section-panel}
-## Topics
+## Topics {#topics}
 
 ::: {.placeholder-note}
-ADD TEXT ABOUT how the topic hubs organize the archive.
+Choose a topic to explore. 
 :::
 
 :::: {.topic-grid}
 ::: {.topic-card}
 ### [Healthcare Analytics](topics/healthcare-analytics.qmd)
-ADD TEXT ABOUT this topic hub.
+Clinical decision making, readmissions, Medicaid, apps
 :::
 
 ::: {.topic-card}
 ### [Statistical Thinking](topics/statistical-thinking.qmd)
-ADD TEXT ABOUT this topic hub.
+Statistical significance, decision making, methods
 :::
 
 ::: {.topic-card}
 ### [Reproducible Analytics](topics/reproducible-analytics.qmd)
-ADD TEXT ABOUT this topic hub.
+Workflows, tools, code
 :::
 
 ::: {.topic-card}
 ### [R / Shiny Applications](topics/r-shiny-applications.qmd)
-ADD TEXT ABOUT this topic hub.
+Applications, tutorials, code
 :::
 
 ::: {.topic-card}
 ### [AI for Analytics](topics/ai-for-analytics.qmd)
-ADD TEXT ABOUT this topic hub.
+LLM's, AI-assisted development, applications
 :::
 ::::
 :::
@@ -62,28 +60,29 @@ ADD TEXT ABOUT this topic hub.
 ## Featured
 
 ::: {.placeholder-note}
-ADD TEXT ABOUT why these are good starting points.
+Check out some of the most popular articles.
 :::
 
 :::: {.feature-grid}
-::: {.feature-card}
-### [What decision are we trying to make, anyway?](post/what-decision-are-we-trying-to-make/)
-ADD TEXT ABOUT why this post is featured.
-:::
-
-::: {.feature-card}
-### [A prediction system for managing the hospital readmission risk pool](post/managing-the-readmission-risk-pool/)
-ADD TEXT ABOUT why this post is featured.
-:::
 
 ::: {.feature-card}
 ### [Building a custom LLM-powered Shiny app for hospital readmissions with {querychat}](post/building-an-llm-powered-shiny-app-for-hospital-readmissions/)
-ADD TEXT ABOUT why this post is featured.
+Building and deploying a Shiny app with a chatbot that interacts with your data.
 :::
 
 ::: {.feature-card}
-### [You should have a data science blog](post/you-should-have-a-data-science-blog/)
-ADD TEXT ABOUT why this post is featured.
+### [Statistical significance is…insignificant](post/statistical-significance-is-insignificant/)
+An argument about why statistical significance is mostly useless.
+:::
+
+::: {.feature-card}
+### [Building a filterable map with {leaflet} and {crosstalk} for hospital readmissions](post/filterable-maps/)
+How you can embed a self-contained interactive map into your web page.
+:::
+
+::: {.feature-card}
+### [The overlap weight in survival analysis](post/the-overlap-weight/)
+Exploring a newer weighting method in causal inference through simulation.
 :::
 ::::
 :::
@@ -97,7 +96,7 @@ ADD TEXT ABOUT why this post is featured.
 ## Subscribe
 
 ::: {.placeholder-note}
-ADD TEXT ABOUT what readers get by subscribing.
+Enter your email to receive alerts when new articles drop.
 :::
 
 [Subscribe by email](https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share){.btn .btn-outline-primary}

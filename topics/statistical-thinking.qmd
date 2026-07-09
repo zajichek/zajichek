@@ -22,7 +22,7 @@ listing:
 
 ::: {.page-hero}
 ::: {.placeholder-note}
-ADD TEXT ABOUT statistical thinking, decision-making, inference, modeling, and interpretation.
+Statistical thinking, decision-making, inference, modeling, and interpretation.
 :::
 :::
 

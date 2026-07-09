@@ -18,7 +18,7 @@ listing:
 
 ::: {.page-hero}
 ::: {.placeholder-note}
-ADD TEXT ABOUT R, Shiny, interactive analytics, application development, and deployment.
+Examples and code for various Shiny applications and other R-related output.
 :::
 :::
 

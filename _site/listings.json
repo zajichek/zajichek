@@ -19,15 +19,18 @@
     ]
   },
   {
-    "listing": "/topics/healthcare-analytics.html",
+    "listing": "/topics/statistical-thinking.html",
     "items": [
-      "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
-      "/post/conceptualizing-the-readmission-risk-pool/index.html",
-      "/post/investigating-a-hospital-specific-report/index.html",
-      "/post/introducing-the-readmit-r-package/index.html",
-      "/post/managing-the-readmission-risk-pool/index.html",
-      "/post/reactable-javascript/index.html",
-      "/post/filterable-maps/index.html"
+      "/post/what-decision-are-we-trying-to-make/index.html",
+      "/post/reconciling-regression-equation-spline-terms/index.html",
+      "/post/can-you-have-a-model-without-data/index.html",
+      "/post/how-to-assess-the-proportional-odds-assumption/index.html",
+      "/post/simple-example-why-statistical-significance-is-insufficient/index.html",
+      "/post/statistical-significance-is-insignificant/index.html",
+      "/post/the-overlap-weight/index.html",
+      "/post/the-evasive-spline/index.html",
+      "/post/com-poisson-regression/index.html",
+      "/post/a-look-at-collider-bias/index.html"
     ]
   },
   {
@@ -91,18 +94,15 @@
     ]
   },
   {
-    "listing": "/topics/statistical-thinking.html",
+    "listing": "/topics/healthcare-analytics.html",
     "items": [
-      "/post/what-decision-are-we-trying-to-make/index.html",
-      "/post/reconciling-regression-equation-spline-terms/index.html",
-      "/post/can-you-have-a-model-without-data/index.html",
-      "/post/how-to-assess-the-proportional-odds-assumption/index.html",
-      "/post/simple-example-why-statistical-significance-is-insufficient/index.html",
-      "/post/statistical-significance-is-insignificant/index.html",
-      "/post/the-overlap-weight/index.html",
-      "/post/the-evasive-spline/index.html",
-      "/post/com-poisson-regression/index.html",
-      "/post/a-look-at-collider-bias/index.html"
+      "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
+      "/post/conceptualizing-the-readmission-risk-pool/index.html",
+      "/post/investigating-a-hospital-specific-report/index.html",
+      "/post/introducing-the-readmit-r-package/index.html",
+      "/post/managing-the-readmission-risk-pool/index.html",
+      "/post/reactable-javascript/index.html",
+      "/post/filterable-maps/index.html"
     ]
   },
   {

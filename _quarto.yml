@@ -7,19 +7,14 @@ website:
   google-analytics: "G-9MW3W3RQD9"
   site-url: https://www.zajichekstats.com/
   repo-url: https://github.com/zajichek/zajichek
-  description: "ADD TEXT ABOUT Zajichek Stats, practical statistics, healthcare analytics, R/Shiny, reproducible analytics, and AI for analytics."
+  description: "Practical statistics, healthcare analytics, R/Shiny, reproducible analytics, and AI for analytics."
   page-footer:
-    left: "© 2026 Zajichek Stats"
-    center:
-      - text: "Start Here"
-        href: start-here.qmd
-      - text: "Topics"
-        href: topics/index.qmd
-      - text: "RSS"
-        href: index.xml
+    center: "© 2026 Zajichek Stats"
     right:
       - text: "CentralStatz"
         href: https://www.centralstatz.com/
+      - text: "RSS"
+        href: index.xml
   open-graph: true
   twitter-card:
     site: "@zajichekstats"
@@ -29,8 +24,6 @@ website:
     logo: "logo.png"
     title: false
     left:
-      - href: start-here.qmd
-        text: Start Here
       - text: Topics
         menu:
           - href: topics/healthcare-analytics.qmd

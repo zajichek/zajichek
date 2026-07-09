@@ -4,7 +4,7 @@
     "href": "topics/ai-for-analytics.html",
     "title": "AI for Analytics",
     "section": "",
-    "text": "ADD TEXT ABOUT AI-assisted analytics, LLM-powered applications, and practical AI tooling for data science work."
+    "text": "Exploring where AI tools can actually be useful in data science work."
   },
   {
     "objectID": "topics/ai-for-analytics.html#start-with-these",
@@ -25,7 +25,7 @@
     "href": "topics/reproducible-analytics.html",
     "title": "Reproducible Analytics",
     "section": "",
-    "text": "ADD TEXT ABOUT reproducible analytics, deployment, data tooling, and infrastructure for analytical work."
+    "text": "Reproducible analytics, deployment, data tooling, and infrastructure for analytical work."
   },
   {
     "objectID": "topics/reproducible-analytics.html#start-with-these",
@@ -42,67 +42,25 @@
     "text": "Articles\n\n\n\n\n\n\n\n\n\n\nGetting Started with the HHS Medicaid Provider Spending Dataset\n\n\nHow to setup your own local database\n\n\n\n\n\nMay 22, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nYou should have a data science blog\n\n\nEasy and free are only a couple benefits.\n\n\n\n\n\nSep 25, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nLow cost ways to build and deploy analytical web apps\n\n\nAn overview of some server options\n\n\n\n\n\nAug 20, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nRemoving higher-order aggregation text in {reactable}\n\n\n\n\n\n\n\n\nJun 29, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nNesting with {tidyr}\n\n\n\n\n\n\n\n\nFeb 2, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA couple useful JavaScript aggregation and formatting functions for {reactable}\n\n\nEmbedding tables into your analytical HTML document\n\n\n\n\n\nJul 31, 2022\n\n\nAlex Zajichek\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "topics/healthcare-analytics.html",
-    "href": "topics/healthcare-analytics.html",
-    "title": "Healthcare Analytics",
+    "objectID": "topics/statistical-thinking.html",
+    "href": "topics/statistical-thinking.html",
+    "title": "Statistical Thinking",
     "section": "",
-    "text": "ADD TEXT ABOUT healthcare analytics, hospital readmissions, risk adjustment, and practical data workflows."
+    "text": "Statistical thinking, decision-making, inference, modeling, and interpretation."
   },
   {
-    "objectID": "topics/healthcare-analytics.html#start-with-these",
-    "href": "topics/healthcare-analytics.html#start-with-these",
-    "title": "Healthcare Analytics",
+    "objectID": "topics/statistical-thinking.html#start-with-these",
+    "href": "topics/statistical-thinking.html#start-with-these",
+    "title": "Statistical Thinking",
     "section": "Start With These",
-    "text": "Start With These\n\n\nA prediction system for managing the hospital readmission risk pool\n\n\nConceptualizing the readmission risk pool\n\n\nInvestigating a Hospital-Specific Report (HSR)"
+    "text": "Start With These\n\n\nWhat decision are we trying to make, anyway?\n\n\nA simple example why statistical significance is insufficient for action\n\n\nCan you have a model without data?"
   },
   {
-    "objectID": "topics/healthcare-analytics.html#articles",
-    "href": "topics/healthcare-analytics.html#articles",
-    "title": "Healthcare Analytics",
+    "objectID": "topics/statistical-thinking.html#articles",
+    "href": "topics/statistical-thinking.html#articles",
+    "title": "Statistical Thinking",
     "section": "Articles",
-    "text": "Articles\n\n\n\n\n\n\n\n\n\n\nGetting Started with the HHS Medicaid Provider Spending Dataset\n\n\nHow to setup your own local database\n\n\n\n\n\nMay 22, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nConceptualizing the readmission risk pool\n\n\nThinking in terms of what is actionable\n\n\n\n\n\nJan 5, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nInvestigating a Hospital-Specific Report (HSR)\n\n\nAnalysis strategies to gain insight into HRRP program results\n\n\n\n\n\nDec 26, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing the {readmit} R package\n\n\nTools for analyzing hospital readmissions data\n\n\n\n\n\nDec 19, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA prediction system for managing the hospital readmission risk pool\n\n\nProposed framework\n\n\n\n\n\nJul 26, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA couple useful JavaScript aggregation and formatting functions for {reactable}\n\n\nEmbedding tables into your analytical HTML document\n\n\n\n\n\nJul 31, 2022\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding a filterable map with {leaflet} and {crosstalk} for hospital readmissions\n\n\nFor runtime-free analytical content delivery\n\n\n\n\n\nJun 18, 2022\n\n\nAlex Zajichek\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "start-here.html",
-    "href": "start-here.html",
-    "title": "Start Here",
-    "section": "",
-    "text": "ADD TEXT ABOUT who this site is for, what a new reader should expect, and how to use this page."
-  },
-  {
-    "objectID": "start-here.html#healthcare-analytics",
-    "href": "start-here.html#healthcare-analytics",
-    "title": "Start Here",
-    "section": "Healthcare Analytics",
-    "text": "Healthcare Analytics\n\nADD TEXT ABOUT why these healthcare analytics posts are a good starting point.\n\n\n\nA prediction system for managing the hospital readmission risk pool\n\n\nConceptualizing the readmission risk pool\n\n\nInvestigating a Hospital-Specific Report (HSR)\n\n\nIntroducing the {readmit} R package\n\n\nGetting Started with the HHS Medicaid Provider Spending Dataset"
-  },
-  {
-    "objectID": "start-here.html#statistical-thinking",
-    "href": "start-here.html#statistical-thinking",
-    "title": "Start Here",
-    "section": "Statistical Thinking",
-    "text": "Statistical Thinking\n\nADD TEXT ABOUT the statistical thinking thread across these posts.\n\n\n\nWhat decision are we trying to make, anyway?\n\n\nA simple example why statistical significance is insufficient for action\n\n\nStatistical significance is…insignificant\n\n\nCan you have a model without data?\n\n\nA look at collider bias"
-  },
-  {
-    "objectID": "start-here.html#r-shiny-applications",
-    "href": "start-here.html#r-shiny-applications",
-    "title": "Start Here",
-    "section": "R / Shiny Applications",
-    "text": "R / Shiny Applications\n\nADD TEXT ABOUT how these posts connect R, Shiny, and applied analytics products.\n\n\n\nBuilding a custom LLM-powered Shiny app for hospital readmissions with {querychat}\n\n\nMaking an AI statistical consultant\n\n\nTrying AI-assisted development in the Positron IDE\n\n\nLow cost ways to build and deploy analytical web apps\n\n\nBuilding a filterable map with {leaflet} and {crosstalk} for hospital readmissions"
-  },
-  {
-    "objectID": "start-here.html#reproducible-analytics",
-    "href": "start-here.html#reproducible-analytics",
-    "title": "Start Here",
-    "section": "Reproducible Analytics",
-    "text": "Reproducible Analytics\n\nADD TEXT ABOUT reproducible workflows, deployment, and practical analytics infrastructure.\n\n\n\nYou should have a data science blog\n\n\nLow cost ways to build and deploy analytical web apps\n\n\nGetting Started with the HHS Medicaid Provider Spending Dataset\n\n\nA couple useful JavaScript aggregation and formatting functions for {reactable}\n\n\nNesting with {tidyr}"
-  },
-  {
-    "objectID": "start-here.html#ai-for-analytics",
-    "href": "start-here.html#ai-for-analytics",
-    "title": "Start Here",
-    "section": "AI for Analytics",
-    "text": "AI for Analytics\n\nADD TEXT ABOUT how these posts approach AI as part of practical analytics work.\n\n\n\nBuilding a custom LLM-powered Shiny app for hospital readmissions with {querychat}\n\n\nMaking an AI statistical consultant\n\n\nTrying AI-assisted development in the Positron IDE"
+    "text": "Articles\n\n\n\n\n\n\n\n\n\n\nWhat decision are we trying to make, anyway?\n\n\nThe crux of the statistical significance issue.\n\n\n\n\n\nApr 23, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nHow to reconcile the regression equation from spline terms\n\n\nUsing the {rms::rcs} function\n\n\n\n\n\nNov 25, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nCan you have a model without data?\n\n\nYes, by being a Bayesian.\n\n\n\n\n\nOct 29, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nHow do you assess the proportional-odds assumption? Directly.\n\n\nA simple visual check.\n\n\n\n\n\nJul 19, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA simple example why statistical significance is insufficient for action\n\n\nIt ignores the basic question: “How much?”\n\n\n\n\n\nJun 19, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nStatistical significance is…insignificant\n\n\n“A cheap way to get marketable results” -William Kruskal\n\n\n\n\n\nDec 22, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nThe overlap weight in survival analysis\n\n\nA simulation review\n\n\n\n\n\nOct 2, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nThe Evasive Spline\n\n\nBasis Functions & Splines\n\n\n\n\n\nJan 13, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nExploring COM Poisson regression\n\n\nA method for underdispersed count data\n\n\n\n\n\nDec 28, 2021\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA look at collider bias\n\n\n\n\n\n\n\n\nJul 15, 2021\n\n\nAlex Zajichek\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "presentations/journey-through-statistical-rethinking/index.html",
@@ -261,37 +219,37 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Practical Statistics, Healthcare Analytics, and Data Science Tools",
+    "title": "Statistics. Software. Context.",
     "section": "",
-    "text": "ADD TEXT ABOUT who this site is for, what topics it covers, and why readers should start here.\n\nStart Here Browse Topics"
+    "text": "Opinionated articles covering topics in statistical thinking, R development, healthcare analytics, reproducibility, (causal) modeling, and more.\n\nBrowse Topics"
   },
   {
     "objectID": "index.html#topics",
     "href": "index.html#topics",
-    "title": "Practical Statistics, Healthcare Analytics, and Data Science Tools",
+    "title": "Statistics. Software. Context.",
     "section": "Topics",
-    "text": "Topics\n\nADD TEXT ABOUT how the topic hubs organize the archive.\n\n\n\nHealthcare Analytics\nADD TEXT ABOUT this topic hub.\n\n\nStatistical Thinking\nADD TEXT ABOUT this topic hub.\n\n\nReproducible Analytics\nADD TEXT ABOUT this topic hub.\n\n\nR / Shiny Applications\nADD TEXT ABOUT this topic hub.\n\n\nAI for Analytics\nADD TEXT ABOUT this topic hub."
+    "text": "Topics\n\nChoose a topic to explore.\n\n\n\nHealthcare Analytics\nClinical decision making, readmissions, Medicaid, apps\n\n\nStatistical Thinking\nStatistical significance, decision making, methods\n\n\nReproducible Analytics\nWorkflows, tools, code\n\n\nR / Shiny Applications\nApplications, tutorials, code\n\n\nAI for Analytics\nLLM’s, AI-assisted development, applications"
   },
   {
     "objectID": "index.html#featured",
     "href": "index.html#featured",
-    "title": "Practical Statistics, Healthcare Analytics, and Data Science Tools",
+    "title": "Statistics. Software. Context.",
     "section": "Featured",
-    "text": "Featured\n\nADD TEXT ABOUT why these are good starting points.\n\n\n\nWhat decision are we trying to make, anyway?\nADD TEXT ABOUT why this post is featured.\n\n\nA prediction system for managing the hospital readmission risk pool\nADD TEXT ABOUT why this post is featured.\n\n\nBuilding a custom LLM-powered Shiny app for hospital readmissions with {querychat}\nADD TEXT ABOUT why this post is featured.\n\n\nYou should have a data science blog\nADD TEXT ABOUT why this post is featured."
+    "text": "Featured\n\nCheck out some of the most popular articles.\n\n\n\nBuilding a custom LLM-powered Shiny app for hospital readmissions with {querychat}\nBuilding and deploying a Shiny app with a chatbot that interacts with your data.\n\n\nStatistical significance is…insignificant\nAn argument about why statistical significance is mostly useless.\n\n\nBuilding a filterable map with {leaflet} and {crosstalk} for hospital readmissions\nHow you can embed a self-contained interactive map into your web page.\n\n\nThe overlap weight in survival analysis\nExploring a newer weighting method in causal inference through simulation."
   },
   {
     "objectID": "index.html#latest-articles",
     "href": "index.html#latest-articles",
-    "title": "Practical Statistics, Healthcare Analytics, and Data Science Tools",
+    "title": "Statistics. Software. Context.",
     "section": "Latest Articles",
     "text": "Latest Articles\n\n\n\n\n\n\n\n\n\n\nIs 3-0 the worst lead in hockey?\n\n\nEvaluating something I observe far too often.\n\n\n\n\n\nJun 4, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nGetting Started with the HHS Medicaid Provider Spending Dataset\n\n\nHow to setup your own local database\n\n\n\n\n\nMay 22, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nConceptualizing the readmission risk pool\n\n\nThinking in terms of what is actionable\n\n\n\n\n\nJan 5, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nInvestigating a Hospital-Specific Report (HSR)\n\n\nAnalysis strategies to gain insight into HRRP program results\n\n\n\n\n\nDec 26, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing the {readmit} R package\n\n\nTools for analyzing hospital readmissions data\n\n\n\n\n\nDec 19, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nTrying AI-assisted development in the Positron IDE\n\n\nThe ultimate setup for using an AI-companion for data science development.\n\n\n\n\n\nOct 29, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nThe question is not if, but how much\n\n\nWe focus on a binary that doesn’t exist.\n\n\n\n\n\nSep 26, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding a custom LLM-powered Shiny app for hospital readmissions with {querychat}\n\n\nHow we can use natural language to interact with and manipulate app content.\n\n\n\n\n\nMay 23, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nMaking an AI statistical consultant\n\n\nExploring some new R packages for AI.\n\n\n\n\n\nMay 13, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nWhat decision are we trying to make, anyway?\n\n\nThe crux of the statistical significance issue.\n\n\n\n\n\nApr 23, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nHow to reconcile the regression equation from spline terms\n\n\nUsing the {rms::rcs} function\n\n\n\n\n\nNov 25, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nCan you have a model without data?\n\n\nYes, by being a Bayesian.\n\n\n\n\n\nOct 29, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nYou should have a data science blog\n\n\nEasy and free are only a couple benefits.\n\n\n\n\n\nSep 25, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nLow cost ways to build and deploy analytical web apps\n\n\nAn overview of some server options\n\n\n\n\n\nAug 20, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA prediction system for managing the hospital readmission risk pool\n\n\nProposed framework\n\n\n\n\n\nJul 26, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nHow do you assess the proportional-odds assumption? Directly.\n\n\nA simple visual check.\n\n\n\n\n\nJul 19, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA simple example why statistical significance is insufficient for action\n\n\nIt ignores the basic question: “How much?”\n\n\n\n\n\nJun 19, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\n5 ways to help ensure success of a statistical project\n\n\nHow can we increase the likelihood that things will go as expected?\n\n\n\n\n\nMay 16, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nQuantum entanglement from a statistician’s perspective\n\n\nI’m a total beginner, but this stuff is interesting\n\n\n\n\n\nFeb 16, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nOn the Creation of Classical Statistics\n\n\nFisher was in fact, a genius\n\n\n\n\n\nFeb 10, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nStatistical significance is…insignificant\n\n\n“A cheap way to get marketable results” -William Kruskal\n\n\n\n\n\nDec 22, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nThe overlap weight in survival analysis\n\n\nA simulation review\n\n\n\n\n\nOct 2, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nRemoving higher-order aggregation text in {reactable}\n\n\n\n\n\n\n\n\nJun 29, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nNesting with {tidyr}\n\n\n\n\n\n\n\n\nFeb 2, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nSome Takeaways from Effective Data Storytelling\n\n\n\n\n\n\n\n\nJan 14, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nThe Evasive Spline\n\n\nBasis Functions & Splines\n\n\n\n\n\nJan 13, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\n(Re)deriving a Bernoulli MLE\n\n\nTrying to remember calculus\n\n\n\n\n\nJan 12, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nStatistical Rethinking 2023 Class Notes\n\n\n\n\n\n\n\n\nJan 1, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA couple useful JavaScript aggregation and formatting functions for {reactable}\n\n\nEmbedding tables into your analytical HTML document\n\n\n\n\n\nJul 31, 2022\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding a filterable map with {leaflet} and {crosstalk} for hospital readmissions\n\n\nFor runtime-free analytical content delivery\n\n\n\n\n\nJun 18, 2022\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nExploring COM Poisson regression\n\n\nA method for underdispersed count data\n\n\n\n\n\nDec 28, 2021\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA look at collider bias\n\n\n\n\n\n\n\n\nJul 15, 2021\n\n\nAlex Zajichek\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html#subscribe",
     "href": "index.html#subscribe",
-    "title": "Practical Statistics, Healthcare Analytics, and Data Science Tools",
+    "title": "Statistics. Software. Context.",
     "section": "Subscribe",
-    "text": "Subscribe\n\nADD TEXT ABOUT what readers get by subscribing.\n\nSubscribe by email"
+    "text": "Subscribe\n\nEnter your email to receive alerts when new articles drop.\n\nSubscribe by email"
   },
   {
     "objectID": "post/statistical-rethinking-2023-class-notes/index.html",
@@ -1554,46 +1512,32 @@
     "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n      \n        Author\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\nAuthor\n\n\n\n\n\n\n\n\nMay 7, 2026\n\n\nToggling Between Traditional and Chat-Based Data Filters in Shiny\n\n\nAlex Zajichek\n\n\n\n\n\n\nNov 23, 2025\n\n\nreadmit: An R package for navigating, managing, and analyzing hospital readmissions\n\n\nAlex Zajichek\n\n\n\n\n\n\nJun 12, 2025\n\n\nriskcalc.org: A Repository of Risk Calculators for Medical Decision Making\n\n\nAlex Zajichek\n\n\n\n\n\n\nFeb 27, 2025\n\n\nThe value of open-source: Leveraging free, code-first tools to iterate toward advanced analytics\n\n\nAlex Zajichek\n\n\n\n\n\n\nJan 10, 2025\n\n\nA journey through Statistical Rethinking\n\n\nAlex Zajichek\n\n\n\n\n\n\nOct 4, 2024\n\n\nriskcalc: An R package for building risk calculators\n\n\nAlex Zajichek\n\n\n\n\n\n\nSep 3, 2024\n\n\ncarecompare: An R package to enable hospitals and health systems to access, explore, and analyze performance in quality measures and payment programs\n\n\nAlex Zajichek\n\n\n\n\n\n\nJul 18, 2023\n\n\ncheese: An R package for statistical analysis workflows\n\n\nAlex Zajichek\n\n\n\n\n\n\nJun 30, 2023\n\n\nzildge: An R package containing functions that I frequently use\n\n\nAlex Zajichek\n\n\n\n\n\n\nFeb 12, 2018\n\n\nAn assessment of non-traditional regression models for count data\n\n\nAlex Zajichek\n\n\n\n\n\n\nMay 5, 2017\n\n\nMidwest home price index vs. national average from 1991-2016\n\n\nAlex Zajichek\n\n\n\n\n\n\nMay 2, 2017\n\n\nJNaiveBayes: An R package implementing the Naive Bayes text classifier in Java\n\n\nTyler Olson, Alex Zajichek\n\n\n\n\n\n\nMar 24, 2017\n\n\nEstimating player contribution in hockey with regularized logistic regression\n\n\nAlex Zajichek\n\n\n\n\n\n\nFeb 10, 2017\n\n\nModeling the probability of an NHL goal for player placement strategy: A naive (Bayes’) approach\n\n\nAlex Zajichek\n\n\n\n\n\n\nDec 8, 2016\n\n\nAn analysis of binary classification methods via simulation and application\n\n\nBrandon Bergerud, Jeff Hajewski, Sam Justice, Tyler Olson, Alex Zajichek\n\n\n\n\n\n\nDec 5, 2016\n\n\nGibbs sampler in Python with R and OpenBUGS comparisons\n\n\nTyler Olson, Alex Zajichek\n\n\n\n\n\n\nMay 5, 2016\n\n\nPredicting the 2016 NCAA men’s basketball tournament\n\n\nTyler Olson, Tom Tran, Alex Zajichek\n\n\n\n\n\n\nOct 31, 2015\n\n\nAn introduction to SQL Server, RODBC, and ggplot2 with PITCHf/x data\n\n\nSam Justice, Tyler Olson, Alex Zajichek\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "topics/statistical-thinking.html",
-    "href": "topics/statistical-thinking.html",
-    "title": "Statistical Thinking",
+    "objectID": "topics/healthcare-analytics.html",
+    "href": "topics/healthcare-analytics.html",
+    "title": "Healthcare Analytics",
     "section": "",
-    "text": "ADD TEXT ABOUT statistical thinking, decision-making, inference, modeling, and interpretation."
+    "text": "Concepts, tutorials, applications, etc. around topics in healthcare like readmissions and clinical decision making"
   },
   {
-    "objectID": "topics/statistical-thinking.html#start-with-these",
-    "href": "topics/statistical-thinking.html#start-with-these",
-    "title": "Statistical Thinking",
+    "objectID": "topics/healthcare-analytics.html#start-with-these",
+    "href": "topics/healthcare-analytics.html#start-with-these",
+    "title": "Healthcare Analytics",
     "section": "Start With These",
-    "text": "Start With These\n\n\nWhat decision are we trying to make, anyway?\n\n\nA simple example why statistical significance is insufficient for action\n\n\nCan you have a model without data?"
+    "text": "Start With These\n\n\nA prediction system for managing the hospital readmission risk pool\n\n\nConceptualizing the readmission risk pool\n\n\nInvestigating a Hospital-Specific Report (HSR)"
   },
   {
-    "objectID": "topics/statistical-thinking.html#articles",
-    "href": "topics/statistical-thinking.html#articles",
-    "title": "Statistical Thinking",
+    "objectID": "topics/healthcare-analytics.html#articles",
+    "href": "topics/healthcare-analytics.html#articles",
+    "title": "Healthcare Analytics",
     "section": "Articles",
-    "text": "Articles\n\n\n\n\n\n\n\n\n\n\nWhat decision are we trying to make, anyway?\n\n\nThe crux of the statistical significance issue.\n\n\n\n\n\nApr 23, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nHow to reconcile the regression equation from spline terms\n\n\nUsing the {rms::rcs} function\n\n\n\n\n\nNov 25, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nCan you have a model without data?\n\n\nYes, by being a Bayesian.\n\n\n\n\n\nOct 29, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nHow do you assess the proportional-odds assumption? Directly.\n\n\nA simple visual check.\n\n\n\n\n\nJul 19, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA simple example why statistical significance is insufficient for action\n\n\nIt ignores the basic question: “How much?”\n\n\n\n\n\nJun 19, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nStatistical significance is…insignificant\n\n\n“A cheap way to get marketable results” -William Kruskal\n\n\n\n\n\nDec 22, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nThe overlap weight in survival analysis\n\n\nA simulation review\n\n\n\n\n\nOct 2, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nThe Evasive Spline\n\n\nBasis Functions & Splines\n\n\n\n\n\nJan 13, 2023\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nExploring COM Poisson regression\n\n\nA method for underdispersed count data\n\n\n\n\n\nDec 28, 2021\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA look at collider bias\n\n\n\n\n\n\n\n\nJul 15, 2021\n\n\nAlex Zajichek\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "topics/index.html",
-    "href": "topics/index.html",
-    "title": "Topics",
-    "section": "",
-    "text": "ADD TEXT ABOUT the major themes of the site and how these topic hubs are organized."
-  },
-  {
-    "objectID": "topics/index.html#topic-hubs",
-    "href": "topics/index.html#topic-hubs",
-    "title": "Topics",
-    "section": "Topic Hubs",
-    "text": "Topic Hubs\n\n\nHealthcare Analytics\nADD TEXT ABOUT this topic hub.\n\n\nStatistical Thinking\nADD TEXT ABOUT this topic hub.\n\n\nReproducible Analytics\nADD TEXT ABOUT this topic hub.\n\n\nR / Shiny Applications\nADD TEXT ABOUT this topic hub.\n\n\nAI for Analytics\nADD TEXT ABOUT this topic hub."
+    "text": "Articles\n\n\n\n\n\n\n\n\n\n\nGetting Started with the HHS Medicaid Provider Spending Dataset\n\n\nHow to setup your own local database\n\n\n\n\n\nMay 22, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nConceptualizing the readmission risk pool\n\n\nThinking in terms of what is actionable\n\n\n\n\n\nJan 5, 2026\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nInvestigating a Hospital-Specific Report (HSR)\n\n\nAnalysis strategies to gain insight into HRRP program results\n\n\n\n\n\nDec 26, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nIntroducing the {readmit} R package\n\n\nTools for analyzing hospital readmissions data\n\n\n\n\n\nDec 19, 2025\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA prediction system for managing the hospital readmission risk pool\n\n\nProposed framework\n\n\n\n\n\nJul 26, 2024\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nA couple useful JavaScript aggregation and formatting functions for {reactable}\n\n\nEmbedding tables into your analytical HTML document\n\n\n\n\n\nJul 31, 2022\n\n\nAlex Zajichek\n\n\n\n\n\n\n\n\n\n\n\n\nBuilding a filterable map with {leaflet} and {crosstalk} for hospital readmissions\n\n\nFor runtime-free analytical content delivery\n\n\n\n\n\nJun 18, 2022\n\n\nAlex Zajichek\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "topics/r-shiny-applications.html",
     "href": "topics/r-shiny-applications.html",
     "title": "R / Shiny Applications",
     "section": "",
-    "text": "ADD TEXT ABOUT R, Shiny, interactive analytics, application development, and deployment."
+    "text": "Examples and code for various Shiny applications and other R-related output."
   },
   {
     "objectID": "topics/r-shiny-applications.html#start-with-these",

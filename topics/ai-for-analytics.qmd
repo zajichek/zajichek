@@ -15,7 +15,7 @@ listing:
 
 ::: {.page-hero}
 ::: {.placeholder-note}
-ADD TEXT ABOUT AI-assisted analytics, LLM-powered applications, and practical AI tooling for data science work.
+Exploring where AI tools can actually be useful in data science work.
 :::
 :::
 

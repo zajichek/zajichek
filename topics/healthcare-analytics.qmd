@@ -19,7 +19,7 @@ listing:
 
 ::: {.page-hero}
 ::: {.placeholder-note}
-ADD TEXT ABOUT healthcare analytics, hospital readmissions, risk adjustment, and practical data workflows.
+Concepts, tutorials, applications, etc. around topics in healthcare like readmissions and clinical decision making
 :::
 :::
 
