@@ -19,7 +19,7 @@ website:
   twitter-card:
     site: "@zajichekstats"
     creator: "@zajichekstats"
-  draft-mode: gone
+  draft-mode: unlinked
   navbar:
     logo: "logo.png"
     title: false

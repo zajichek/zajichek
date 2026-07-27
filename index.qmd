@@ -12,23 +12,18 @@ listing:
   feed: true
 ---
 
-::: {.home-hero}
-# Statistics. Software. Context.
+```{=html}
+<div class="home-space-field" aria-hidden="true"></div>
+```
 
-::: {.placeholder-note}
-Opinionated articles covering topics in statistical thinking, R development, healthcare analytics, reproducibility, (causal) modeling, and more.
-:::
-[Browse Topics](#topics){.btn .btn-outline-light}
+::: {.home-intro}
+A practical statistics blog about analytics, reproducible tools, and applied data science.
 :::
 
-::: {.section-panel}
+::: {.topic-selector-panel}
 ## Topics {#topics}
 
-::: {.placeholder-note}
-Choose a topic to explore. 
-:::
-
-:::: {.topic-grid}
+:::: {.topic-grid .home-topic-grid}
 ::: {.topic-card}
 ### [Healthcare Analytics](topics/healthcare-analytics.qmd)
 Clinical decision making, readmissions, Medicaid, apps
@@ -47,11 +42,6 @@ Workflows, tools, code
 ::: {.topic-card}
 ### [R / Shiny Applications](topics/r-shiny-applications.qmd)
 Applications, tutorials, code
-:::
-
-::: {.topic-card}
-### [AI for Analytics](topics/ai-for-analytics.qmd)
-LLM's, AI-assisted development, applications
 :::
 ::::
 :::

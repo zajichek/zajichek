@@ -1,5 +1,5 @@
 ---
-title: "Why an estimand framework for {flux}?"
+title: "Why an estimand framework for Flux?"
 description: "I quickly realized that simulating a system leads to an infinite loop."
 author: "Alex Zajichek"
 date: "7/8/2026"
@@ -18,7 +18,7 @@ format:
 draft: true
 ---
 
-_Have you heard of the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) ecosystem yet? It's a new R framework (Python planned) for developing dynamic, event-driven probabilistic models via simulation. Highly recommend you check it out, starting with the first tutorial [here](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md)._
+_Have you heard of the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) ecosystem yet? It's a new R framework (Python planned) for developing dynamic, event-driven probabilistic models via simulation built by [Jarrod Dalton]() of [Cleveland Clinic](). I highly recommend you check it out starting with the first tutorial [here](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md). You can also install the core R package that powers the framework, which was recently released to [CRAN](), with `install.packages("fluxCore")`._
 
 # Background
 
@@ -100,7 +100,7 @@ After a while of hopelessly going back and forth of what detail I wanted to buil
 
 It was in that ponderance where I thought of the most fundamental question I should have asked myself right away: **_What am I actually trying to do with this model?_**
 
-I realized that I was trying to create the perfect model of a _system_ (i.e, a hockey game) without any sort of direction about what I want to do with it. What question did I want to answer? Did I just want to simulate a hockey game for the hell of it? What's the actual point? It was essentially a fool's errand.
+I realized that I was trying to create the perfect model of a _system_ (i.e, a hockey game) without any sort of direction about what I want to do with it. What question did I want to answer? Did I just want to simulate a hockey game for the hell of it? What decision am I trying to inform? What's the actual point? It was essentially a fool's errand.
 
 ## Invoking the "estimand" concept
 
@@ -118,7 +118,7 @@ These are what led me to see light at the end of the tunnel. Depending on the _s
 
 ## Counterfactuals and potential outcomes
 
-In the same light, I saw an additional benefit of doing this in [`flux`](https://github.com/jarrod-dalton/flux/tree/main). The entire premise of the [potential outcomes](https://en.wikipedia.org/wiki/Rubin_causal_model) framework is that we can only observe, for example, a single patient undergo a single treatment path. That's the world we live in. There's an alternate world that exists where the patient didn't take that treatment at that time (or took another one). But we didn't observe that one. If we _could_ observe both, then in order estimate the causal effect of the treatment, we'd literally just look at the difference between the two worlds. Since we can't observe both, we need all of the fancy methods that make up [causal inference](https://en.wikipedia.org/wiki/Causal_inference) to try to deduce what this difference would be _had_ we observed both worlds.
+In the same light, I saw an additional connection point. The entire premise of the [potential outcomes](https://en.wikipedia.org/wiki/Rubin_causal_model) framework is that we can only observe, for example, a single patient undergo a single treatment path. That's the world we live in. There's an alternate world that exists where the patient didn't take that treatment at that time (or took another one). But we didn't observe that one. If we _could_ observe both, then in order to estimate the causal effect of the treatment, we'd literally just look at the difference between the two worlds. Since we can't observe both, we need all of the fancy methods that make up [causal inference](https://en.wikipedia.org/wiki/Causal_inference) to try to deduce what this difference would be _had_ we observed both worlds.
 
 But in [`flux`](https://github.com/jarrod-dalton/flux/tree/main), we _can_ look at both worlds!
 
@@ -128,17 +128,29 @@ The concepts of [decisions, policies, and actions](https://github.com/jarrod-dal
 
 This is pretty much exactly the idea of [potential outcomes](https://en.wikipedia.org/wiki/Rubin_causal_model). 
 
-So with the ideas of estimands + counterfactuals in mind, it seemed that integrating these concepts into [`flux`](https://github.com/jarrod-dalton/flux/tree/main) model development could be very useful. For my brain at least.
+With the ideas of estimands and counterfactuals in mind, it seemed we could structure a special kind of [`flux`](https://github.com/jarrod-dalton/flux/tree/main) implementation to be centered around a specific _causal_ question around a specific _decision_ that it's desired to inform. It all seemed to fit together.
 
-## Applying this to a hockey game
+## Rethinking the hockey logic
 
-* Specific question: goalie pull
-* Realizing through this structured thinking that goalie's are really only pulled in the last 10 minutes (though they could be earlier)
-* Defining the denominator, means my simulation only needs to start in the last 10 minutes of a game to get _an_ answer to my question
-* Not to say you _couldn't_ do something more complex. But this gets at the idea of model sufficiency.
+With this structured way of thinking in mind, I could move away from just trying to "simulate a hockey game", and think more about what sort of decision points there are to target that would actually be useful to get an answer to. The obvious one that came to mind: _when to pull your goalie_. 
 
-# Formalizing the Flux Estimand
+Now instead of trying to incorporate every last detail around a goalie pull (which is a _lot_), I thought about the _decision_ process. When does a coach make the decision to pull the goalie? Well, they sort of take in everything that has happened in the game, up until _now_, and determine if pulling the goalie right now is going to lead to a higher likelihood of them tying up the game than if they leave him in. Thinking of it this way, the _contrast_ becomes more clear. If I want to estimate the causal effect of pulling the goalie with 5 minutes left in the game when a team is down by one goal, I just need to simulate that situation and compare it to an alternative simulation where the goalie was _not_ pulled with 5 minutes left in the game when the team was down by one goal.
+
+What's more, and the even more important byproduct of this thought process, is that **I may not even need to simulate the full hockey game to get my answer** (though you could). In fact, everything that happens _before_ the decision point only informs the rate at which the decision situation can occur, but it has no bearing on the causal contrast we're trying to estimate.
+
+Therefore, the most basic, minimal model needed to get a valid estimate of my contrast of interest could just be one that starts the simulation with a few minutes left in the hockey game. Or, more specifically, _at_ exactly the time of the decision point. The direct, and full, effect of the decision is only captured by what happens afterwards. Everything before that is just adding noise.
+
+That's not to say you _couldn't_ get at the estimate from a full game simulation, or incorporating as much real detail as you can into the model. It's more so the realization that there's a concept of model sufficiency at play, with a "minimum" criteria (or the idea of a _denominator_) so to speak, that can provide you with a valid estimate for your contrast. Once you obtain the working "minimum" estimate, you might choose to then incorporate more knowledge, flexibility, assumptions, complexity, etc. to try to improve upon it. **But still targeting the same estimand.**
+
+# Formalizing the framework
 
 I started going down the rabbit hole of formalizing these ideas into a more concrete framework.
 
+Read these two statements:
+* There's 5 minutes left in the game, should I pull the goalie now?
+* There's 10 minutes left in the game, should I pull the goalie when there's 5 minutes left in the game?
 
+Different decisions. Different contrasts. Different effects. Different simulations.
+
+* I used AI to generate most of it, while having guidance over everything. It also helped me come to a realization that I'm fine with AI-generated text _in certain situations_. Given that [`flux-estimand`]() is a repo meant to ultimately guide modeling building (through _code_), I almost view the AI text as a new type of code itself. It's like it is natural language code optimized to help with downstream tasks (i.e., using the framework repo to guide specific model developments). But in the context of _this_ blog post, for example, I will never use AI because this is intended to be me writing and conveying my thoughts.
+* Added agents and skills to help users stay true to the framework when implementing it for their own application. The AI helpers are _not_ meant to do everything for you. They are meant to keep you on track and help you clarify things and make clear, important decisions about your model structure as it pertains to the estimand.
