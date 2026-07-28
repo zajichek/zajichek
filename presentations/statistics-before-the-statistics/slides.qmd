@@ -76,6 +76,7 @@ _My evolution in statistical problem solving and how Dr. Kattan helped shape it.
 
 :::
 
+
 ::: {.career-trajectory}
 <svg class="trajectory-svg" viewBox="0 0 205 150" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
   <title>Professional development trajectory</title>
@@ -86,24 +87,41 @@ _My evolution in statistical problem solving and how Dr. Kattan helped shape it.
   <circle class="trajectory-endpoint" cx="38" cy="23" r="2.5" />
   <circle class="trajectory-endpoint" cx="190" cy="103" r="2.5" />
   <circle class="trajectory-point" cx="38.4" cy="23" r="5" />
-  <text class="trajectory-label trajectory-label-x" x="114" y="142" text-anchor="middle">Real-world problem solving</text>
-  <text class="trajectory-label trajectory-label-y" x="11" y="70" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
+  <text class="trajectory-label trajectory-label-x" x="114" y="135" text-anchor="middle">Real-world problem solving</text>
+  <text class="trajectory-label trajectory-label-y" x="11" y="78" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
 </svg>
 :::
 
 ::: {.slide-timeline}
 ::: timeline
-::: {.event .timeline-current data-label="Summer 2017" data-id="event-2017"}
-Fresh Graduate <br> Started at CCF
+::: {.event .timeline-current data-label="2017" data-id="event-2017"}
+Fresh Graduate → Started at CCF 
 :::
 :::
 :::
 
-## First release {.timeline-slide auto-animate=true}
+## Falling down the curve {.timeline-slide auto-animate=true}
+
+::: {.notes}
+
+- Mike introduced me to decision curves, tradeoffs, clinical context
+- Not just is the model good, but does it help make better decisions?
+- We would talk about risk: flipping a coin, is it deterministic? "Given we know EVERYTHING about the coin, it's a 1 or 0.". We're limited by our knowledge about the system. That determines probability.
+- Applies to patients. Different patients have different risk up to how much we know about them.
+
+- Building a no-show model forced us to think about resource constraints. The entire implementation around it might influence how you do the MATH.
+
+- Hypoglycemia project. "This could be implemented...". Why not DO the implementation?
+- Experiences led to want to think about tangible output. Starting with problem, decision making process, and building towards that.
+:::
 
 ::: {.slide-main}
 
-The work becomes visible once there is something others can try, question, and react to.
+* Decision curves and the like
+* What is risk and how it applies to patients
+* Practical contraints _inform_ the math
+* More product focused
+
 :::
 
 ::: {.career-trajectory}
@@ -115,19 +133,167 @@ The work becomes visible once there is something others can try, question, and r
   <path class="trajectory-curve" d="M 38 23 C 60 45, 95 80, 190 103" />
   <circle class="trajectory-endpoint" cx="38" cy="23" r="2.5" />
   <circle class="trajectory-endpoint" cx="190" cy="103" r="2.5" />
-  <circle class="trajectory-point" cx="72" cy="38" r="5" />
-  <text class="trajectory-label trajectory-label-x" x="114" y="142" text-anchor="middle">Real-world problem solving</text>
-  <text class="trajectory-label trajectory-label-y" x="11" y="70" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
+  <circle class="trajectory-point" cx="62" cy="45" r="5" />
+  <text class="trajectory-label trajectory-label-x" x="114" y="135" text-anchor="middle">Real-world problem solving</text>
+  <text class="trajectory-label trajectory-label-y" x="11" y="78" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
 </svg>
 :::
 
 ::: {.slide-timeline}
 ::: timeline
-::: {.event .timeline-past data-label="2020" data-id="event-2020"}
-**Project Started**
+::: {.event .timeline-current data-label="2017" data-id="event-2017"}
+Fresh Graduate → Started at CCF 
+:::
+::: {.event .timeline-current data-label="2019" data-id="event-2019"}
+Working biostatistician
+:::
+:::
+:::
+
+## An alternative view {.timeline-slide auto-animate=true}
+
+::: {.notes}
+
+- Moved back to Wisconsin. Eventually joined a local health system in the Quality department. Working directly with care teams on clinical operations and executives on continuous improvement/quality initiatives.
+- Started to realize how much impact can be made on patient care just from basic reporting, clean/accurate data pipelines, and just having useful information to the right people at the right time
+
+- Began questioning the utility of p-values. CI advisor presenting results, stating p-value, and room is quiet. Nothing intuitive about it. Couldn't "feel" the result. Needed more to ensure decision.
+
+:::
+
+::: {.slide-main}
+
+* Value in basic reporting + clean data
+* Insufficiency of p-values (_"interocular trauma"_)
+
+:::
+
+::: {.career-trajectory}
+<svg class="trajectory-svg" viewBox="0 0 205 150" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
+  <title>Professional development trajectory</title>
+  <desc>A conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.</desc>
+  <path class="trajectory-axis" d="M 30 118 L 198 118" />
+  <path class="trajectory-axis" d="M 30 118 L 30 18" />
+  <path class="trajectory-curve" d="M 38 23 C 60 45, 95 80, 190 103" />
+  <circle class="trajectory-endpoint" cx="38" cy="23" r="2.5" />
+  <circle class="trajectory-endpoint" cx="190" cy="103" r="2.5" />
+  <circle class="trajectory-point" cx="100" cy="70" r="5" />
+  <text class="trajectory-label trajectory-label-x" x="114" y="135" text-anchor="middle">Real-world problem solving</text>
+  <text class="trajectory-label trajectory-label-y" x="11" y="78" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
+</svg>
+:::
+
+::: {.slide-timeline}
+::: timeline
+::: {.event .timeline-current data-label="2017" data-id="event-2017"}
+Fresh Graduate → Started at CCF 
+:::
+::: {.event .timeline-current data-label="2019" data-id="event-2019"}
+Working Biostatistician
 :::
 ::: {.event .timeline-current data-label="2021" data-id="event-2021"}
-**First Release**
+Back to WI → Clinical Operations
+:::
+:::
+:::
+
+## Renewed focus {.timeline-slide auto-animate=true}
+
+::: {.notes}
+
+- Came back to CCF (remotely) with a renewed focus/perspective. 
+- Problem first. Thinking of tools, workflows, assumptions, product, END GOAL.
+
+:::
+
+::: {.slide-main}
+
+* The stats is only a slice of the pie
+* Research diagram (the FULL product)
+* Publications as byproduct
+
+:::
+
+::: {.career-trajectory}
+<svg class="trajectory-svg" viewBox="0 0 205 150" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
+  <title>Professional development trajectory</title>
+  <desc>A conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.</desc>
+  <path class="trajectory-axis" d="M 30 118 L 198 118" />
+  <path class="trajectory-axis" d="M 30 118 L 30 18" />
+  <path class="trajectory-curve" d="M 38 23 C 60 45, 95 80, 190 103" />
+  <circle class="trajectory-endpoint" cx="38" cy="23" r="2.5" />
+  <circle class="trajectory-endpoint" cx="190" cy="103" r="2.5" />
+  <circle class="trajectory-point" cx="130" cy="84" r="5" />
+  <text class="trajectory-label trajectory-label-x" x="114" y="135" text-anchor="middle">Real-world problem solving</text>
+  <text class="trajectory-label trajectory-label-y" x="11" y="78" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
+</svg>
+:::
+
+::: {.slide-timeline}
+::: timeline
+::: {.event .timeline-current data-label="2017" data-id="event-2017"}
+Fresh Graduate → Started at CCF 
+:::
+::: {.event .timeline-current data-label="2019" data-id="event-2019"}
+Working Biostatistician
+:::
+::: {.event .timeline-current data-label="2021" data-id="event-2021"}
+Back to WI → Clinical Operations
+:::
+::: {.event .timeline-current data-label="2023" data-id="event-2023"}
+Rejoined CCF
+:::
+:::
+:::
+
+## Current goals {.timeline-slide auto-animate=true}
+
+::: {.notes}
+
+- Probably annoy people asking "why are we doing this even?", "what is the end goal here?"
+- I still care (a lot) about statistical theory and mathematical soundness. It just doesn't have as much of a place in getting to the solution. If you're thinking about modeling, you are 80% of the way there.
+
+:::
+
+::: {.slide-main}
+
+* Product-first mentality
+* Stats comes last
+* Measured outcomes and impact
+
+:::
+
+::: {.career-trajectory}
+<svg class="trajectory-svg" viewBox="0 0 205 150" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
+  <title>Professional development trajectory</title>
+  <desc>A conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.</desc>
+  <path class="trajectory-axis" d="M 30 118 L 198 118" />
+  <path class="trajectory-axis" d="M 30 118 L 30 18" />
+  <path class="trajectory-curve" d="M 38 23 C 60 45, 95 80, 190 103" />
+  <circle class="trajectory-endpoint" cx="38" cy="23" r="2.5" />
+  <circle class="trajectory-endpoint" cx="190" cy="103" r="2.5" />
+  <circle class="trajectory-point" cx="180" cy="101" r="5" />
+  <text class="trajectory-label trajectory-label-x" x="114" y="135" text-anchor="middle">Real-world problem solving</text>
+  <text class="trajectory-label trajectory-label-y" x="11" y="78" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
+</svg>
+:::
+
+::: {.slide-timeline}
+::: timeline
+::: {.event .timeline-current data-label="2017" data-id="event-2017"}
+Fresh Graduate → Started at CCF 
+:::
+::: {.event .timeline-current data-label="2019" data-id="event-2019"}
+Working Biostatistician
+:::
+::: {.event .timeline-current data-label="2021" data-id="event-2021"}
+Back to WI → Clinical Operations
+:::
+::: {.event .timeline-current data-label="2023" data-id="event-2023"}
+Rejoined CCF
+:::
+::: {.event .timeline-current data-label="2026" data-id="event-2026"}
+Current State
 :::
 :::
 :::
