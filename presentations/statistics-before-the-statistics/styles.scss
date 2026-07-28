@@ -1,3 +1,5 @@
+/*-- scss:rules --*/
+
 .reveal h1,
 .reveal h2,
 .reveal h3 {
@@ -21,13 +23,18 @@
 }
 
 .reveal .timeline-slide .slide-timeline {
-  bottom: 0.2em;
-  left: 0;
   position: absolute;
   right: 0;
+  bottom: 0.2em;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 .reveal .timeline-slide .timeline {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   font-size: 0.55em;
   margin-top: 1.2em;
 }
@@ -46,14 +53,14 @@
   position: absolute;
   right: 0;
   top: -1.25em;
-  width: 15rem;
+  width: 17rem;
 }
 
 .reveal .career-trajectory svg {
   display: block;
-  height: auto;
-  overflow: visible;
   width: 100%;
+  height: auto;
+  overflow: hidden;
 }
 
 .reveal .trajectory-axis {

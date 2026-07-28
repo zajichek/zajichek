@@ -8,8 +8,9 @@ date-format: "MMMM D, YYYY"
 footer: "Kattan Symposium 2026"
 format:
   revealjs:
-    theme: serif
-    css: styles.scss
+    theme:
+      - serif
+      - styles.scss
     slide-number: true
     transition: fade
     incremental: false
@@ -50,7 +51,7 @@ _My evolution in statistical problem solving and how Dr. Kattan helped shape it.
 
 :::
 
-## Starting (not) at the origin {.timeline-slide}
+## Starting (not) at the origin {.timeline-slide auto-animate=true}
 
 ::: {.notes}
 
@@ -76,7 +77,7 @@ _My evolution in statistical problem solving and how Dr. Kattan helped shape it.
 :::
 
 ::: {.career-trajectory}
-<svg class="trajectory-svg" viewBox="0 0 125 125" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
+<svg class="trajectory-svg" viewBox="0 0 205 150" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
   <title>Professional development trajectory</title>
   <desc>A conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.</desc>
   <path class="trajectory-axis" d="M 30 118 L 198 118" />
@@ -98,7 +99,7 @@ Fresh Graduate <br> Started at CCF
 :::
 :::
 
-## First release {.timeline-slide}
+## First release {.timeline-slide auto-animate=true}
 
 ::: {.slide-main}
 
@@ -106,7 +107,7 @@ The work becomes visible once there is something others can try, question, and r
 :::
 
 ::: {.career-trajectory}
-<svg class="trajectory-svg" viewBox="0 0 125 125" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
+<svg class="trajectory-svg" viewBox="0 0 205 150" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
   <title>Professional development trajectory</title>
   <desc>A conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.</desc>
   <path class="trajectory-axis" d="M 30 118 L 198 118" />
