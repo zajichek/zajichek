@@ -154,6 +154,27 @@
     "text": "Link to package website\nLink to source code"
   },
   {
+    "objectID": "presentations/statistics-before-the-statistics/slides.html#who-am-i",
+    "href": "presentations/statistics-before-the-statistics/slides.html#who-am-i",
+    "title": "The Statistics Before the Statistics",
+    "section": "Who Am I?",
+    "text": "Who Am I?\n\n\n\nData scientist in the Rotroff Lab\nStatistical, modeling, and software projects\nHired in QHS, moved, rehired remotely\n\n\n\n\n\nAI-me*\n\n\n\n*I have justification for this\n\n\nWhat are these slides about?\nMy evolution in statistical problem solving and how Dr. Kattan helped shape it."
+  },
+  {
+    "objectID": "presentations/statistics-before-the-statistics/slides.html#starting-not-at-the-origin",
+    "href": "presentations/statistics-before-the-statistics/slides.html#starting-not-at-the-origin",
+    "title": "The Statistics Before the Statistics",
+    "section": "Starting (not) at the origin",
+    "text": "Starting (not) at the origin\n\n\nHired out of school by Mike. Special thanks to Jim Bena.\nWhen I started I was at my peak in terms of technical knowledge, statistical theory, etc. I could still do advanced calculus and make derivations\nLittle did I know I knew nothing about statistics in the real world.\nMindset was “if this then do this method”. It was objective/systematic. Run procedure, check diagnostics, calculate pvalue, GET conclusion\nI remember explicitly mikes email on\nroughly my 3rd day. “Here’s something to get your feet wet with.” It was some R code to compute a c-index (using frank harrells rms package). He wanted me to run it for some new predictions he had and send him the results. “Sure here you go!”. It was something like this: (show some R code/output).\n\n“That looks backwards”. I was confused. Then he told me the minimum value is .5, you need to flip the labels.\nI didn’t even know what this meant. He clarified it’s like an AUC. “Oh I’ve done that”. But I never had an intuitive understanding of what it was telling us. Just knew higher was “better”.\nSo then the next part: is this good? (looks at recommended thresholds). Maybe? But what if it’s better than the current standard of care/decision making process? “Hmm I never thought of it like that” I guess there is not an objectively right answer. It depends on the context.\nThis story is the first time I really began thinking that statistics is more than objective math. It’s subjective problem solving.\n\n\n\n\n\nPeak technical knowledge\n“Use this formula, GET answer”\nA C-Index of 0.4?\n\n\n\n\n\nProfessional development trajectory\n\nA conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.       Real-world problem solving Statistical theory\n\n\n\n\n\nFresh Graduate  Started at CCF"
+  },
+  {
+    "objectID": "presentations/statistics-before-the-statistics/slides.html#first-release",
+    "href": "presentations/statistics-before-the-statistics/slides.html#first-release",
+    "title": "The Statistics Before the Statistics",
+    "section": "First release",
+    "text": "First release\n\nThe work becomes visible once there is something others can try, question, and react to.\n\n\n\n\nProfessional development trajectory\n\nA conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.       Real-world problem solving Statistical theory\n\n\n\n\n\nProject Started\n\n\nFirst Release"
+  },
+  {
     "objectID": "presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
     "href": "presentations/an-assessment-of-non-traditional-regression-models-for-count-data/index.html",
     "title": "An assessment of non-traditional regression models for count data",

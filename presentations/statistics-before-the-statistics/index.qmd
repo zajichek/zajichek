@@ -1,0 +1,16 @@
+---
+title: "The Statistics Before the Statistics"
+subtitle: "Realizing It Was Never Just About the Math"
+author: Alex Zajichek
+date: "2026-09-30"
+draft: true
+---
+
+```{=html}
+<center>
+<h3>Slides</h3>
+<iframe width = 100% height = 475px class="slide-deck" src="slides.html"></iframe>
+</center>
+```
+
+[Full screen slideshow](slides.html)

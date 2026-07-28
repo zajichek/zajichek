@@ -1,0 +1,100 @@
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  letter-spacing: -0.025em;
+}
+
+.reveal .subtitle {
+  font-style: italic;
+}
+
+.reveal .timeline-slide .slide-lead {
+  font-size: 1.25em;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0.45em 0 0.55em;
+}
+
+.reveal .timeline-slide .slide-main {
+  max-width: 70%;
+  padding-bottom: 6rem;
+}
+
+.reveal .timeline-slide .slide-timeline {
+  bottom: 0.2em;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.reveal .timeline-slide .timeline {
+  font-size: 0.55em;
+  margin-top: 1.2em;
+}
+
+.reveal .timeline-past {
+  opacity: 0.55;
+}
+
+.reveal .timeline-current {
+  font-weight: 700;
+  opacity: 1;
+}
+
+.reveal .career-trajectory {
+  color: black;
+  position: absolute;
+  right: 0;
+  top: -1.25em;
+  width: 15rem;
+}
+
+.reveal .career-trajectory svg {
+  display: block;
+  height: auto;
+  overflow: visible;
+  width: 100%;
+}
+
+.reveal .trajectory-axis {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.6;
+  opacity: 0.5;
+}
+
+.reveal .trajectory-curve {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 2.4;
+  opacity: 0.75;
+}
+
+.reveal .trajectory-endpoint {
+  fill: currentColor;
+  opacity: 0;
+}
+
+.reveal .trajectory-point {
+  fill: #f85151;
+  stroke: #fff;
+  stroke-width: 0;
+  opacity: .75;
+}
+
+.reveal .trajectory-label {
+  fill: currentColor;
+  font-size: 9px;
+  font-weight: 600;
+  opacity: 0.72;
+}
+
+.reveal figure {
+  display: inline-block;
+}
+
+.reveal .quarto-figure {
+  text-align: center;
+}

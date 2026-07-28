@@ -1,0 +1,132 @@
+---
+title: "The Statistics Before the Statistics"
+subtitle: "Realizing It Was Never Just About the Math"
+author: "Alex Zajichek, Data Scientist"
+institute: "Department of Quantitative Health Sciences<br>Cleveland Clinic"
+date: "2026-09-30"
+date-format: "MMMM D, YYYY"
+footer: "Kattan Symposium 2026"
+format:
+  revealjs:
+    theme: serif
+    css: styles.scss
+    slide-number: true
+    transition: fade
+    incremental: false
+filters:
+  - timeline
+---
+
+## Who Am I?
+
+:::: {.columns}
+
+::: {.column width="60%"}
+
+- Data scientist in the Rotroff Lab
+- Statistical, modeling, and software projects
+- Hired in QHS, moved, rehired remotely
+
+:::
+
+::: {.column width="40%"}
+![AI-me*](ai-headshot.png){width=80%}
+
+::: {style="font-size: 10px;margin-top: -40px; text-align: center;"}
+
+*I have justification for this
+
+:::
+
+:::
+
+::: {style="font-size: smaller;"}
+
+**What are these slides about?**
+
+_My evolution in statistical problem solving and how Dr. Kattan helped shape it._
+
+:::
+
+:::
+
+## Starting (not) at the origin {.timeline-slide}
+
+::: {.notes}
+
+- Hired out of school by Mike. Special thanks to Jim Bena.
+- When I started I was at my peak in terms of technical knowledge, statistical theory, etc. I could still do advanced calculus and make derivations
+- Little did I know I knew nothing about statistics in the real world. 
+- Mindset was “if this then do this method”. It was objective/systematic. Run procedure, check diagnostics, calculate pvalue, GET conclusion
+- I remember explicitly mikes email on 
+- roughly my 3rd day. “Here’s something to get your feet wet with.” It was some R code to compute a c-index (using frank harrells rms package). He wanted me to run it for some new predictions he had and send him the results. “Sure here you go!”. It was something like this: (show some R code/output). 
+    - “That looks backwards”. I was confused. Then he told me the minimum value is .5, you need to flip the labels. 
+    - I didn’t even know what this meant. He clarified it’s like an AUC. “Oh I’ve done that”. But I never had an intuitive understanding of what it was telling us. Just knew higher was “better”.
+    - So then the next part: is this good? (looks at recommended thresholds). Maybe? But what if it’s better than the current standard of care/decision making process? “Hmm I never thought of it like that” I guess there is not an objectively right answer. It depends on the context. 
+    - This story is the first time I really began thinking that statistics is more than objective math. It’s subjective problem solving.
+
+:::
+
+::: {.slide-main}
+
+- Peak technical knowledge
+- "Use this formula, _GET_ answer"
+- A C-Index of 0.4?
+
+:::
+
+::: {.career-trajectory}
+<svg class="trajectory-svg" viewBox="0 0 125 125" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
+  <title>Professional development trajectory</title>
+  <desc>A conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.</desc>
+  <path class="trajectory-axis" d="M 30 118 L 198 118" />
+  <path class="trajectory-axis" d="M 30 118 L 30 18" />
+  <path class="trajectory-curve" d="M 38 23 C 60 45, 95 80, 190 103" />
+  <circle class="trajectory-endpoint" cx="38" cy="23" r="2.5" />
+  <circle class="trajectory-endpoint" cx="190" cy="103" r="2.5" />
+  <circle class="trajectory-point" cx="38.4" cy="23" r="5" />
+  <text class="trajectory-label trajectory-label-x" x="114" y="142" text-anchor="middle">Real-world problem solving</text>
+  <text class="trajectory-label trajectory-label-y" x="11" y="70" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
+</svg>
+:::
+
+::: {.slide-timeline}
+::: timeline
+::: {.event .timeline-current data-label="Summer 2017" data-id="event-2017"}
+Fresh Graduate <br> Started at CCF
+:::
+:::
+:::
+
+## First release {.timeline-slide}
+
+::: {.slide-main}
+
+The work becomes visible once there is something others can try, question, and react to.
+:::
+
+::: {.career-trajectory}
+<svg class="trajectory-svg" viewBox="0 0 125 125" role="img" aria-label="Conceptual career trajectory from statistical theory toward real-world problem solving">
+  <title>Professional development trajectory</title>
+  <desc>A conceptual curve showing movement from high statistical theory toward stronger real-world problem solving.</desc>
+  <path class="trajectory-axis" d="M 30 118 L 198 118" />
+  <path class="trajectory-axis" d="M 30 118 L 30 18" />
+  <path class="trajectory-curve" d="M 38 23 C 60 45, 95 80, 190 103" />
+  <circle class="trajectory-endpoint" cx="38" cy="23" r="2.5" />
+  <circle class="trajectory-endpoint" cx="190" cy="103" r="2.5" />
+  <circle class="trajectory-point" cx="72" cy="38" r="5" />
+  <text class="trajectory-label trajectory-label-x" x="114" y="142" text-anchor="middle">Real-world problem solving</text>
+  <text class="trajectory-label trajectory-label-y" x="11" y="70" text-anchor="middle" transform="rotate(-90 11 70)">Statistical theory</text>
+</svg>
+:::
+
+::: {.slide-timeline}
+::: timeline
+::: {.event .timeline-past data-label="2020" data-id="event-2020"}
+**Project Started**
+:::
+::: {.event .timeline-current data-label="2021" data-id="event-2021"}
+**First Release**
+:::
+:::
+:::
