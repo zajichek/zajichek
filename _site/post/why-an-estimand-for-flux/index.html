@@ -8,9 +8,9 @@
 
 <meta name="author" content="Alex Zajichek">
 <meta name="dcterms.date" content="2026-07-08">
-<meta name="description" content="I quickly realized that simulating a system leads to an infinite loop.">
+<meta name="description" content="I realized that simulating a system leads to an infinite loop.">
 
-<title>Why an estimand framework for Flux? – Zajichek Stats</title>
+<title>When a flux model needs and estimand. – Zajichek Stats</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -118,12 +118,12 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <meta name="quarto:status" content="draft">
 
 
-<meta property="og:title" content="Why an estimand framework for Flux? – Zajichek Stats">
-<meta property="og:description" content="I quickly realized that simulating a system leads to an infinite loop.">
+<meta property="og:title" content="When a flux model needs and estimand. – Zajichek Stats">
+<meta property="og:description" content="I realized that simulating a system leads to an infinite loop.">
 <meta property="og:image" content="https://www.zajichekstats.com/post/why-an-estimand-for-flux/feature.png">
 <meta property="og:site_name" content="Zajichek Stats">
-<meta name="twitter:title" content="Why an estimand framework for Flux? – Zajichek Stats">
-<meta name="twitter:description" content="I quickly realized that simulating a system leads to an infinite loop.">
+<meta name="twitter:title" content="When a flux model needs and estimand. – Zajichek Stats">
+<meta name="twitter:description" content="I realized that simulating a system leads to an infinite loop.">
 <meta name="twitter:image" content="https://www.zajichekstats.com/post/why-an-estimand-for-flux/feature.png">
 <meta name="twitter:creator" content="@zajichekstats">
 <meta name="twitter:site" content="@zajichekstats">
@@ -259,7 +259,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Why an estimand framework for Flux?</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">When a flux model needs and estimand.</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
   <div class="quarto-categories">
     <div class="quarto-category">Simulation</div>
     <div class="quarto-category">Modeling</div>
@@ -269,7 +269,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 
 <div>
   <div class="description">
-    I quickly realized that simulating a system leads to an infinite loop.
+    I realized that simulating a system leads to an infinite loop.
   </div>
 </div>
 
@@ -298,7 +298,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 </header>
 
 
-<p><em>Have you heard of the <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> ecosystem yet? It’s a new R framework (Python planned) for developing dynamic, event-driven probabilistic models via simulation built by <a href="">Jarrod Dalton</a> of <a href="">Cleveland Clinic</a>. I highly recommend you check it out starting with the first tutorial <a href="https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md">here</a>. You can also install the core R package that powers the framework, which was recently released to <a href="">CRAN</a>, with <code>install.packages("fluxCore")</code>.</em></p>
+<p><em>Have you heard of the <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> ecosystem yet? It’s a new R framework for developing dynamic, event-driven probabilistic models via simulation built by <a href="">Jarrod Dalton</a> of <a href="">Cleveland Clinic</a>. I highly recommend you check it out starting with the first tutorial <a href="https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md">here</a>. You can also install the core R package that powers the framework, which was recently released to <a href="https://cran.r-project.org/web/packages/fluxCore/index.html">CRAN</a>, with <code>install.packages("fluxCore")</code>.</em></p>
 <section id="background" class="level1">
 <h1>Background</h1>
 <p>When I began learning about <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a>, I started reading the documentation to figure out not only what it <em>is</em> but also how to use it. I spent a lot of time in the <a href="https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md">tutorials</a> trying to understand concepts, how the code maps to those concepts, and submitting nit-picky issues to GitHub to try to make the code and documentation row together more seamlessly. Then I began trying to apply the framework to a project, manually defining schemas and event processes. I definitely made a lot of progress compared to when I started (i.e., when I knew absolutely nothing about it), but something still didn’t click–I could only get so far without knowing what to do next. I didn’t have any intuition about what the states should be, what processes and events were important, or what outcomes mattered. So trying to <em>learn</em> the <a href="https://github.com/jarrod-dalton/flux/tree/main"><code>flux</code></a> framework <em>while</em> trying to implement it on a project was rather difficult.</p>
@@ -860,8 +860,8 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Why an estimand framework for Flux?"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "I quickly realized that simulating a system leads to an infinite loop."</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "When a flux model needs and estimand."</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "I realized that simulating a system leads to an infinite loop."</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "7/8/2026"</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
@@ -879,7 +879,7 @@ gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="an">draft:</span><span class="co"> true</span></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>_Have you heard of the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) ecosystem yet? It's a new R framework (Python planned) for developing dynamic, event-driven probabilistic models via simulation built by [Jarrod Dalton]() of [Cleveland Clinic](). I highly recommend you check it out starting with the first tutorial [here](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md). You can also install the core R package that powers the framework, which was recently released to [CRAN](), with `install.packages("fluxCore")`._</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>_Have you heard of the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) ecosystem yet? It's a new R framework for developing dynamic, event-driven probabilistic models via simulation built by [Jarrod Dalton]() of [Cleveland Clinic](). I highly recommend you check it out starting with the first tutorial [here](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md). You can also install the core R package that powers the framework, which was recently released to [CRAN](https://cran.r-project.org/web/packages/fluxCore/index.html), with `install.packages("fluxCore")`._</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu"># Background</span></span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>

@@ -1,0 +1,27 @@
+---
+title: "What's in these machine-readable files?"
+description: "Exploring contents of pricing transparency files from my local hospital systems."
+author: "Alex Zajichek"
+date: "8/1/2026"
+image: "feature.png"
+categories:
+  - Healthcare
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+    toc-depth: 3
+    toc-location: right
+draft: true
+---
+
+I was listening to the Self-Funded with Spencer podcast (episode XXX) and they were talking about price transparency files and how things will change now that these are available. Naturally, I wanted to see what was in them.
+
+* Machine readable file is just a term used for nontechnical people to not open it in Excel (probably) and so hospitals don't release things intentionally into obscure formats like PDFs or images. It needs to be at least possible to import it.
+
+* My thoughts of where to go with them
+
+* Aspirus + Marshfield Clinic, they come in different sources/format. Need to parse differently.
+
+* At the end just have a somewhat structured dataset and show something interesting.

@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://www.zajichekstats.com/topics/statistical-thinking.html</loc>
-    <lastmod>2026-07-09T17:47:41.167Z</lastmod>
+    <lastmod>2026-07-31T04:04:01.973Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/presentations/journey-through-statistical-rethinking/index.html</loc>
@@ -87,6 +87,10 @@
   <url>
     <loc>https://www.zajichekstats.com/post/nesting-with-tidyr/index.html</loc>
     <lastmod>2026-07-09T13:50:50.015Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/i-am-not-data-driven/index.html</loc>
+    <lastmod>2026-07-31T04:03:13.589Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/introducing-the-readmit-r-package/index.html</loc>

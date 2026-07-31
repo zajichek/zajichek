@@ -1,6 +1,6 @@
 ---
-title: "Why an estimand framework for Flux?"
-description: "I quickly realized that simulating a system leads to an infinite loop."
+title: "When a flux model needs and estimand."
+description: "I realized that simulating a system leads to an infinite loop."
 author: "Alex Zajichek"
 date: "7/8/2026"
 image: "feature.png"
@@ -18,7 +18,7 @@ format:
 draft: true
 ---
 
-_Have you heard of the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) ecosystem yet? It's a new R framework (Python planned) for developing dynamic, event-driven probabilistic models via simulation built by [Jarrod Dalton]() of [Cleveland Clinic](). I highly recommend you check it out starting with the first tutorial [here](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md). You can also install the core R package that powers the framework, which was recently released to [CRAN](), with `install.packages("fluxCore")`._
+_Have you heard of the [`flux`](https://github.com/jarrod-dalton/flux/tree/main) ecosystem yet? It's a new R framework for developing dynamic, event-driven probabilistic models via simulation built by [Jarrod Dalton]() of [Cleveland Clinic](). I highly recommend you check it out starting with the first tutorial [here](https://github.com/jarrod-dalton/flux/blob/main/tutorials/00_start_here.md). You can also install the core R package that powers the framework, which was recently released to [CRAN](https://cran.r-project.org/web/packages/fluxCore/index.html), with `install.packages("fluxCore")`._
 
 # Background
 
