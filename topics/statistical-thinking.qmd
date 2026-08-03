@@ -4,6 +4,7 @@ description: "Articles on statistical reasoning, decision-making, modeling, infe
 listing:
   id: topic-listing
   contents:
+    - ../post/what-if-implementation-is-no-longer-a-constraint/index.qmd
     - ../post/i-am-not-data-driven/index.qmd
     - ../post/what-decision-are-we-trying-to-make/index.qmd
     - ../post/simple-example-why-statistical-significance-is-insufficient/index.qmd

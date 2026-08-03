@@ -21,6 +21,7 @@
   {
     "listing": "/topics/statistical-thinking.html",
     "items": [
+      "/post/what-if-implementation-is-no-longer-a-constraint/index.html",
       "/post/i-am-not-data-driven/index.html",
       "/post/what-decision-are-we-trying-to-make/index.html",
       "/post/reconciling-regression-equation-spline-terms/index.html",
@@ -37,6 +38,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/what-if-implementation-is-no-longer-a-constraint/index.html",
       "/post/i-am-not-data-driven/index.html",
       "/post/the-worst-lead-in-hockey/index.html",
       "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",

@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://www.zajichekstats.com/topics/statistical-thinking.html</loc>
-    <lastmod>2026-07-31T04:04:01.973Z</lastmod>
+    <lastmod>2026-08-03T18:18:17.174Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/presentations/journey-through-statistical-rethinking/index.html</loc>
@@ -109,56 +109,60 @@
     <lastmod>2024-11-05T00:25:33.744Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/reactable-javascript/index.html</loc>
+    <loc>https://www.zajichekstats.com/post/reconciling-regression-equation-spline-terms/index.html</loc>
     <lastmod>2026-07-09T13:50:50.016Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html</loc>
-    <lastmod>2026-07-09T13:50:50.011Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html</loc>
-    <lastmod>2026-07-09T13:50:50.015Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/the-question-is-not-if-but-how-much/index.html</loc>
-    <lastmod>2025-09-26T16:26:50.653Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/ways-to-ensure-success-of-statistical-project/index.html</loc>
-    <lastmod>2024-11-30T22:08:56.968Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/on-the-creation-of-classical-statistics/index.html</loc>
-    <lastmod>2024-11-05T00:21:17.465Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/you-should-have-a-data-science-blog/index.html</loc>
-    <lastmod>2026-07-09T13:50:50.018Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/can-you-have-a-model-without-data/index.html</loc>
-    <lastmod>2026-07-09T13:50:50.012Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/index.html</loc>
-    <lastmod>2026-07-09T13:50:50.011Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/the-worst-lead-in-hockey/index.html</loc>
-    <lastmod>2026-06-04T20:40:06.245Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.zajichekstats.com/post/filterable-maps/index.html</loc>
-    <lastmod>2026-07-09T13:50:50.012Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/some-takeaways-from-effective-data-storytelling/index.html</loc>
     <lastmod>2024-11-04T22:13:49.729Z</lastmod>
   </url>
   <url>
-    <loc>https://www.zajichekstats.com/post/reconciling-regression-equation-spline-terms/index.html</loc>
+    <loc>https://www.zajichekstats.com/post/filterable-maps/index.html</loc>
+    <lastmod>2026-07-09T13:50:50.012Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/the-worst-lead-in-hockey/index.html</loc>
+    <lastmod>2026-06-04T20:40:06.245Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/ai-assisted-shiny-development-in-positron/index.html</loc>
+    <lastmod>2026-07-09T13:50:50.011Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/can-you-have-a-model-without-data/index.html</loc>
+    <lastmod>2026-07-09T13:50:50.012Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/you-should-have-a-data-science-blog/index.html</loc>
+    <lastmod>2026-07-09T13:50:50.018Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/on-the-creation-of-classical-statistics/index.html</loc>
+    <lastmod>2024-11-05T00:21:17.465Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/ways-to-ensure-success-of-statistical-project/index.html</loc>
+    <lastmod>2024-11-30T22:08:56.968Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/the-question-is-not-if-but-how-much/index.html</loc>
+    <lastmod>2025-09-26T16:26:50.653Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/quickly-removing-higher-order-aggregation-text-in-reactable/index.html</loc>
+    <lastmod>2026-07-09T13:50:50.015Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/building-an-llm-powered-shiny-app-for-hospital-readmissions/index.html</loc>
+    <lastmod>2026-07-09T13:50:50.011Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/reactable-javascript/index.html</loc>
     <lastmod>2026-07-09T13:50:50.016Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.zajichekstats.com/post/what-if-implementation-is-no-longer-a-constraint/index.html</loc>
+    <lastmod>2026-08-03T18:12:13.780Z</lastmod>
   </url>
   <url>
     <loc>https://www.zajichekstats.com/post/investigating-a-hospital-specific-report/index.html</loc>

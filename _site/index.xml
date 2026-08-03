@@ -10,7 +10,72 @@
 <atom:link href="https://www.zajichekstats.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>Practical statistics, healthcare analytics, R/Shiny, reproducible analytics, and AI for analytics.</description>
 <generator>quarto-1.7.33</generator>
-<lastBuildDate>Thu, 30 Jul 2026 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 03 Aug 2026 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>What if implementation is no longer a constraint?</title>
+  <dc:creator>Alex Zajichek</dc:creator>
+  <link>https://www.zajichekstats.com/post/what-if-implementation-is-no-longer-a-constraint/</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="installing-pipes" class="level1">
+<h1>Installing pipes</h1>
+<p>Imagine you’re a plumber (and I intentionally use plumbing as the example because it is such a great analog to data work). It takes you a day (e.g., 8 hours) to connect all the water lines in a house. You have the right amount of demand such that you can consistently work this way: one day equals one house, roughly speaking.</p>
+<p>Now suppose you are given a tool such that the installation of the water lines could be done for you. That’s pretty awesome. You get to basically just map our what needs to be done, how all the water lines fit together, maybe ensure that it’s all working as expected, no leaks, etc. Done.</p>
+<p>But wait, there’s more.</p>
+<p>Additionally, the tool you got doesn’t <em>just</em> do the installation work for you. It does it faster. So fast that it’s almost instantaneous. What originally took you a full work day to do only takes your new tool say, one minute. This means that once you have your plan in place for what work needs to be done, and how, you get to basically declare it done at that point (plus a minute). What does this mean?</p>
+<p>It means you’re going to be rich! Right? If what took you 8 hours can be done in one minute, then, maybe accounting for a little travel/setup time, you’ve now converted, say, on average, one hour of your time into one minute. Every minute that passes you’re able to get done what would have been an hour. So now you can complete <em>60 times</em> the amount of work you used to do in a single day. The problem?</p>
+<p>This doesn’t scale indefinitely. Just because you <em>can</em> all of the sudden do 60 times the amount of work, doesn’t mean the demand is there for it. Maybe you just get your entire years’ worth of work done in a week. That’d be nice. But over time, especially if others start using your tool as well, the <em>value</em> of the work you do diminishes. Because it is now <em>expected</em> that this work now takes one minute, not 8 hours. Soon enough the rythm of what used to sustain you (i.e., one house equals one day) now becomes unsustainable to keep your operation afloat. You need to do <em>more</em>, but like we said, you can’t just keep doing more of the same thing because of the demand issue. So what do you do?</p>
+<p><strong>You have to redesign the problem.</strong></p>
+<p>Now that the implementation work is a given, you start to ask questions like:</p>
+<ul>
+<li>Is this even the way plumbing should be done?</li>
+<li>Should the building itself be designed differently?</li>
+<li>Can you iterate on different setups in real time, since each one only takes a minute?</li>
+<li>Do the tools and materials themselves even need to exist in their current form?</li>
+</ul>
+<p>The thinking moves upstream, in a bigger picture, at a deeper level. Time becomes compressed. You start to unravel the system itself. You question why you’re doing it this way anymore when what used to be your craft is now trivial. You must adapt to what’s next given the newfound capabilities.</p>
+</section>
+<section id="the-state-of-data-science" class="level1">
+<h1>The state of data science</h1>
+<p>Through a bout of excitement, exploration, contemplation, and probably a bit of existential crisis, this is basically where I think we’re at with data science. Developing the tools and writing the code to implement our simplified abstractions is no longer a constraint. We’re at a point where we can begin thinking deeper about data science as a whole.</p>
+<p>After working with AI coding assistants, agents, and skills for some time now, it almost feels impossible to think about going back to the old way of working (as much as I would <em>like</em> to sometimes). Building a complex <a href="https://shiny.posit.co/">Shiny</a> application, for example, has become a trivial task. The idea of opening a script and writing one from scratch seems almost wasteful, since with one prompt I can at least get a scaffolding of a nicer, visually-appealing, better functioning app in minutes than I could hand-writing one for a day (or week, or more).</p>
+<p>But I think apps may be a little beside the point (though definitely part of it). What I’m thinking about here is beyond that. It’s how we even think about practicing statistical modeling entirely. Ultimately, the goal of our analyses is supposed to be to learn about the world and inform decisions. Now we’re able to focus more closely on what those decisions are.</p>
+</section>
+<section id="oversimplification" class="level1">
+<h1>Oversimplification?</h1>
+<p>Let’s take <a href="https://en.wikipedia.org/wiki/Regression_analysis">regression</a> for example. The simplest, most common statistical/machine learning method in the books. Why do we use it?</p>
+<p>We don’t truly believe it’s the <em>right</em> model (or the ground truth) basically ever, it’s just sufficient for our use-case. It makes things intuitive and interpretable for consumption. We need to get our work done, and this is one way to do it. You can always critique the caveats, nuances, assumptions, etc., but it’s better than nothing, right?</p>
+<p>This is what I’m questioning. AI tools now make it immediately accessible to dig into the question behind the question. If our model is being constructed to help inform some kind of decision process, why are we beating around the bush with a simplified version of reality serving as a middleman that is only directionally-associated with our ultimate end goal? Instead, I could just type a prompt tailored to the exact decision I’m trying to make:</p>
+<blockquote class="blockquote">
+<p><em>“We have to decide on X by next week. I’m currently thinking of choosing Decision A because my current understanding is Y, but I’d choose Decision B if Z were true.”</em></p>
+</blockquote>
+<p>Through the scale and pace at which AI can work, we can almost develop decision-specific methodological frameworks on the fly tailored to exactly what I’m trying to know. In the past, we might go with a single modeling architecture that we think best represents reality, because that’s hard enough to realize. Now we have the ability to come up with complex representations of reality in minutes. We can develop complicated Bayesian models with tailored, expert-researched, super-informative priors, or full fledged system simulation architectures, all at our fingertips, in natural language. It begs the question: do we even need to live in the world of simplified, broad associations anymore? Why can’t we always just think in a decision-first, causally-motivated, hyper-local environment?</p>
+<p>We’re always told that we want to develop models that are simple (Occam’s Razor, right?). But is this because that is truly the best representation of reality, or just an accomodation for us as humans to be feasilbly able to come with (and consume) something useful? It’s hard to convey statistical results to people. But now AI can help develop the interfaces and overlays on top of complex representations to make them intuitive and accessible.</p>
+</section>
+<section id="learning-still-matters" class="level1">
+<h1>Learning still matters</h1>
+<p>This is not to say that statistics and data science is not worth learning anymore. I still think it’s entirely worth it. These things are what make up the foundation of AI tools anyway. It’s always good, just at a human level, to understand the fundamentals and learn how things work. It’s akin to why I still like reading books on interesting topics, even though I could just prompt AI about anything: it’s good for the soul. But that doesn’t change the fact that how we actually implement data science work is changing, or how we even think about a problem to begin with. In fact, the fundamentals may be more important than ever to be able to guide the deeper questioning that AI tools enable.</p>
+</section>
+<section id="where-does-this-lead" class="level1">
+<h1>Where does this lead?</h1>
+<p>We’re now thinking beyond the original problem scope. It seems the baseline for statistial rigor is being shifted, and much of the “fluff” in the middle is becoming obsolete. If you start removing the layers between the problem and the decision, you essentially eliminate the vast majority of the work that makes up statistical and data science practice. So how far does this go? It’s a little unnerving to think about, and my current answer is “I don’t know, we’ll see”. Perhaps this is what is meant when someone says we’re “converging on the singularity”.</p>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>Data Science</category>
+  <category>AI</category>
+  <category>Statistics</category>
+  <guid>https://www.zajichekstats.com/post/what-if-implementation-is-no-longer-a-constraint/</guid>
+  <pubDate>Mon, 03 Aug 2026 05:00:00 GMT</pubDate>
+  <media:content url="https://www.zajichekstats.com/post/what-if-implementation-is-no-longer-a-constraint/feature.png" medium="image" type="image/png" height="89" width="144"/>
+</item>
 <item>
   <title>I am not data-driven</title>
   <dc:creator>Alex Zajichek</dc:creator>
@@ -37,7 +102,7 @@
   <category>Philosophy</category>
   <guid>https://www.zajichekstats.com/post/i-am-not-data-driven/</guid>
   <pubDate>Thu, 30 Jul 2026 05:00:00 GMT</pubDate>
-  <media:content url="https://www.zajichekstats.com/post/i-am-not-data-driven/feature.png" medium="image" type="image/png" height="145" width="144"/>
+  <media:content url="https://www.zajichekstats.com/post/i-am-not-data-driven/feature.png" medium="image" type="image/png" height="96" width="144"/>
 </item>
 <item>
   <title>Is 3-0 the worst lead in hockey?</title>
@@ -20168,96 +20233,6 @@ font-style: inherit;">"Customers"</span>)</span></code></pre></div>
   <guid>https://www.zajichekstats.com/post/ways-to-ensure-success-of-statistical-project/</guid>
   <pubDate>Thu, 16 May 2024 05:00:00 GMT</pubDate>
   <media:content url="https://www.zajichekstats.com/post/ways-to-ensure-success-of-statistical-project/feature.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>Quantum entanglement from a statistician’s perspective</title>
-  <dc:creator>Alex Zajichek</dc:creator>
-  <link>https://www.zajichekstats.com/post/quantum-entanglement-from-statistical-perspective/</link>
-  <description><![CDATA[ 
-
-
-
-
-<p><em>Quantum entanglement</em> is an intimidating phrase to encounter when you barely know what <em>quantum</em> means (and maybe it is even if you do). My daughter’s book, <a href="https://www.amazon.com/Quantum-Entanglement-Babies-Baby-University/dp/1492656232"><em>Quantum Entanglement for Babies</em></a>, also does a good job of keeping the mystery alive:</p>
-<p><img src="https://www.zajichekstats.com/post/quantum-entanglement-from-statistical-perspective/QEPage.png" class="img-fluid"></p>
-<p>Now I’ve just barely scratched the surface in quantum computing (and I mean <em>barely</em>, like I’ve gotten so far as to understand how to build a circuit to add two bits together. Yes, 1 + 1 = 2). But as I was going through the section on quantum entanglement in <a href="https://github.com/Qiskit/textbook/tree/main/notebooks/intro">this tutorial</a>, I immediately noticed something familiar that it was getting at (albeit in an unfamiliar, roundabout way). And that was <em>statistical independence</em>.</p>
-<section id="some-background" class="level1">
-<h1>Some background</h1>
-<p>We can represent the state of <a href="https://en.wikipedia.org/wiki/Qubit"><em>qubits</em></a> (like a <a href="https://en.wikipedia.org/wiki/Bit"><em>bit</em></a>, but in quantum), at a given point in time, as <em>state vectors</em>, which (loosely) correspond to the probability they will be measured in a particular state.</p>
-<p>For example, suppose we have a qubit, <img src="https://latex.codecogs.com/png.latex?q_0">, that has the following state vector:</p>
-<p><img src="https://latex.codecogs.com/png.latex?q_0%20=%20%7C0%5Crangle%20=%20%5Cleft%5B%5Cbegin%7Barray%7D%7Bc%7D%201%20%5C%5C%200%20%5C%5C%20%5Cend%7Barray%7D%5Cright%5D"></p>
-<p>The <em>positions</em> of the vector represent the possible states the qubit can be in. Namely, since it’s basically just a <a href="https://en.wikipedia.org/wiki/Bit">bit</a>, 0 (position 1) or 1 (position 2). The <em>entries</em> in the vector represent (again, loosely) the probability that the qubit will take on that state when measured. So in this example,</p>
-<p><img src="https://latex.codecogs.com/png.latex?P(q_0%20=%200)%20=%201%20%5Chskip.1in%20P(q_0=1)=0"> It will <em>always</em> be measured in the 0 state.</p>
-<p>Now suppose we introduce another qubit, <img src="https://latex.codecogs.com/png.latex?q_1">. And remember, computers just store information as sequences of bits. This qubit can also only be measured in states 0 or 1. Thus, the possible <a href="https://en.wikipedia.org/wiki/Binary_code">bit strings</a> are:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th><img src="https://latex.codecogs.com/png.latex?q_1q_0"></th>
-<th>Represents the number…</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>00</td>
-<td><img src="https://latex.codecogs.com/png.latex?(0%5Ctimes2%5E1)%20+%20(0%20%5Ctimes%202%5E0)%20=%200"></td>
-</tr>
-<tr class="even">
-<td>01</td>
-<td><img src="https://latex.codecogs.com/png.latex?(0%5Ctimes2%5E1)%20+%20(1%20%5Ctimes%202%5E0)%20=%201"></td>
-</tr>
-<tr class="odd">
-<td>10</td>
-<td><img src="https://latex.codecogs.com/png.latex?(1%5Ctimes2%5E1)%20+%20(0%20%5Ctimes%202%5E0)%20=%202"></td>
-</tr>
-<tr class="even">
-<td>11</td>
-<td><img src="https://latex.codecogs.com/png.latex?(1%5Ctimes2%5E1)%20+%20(1%20%5Ctimes%202%5E0)%20=%203"></td>
-</tr>
-</tbody>
-</table>
-<p>So one possible two-qubit state vector is:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%7C01%5Crangle%20=%20%5Cleft%5B%5Cbegin%7Barray%7D%7Bc%7D%200%20%5C%5C%201%20%5C%5C%200%20%5C%5C%200%20%5C%5C%20%5Cend%7Barray%7D%5Cright%5D"></p>
-<p>where, again, the <em>positions</em> represent the possible sequences of qubits (00, 01, 10, 11; there will always be <img src="https://latex.codecogs.com/png.latex?2%5En"> possible states, where <img src="https://latex.codecogs.com/png.latex?n"> is the number of qubits), and the entries (for the third time, loosely) represent the probability of measuring that sequence. In this case,</p>
-<p><img src="https://latex.codecogs.com/png.latex?P(q_0%20=%201%20%5Ccap%20q_1%20=%200)%20=%201;%20%5Chskip.1in%20P(%5Ctext%7Bother%20combos%7D)%20=%200"> So now we can imagine the more interesting case where more than one entry is non-zero, that is, multiple different states have a positive probability of being measured. Given it still has to lead to a valid probability distribution, this means that the 100% must be distributed amongst the possibilities.</p>
-<p>The final thing I’ll leave here is that the entries actually represent the <em>square root</em> of the probability, which is why I’ve been emphasizing probability “loosely”. So the “valid probability distribution” constraint applies to the <em>square</em> of the vector entries. In the first example above, a more complete way to write this would be:</p>
-<p><img src="https://latex.codecogs.com/png.latex?P(q_0%20=%200)%20=%201%5E2%20=%201%20%5Chskip.1in%20P(q_0=1)%20=%200%5E2%20=%200"></p>
-</section>
-<section id="what-is-entanglement" class="level1">
-<h1>What is entanglement?</h1>
-<p>The <a href="https://github.com/Qiskit/textbook/blob/main/notebooks/intro/entangled-states.ipynb">tutorial</a> has us consider a couple of two-qubit state vectors:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%7C%5CPhi%5E+%5Crangle%20=%20%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%20%5Cleft%5B%5Cbegin%7Barray%7D%7Bc%7D%201%20%5C%5C%200%20%5C%5C%200%20%5C%5C%201%20%5C%5C%20%5Cend%7Barray%7D%5Cright%5D%20%5Chskip.2in%20%7C+0%5Crangle%20=%20%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%20%5Cleft%5B%5Cbegin%7Barray%7D%7Bc%7D%201%20%5C%5C%200%20%5C%5C%201%20%5C%5C%200%20%5C%5C%20%5Cend%7Barray%7D%5Cright%5D"></p>
-<p>If we let <img src="https://latex.codecogs.com/png.latex?X%20=%20q_1q_0">, that is, the bit string measured from the qubits, these imply the following:</p>
-<p><img src="https://latex.codecogs.com/png.latex?P_%7B%7C%5CPhi%5E+%5Crangle%7D(X%20=%2000)%20=%20P_%7B%7C%5CPhi%5E+%5Crangle%7D(X%20=%2011)%20=%20%5Cfrac%7B1%7D%7B2%7D"></p>
-<p><img src="https://latex.codecogs.com/png.latex?P_%7B%7C+0%5Crangle%7D(X%20=%2000)%20=%20P_%7B%7C+0%5Crangle%7D(X%20=%2010)%20=%20%5Cfrac%7B1%7D%7B2%7D"></p>
-<p>Notice how both bits change in <img src="https://latex.codecogs.com/png.latex?%7C%5CPhi%5E+%5Crangle">, but only one changes in <img src="https://latex.codecogs.com/png.latex?%7C+0%5Crangle">. The former is <em>entangled</em>, the latter is not. This is because we cannot separate <img src="https://latex.codecogs.com/png.latex?%7C%5CPhi%5E+%5Crangle"> into <a href="https://en.wikipedia.org/wiki/Quantum_superposition">superpositions</a> of two individual, one-qubit state vectors. But in <img src="https://latex.codecogs.com/png.latex?%7C+0%5Crangle">, we can:</p>
-<p><img src="https://latex.codecogs.com/png.latex?q_0%20=%20%5Cleft%5B%5Cbegin%7Barray%7D%7Bc%7D%201%20%5C%5C%200%20%5C%5C%20%5Cend%7Barray%7D%5Cright%5D%20=%20%7C0%5Crangle"> <img src="https://latex.codecogs.com/png.latex?q_1%20=%20%5Cfrac%7B1%7D%7B%5Csqrt%7B2%7D%7D%20%5Cleft%5B%5Cbegin%7Barray%7D%7Bc%7D%201%20%5C%5C%201%20%5C%5C%20%5Cend%7Barray%7D%5Cright%5D%20=%20%7C+%5Crangle"></p>
-<p>Implying that <img src="https://latex.codecogs.com/png.latex?q_0"> will always be measured to 0, and all uncertainty (random variability) lies in measuring <img src="https://latex.codecogs.com/png.latex?q_1">. This is known as a <em>product</em> state, because the probabilities in the two-qubit state vector can be determined by a cross-product of the individual ones.</p>
-</section>
-<section id="its-just-independence" class="level1">
-<h1>It’s just independence</h1>
-<p><a href="https://en.wikipedia.org/wiki/Independence_(probability_theory)">Statistical independence</a> occurs when the probability of observing an event does not change once we know something about another one. In our case, we can pretty clearly see this holds for <img src="https://latex.codecogs.com/png.latex?%7C+0%5Crangle"> but not <img src="https://latex.codecogs.com/png.latex?%7C%5CPhi%5E+%5Crangle">. Let’s look at the latter case.</p>
-<p>From the the two-qubit state vector, we know the possible measurements are 00 or 11. Thus,</p>
-<p><img src="https://latex.codecogs.com/png.latex?P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_0%20=%200)%20=%20P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_0%20=%201)%20=%20%5Cfrac%7B1%7D%7B2%7D"> <img src="https://latex.codecogs.com/png.latex?P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_1%20=%200)%20=%20P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_1%20=%201)%20=%20%5Cfrac%7B1%7D%7B2%7D"></p>
-<p>Marginally, each qubit has an equal chance of being measured 0 or 1. But once we know something about the state of the other qubit, this changes:</p>
-<p><img src="https://latex.codecogs.com/png.latex?P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_1%20=%200%7Cq_0%20=%200)%20=%201"> <img src="https://latex.codecogs.com/png.latex?P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_1%20=%200%7Cq_0%20=%201)%20=%200"> <img src="https://latex.codecogs.com/png.latex?P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_1%20=%201%7Cq_0%20=%200)%20=%200"> <img src="https://latex.codecogs.com/png.latex?P_%7B%7C%5CPhi%5E+%5Crangle%7D(q_1%20=%201%7Cq_0%20=%201)%20=%201"></p>
-<p>We could flip those around and condition <img src="https://latex.codecogs.com/png.latex?q_0"> on <img src="https://latex.codecogs.com/png.latex?q_1"> and we’d end up with the same result. What this shows is that in the entangled state,</p>
-<p><img src="https://latex.codecogs.com/png.latex?P(q_0%7Cq_1)%20%5Cneq%20P(q_0)"> implying</p>
-<p><img src="https://latex.codecogs.com/png.latex?P(q_0%20%5Ccap%20q_1)%20%5Cneq%20P(q_0)P(q_1)"></p>
-<p>and therefore are not independent. Once we know (measure) one qubit, we automatically know what the other one will be. If you go through the same math for <img src="https://latex.codecogs.com/png.latex?%7C+0%5Crangle">, you’ll see the marginal and conditional probabilities are in fact equal, and thus independent.</p>
-<p>Now I don’t know if/how this might change once you start introducing more qubits or allow for the full range of <a href="https://github.com/Qiskit/textbook/blob/main/notebooks/intro/what-is-quantum.ipynb">phase</a>, but to keep things intuitive, my working definition of quantum entanglement is:</p>
-<p><strong><em>Does the probability of a qubit being measured to a particular state depend on the state of another qubit? If yes, they are entangled; otherwise, they are not.</em></strong></p>
-
-
-<!-- -->
-
-</section>
-
- ]]></description>
-  <category>Quantum</category>
-  <category>Probability</category>
-  <guid>https://www.zajichekstats.com/post/quantum-entanglement-from-statistical-perspective/</guid>
-  <pubDate>Fri, 16 Feb 2024 06:00:00 GMT</pubDate>
-  <media:content url="https://www.zajichekstats.com/post/quantum-entanglement-from-statistical-perspective/feature.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>

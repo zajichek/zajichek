@@ -1,0 +1,70 @@
+---
+title: "What if implementation is no longer a constraint?"
+description: "AI doens't just speed up our work, it changes what's possible."
+author: "Alex Zajichek"
+date: "8/3/2026"
+image: "feature.png"
+categories:
+  - Data Science
+  - AI
+  - Statistics
+format:
+  html:
+    code-fold: true
+    code-tools: true
+---
+
+# Installing pipes
+
+Imagine you're a plumber (and I intentionally use plumbing as the example because it is such a great analog to data work). It takes you a day (e.g., 8 hours) to connect all the water lines in a house. You have the right amount of demand such that you can consistently work this way: one day equals one house, roughly speaking.
+
+Now suppose you are given a tool such that the installation of the water lines could be done for you. That's pretty awesome. You get to basically just map our what needs to be done, how all the water lines fit together, maybe ensure that it's all working as expected, no leaks, etc. Done. 
+
+But wait, there's more.
+
+Additionally, the tool you got doesn't _just_ do the installation work for you. It does it faster. So fast that it's almost instantaneous. What originally took you a full work day to do only takes your new tool say, one minute. This means that once you have your plan in place for what work needs to be done, and how, you get to basically declare it done at that point (plus a minute). What does this mean?
+
+It means you're going to be rich! Right? If what took you 8 hours can be done in one minute, then, maybe accounting for a little travel/setup time, you've now converted, say, on average, one hour of your time into one minute. Every minute that passes you're able to get done what would have been an hour. So now you can complete _60 times_ the amount of work you used to do in a single day. The problem?
+
+This doesn't scale indefinitely. Just because you _can_ all of the sudden do 60 times the amount of work, doesn't mean the demand is there for it. Maybe you just get your entire years' worth of work done in a week. That'd be nice. But over time, especially if others start using your tool as well, the _value_ of the work you do diminishes. Because it is now _expected_ that this work now takes one minute, not 8 hours. Soon enough the rythm of what used to sustain you (i.e., one house equals one day) now becomes unsustainable to keep your operation afloat. You need to do _more_, but like we said, you can't just keep doing more of the same thing because of the demand issue. So what do you do?
+
+**You have to redesign the problem.**
+
+Now that the implementation work is a given, you start to ask questions like:
+
+* Is this even the way plumbing should be done?
+* Should the building itself be designed differently?
+* Can you iterate on different setups in real time, since each one only takes a minute?
+* Do the tools and materials themselves even need to exist in their current form?
+
+The thinking moves upstream, in a bigger picture, at a deeper level. Time becomes compressed. You start to unravel the system itself. You question why you're doing it this way anymore when what used to be your craft is now trivial. You must adapt to what's next given the newfound capabilities.
+
+# The state of data science
+
+Through a bout of excitement, exploration, contemplation, and probably a bit of existential crisis, this is basically where I think we're at with data science. Developing the tools and writing the code to implement our simplified abstractions is no longer a constraint. We're at a point where we can begin thinking deeper about data science as a whole.
+
+After working with AI coding assistants, agents, and skills for some time now, it almost feels impossible to think about going back to the old way of working (as much as I would _like_ to sometimes). Building a complex [Shiny](https://shiny.posit.co/) application, for example, has become a trivial task. The idea of opening a script and writing one from scratch seems almost wasteful, since with one prompt I can at least get a scaffolding of a nicer, visually-appealing, better functioning app in minutes than I could hand-writing one for a day (or week, or more). 
+
+But I think apps may be a little beside the point (though definitely part of it). What I'm thinking about here is beyond that. It's how we even think about practicing statistical modeling entirely. Ultimately, the goal of our analyses is supposed to be to learn about the world and inform decisions. Now we're able to focus more closely on what those decisions are.
+
+# Oversimplification? 
+
+Let's take [regression](https://en.wikipedia.org/wiki/Regression_analysis) for example. The simplest, most common statistical/machine learning method in the books. Why do we use it?
+
+We don't truly believe it's the _right_ model (or the ground truth) basically ever, it's just sufficient for our use-case. It makes things intuitive and interpretable for consumption. We need to get our work done, and this is one way to do it. You can always critique the caveats, nuances, assumptions, etc., but it's better than nothing, right? 
+
+This is what I'm questioning. AI tools now make it immediately accessible to dig into the question behind the question. If our model is being constructed to help inform some kind of decision process, why are we beating around the bush with a simplified version of reality serving as a middleman that is only directionally-associated with our ultimate end goal? Instead, I could just type a prompt tailored to the exact decision I'm trying to make:
+
+> _"We have to decide on X by next week. I'm currently thinking of choosing Decision A because my current understanding is Y, but I'd choose Decision B if Z were true."_
+
+Through the scale and pace at which AI can work, we can almost develop decision-specific methodological frameworks on the fly tailored to exactly what I'm trying to know. In the past, we might go with a single modeling architecture that we think best represents reality, because that's hard enough to realize. Now we have the ability to come up with complex representations of reality in minutes. We can develop complicated Bayesian models with tailored, expert-researched, super-informative priors, or full fledged system simulation architectures, all at our fingertips, in natural language. It begs the question: do we even need to live in the world of simplified, broad associations anymore? Why can't we always just think in a decision-first, causally-motivated, hyper-local environment? 
+
+We're always told that we want to develop models that are simple (Occam's Razor, right?). But is this because that is truly the best representation of reality, or just an accomodation for us as humans to be feasilbly able to come with (and consume) something useful? It's hard to convey statistical results to people. But now AI can help develop the interfaces and overlays on top of complex representations to make them intuitive and accessible. 
+
+# Learning still matters
+
+This is not to say that statistics and data science is not worth learning anymore. I still think it's entirely worth it. These things are what make up the foundation of AI tools anyway. It's always good, just at a human level, to understand the fundamentals and learn how things work. It's akin to why I still like reading books on interesting topics, even though I could just prompt AI about anything: it's good for the soul. But that doesn't change the fact that how we actually implement data science work is changing, or how we even think about a problem to begin with. In fact, the fundamentals may be more important than ever to be able to guide the deeper questioning that AI tools enable.
+
+# Where does this lead? 
+
+We're now thinking beyond the original problem scope. It seems the baseline for statistial rigor is being shifted, and much of the "fluff" in the middle is becoming obsolete. If you start removing the layers between the problem and the decision, you essentially eliminate the vast majority of the work that makes up statistical and data science practice. So how far does this go? It's a little unnerving to think about, and my current answer is "I don't know, we'll see". Perhaps this is what is meant when someone says we're "converging on the singularity".
