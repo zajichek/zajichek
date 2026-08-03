@@ -1,6 +1,6 @@
 ---
 title: "What if implementation is no longer a constraint?"
-description: "AI doens't just speed up our work, it changes what's possible."
+description: "AI doesn't just speed up our work, it changes what's possible."
 author: "Alex Zajichek"
 date: "8/3/2026"
 image: "feature.png"
