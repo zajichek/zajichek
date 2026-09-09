@@ -18,7 +18,19 @@ filters:
   - timeline
 ---
 
-## Who Am I?
+## Setting the Stage
+
+::: {.notes}
+- Hi everyone, my name is Alex Zajichek, I'm currently a data scientist in the Rotroff lab. 
+- I work on all sorts of different projects in different clinical contexts, from predictive modeling, comparative effectiveness, observational statistical analysis, and now a lot more heavily focused on software development, particularly using AI. 
+- If you've used/heard of riskcalc.org, which is Mike's repository of risk calculators, I'm the one currently maintaining that and currently trying to work on ways to improve it.
+- And this is actually my second stint at CCF. I was hired by Mike back in 2017 and lived here for about 3 years. Ended up moving back to Wisconsin, bounced around a bit, and then Mike and Alex M convinced me to come back on remotely.
+- So I've been back since early 2023, and now I just work alone in my house...in the woods...in Wisconsin. So it's nice to see people exist in real life instead of just through a camera. This is actually the first time being back in Cleveland in over 5 years.
+
+- And so my brief talk today is really just about how my statistical thinking has evolved over the years and how it really started with Mike and how he helped shape that over time.
+
+- And there's an AI picture of me so you can see what LLM's think I look like.
+:::
 
 :::: {.columns}
 
@@ -31,13 +43,7 @@ filters:
 :::
 
 ::: {.column width="40%"}
-![AI-me*](ai-headshot.png){width=80%}
-
-::: {style="font-size: 10px;margin-top: -40px; text-align: center;"}
-
-*I have justification for this
-
-:::
+![AI-me](ai-headshot.png){width=80%}
 
 :::
 
@@ -55,16 +61,15 @@ _My evolution in statistical problem solving and how Dr. Kattan helped shape it.
 
 ::: {.notes}
 
-- Hired out of school by Mike. Special thanks to Jim Bena.
-- When I started I was at my peak in terms of technical knowledge, statistical theory, etc. I could still do advanced calculus and make derivations
-- Little did I know I knew nothing about statistics in the real world. 
-- Mindset was “if this then do this method”. It was objective/systematic. Run procedure, check diagnostics, calculate pvalue, GET conclusion
-- I remember explicitly mikes email on 
-- roughly my 3rd day. “Here’s something to get your feet wet with.” It was some R code to compute a c-index (using frank harrells rms package). He wanted me to run it for some new predictions he had and send him the results. “Sure here you go!”. It was something like this: (show some R code/output). 
+- Alright so like I said, Mike hired back in 2017 and I was fresh out of graduate school (also a special shout out to Jim Bena for making that happen).
+- And I'm using this graph in the upper right to sort of reflect my views and/capabilities over time with respect to balancing statistical theory with real-world problem solving.
+- When I first started in 2017 I was probably at my peak in terms of pure technical knowledge, statistical theory, etc. Knew all the theorems, could do all the calculus like nothing, but didn't know that I really didn't know anything about solving real world problems.
+- At that point I had the probably common mindset of a freshly trained statistician: “if this situation occurs, run this method; if that situation occurs, run that method”. It was seemingly objective and systematic. You look at the box the problem fits in, run the "correct" procedure, check diagnostics, calculate p-value, and GET conclusion. Statistics was sort of easy with that view and that's how I started approaching things.
+- And I remember on roughly my 3rd day Mike sending me an email: “Here’s something to get your feet wet with.” It was some R code to compute a c-index. He wanted me to run it for some new predictions he had and send him the results. “Sure here you go!”. It was something like this: (show some R code/output). 
     - “That looks backwards”. I was confused. Then he told me the minimum value is .5, you need to flip the labels. 
     - I didn’t even know what this meant. He clarified it’s like an AUC. “Oh I’ve done that”. But I never had an intuitive understanding of what it was telling us. Just knew higher was “better”.
     - So then the next part: is this good? (looks at recommended thresholds). Maybe? But what if it’s better than the current standard of care/decision making process? “Hmm I never thought of it like that” I guess there is not an objectively right answer. It depends on the context. 
-    - This story is the first time I really began thinking that statistics is more than objective math. It’s subjective problem solving.
+    - This story is the first time I remember really begining to think that statistics is more than objective math.
 
 :::
 
@@ -104,15 +109,11 @@ Fresh Graduate → Started at CCF
 
 ::: {.notes}
 
-- Mike introduced me to decision curves, tradeoffs, clinical context
-- Not just is the model good, but does it help make better decisions?
-- We would talk about risk: flipping a coin, is it deterministic? "Given we know EVERYTHING about the coin, it's a 1 or 0.". We're limited by our knowledge about the system. That determines probability.
-- Applies to patients. Different patients have different risk up to how much we know about them.
-
-- Building a no-show model forced us to think about resource constraints. The entire implementation around it might influence how you do the MATH.
-
-- Hypoglycemia project. "This could be implemented...". Why not DO the implementation?
-- Experiences led to want to think about tangible output. Starting with problem, decision making process, and building towards that.
+- So Mike started teaching me about decision analysis: decision curves, tradeoffs, clinical context, etc.
+- The point being that it's not just a matter of if the model is good _statistically_, but does it actually help make better decisions? Well, that depends on how decisions are currently made. A poor model might be better than the standard if the standard is a coin flip.
+- We would talk about risk: flipping a coin, is it deterministic? Mike's view was: "Given we know EVERYTHING about the coin, it's a 1 or 0.". We're limited by our knowledge about the system. That determines probability. (not talking about quantum here).
+- And then how it applies to patients. Different patients have different risk for different outcomes, AND have different thresholds/tolerances for different decisions.
+- And so all of these things over time helped be shift my thinking towards the problem first. The implementation, practical, clinical, technical, resource constraints actually come first and can help INFORM the math. 
 :::
 
 ::: {.slide-main}
@@ -120,7 +121,6 @@ Fresh Graduate → Started at CCF
 * Decision curves and the like
 * What is risk and how it applies to patients
 * Practical contraints _inform_ the math
-* More product focused
 
 :::
 
@@ -150,19 +150,19 @@ Working biostatistician
 :::
 :::
 
-## An alternative view {.timeline-slide auto-animate=true}
+## Seeing the other side {.timeline-slide auto-animate=true}
 
 ::: {.notes}
-
-- Moved back to Wisconsin. Eventually joined a local health system in the Quality department. Working directly with care teams on clinical operations and executives on continuous improvement/quality initiatives.
-- Started to realize how much impact can be made on patient care just from basic reporting, clean/accurate data pipelines, and just having useful information to the right people at the right time
-
-- Began questioning the utility of p-values. CI advisor presenting results, stating p-value, and room is quiet. Nothing intuitive about it. Couldn't "feel" the result. Needed more to ensure decision.
-
+- So with a few years of that experience in hand, after moving back to Wisconsin I eventually ended up joining a local health system working more directly in clinical operations in the Quality department, so I got to work with the clinical teams on the day-to-day running of the clinics and hospitals. It was a completely different perspective from the research context.
+- For example, I had worked on readmissions prediction in the past in the research context, but then being on the frontlines of readmission prevention from an operational perspective was completely different: hospital metrics don't line up with the HRRP, different metrics use different definitions, etc.
+- There was not much attention on statistical theory or mathematical rigor or anything like that. Most of the problems and bottlenecks were just around data and systems not talking to one another. You start to see how much value/impact on patient care there is just from basic information in the right place at the right time, not necessarily overly sophisticated stats. 
+- And so this experience really pulled me down that curve to question a lot of the utility of areas of statistics, particularly p-values. I always think back to this example where someone was presenting results for a continuous improvement project and were presenting a p-value and saying it's "significant", but you could feel the sort of empty tension in the room because it just wasn't convincing because you didn't FEEL it.
+- And it reminds of this tongue-in-cheek concept of "interoccular trauma" that is described in _The Cult of Statistical Significance_ by Stephen Ziliak and Deidre McCloskey where they basically say that, paraphasing, "a useful result should cause interoccular trauma, or hit you between the eyes". You just sort of feel it when see it. And I started to realize that p-values aren't really ever the thing that do that, for me at least. As they also say in the book, again paraphrasing, "there's millions of significance tests done each year, and if p-values were actually as conclusive as they purport to be, we'd be doing less, not more".
 :::
 
 ::: {.slide-main}
 
+* Started working in clinical operations
 * Value in basic reporting + clean data
 * Insufficiency of p-values (_"interocular trauma"_)
 
@@ -197,20 +197,21 @@ Back to WI → Clinical Operations
 :::
 :::
 
-## Renewed focus {.timeline-slide auto-animate=true}
+## A renewed focus {.timeline-slide auto-animate=true}
 
 ::: {.notes}
 
-- Came back to CCF (remotely) with a renewed focus/perspective. 
-- Problem first. Thinking of tools, workflows, assumptions, product, END GOAL.
+- So when I came back to CCF, I really had a completely different view/approach to solving statistical problems.
+- Really thinking of the problem and end goal first. The decision making processes. The implementations, constraints, systems, etc., and ultimately the particulars of the stats much much later. Sort of thinking "product-first".
+- One of the last things Mike and I had been actively discussing (slash debating) was how to begin adding more technological rigor and sophistication to research processes/workflows. How to sort of take a product-minded approach, more formally utilizing tools like git, focusing on code and software as part of the PRODUCT of the work, not just a means to an end, and sort of viewing the publication as the byproduct of solving a useful problem, not the primary focus or objective (and this was something we liked to debate a little on). 
 
 :::
 
 ::: {.slide-main}
 
 * The stats is only a slice of the pie
-* Research diagram (the FULL product)
-* Publications as byproduct
+* More "product" focused
+* Publications as a byproduct
 
 :::
 
@@ -246,20 +247,28 @@ Rejoined CCF
 :::
 :::
 
-## Current goals {.timeline-slide auto-animate=true}
+## Where I'm at now {.timeline-slide auto-animate=true}
 
 ::: {.notes}
+- So where I'm at now. I still care a lot about statistical soundness (probably more than ever). It's more so just the place it fits in is at a different spot in the problem solving process than it used to be for me.
+- I probably annoy colleagues and collaborators sometimes when I'm always asking things like "why are we doing this even?" or "what is the end goal here?" or the dreaded "if we're actually going to implement this in a clinical workflow, shouldn't we get IT involved first?"
+- And I'd be remisced if I didn't mention AI. With the speed and large increments at which an individual can now progress through work it almost becomes a new way of thinking, so it's some exciting times ahead of what we'll be able to do.
 
-- Probably annoy people asking "why are we doing this even?", "what is the end goal here?"
-- I still care (a lot) about statistical theory and mathematical soundness. It just doesn't have as much of a place in getting to the solution. If you're thinking about modeling, you are 80% of the way there.
+- Mike set me up for this journey which I'm really enjoying now. Always willing to discuss these deeper topics, and shape how we get towards
 
 :::
 
 ::: {.slide-main}
 
-* Product-first mentality
-* Stats comes last
-* Measured outcomes and impact
+* I still love stats, just in a different way
+* Spend more time interrogating the _why_
+* Going hard on AI
+
+::: {style="font-size: smaller;"}
+
+_Thanks to Dr. Kattan for setting me up and helping me along this journey._
+
+:::
 
 :::
 
@@ -297,3 +306,5 @@ Current State
 :::
 :::
 :::
+
+# Thank You!
