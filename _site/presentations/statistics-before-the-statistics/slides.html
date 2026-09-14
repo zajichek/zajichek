@@ -165,7 +165,7 @@ Alex Zajichek, Data Scientist
   <p class="date">September 30, 2026</p>
 </section>
 <section id="setting-the-stage" class="slide level2">
-<h2>Setting the Stage</h2>
+<h2>Setting the stage</h2>
 <aside class="notes">
 <ul>
 <li><p>Hi everyone, my name is Alex Zajichek, I’m currently a data scientist in the Rotroff lab.</p></li>
@@ -192,7 +192,7 @@ Alex Zajichek, Data Scientist
 <ul>
 <li>Data scientist in the Rotroff Lab</li>
 <li>Statistical, modeling, and software projects</li>
-<li>Hired in QHS, moved, rehired remotely</li>
+<li>Second stint in QHS</li>
 </ul>
 </div><div class="column" style="width:40%;">
 <div class="quarto-figure quarto-figure-center">
@@ -203,7 +203,7 @@ Alex Zajichek, Data Scientist
 </div>
 </div><div style="font-size: smaller;">
 <p><strong>What are these slides about?</strong></p>
-<p><em>My evolution in statistical problem solving and how Dr.&nbsp;Kattan helped shape it.</em></p>
+<p><em>An evolution in statistical problem solving and how Dr.&nbsp;Kattan helped shape it.</em></p>
 </div>
 </div>
 </section>
@@ -308,11 +308,13 @@ Professional development trajectory
 <h2 data-id="quarto-animate-title">Seeing the other side</h2>
 <aside class="notes">
 <ul>
-<li>So with a few years of that experience in hand, after moving back to Wisconsin I eventually ended up joining a local health system working more directly in clinical operations in the Quality department, so I got to work with the clinical teams on the day-to-day running of the clinics and hospitals. It was a completely different perspective from the research context.</li>
-<li>For example, I had worked on readmissions prediction in the past in the research context, but then being on the frontlines of readmission prevention from an operational perspective was completely different: hospital metrics don’t line up with the HRRP, different metrics use different definitions, etc.</li>
-<li>There was not much attention on statistical theory or mathematical rigor or anything like that. Most of the problems and bottlenecks were just around data and systems not talking to one another. You start to see how much value/impact on patient care there is just from basic information in the right place at the right time, not necessarily overly sophisticated stats.</li>
-<li>And so this experience really pulled me down that curve to question a lot of the utility of areas of statistics, particularly p-values. I always think back to this example where someone was presenting results for a continuous improvement project and were presenting a p-value and saying it’s “significant”, but you could feel the sort of empty tension in the room because it just wasn’t convincing because you didn’t FEEL it.</li>
-<li>And it reminds of this tongue-in-cheek concept of “interoccular trauma” that is described in <em>The Cult of Statistical Significance</em> by Stephen Ziliak and Deidre McCloskey where they basically say that, paraphasing, “a useful result should cause interoccular trauma, or hit you between the eyes”. You just sort of feel it when see it. And I started to realize that p-values aren’t really ever the thing that do that, for me at least. As they also say in the book, again paraphrasing, “there’s millions of significance tests done each year, and if p-values were actually as conclusive as they purport to be, we’d be doing less, not more”.</li>
+<li><p>So with a few years of that experience in hand, after moving back to Wisconsin I eventually ended up joining a local health system working more directly in clinical operations in the Quality department, so I got to work with the clinical teams on the day-to-day running of the clinics and hospitals. It was a completely different perspective from the research context.</p></li>
+<li><p>For example, I had worked on readmissions prediction in the past in the research context, but then being on the frontlines of readmission prevention from an operational perspective was completely different: hospital metrics don’t line up with the HRRP, different metrics use different definitions, etc.</p></li>
+<li><p>There was not much attention on statistical theory or mathematical rigor or anything like that. Most of the problems and bottlenecks were just around data and systems not talking to one another. You start to see how much value/impact on patient care there is just from basic information in the right place at the right time, not necessarily overly sophisticated stats.</p></li>
+<li><p>And so this experience really pulled me down that curve to question a lot of the utility of areas of statistics, particularly p-values. I always think back to this example where someone was presenting results for a continuous improvement project and were presenting a p-value and saying it’s “significant”, but you could feel the sort of empty tension in the room because it just wasn’t convincing because you didn’t FEEL it.</p></li>
+<li><p>And it reminds of this tongue-in-cheek concept of “interoccular trauma” that is described in <em>The Cult of Statistical Significance</em> by Stephen Ziliak and Deidre McCloskey where they basically say that, paraphasing, “a useful result should cause interoccular trauma, or hit you between the eyes”. You just sort of feel it when see it. And I started to realize that p-values aren’t really ever the thing that do that, for me at least.</p></li>
+<li><p>That led me to a re-evaluation of my statistical philosophy, and started to move towards Bayesian thinking and causal inference as the preferred approach. Actually, I remember listening to the <em>Learning Bayesian Statistics</em> podcast when Frank Harrell was a guest (some of you may have heard of him as the creator of the <code>rms</code> package which has been widely used by our department, and from what I heard him and Mike would have some fun debates about prediction modeling). He actually gave me the epiphany on the “issue” of subjectivity in Bayesian modeling, and convinced me that, actually, traditional methods have tons of assumptions baked in that we implicitly accept. So in the alternative view, directly accounting for what we know about a given process/mechanism (e.g., how data is missing) by directly representing that expert knowledge in the model, in some sense, is actually MORE objective scientifically.</p></li>
+<li><p>You shift your focus from the DATA to the MODEL being living, breathing thing representing our understanding. You don’t need data to get it off the ground. Your data only comes in to tune things one way or another, but your model is never “done”.</p></li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -327,9 +329,9 @@ Professional development trajectory
       }</style></aside>
 <div class="slide-main">
 <ul>
-<li>Started working in clinical operations</li>
 <li>Value in basic reporting + clean data</li>
 <li>Insufficiency of p-values (<em>“interocular trauma”</em>)</li>
+<li>Changing statistical philosophy (Bayesian thinking + causal inference)</li>
 </ul>
 </div>
 <div class="career-trajectory">
@@ -359,8 +361,9 @@ Professional development trajectory
 <aside class="notes">
 <ul>
 <li>So when I came back to CCF, I really had a completely different view/approach to solving statistical problems.</li>
-<li>Really thinking of the problem and end goal first. The decision making processes. The implementations, constraints, systems, etc., and ultimately the particulars of the stats much much later. Sort of thinking “product-first”.</li>
-<li>One of the last things Mike and I had been actively discussing (slash debating) was how to begin adding more technological rigor and sophistication to research processes/workflows. How to sort of take a product-minded approach, more formally utilizing tools like git, focusing on code and software as part of the PRODUCT of the work, not just a means to an end, and sort of viewing the publication as the byproduct of solving a useful problem, not the primary focus or objective (and this was something we liked to debate a little on).</li>
+<li>Really thinking of the problem and practical end goal first. The decision making processes, mechanism, structure, implementations, constraints, systems, etc. In some ways for “product” focused.</li>
+<li>Mike and I started thinking more about software and tools. For example, how can we integrate for more software practices into statistical project execution? (like Azure DevOps and GitHub more formally). We created the QHS GitHub page as a place to promote more centralized collaboration of open source projects released from the department, and open sourced the code from riskcalc.org to provide transparency to the risk calculators on the site.</li>
+<li>And one of the last things Mike and I had been delving more into was a bigger picture of this in terms of how we can begin adding more of this technological rigor and sophistication to research processes/workflows themselves. Like using git, DevOps, and things like that as actual parts of the research output or “product”, not just a means to an end. In some ways the resulting publication as only a component or byproduct of that, not necessarily the sole goal.</li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -375,8 +378,8 @@ Professional development trajectory
       }</style></aside>
 <div class="slide-main">
 <ul>
-<li>The stats is only a slice of the pie</li>
-<li>More “product” focused</li>
+<li>The math is only a slice of the pie</li>
+<li>Software, tools, and transparency</li>
 <li>Publications as a byproduct</li>
 </ul>
 </div>
@@ -405,14 +408,14 @@ Professional development trajectory
 </div>
 </div>
 </section>
-<section id="where-im-at-now" class="slide level2 timeline-slide" data-auto-animate="true">
-<h2 data-id="quarto-animate-title">Where I’m at now</h2>
+<section id="in-the-present" class="slide level2 timeline-slide" data-auto-animate="true">
+<h2 data-id="quarto-animate-title">In the present</h2>
 <aside class="notes">
 <ul>
-<li><p>So where I’m at now. I still care a lot about statistical soundness (probably more than ever). It’s more so just the place it fits in is at a different spot in the problem solving process than it used to be for me.</p></li>
-<li><p>I probably annoy colleagues and collaborators sometimes when I’m always asking things like “why are we doing this even?” or “what is the end goal here?” or the dreaded “if we’re actually going to implement this in a clinical workflow, shouldn’t we get IT involved first?”</p></li>
-<li><p>And I’d be remisced if I didn’t mention AI. With the speed and large increments at which an individual can now progress through work it almost becomes a new way of thinking, so it’s some exciting times ahead of what we’ll be able to do.</p></li>
-<li><p>Mike set me up for this journey which I’m really enjoying now. Always willing to discuss these deeper topics, and shape how we get towards</p></li>
+<li>So where I’m at now.</li>
+<li>I’m spending more time thinking deeper about scientific and statistical projects than I used to. I probably annoy some of my colleagues and collaborators sometimes when I’m always asking things like <em>“why are we doing this even?”</em> or <em>“what is the end goal here?”</em> or the dreaded <em>“if we’re actually going to implement this in a clinical workflow, shouldn’t we get IT involved first?”</em></li>
+<li>I’m also trying to carry on where Mike and I left off. For one, evaluating how we can revamp the intention of what riskcalc.org is for and can do, and enhancing the technical soundness under the hood.</li>
+<li>And I’d be remisced if I didn’t mention AI. Starting to slowly integrate it into all the work I do, which fundamentally is changing <em>how</em> we can think about statistical problems.</li>
 </ul>
 <style type="text/css">
         span.MJX_Assistive_MathML {
@@ -427,12 +430,12 @@ Professional development trajectory
       }</style></aside>
 <div class="slide-main">
 <ul>
-<li>I still love stats, just in a different way</li>
 <li>Spend more time interrogating the <em>why</em></li>
-<li>Going hard on AI</li>
+<li>Revamp of riskcalc.org</li>
+<li>Excited about AI</li>
 </ul>
 <div style="font-size: smaller;">
-<p><em>Thanks to Dr.&nbsp;Kattan for setting me up and helping me along this journey.</em></p>
+<p><em>Thanks to Dr.&nbsp;Kattan for setting me up for this journey, always engaging, debating, and helping shape my thinking along the way.</em></p>
 </div>
 </div>
 <div class="career-trajectory">
@@ -463,8 +466,20 @@ Professional development trajectory
 </div>
 </div>
 </section>
-<section id="thank-you" class="title-slide slide level1 center">
+<section id="thank-you" class="title-slide slide level1 center" style="text-align: center;">
 <h1>Thank You!</h1>
+
+</section>
+
+<section id="references" class="title-slide slide level1 center">
+<h1>References</h1>
+<div style="font-size: 0.6em;">
+<ul>
+<li>Deirdre McCloskey, Steve Ziliak. The Cult of Statistical Significance: How the Standard Error Costs Us Jobs, Justice, and Lives. University of Michigan Press. 2008. https://doi.org/10.3998/mpub.186351 (quote: chapter 5, page 72)</li>
+<li>Harrell, F. E., Jr.&nbsp;(2015). Regression modeling strategies: With applications to linear models, logistic and ordinal regression, and survival analysis (2nd ed.). Springer</li>
+<li><em>Learning Bayesian Statistics</em> episode with Frank Harrell. https://learnbayesstats.com/episode/45-biostats-clinical-trial-design-with-frank-harrell</li>
+</ul>
+</div>
 
 
 </section>

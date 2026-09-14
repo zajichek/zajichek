@@ -18,7 +18,7 @@ filters:
   - timeline
 ---
 
-## Setting the Stage
+## Setting the stage
 
 ::: {.notes}
 - Hi everyone, my name is Alex Zajichek, I'm currently a data scientist in the Rotroff lab. 
@@ -38,7 +38,7 @@ filters:
 
 - Data scientist in the Rotroff Lab
 - Statistical, modeling, and software projects
-- Hired in QHS, moved, rehired remotely
+- Second stint in QHS
 
 :::
 
@@ -51,7 +51,7 @@ filters:
 
 **What are these slides about?**
 
-_My evolution in statistical problem solving and how Dr. Kattan helped shape it._
+_An evolution in statistical problem solving and how Dr. Kattan helped shape it._
 
 :::
 
@@ -157,14 +157,17 @@ Working biostatistician
 - For example, I had worked on readmissions prediction in the past in the research context, but then being on the frontlines of readmission prevention from an operational perspective was completely different: hospital metrics don't line up with the HRRP, different metrics use different definitions, etc.
 - There was not much attention on statistical theory or mathematical rigor or anything like that. Most of the problems and bottlenecks were just around data and systems not talking to one another. You start to see how much value/impact on patient care there is just from basic information in the right place at the right time, not necessarily overly sophisticated stats. 
 - And so this experience really pulled me down that curve to question a lot of the utility of areas of statistics, particularly p-values. I always think back to this example where someone was presenting results for a continuous improvement project and were presenting a p-value and saying it's "significant", but you could feel the sort of empty tension in the room because it just wasn't convincing because you didn't FEEL it.
-- And it reminds of this tongue-in-cheek concept of "interoccular trauma" that is described in _The Cult of Statistical Significance_ by Stephen Ziliak and Deidre McCloskey where they basically say that, paraphasing, "a useful result should cause interoccular trauma, or hit you between the eyes". You just sort of feel it when see it. And I started to realize that p-values aren't really ever the thing that do that, for me at least. As they also say in the book, again paraphrasing, "there's millions of significance tests done each year, and if p-values were actually as conclusive as they purport to be, we'd be doing less, not more".
+- And it reminds of this tongue-in-cheek concept of "interoccular trauma" that is described in _The Cult of Statistical Significance_ by Stephen Ziliak and Deidre McCloskey where they basically say that, paraphasing, "a useful result should cause interoccular trauma, or hit you between the eyes". You just sort of feel it when see it. And I started to realize that p-values aren't really ever the thing that do that, for me at least.
+
+- That led me to a re-evaluation of my statistical philosophy, and started to move towards Bayesian thinking and causal inference as the preferred approach. Actually, I remember listening to the _Learning Bayesian Statistics_ podcast when Frank Harrell was a guest (some of you may have heard of him as the creator of the `rms` package which has been widely used by our department, and from what I heard him and Mike would have some fun debates about prediction modeling). He actually gave me the epiphany on the "issue" of subjectivity in Bayesian modeling, and convinced me that, actually, traditional methods have tons of assumptions baked in that we implicitly accept. So in the alternative view, directly accounting for what we know about a given process/mechanism (e.g., how data is missing) by directly representing that expert knowledge in the model, in some sense, is actually MORE objective scientifically.
+- You shift your focus from the DATA to the MODEL being living, breathing thing representing our understanding. You don't need data to get it off the ground. Your data only comes in to tune things one way or another, but your model is never "done". 
 :::
 
 ::: {.slide-main}
 
-* Started working in clinical operations
 * Value in basic reporting + clean data
 * Insufficiency of p-values (_"interocular trauma"_)
+* Changing statistical philosophy (Bayesian thinking + causal inference)
 
 :::
 
@@ -202,15 +205,16 @@ Back to WI → Clinical Operations
 ::: {.notes}
 
 - So when I came back to CCF, I really had a completely different view/approach to solving statistical problems.
-- Really thinking of the problem and end goal first. The decision making processes. The implementations, constraints, systems, etc., and ultimately the particulars of the stats much much later. Sort of thinking "product-first".
-- One of the last things Mike and I had been actively discussing (slash debating) was how to begin adding more technological rigor and sophistication to research processes/workflows. How to sort of take a product-minded approach, more formally utilizing tools like git, focusing on code and software as part of the PRODUCT of the work, not just a means to an end, and sort of viewing the publication as the byproduct of solving a useful problem, not the primary focus or objective (and this was something we liked to debate a little on). 
+- Really thinking of the problem and practical end goal first. The decision making processes, mechanism, structure, implementations, constraints, systems, etc. In some ways for "product" focused.
+- Mike and I started thinking more about software and tools. For example, how can we integrate for more software practices into statistical project execution? (like Azure DevOps and GitHub more formally). We created the QHS GitHub page as a place to promote more centralized collaboration of open source projects released from the department, and open sourced the code from riskcalc.org to provide transparency to the risk calculators on the site.
+- And one of the last things Mike and I had been delving more into was a bigger picture of this in terms of how we can begin adding more of this technological rigor and sophistication to research processes/workflows themselves. Like using git, DevOps, and things like that as actual parts of the research output or "product", not just a means to an end. In some ways the resulting publication as only a component or byproduct of that, not necessarily the sole goal.
 
 :::
 
 ::: {.slide-main}
 
-* The stats is only a slice of the pie
-* More "product" focused
+* The math is only a slice of the pie
+* Software, tools, and transparency
 * Publications as a byproduct
 
 :::
@@ -247,26 +251,25 @@ Rejoined CCF
 :::
 :::
 
-## Where I'm at now {.timeline-slide auto-animate=true}
+## In the present {.timeline-slide auto-animate=true}
 
 ::: {.notes}
-- So where I'm at now. I still care a lot about statistical soundness (probably more than ever). It's more so just the place it fits in is at a different spot in the problem solving process than it used to be for me.
-- I probably annoy colleagues and collaborators sometimes when I'm always asking things like "why are we doing this even?" or "what is the end goal here?" or the dreaded "if we're actually going to implement this in a clinical workflow, shouldn't we get IT involved first?"
-- And I'd be remisced if I didn't mention AI. With the speed and large increments at which an individual can now progress through work it almost becomes a new way of thinking, so it's some exciting times ahead of what we'll be able to do.
-
-- Mike set me up for this journey which I'm really enjoying now. Always willing to discuss these deeper topics, and shape how we get towards
+- So where I'm at now. 
+- I'm spending more time thinking deeper about scientific and statistical projects than I used to. I probably annoy some of my colleagues and collaborators sometimes when I'm always asking things like _"why are we doing this even?"_ or _"what is the end goal here?"_ or the dreaded _"if we're actually going to implement this in a clinical workflow, shouldn't we get IT involved first?"_
+- I'm also trying to carry on where Mike and I left off. For one, evaluating how we can revamp the intention of what riskcalc.org is for and can do, and enhancing the technical soundness under the hood.
+- And I'd be remisced if I didn't mention AI. Starting to slowly integrate it into all the work I do, which fundamentally is changing _how_ we can think about statistical problems.
 
 :::
 
 ::: {.slide-main}
 
-* I still love stats, just in a different way
 * Spend more time interrogating the _why_
-* Going hard on AI
+* Revamp of riskcalc.org
+* Excited about AI
 
 ::: {style="font-size: smaller;"}
 
-_Thanks to Dr. Kattan for setting me up and helping me along this journey._
+_Thanks to Dr. Kattan for setting me up for this journey, always engaging, debating, and helping shape my thinking along the way._
 
 :::
 
@@ -307,4 +310,14 @@ Current State
 :::
 :::
 
-# Thank You!
+# Thank You! {style="text-align: center;"}
+
+# References
+
+::: {style="font-size: 0.6em;"}
+
+* Deirdre McCloskey, Steve Ziliak. The Cult of Statistical Significance: How the Standard Error Costs Us Jobs, Justice, and Lives. University of Michigan Press. 2008. https://doi.org/10.3998/mpub.186351 (quote: chapter 5, page 72)
+* Harrell, F. E., Jr. (2015). Regression modeling strategies: With applications to linear models, logistic and ordinal regression, and survival analysis (2nd ed.). Springer
+* _Learning Bayesian Statistics_ episode with Frank Harrell. https://learnbayesstats.com/episode/45-biostats-clinical-trial-design-with-frank-harrell
+
+:::
