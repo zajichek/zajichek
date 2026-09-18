@@ -105,7 +105,7 @@ Fresh Graduate → Started at CCF
 :::
 :::
 
-## Falling down the curve {.timeline-slide auto-animate=true}
+## Gaining perspective {.timeline-slide auto-animate=true}
 
 ::: {.notes}
 
@@ -118,8 +118,8 @@ Fresh Graduate → Started at CCF
 
 ::: {.slide-main}
 
-* Decision curves and the like
-* What is risk and how it applies to patients
+* What risk is and how it applies to patients
+* Decision curves and tradeoffs
 * Practical contraints _inform_ the math
 
 :::
@@ -167,7 +167,7 @@ Working biostatistician
 
 * Value in basic reporting + clean data
 * Insufficiency of p-values (_"interocular trauma"_)
-* Changing statistical philosophy (Bayesian thinking + causal inference)
+* Changing statistical philosophy
 
 :::
 
@@ -195,7 +195,7 @@ Fresh Graduate → Started at CCF
 Working Biostatistician
 :::
 ::: {.event .timeline-current data-label="2021" data-id="event-2021"}
-Back to WI → Clinical Operations
+Clinical Operations
 :::
 :::
 :::
@@ -208,14 +208,15 @@ Back to WI → Clinical Operations
 - Really thinking of the problem and practical end goal first. The decision making processes, mechanism, structure, implementations, constraints, systems, etc. In some ways for "product" focused.
 - Mike and I started thinking more about software and tools. For example, how can we integrate for more software practices into statistical project execution? (like Azure DevOps and GitHub more formally). We created the QHS GitHub page as a place to promote more centralized collaboration of open source projects released from the department, and open sourced the code from riskcalc.org to provide transparency to the risk calculators on the site.
 - And one of the last things Mike and I had been delving more into was a bigger picture of this in terms of how we can begin adding more of this technological rigor and sophistication to research processes/workflows themselves. Like using git, DevOps, and things like that as actual parts of the research output or "product", not just a means to an end. In some ways the resulting publication as only a component or byproduct of that, not necessarily the sole goal.
+- CODE, TOOLS, ETC. EQUALLY IMPORTANT AS RESEARCH OUTPUT
 
 :::
 
 ::: {.slide-main}
 
-* The math is only a slice of the pie
+* The math is only a slice
 * Software, tools, and transparency
-* Publications as a byproduct
+* Enhancing our research workflow
 
 :::
 
@@ -243,7 +244,7 @@ Fresh Graduate → Started at CCF
 Working Biostatistician
 :::
 ::: {.event .timeline-current data-label="2021" data-id="event-2021"}
-Back to WI → Clinical Operations
+Clinical Operations
 :::
 ::: {.event .timeline-current data-label="2023" data-id="event-2023"}
 Rejoined CCF
@@ -299,7 +300,7 @@ Fresh Graduate → Started at CCF
 Working Biostatistician
 :::
 ::: {.event .timeline-current data-label="2021" data-id="event-2021"}
-Back to WI → Clinical Operations
+Clinical Operations
 :::
 ::: {.event .timeline-current data-label="2023" data-id="event-2023"}
 Rejoined CCF
