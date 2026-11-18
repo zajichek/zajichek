@@ -10,7 +10,118 @@
 <atom:link href="https://www.zajichekstats.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>Practical statistics, healthcare analytics, R/Shiny, reproducible analytics, and AI for analytics.</description>
 <generator>quarto-1.7.33</generator>
-<lastBuildDate>Mon, 03 Aug 2026 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 18 Nov 2026 06:00:00 GMT</lastBuildDate>
+<item>
+  <title>Introducing the Readmission Risk Pool Platform</title>
+  <dc:creator>Alex Zajichek</dc:creator>
+  <link>https://www.zajichekstats.com/post/readmission-risk-pool-platform/</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="the-old-package" class="level1">
+<h1>The old package</h1>
+<p>I built the original <code>0.0.1</code> version of the <code>readmit</code> R package back in December 2025 (see the article <a href="https://www.zajichekstats.com/post/introducing-the-readmit-r-package/">here</a>). Maybe some of that was useful, but it felt like a hodgepodge of functionality. One of the main limitations was that it was built to directly ingest the <a href="https://qualitynet.cms.gov/inpatient/hrrp/reports">Hospital-Specific Reports (HSR)</a> that hospitals receive detailing their results from the <a href="https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp">Hospital Readmissions Reduction Program (HRRP)</a> for that year. These are Excel workbooks that contain details about the total penalty amount, the contributions of each disease cohort to that penalty, and the line-item, discharge-level data of the patients that contributed to the penalty for each disease cohort, among other things. This had been the standard format for how these reports were produced for many program years. So, the package functions depended explicitly on this format to properly import the various tabs from this workbook, all the way down to field names, row gaps, etc. It seemed to be reliable and worked well for a collection of sample reports spanning multiple program years.</p>
+<p>Basically right as I had finished up developing the code, <a href="https://www.cms.gov/">CMS</a> completely <em>changed</em> the way these reports were formatted, how they were structured, and how hospitals would access them. Starting in FY2026, the information in these reports was to be retrieved in various CSV files that hospitals could only download from within the <a href="https://hqr.cms.gov/hqrng/login">Hospital Quality Reporting (HQR)</a> portal (which you need a login to access). The <a href="https://qualitynet.cms.gov/inpatient/hrrp/reports#tab2">sample report page</a>, which the initial package version depended on for developing the right structure, no longer contained examples of the actual data files. I was blind. So even though the package was still useful for analyzing historical program results, the functions were obsolete to analyze future reports, and now I had this baggage of carrying around multiple reporting standards and trying to determine if I should try to accomodate both, or just forget about the old versions and try to work towards implementing for the future.</p>
+<p>So this year, <strong>I scratched all of it</strong>.</p>
+<p>Don’t get me wrong. The concepts in the original package are still important, and I think there is definite value in having a strategy and method to analyze these reports to understand your hospital’s results in the HRRP. But I wanted to give the package a more coherent identity and a more direct purpose.</p>
+<p>Starting with the <code>1.0.0</code> version, the <code>readmit</code> R package is now the <a href="https://readmit.centralstatz.com/">Readmission Risk Pool Platform (RRP)</a>. The current <a href="https://cran.r-project.org/web/packages/readmit/index.html">CRAN version</a> is <code>1.1.0</code>, so you should make sure you have that one when you install it:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"readmit"</span>)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">packageVersion</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"readmit"</span>)</span>
+<span id="cb1-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># [1] ‘1.1.0’</span></span></code></pre></div>
+</section>
+<section id="what-is-the-rrp" class="level1">
+<h1>What is the RRP?</h1>
+<p>This is something I’ve been sort of casually exploring and thinking about for years. I’ve spent most of my career working for hospitals as a data scientist, and I got to see readmissions from many different angles: on the research side focused on the methodology trying to build models to predict readmissions in different contexts, on the administration side trying to untangle the HRRP and convey to hospital leadership how the results relate to broader executive level reporting metrics, and on the day-to-day side working directly with the nurses and care teams trying to figure out which patients to call to prevent a readmission from occurring.</p>
+<p>Through all of that there was a lot of problems, or opportunities I should say, to do things better from a data science perspective. There are many layers to this. From the disconnect of readmission reporting metrics between teams and layers of the health system (e.g., HRRP vs.&nbsp;hospital readmission metrics, finance vs.&nbsp;quality, etc.), how readmission risk models get implemented and used in the clinical workflows, and even just the framing of the readmission risk estimation problem. In 2024 I sort of consolidated all of my observations about readmissions into a cohesive framing of the problem and my view of a solution which I wrote it all up in an article <a href="https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/">here</a>.</p>
+<p>The <a href="https://readmit.centralstatz.com/">Readmission Risk Pool Platform (RRP)</a>, for now, focuses on the <em>risk model framing</em> part.</p>
+<p>It essentially provides the analytic workflow to facilitate hospitals being able to track, estimate, and monitoring readmission risk throughout the 30-day post-discharge period. The premise being that, while potentially useful at that specific time, discharge risk scores (which are the most common/prominent way readmission risk models work) quickly grow stale after the patient leaves the hospital. We should be monitoring and updating risk (e.g., daily) to continually monitor who <em>currently</em> needs the attention. That could be someone who was just discharged yesterday, or someone who was discharged 20 days ago (<em>both</em> are at risk for readmission still, and thus are part of the “pool”).</p>
+<p>Future versions my incrementally add more scope to the readmission management problem: like thinking about interventions, tracking those, or lineage between HRRP and hospital readmission metrics to the day to day management of readmissions. It’s all on the table.</p>
+</section>
+<section id="how-does-it-work" class="level1">
+<h1>How does it work?</h1>
+<p>The <a href="https://readmit.centralstatz.com/">website</a> has much more detailed information, tutorials, and documentation, so you should browse that site for the technical specifics and how the package functions actually work, but I’ll describe it here more off the cuff.</p>
+<p>The basic idea is that you initialize an <em>RRP Project</em> (using the <a href="https://readmit.centralstatz.com/reference/rrp_project_init.html"><code>rrp_project_init()</code></a> function). This generates a new project folder which all of your work will be configured in. As you configure things or want to operate/run the platform, you simply just use the other package functions to apply operations to your project. So you are just managing that project folder that gets created.</p>
+<section id="whats-in-an-rrp-project" class="level2">
+<h2 class="anchored" data-anchor-id="whats-in-an-rrp-project">What’s in an RRP project?</h2>
+<p>You can go and see it <a href="https://github.com/centralstatz/readmit/tree/main/inst/project-template">here</a>. That folder is the exact project template that is made to your computer.</p>
+<ul>
+<li>You get a <code>README.md</code> file which tells you exactly what you need to do next and how to operate your project.</li>
+<li>You get some configuration (<code>.dcf</code>) files that simply provide metadata about your project.</li>
+<li>You get a <em>runnable</em> <a href="https://shiny.posit.co/">Shiny</a> application in <code>app/</code> that is completely self-contained (you can customize it or deploy it anywhere) (You also get some branding files to help with that config)</li>
+<li><strong>Most Importantly</strong>: You get two scripts in <code>R/</code> that need to be configured. Once those are configured properly, then you can essentially just start making runs on the project.</li>
+</ul>
+</section>
+<section id="whats-in-the-r-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="whats-in-the-r-scripts">What’s in the R scripts?</h2>
+<p>These are the essential pieces, and represent the core concepts of the platform. One script is for you to map your hospital’s data to the canonical data model the platform needs to perform operations.</p>
+<p>For <code>produce-canonical.R</code>, you are essentially just determining what a “discharge” and “readmission” is for <em>your</em> hospital (with timestamps) and mapping that to the column names the platform expects. It simply needs to be encoded in the R script, but you can use whatever database connectors/tools you’d like to retrieve your data. Then when a run is made on the platform, it’s just going to run that script at the appropriate step to fetch the discharges it needed.</p>
+<p>For <code>calculate-risk.R</code>, you are configuring <em>how</em> you want to estimate the risk of readmission for each discharge that gets passed through the function. This can be anything you want. You can have as simple or complex of a model you want. You can bring in any number of additional predictors you want. The main requirement is that you understand <em>what</em> is being predicted, and your model should be reflective of that <em>estimand</em> (which is the <em>remaining risk of readmission at the current point in time</em>).</p>
+<p>The choice to keep things pieces up to the user is COMPLETELY INTENTIONAL. First, you know your data, how it’s captured, how things are defined. It’s your call to make what represents discharges for your organization. Second, I think readmission risk models (and models in general) are actually better suited to be locally developed. I don’t need to prescribe some risk model that I think is universally applicable to every hospital and patient. That’s the EXACT OPPOSITE of my philosophy. Instead, I think every hospital probably has a different flavor as to why patients are readmitted, how they want to think about risk, and what specific drivers of that risk are. Thus, these are meant to empower analysts within health systems to build their methodology.</p>
+<p>You can use validation functions (e.g., <a href="https://readmit.centralstatz.com/reference/rrp_project_validate.html"><code>rrp_project_validate()</code></a>) to check things and confirm things along the way. The <code>README.md</code> and website <a href="https://readmit.centralstatz.com/articles/implementing-rrp.html">tutorial</a> also help you understand how to make things fit together.</p>
+</section>
+<section id="persistent-history-and-app-data" class="level2">
+<h2 class="anchored" data-anchor-id="persistent-history-and-app-data">Persistent history and app data?</h2>
+<p>So when the RRP Project is initialized, there’s actually one piece that’s not in your folder until you make it so. First, you’ll notice that if you try running the <code>app/</code> right after project initialization, it <em>will</em> work, there’s just no data to feed it. You need to first configure your source mapping and model prediction functions. Once those are in place, you use the <a href="https://readmit.centralstatz.com/reference/rrp_state_init.html"><code>rrp_state_init()</code></a> function which then adds another folder to your RRP Project in order to capture persistent history of your operational runs. Specifically, it initializes an (empty) <a href="https://duckdb.org/">DuckDB</a> database that will eventually store records and predictions as runs are made, along with the datasets needed to populate the application.</p>
+<p>So if we assume you’ve configured the source mapping, a valid model, and initialized the state history, you can then use <a href="https://readmit.centralstatz.com/reference/rrp_run.html"><code>rrp_run()</code></a> to perform a “run” on your project. For example, a <em>run</em> might (or should) mean: <em>“as of today, or right now, query all of the patients currently at risk for readmission, and compute their remaining risk of readmission”.</em></p>
+<p>Your source mapping and model prediction scripts are invoked, and propogated through the platform functions. Ultimately, all (qualified) discharges will receive their readmission risk prediction (according to your model) and then write those records to the project’s database.</p>
+<p>Now if I run it again tomorrow, it’s going to do it again. And again. And again. Everytime you <em>run</em> the platform, based on the <em>as-of</em> time you input (which typically would be <em>right now</em>) it should see who is at risk for readmission and then store their risk in the database.</p>
+<p><em>This means you now have a trajectory throughout follow-up for each patient at risk for readmission</em>.</p>
+<p>You can query this database if you’d like to explore those results (or use the <a href="https://readmit.centralstatz.com/reference/rrp_inspect_history.html"><code>rrp_inspect_history()</code></a> function).</p>
+<p>Then, the next step of package functions is to actually get this data to now populate in the application.</p>
+<p>Once you have your persistent, retained history in the database, you can use the <a href="https://readmit.centralstatz.com/reference/rrp_refresh_products.html"><code>rrp_refresh_products()</code></a> function which will <em>extract</em> the relevant records from your current historical database and prepare them as CSV files that the application currently needs.</p>
+<p>This is key: <em>the app does NOT read from the database directly</em>. We intentionally create the extracts of what the app currently needs for its purpose. Namely, the patients who are <em>currently</em> at risk for readmission, and their associated risk trajectories. The database stores everything, forever. The extracts get refreshed to facilitate the app for that point in time.</p>
+</section>
+<section id="a-self-contained-app" class="level2">
+<h2 class="anchored" data-anchor-id="a-self-contained-app">A self-contained app</h2>
+<p>THAT is the whole point. The refreshed application datasets make it so your applications is completely separated and independent of everything else, including the <code>readmit</code> package. Thus, <em>you</em> get to choose what to do with the application: you can add your own custom hospital logo (it comes with a placeholder), you can change the color schemes, you could even add a bunch more analytical content if you wanted to connect other sources. But importantly, you can <em>deploy</em> the app wherever you want without a bunch of overhead besides the basic, standard dependencies that are required for the Shiny application.</p>
+</section>
+</section>
+<section id="empowering-hospital-analysts" class="level1">
+<h1>Empowering hospital analysts</h1>
+<p>One of the main goals of developing it this way was to empower data analysts, data scientists, quality folks, etc. to be able to build a usable data/modeling product that is operational almost out of the box without prescribing exactly how you do it. Again, you get to determine how the source mapping is done. You get to determine how the modeling is done (though I’m always open to discussing this :) ).</p>
+<p>But more importantly, this is <em>just an R package</em>. It’s FREE and OPEN SOURCE. You can literally just install/download it and start using it. Typically with platform vendors and stuff like that, there’s so much bureacracy inside a hospital by the time a new tool can get “approved”, then tested, then evaluated. Probably because there’s money at stake. So by the time you’ve even been able to vet something it’s already been forever. You have to likely already have all the different stakeholder buy-in, etc. because there’s likely so much integration involved.</p>
+<p><em>This tool takes a different approach.</em></p>
+<p><em>Instead</em>, it’s immediately available to you. Just install it. And once you install it, you already have a <em>polished</em> application out of the box. You just need to link up your data source and model and GO. Thus, you, on your own, as an analyst inside the hospital, could get it all configured with your ideas of how risk should be estimated, and simply start running the platform and getting predictions. The package tools let you easily operate your project, so now your Shiny app is going to be updated with the actual patient data and risk trajectories. You can add your hospital’s logo to the app, and rebrand it if you’d like, and even <em>deploy</em> it somewhere internally-accessible (e.g., Posit Connect, or some other app service).</p>
+<p><em>By the time you even need to start talking to stakeholders about it, you can have a living, breathing polished product in place</em>. You don’t need to go to people with the <em>idea</em> of it, you can go to them with the actual product. They can see it, and determine if it’s useful, or what would make it useful. They can put there hands on it right away. And YOU are the one that took the initiative and built it.</p>
+</section>
+<section id="why-is-it-a-platform" class="level1">
+<h1>Why is it a “platform”?</h1>
+<p>I call it a <em>platform</em> because it’s meant to be an operational tool that a hospital data science team or analyst can use to actually facilitate readmission prediction day to day. There is a web application that you can deploy wherever you want to have care teams navigate who is at risk, etc. So I see it more as a platform/software installation that is simply delivered as an R package. And actually, I spent a TON of time developing this into an actual stand alone, installable software with its own command line interface (CLI). It was fully working with an <code>rrp</code> command you could run in terminal. That was going to be the primary interface to operate the platform. But I got to a point where it was becoming way overengineered for an initial version (even though it was pretty cool), and since most of the backend was written in R anyway, it DRAMATICALLY simplified things to declare the platform itself as an R package and implement it that way.</p>
+</section>
+<section id="future-direction" class="level1">
+<h1>Future direction</h1>
+<p>While the current platform operations and the application are pretty polished and rigorous, the scope of information is not yet. Right now it’s quite simple: you just load your discharges, assess the risk, and the app displays the risk over follow. That’s useful information. But eventually I want it to be able to connect MORE dots around readmission management (again going back to some of the broader points made in my <a href="https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/">2024 article</a>).</p>
+<p>For example, I could envision there being capabilities to test, record and assess local interventions on readmission reduction. Every hospital is trying all sorts of different things to try to achieve clinical outcomes. Why not let teams register and encode those strategies into the platform, see how they work, and potentially INFORM the risk estimation as they take shape? It’s sort of like a feedback loop: implement an intervention, train new models with those interventions encoded, and then risks adjust based on those interventions. You start to be able to assess counterfactuals of different interventions, and not just identify <em>who</em> is at highest risk, but <em>what</em> intervention might be best for them at that point in time during follow-up.</p>
+<p>Another layer is executive-level readmission reporting. There’s so much disconnect in terms of what patients are included in which metrics that a lot of the times these become almost uninterpretable or meaningless. For example, the HRRP only cares about Medicare patients, but hospital-level readmission metrics typically look at everyone. You might still get penalized even though you are meeting your hospital level goals. This is a lineage problem. And I think hospitals can do a much better job of tracking that lineage across different readmission measures, how they relate to one another, and how things roll-up (or roll-down) into the day to day readmission management of individual patients.</p>
+<p><br></p>
+<p>We’ll end it there. Check out the <a href="https://readmit.centralstatz.com/index.html">website</a> to get started with an RRP Project. It’s free and open-source, so you don’t have much to lose. Would love to hear any feedback from people actually trying to use it.</p>
+
+
+<!-- -->
+
+</section>
+
+ ]]></description>
+  <category>Healthcare Analytics</category>
+  <category>Software Development</category>
+  <category>Healthcare</category>
+  <category>Readmissions</category>
+  <guid>https://www.zajichekstats.com/post/readmission-risk-pool-platform/</guid>
+  <pubDate>Wed, 18 Nov 2026 06:00:00 GMT</pubDate>
+  <media:content url="https://www.zajichekstats.com/post/readmission-risk-pool-platform/feature.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>What if implementation is no longer a constraint?</title>
   <dc:creator>Alex Zajichek</dc:creator>
@@ -20188,51 +20299,6 @@ font-style: inherit;">"Customers"</span>)</span></code></pre></div>
   <guid>https://www.zajichekstats.com/post/simple-example-why-statistical-significance-is-insufficient/</guid>
   <pubDate>Wed, 19 Jun 2024 05:00:00 GMT</pubDate>
   <media:content url="https://www.zajichekstats.com/post/simple-example-why-statistical-significance-is-insufficient/feature.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>5 ways to help ensure success of a statistical project</title>
-  <dc:creator>Alex Zajichek</dc:creator>
-  <link>https://www.zajichekstats.com/post/ways-to-ensure-success-of-statistical-project/</link>
-  <description><![CDATA[ 
-
-
-
-
-<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/blO16Uuo68E" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
-<p>Sometimes stats projects don’t go as planned. There are delays, setbacks, surprises, ambiguity, scope creep…the list goes on. All of these things can lead to a seemingly longer list of questions than what was started with: <em>Did we answer the research question? Are we confident in the result? What do we do now?</em> It’s a sense of dissatisfaction.</p>
-<p>Many of these issues stem from the early phases of the project, and (maybe I should collect data on this) they can largely be alleviated when more care is taken at that stage. Actually, the <a href="https://theeffectbook.net/">book I’m currently reading</a> summed it up perfectly, <em>“Well-designed research is research capable of answering the question it’s trying to answer”</em>. Sounds obtuse, but it is undoubtedly true, even for projects outside of what you may define as “research”. This is about proper planning. So here are 5 things that can help increase the likelihood of a successful statistical project:</p>
-<section id="assembleteam" class="level1">
-<h1>1. Assemble your team…early</h1>
-<p>It’s often a misconception that the statistician’s role is to simply analyze, or “run the tests on”, the data at the end once it is collected. This is far from optimal. Statistical analysis is not systematic or mechanical. Rather, it requires knowledge and intuition about the subject matter context. Add in a lack of transparency to the data collection itself, the chances of lost insight definitely increase. In fact, it might be the case that a few poor design choices end up adding huge complexities in answering the original question, or maybe even make it impossible altogether. So, if you have a project idea, consult your statistician! Early and often during the development phase.</p>
-<p>Now, data people are certainly not the only ones you need involved early. Far from it. Who better to help shape the final product than the end-users—the people who will actually be using the information <em>and</em> know what works? If you want to integrate models into your operational workflow, what sort of resource or technical constraints may there be? Well, we probably have to talk to systems and IT people who will also likely need to commit their own resources for upkeep. And it comes full circle, because all of these nuances may even affect the statistical choices made from a mathematical perspective (i.e., design, modeling framework, etc.). There are plenty more important roles that could be described here, but the bottom line is that cross-functional collaboration, from the beginning, is crucial.</p>
-</section>
-<section id="make-the-goals-clear-then-plan-accordingly" class="level1">
-<h1>2. Make the goals clear, then plan accordingly</h1>
-<p>There is a common issue in data projects of ambiguous or non-specific objectives. Statistics is inherently “gray”, by definition, because there is no right answer. Uncertainty always exists. So unless you already know exactly what you’re looking for in the data, without a clearly defined goal, you can find yourself spinning in circles and never know when what you’ve done is sufficient to move on.</p>
-<p>My recommendation is to have multiple levels: the <em>statistical</em> goals and the real-world goals that they are supporting. The statistical goals should be stated as clear, specific questions with quantitative answers that data (among other things) will be used to estimate. However, we have to think about how these statistical quantities will be <em>used</em> afterwards. For example, the approach taken to estimate the likelihood of a customer buying a product (a statistical goal) may differ if we’re trying to decrease costs versus increase retention, especially when thinking about the solution as a whole. The question comes down to what we are trying to accomplish with the new information. Once that is clear, we can envision the roadmap for how it will be used, which can be an anchor for developing the right methodology, making analytic decisions easier to manage.</p>
-</section>
-<section id="think-about-taking-action" class="level1">
-<h1>3. Think about taking action</h1>
-<p>Once you obtain the new information you set out to find, what are you going to do about it? Under what circumstances? Based on which results? Having some inkling as to what it is going to enable (or disable) someone to do–not just in general, but a specific example–adds clarity to the practical implications of investing the time and money into finding the answers. These things can unravel many of the nuances that were originally an oversight, and may end up causing changes to how the information gets disseminated, who gets involved and when, or even the math itself. All in all, it allows for more proper design at the beginning, a reduction of wasted time/resources, and a better chance of finding the right solution. The reason we perform statistical analysis is (or should be) to inform some action or decision. If it doesn’t, then you may need to think about why that is and adjust. My favorite way to frame this to someone is by asking a simple question: <em>“If you knew X at time Y then you could do Z. What are X, Y and Z?”</em>.</p>
-</section>
-<section id="create-a-tangible-product" class="level1">
-<h1>4. Create a tangible product</h1>
-<p>It may sound trivial, but it’s worth thinking about (and even explicitly defining). By what means will the result or solution be delivered? To whom? When? How? Is it going to be a comprehensive report or just a number sent in an email? It might even be a model deployed in the organization’s systems and workflows, or an application hosted on the web. These tell you all sorts of things about who should get involved (see #1) and what it will take to get there. It is about ensuring that the right information gets to the right people at the right time in an expected and predictable manner. It can be the case that a data project fails not because of bad statistics or models, but because it wasn’t disseminated optimally. Having a tangible end-product that you can work towards keeps everyone’s eye on the ball, exposes where the problems are, helps you plan deliverables, create milestones, and makes it clear when you are veering off course.</p>
-</section>
-<section id="answer-the-question-did-it-work" class="level1">
-<h1>5. Answer the question, “did it work?”</h1>
-<p>Oftentimes when you look at a statistic like a p-value, it leaves an empty feeling like you haven’t been convinced. That’s because it does not yet directly translate to the real-world impact the new insight is supposed to address. Maybe it’s useful during data analysis, but we should be thinking beyond the inferences made from the sample at hand to what we need to see to convince us that the results really matter. If the information we’ve garnered is actually useful, then we should expect improvements to play out where the rubber meets the road once it is utilized. The most direct way to do this: test it.</p>
-    <bluesky-comments post="at://did:plc:sh3av73hihgu72vx7k44kgv7/app.bsky.feed.post/3lc747wvce22t" config="{}"></bluesky-comments>
-  
-
-
-</section>
-
- ]]></description>
-  <category>Project Management</category>
-  <guid>https://www.zajichekstats.com/post/ways-to-ensure-success-of-statistical-project/</guid>
-  <pubDate>Thu, 16 May 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://www.zajichekstats.com/post/ways-to-ensure-success-of-statistical-project/feature.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 </channel>
 </rss>

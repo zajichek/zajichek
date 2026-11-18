@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alex Zajichek">
+<meta name="dcterms.date" content="2026-11-18">
+<meta name="description" content="An open-source platform for hospital readmission risk assessment.">
+
+<title>Introducing the Readmission Risk Pool Platform – Zajichek Stats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-86e1fde90298496757db9d1a8be3da64.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-9MW3W3RQD9"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-9MW3W3RQD9', { 'anonymize_ip': true});
+</script>
+
+
+<meta property="og:title" content="Introducing the Readmission Risk Pool Platform – Zajichek Stats">
+<meta property="og:description" content="An open-source platform for hospital readmission risk assessment.">
+<meta property="og:image" content="https://www.zajichekstats.com/post/readmission-risk-pool-platform/feature.png">
+<meta property="og:site_name" content="Zajichek Stats">
+<meta property="og:image:height" content="512">
+<meta property="og:image:width" content="512">
+<meta name="twitter:title" content="Introducing the Readmission Risk Pool Platform – Zajichek Stats">
+<meta name="twitter:description" content="An open-source platform for hospital readmission risk assessment.">
+<meta name="twitter:image" content="https://www.zajichekstats.com/post/readmission-risk-pool-platform/feature.png">
+<meta name="twitter:creator" content="@zajichekstats">
+<meta name="twitter:site" content="@zajichekstats">
+<meta name="twitter:image-height" content="512">
+<meta name="twitter:image-width" content="512">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../logo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-topics" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Topics</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-topics">    
+        <li>
+    <a class="dropdown-item" href="../../topics/healthcare-analytics.html">
+ <span class="dropdown-text">Healthcare Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/statistical-thinking.html">
+ <span class="dropdown-text">Statistical Thinking</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/reproducible-analytics.html">
+ <span class="dropdown-text">Reproducible Analytics</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/r-shiny-applications.html">
+ <span class="dropdown-text">R / Shiny Applications</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../topics/ai-for-analytics.html">
+ <span class="dropdown-text">AI for Analytics</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../presentations.html"> 
+<span class="menu-text">Projects &amp; Presentations</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../publications.html"> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/"> 
+<span class="menu-text">Consultancy</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://dashboard.mailerlite.com/forms/1517199/154300987644839168/share"> 
+<span class="menu-text">Subscribe</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:alex@centralstatz.com"> <i class="bi bi-envelope" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/alexzajichek"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/zajichek"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@centralstatz"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-old-package" id="toc-the-old-package" class="nav-link active" data-scroll-target="#the-old-package">The old package</a></li>
+  <li><a href="#what-is-the-rrp" id="toc-what-is-the-rrp" class="nav-link" data-scroll-target="#what-is-the-rrp">What is the RRP?</a></li>
+  <li><a href="#how-does-it-work" id="toc-how-does-it-work" class="nav-link" data-scroll-target="#how-does-it-work">How does it work?</a>
+  <ul class="collapse">
+  <li><a href="#whats-in-an-rrp-project" id="toc-whats-in-an-rrp-project" class="nav-link" data-scroll-target="#whats-in-an-rrp-project">What’s in an RRP project?</a></li>
+  <li><a href="#whats-in-the-r-scripts" id="toc-whats-in-the-r-scripts" class="nav-link" data-scroll-target="#whats-in-the-r-scripts">What’s in the R scripts?</a></li>
+  <li><a href="#persistent-history-and-app-data" id="toc-persistent-history-and-app-data" class="nav-link" data-scroll-target="#persistent-history-and-app-data">Persistent history and app data?</a></li>
+  <li><a href="#a-self-contained-app" id="toc-a-self-contained-app" class="nav-link" data-scroll-target="#a-self-contained-app">A self-contained app</a></li>
+  </ul></li>
+  <li><a href="#empowering-hospital-analysts" id="toc-empowering-hospital-analysts" class="nav-link" data-scroll-target="#empowering-hospital-analysts">Empowering hospital analysts</a></li>
+  <li><a href="#why-is-it-a-platform" id="toc-why-is-it-a-platform" class="nav-link" data-scroll-target="#why-is-it-a-platform">Why is it a “platform”?</a></li>
+  <li><a href="#future-direction" id="toc-future-direction" class="nav-link" data-scroll-target="#future-direction">Future direction</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Introducing the Readmission Risk Pool Platform</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+  <div class="quarto-categories">
+    <div class="quarto-category">Healthcare Analytics</div>
+    <div class="quarto-category">Software Development</div>
+    <div class="quarto-category">Healthcare</div>
+    <div class="quarto-category">Readmissions</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    An open-source platform for hospital readmission risk assessment.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alex Zajichek </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 18, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="the-old-package" class="level1">
+<h1>The old package</h1>
+<p>I built the original <code>0.0.1</code> version of the <code>readmit</code> R package back in December 2025 (see the article <a href="https://www.zajichekstats.com/post/introducing-the-readmit-r-package/">here</a>). Maybe some of that was useful, but it felt like a hodgepodge of functionality. One of the main limitations was that it was built to directly ingest the <a href="https://qualitynet.cms.gov/inpatient/hrrp/reports">Hospital-Specific Reports (HSR)</a> that hospitals receive detailing their results from the <a href="https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp">Hospital Readmissions Reduction Program (HRRP)</a> for that year. These are Excel workbooks that contain details about the total penalty amount, the contributions of each disease cohort to that penalty, and the line-item, discharge-level data of the patients that contributed to the penalty for each disease cohort, among other things. This had been the standard format for how these reports were produced for many program years. So, the package functions depended explicitly on this format to properly import the various tabs from this workbook, all the way down to field names, row gaps, etc. It seemed to be reliable and worked well for a collection of sample reports spanning multiple program years.</p>
+<p>Basically right as I had finished up developing the code, <a href="https://www.cms.gov/">CMS</a> completely <em>changed</em> the way these reports were formatted, how they were structured, and how hospitals would access them. Starting in FY2026, the information in these reports was to be retrieved in various CSV files that hospitals could only download from within the <a href="https://hqr.cms.gov/hqrng/login">Hospital Quality Reporting (HQR)</a> portal (which you need a login to access). The <a href="https://qualitynet.cms.gov/inpatient/hrrp/reports#tab2">sample report page</a>, which the initial package version depended on for developing the right structure, no longer contained examples of the actual data files. I was blind. So even though the package was still useful for analyzing historical program results, the functions were obsolete to analyze future reports, and now I had this baggage of carrying around multiple reporting standards and trying to determine if I should try to accomodate both, or just forget about the old versions and try to work towards implementing for the future.</p>
+<p>So this year, <strong>I scratched all of it</strong>.</p>
+<p>Don’t get me wrong. The concepts in the original package are still important, and I think there is definite value in having a strategy and method to analyze these reports to understand your hospital’s results in the HRRP. But I wanted to give the package a more coherent identity and a more direct purpose.</p>
+<p>Starting with the <code>1.0.0</code> version, the <code>readmit</code> R package is now the <a href="https://readmit.centralstatz.com/">Readmission Risk Pool Platform (RRP)</a>. The current <a href="https://cran.r-project.org/web/packages/readmit/index.html">CRAN version</a> is <code>1.1.0</code>, so you should make sure you have that one when you install it:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"readmit"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"readmit"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] ‘1.1.0’</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="what-is-the-rrp" class="level1">
+<h1>What is the RRP?</h1>
+<p>This is something I’ve been sort of casually exploring and thinking about for years. I’ve spent most of my career working for hospitals as a data scientist, and I got to see readmissions from many different angles: on the research side focused on the methodology trying to build models to predict readmissions in different contexts, on the administration side trying to untangle the HRRP and convey to hospital leadership how the results relate to broader executive level reporting metrics, and on the day-to-day side working directly with the nurses and care teams trying to figure out which patients to call to prevent a readmission from occurring.</p>
+<p>Through all of that there was a lot of problems, or opportunities I should say, to do things better from a data science perspective. There are many layers to this. From the disconnect of readmission reporting metrics between teams and layers of the health system (e.g., HRRP vs.&nbsp;hospital readmission metrics, finance vs.&nbsp;quality, etc.), how readmission risk models get implemented and used in the clinical workflows, and even just the framing of the readmission risk estimation problem. In 2024 I sort of consolidated all of my observations about readmissions into a cohesive framing of the problem and my view of a solution which I wrote it all up in an article <a href="https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/">here</a>.</p>
+<p>The <a href="https://readmit.centralstatz.com/">Readmission Risk Pool Platform (RRP)</a>, for now, focuses on the <em>risk model framing</em> part.</p>
+<p>It essentially provides the analytic workflow to facilitate hospitals being able to track, estimate, and monitoring readmission risk throughout the 30-day post-discharge period. The premise being that, while potentially useful at that specific time, discharge risk scores (which are the most common/prominent way readmission risk models work) quickly grow stale after the patient leaves the hospital. We should be monitoring and updating risk (e.g., daily) to continually monitor who <em>currently</em> needs the attention. That could be someone who was just discharged yesterday, or someone who was discharged 20 days ago (<em>both</em> are at risk for readmission still, and thus are part of the “pool”).</p>
+<p>Future versions my incrementally add more scope to the readmission management problem: like thinking about interventions, tracking those, or lineage between HRRP and hospital readmission metrics to the day to day management of readmissions. It’s all on the table.</p>
+</section>
+<section id="how-does-it-work" class="level1">
+<h1>How does it work?</h1>
+<p>The <a href="https://readmit.centralstatz.com/">website</a> has much more detailed information, tutorials, and documentation, so you should browse that site for the technical specifics and how the package functions actually work, but I’ll describe it here more off the cuff.</p>
+<p>The basic idea is that you initialize an <em>RRP Project</em> (using the <a href="https://readmit.centralstatz.com/reference/rrp_project_init.html"><code>rrp_project_init()</code></a> function). This generates a new project folder which all of your work will be configured in. As you configure things or want to operate/run the platform, you simply just use the other package functions to apply operations to your project. So you are just managing that project folder that gets created.</p>
+<section id="whats-in-an-rrp-project" class="level2">
+<h2 class="anchored" data-anchor-id="whats-in-an-rrp-project">What’s in an RRP project?</h2>
+<p>You can go and see it <a href="https://github.com/centralstatz/readmit/tree/main/inst/project-template">here</a>. That folder is the exact project template that is made to your computer.</p>
+<ul>
+<li>You get a <code>README.md</code> file which tells you exactly what you need to do next and how to operate your project.</li>
+<li>You get some configuration (<code>.dcf</code>) files that simply provide metadata about your project.</li>
+<li>You get a <em>runnable</em> <a href="https://shiny.posit.co/">Shiny</a> application in <code>app/</code> that is completely self-contained (you can customize it or deploy it anywhere) (You also get some branding files to help with that config)</li>
+<li><strong>Most Importantly</strong>: You get two scripts in <code>R/</code> that need to be configured. Once those are configured properly, then you can essentially just start making runs on the project.</li>
+</ul>
+</section>
+<section id="whats-in-the-r-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="whats-in-the-r-scripts">What’s in the R scripts?</h2>
+<p>These are the essential pieces, and represent the core concepts of the platform. One script is for you to map your hospital’s data to the canonical data model the platform needs to perform operations.</p>
+<p>For <code>produce-canonical.R</code>, you are essentially just determining what a “discharge” and “readmission” is for <em>your</em> hospital (with timestamps) and mapping that to the column names the platform expects. It simply needs to be encoded in the R script, but you can use whatever database connectors/tools you’d like to retrieve your data. Then when a run is made on the platform, it’s just going to run that script at the appropriate step to fetch the discharges it needed.</p>
+<p>For <code>calculate-risk.R</code>, you are configuring <em>how</em> you want to estimate the risk of readmission for each discharge that gets passed through the function. This can be anything you want. You can have as simple or complex of a model you want. You can bring in any number of additional predictors you want. The main requirement is that you understand <em>what</em> is being predicted, and your model should be reflective of that <em>estimand</em> (which is the <em>remaining risk of readmission at the current point in time</em>).</p>
+<p>The choice to keep things pieces up to the user is COMPLETELY INTENTIONAL. First, you know your data, how it’s captured, how things are defined. It’s your call to make what represents discharges for your organization. Second, I think readmission risk models (and models in general) are actually better suited to be locally developed. I don’t need to prescribe some risk model that I think is universally applicable to every hospital and patient. That’s the EXACT OPPOSITE of my philosophy. Instead, I think every hospital probably has a different flavor as to why patients are readmitted, how they want to think about risk, and what specific drivers of that risk are. Thus, these are meant to empower analysts within health systems to build their methodology.</p>
+<p>You can use validation functions (e.g., <a href="https://readmit.centralstatz.com/reference/rrp_project_validate.html"><code>rrp_project_validate()</code></a>) to check things and confirm things along the way. The <code>README.md</code> and website <a href="https://readmit.centralstatz.com/articles/implementing-rrp.html">tutorial</a> also help you understand how to make things fit together.</p>
+</section>
+<section id="persistent-history-and-app-data" class="level2">
+<h2 class="anchored" data-anchor-id="persistent-history-and-app-data">Persistent history and app data?</h2>
+<p>So when the RRP Project is initialized, there’s actually one piece that’s not in your folder until you make it so. First, you’ll notice that if you try running the <code>app/</code> right after project initialization, it <em>will</em> work, there’s just no data to feed it. You need to first configure your source mapping and model prediction functions. Once those are in place, you use the <a href="https://readmit.centralstatz.com/reference/rrp_state_init.html"><code>rrp_state_init()</code></a> function which then adds another folder to your RRP Project in order to capture persistent history of your operational runs. Specifically, it initializes an (empty) <a href="https://duckdb.org/">DuckDB</a> database that will eventually store records and predictions as runs are made, along with the datasets needed to populate the application.</p>
+<p>So if we assume you’ve configured the source mapping, a valid model, and initialized the state history, you can then use <a href="https://readmit.centralstatz.com/reference/rrp_run.html"><code>rrp_run()</code></a> to perform a “run” on your project. For example, a <em>run</em> might (or should) mean: <em>“as of today, or right now, query all of the patients currently at risk for readmission, and compute their remaining risk of readmission”.</em></p>
+<p>Your source mapping and model prediction scripts are invoked, and propogated through the platform functions. Ultimately, all (qualified) discharges will receive their readmission risk prediction (according to your model) and then write those records to the project’s database.</p>
+<p>Now if I run it again tomorrow, it’s going to do it again. And again. And again. Everytime you <em>run</em> the platform, based on the <em>as-of</em> time you input (which typically would be <em>right now</em>) it should see who is at risk for readmission and then store their risk in the database.</p>
+<p><em>This means you now have a trajectory throughout follow-up for each patient at risk for readmission</em>.</p>
+<p>You can query this database if you’d like to explore those results (or use the <a href="https://readmit.centralstatz.com/reference/rrp_inspect_history.html"><code>rrp_inspect_history()</code></a> function).</p>
+<p>Then, the next step of package functions is to actually get this data to now populate in the application.</p>
+<p>Once you have your persistent, retained history in the database, you can use the <a href="https://readmit.centralstatz.com/reference/rrp_refresh_products.html"><code>rrp_refresh_products()</code></a> function which will <em>extract</em> the relevant records from your current historical database and prepare them as CSV files that the application currently needs.</p>
+<p>This is key: <em>the app does NOT read from the database directly</em>. We intentionally create the extracts of what the app currently needs for its purpose. Namely, the patients who are <em>currently</em> at risk for readmission, and their associated risk trajectories. The database stores everything, forever. The extracts get refreshed to facilitate the app for that point in time.</p>
+</section>
+<section id="a-self-contained-app" class="level2">
+<h2 class="anchored" data-anchor-id="a-self-contained-app">A self-contained app</h2>
+<p>THAT is the whole point. The refreshed application datasets make it so your applications is completely separated and independent of everything else, including the <code>readmit</code> package. Thus, <em>you</em> get to choose what to do with the application: you can add your own custom hospital logo (it comes with a placeholder), you can change the color schemes, you could even add a bunch more analytical content if you wanted to connect other sources. But importantly, you can <em>deploy</em> the app wherever you want without a bunch of overhead besides the basic, standard dependencies that are required for the Shiny application.</p>
+</section>
+</section>
+<section id="empowering-hospital-analysts" class="level1">
+<h1>Empowering hospital analysts</h1>
+<p>One of the main goals of developing it this way was to empower data analysts, data scientists, quality folks, etc. to be able to build a usable data/modeling product that is operational almost out of the box without prescribing exactly how you do it. Again, you get to determine how the source mapping is done. You get to determine how the modeling is done (though I’m always open to discussing this :) ).</p>
+<p>But more importantly, this is <em>just an R package</em>. It’s FREE and OPEN SOURCE. You can literally just install/download it and start using it. Typically with platform vendors and stuff like that, there’s so much bureacracy inside a hospital by the time a new tool can get “approved”, then tested, then evaluated. Probably because there’s money at stake. So by the time you’ve even been able to vet something it’s already been forever. You have to likely already have all the different stakeholder buy-in, etc. because there’s likely so much integration involved.</p>
+<p><em>This tool takes a different approach.</em></p>
+<p><em>Instead</em>, it’s immediately available to you. Just install it. And once you install it, you already have a <em>polished</em> application out of the box. You just need to link up your data source and model and GO. Thus, you, on your own, as an analyst inside the hospital, could get it all configured with your ideas of how risk should be estimated, and simply start running the platform and getting predictions. The package tools let you easily operate your project, so now your Shiny app is going to be updated with the actual patient data and risk trajectories. You can add your hospital’s logo to the app, and rebrand it if you’d like, and even <em>deploy</em> it somewhere internally-accessible (e.g., Posit Connect, or some other app service).</p>
+<p><em>By the time you even need to start talking to stakeholders about it, you can have a living, breathing polished product in place</em>. You don’t need to go to people with the <em>idea</em> of it, you can go to them with the actual product. They can see it, and determine if it’s useful, or what would make it useful. They can put there hands on it right away. And YOU are the one that took the initiative and built it.</p>
+</section>
+<section id="why-is-it-a-platform" class="level1">
+<h1>Why is it a “platform”?</h1>
+<p>I call it a <em>platform</em> because it’s meant to be an operational tool that a hospital data science team or analyst can use to actually facilitate readmission prediction day to day. There is a web application that you can deploy wherever you want to have care teams navigate who is at risk, etc. So I see it more as a platform/software installation that is simply delivered as an R package. And actually, I spent a TON of time developing this into an actual stand alone, installable software with its own command line interface (CLI). It was fully working with an <code>rrp</code> command you could run in terminal. That was going to be the primary interface to operate the platform. But I got to a point where it was becoming way overengineered for an initial version (even though it was pretty cool), and since most of the backend was written in R anyway, it DRAMATICALLY simplified things to declare the platform itself as an R package and implement it that way.</p>
+</section>
+<section id="future-direction" class="level1">
+<h1>Future direction</h1>
+<p>While the current platform operations and the application are pretty polished and rigorous, the scope of information is not yet. Right now it’s quite simple: you just load your discharges, assess the risk, and the app displays the risk over follow. That’s useful information. But eventually I want it to be able to connect MORE dots around readmission management (again going back to some of the broader points made in my <a href="https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/">2024 article</a>).</p>
+<p>For example, I could envision there being capabilities to test, record and assess local interventions on readmission reduction. Every hospital is trying all sorts of different things to try to achieve clinical outcomes. Why not let teams register and encode those strategies into the platform, see how they work, and potentially INFORM the risk estimation as they take shape? It’s sort of like a feedback loop: implement an intervention, train new models with those interventions encoded, and then risks adjust based on those interventions. You start to be able to assess counterfactuals of different interventions, and not just identify <em>who</em> is at highest risk, but <em>what</em> intervention might be best for them at that point in time during follow-up.</p>
+<p>Another layer is executive-level readmission reporting. There’s so much disconnect in terms of what patients are included in which metrics that a lot of the times these become almost uninterpretable or meaningless. For example, the HRRP only cares about Medicare patients, but hospital-level readmission metrics typically look at everyone. You might still get penalized even though you are meeting your hospital level goals. This is a lineage problem. And I think hospitals can do a much better job of tracking that lineage across different readmission measures, how they relate to one another, and how things roll-up (or roll-down) into the day to day readmission management of individual patients.</p>
+<p><br></p>
+<p>We’ll end it there. Check out the <a href="https://readmit.centralstatz.com/index.html">website</a> to get started with an RRP Project. It’s free and open-source, so you don’t have much to lose. Would love to hear any feedback from people actually trying to use it.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/www\.zajichekstats\.com\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Introducing the Readmission Risk Pool Platform"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "An open-source platform for hospital readmission risk assessment."</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Alex Zajichek"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "11/18/2026"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="an">image:</span><span class="co"> "feature.png"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">  - Healthcare Analytics</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">  - Software Development</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">  - Healthcare</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">  - Readmissions</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu"># The old package</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>I built the original <span class="in">`0.0.1`</span> version of the <span class="in">`readmit`</span> R package back in December 2025 (see the article <span class="co">[</span><span class="ot">here</span><span class="co">](https://www.zajichekstats.com/post/introducing-the-readmit-r-package/)</span>). Maybe some of that was useful, but it felt like a hodgepodge of functionality. One of the main limitations was that it was built to directly ingest the <span class="co">[</span><span class="ot">Hospital-Specific Reports (HSR)</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/reports)</span> that hospitals receive detailing their results from the <span class="co">[</span><span class="ot">Hospital Readmissions Reduction Program (HRRP)</span><span class="co">](https://www.cms.gov/medicare/payment/prospective-payment-systems/acute-inpatient-pps/hospital-readmissions-reduction-program-hrrp)</span> for that year. These are Excel workbooks that contain details about the total penalty amount, the contributions of each disease cohort to that penalty, and the line-item, discharge-level data of the patients that contributed to the penalty for each disease cohort, among other things. This had been the standard format for how these reports were produced for many program years. So, the package functions depended explicitly on this format to properly import the various tabs from this workbook, all the way down to field names, row gaps, etc. It seemed to be reliable and worked well for a collection of sample reports spanning multiple program years. </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>Basically right as I had finished up developing the code, <span class="co">[</span><span class="ot">CMS</span><span class="co">](https://www.cms.gov/)</span> completely _changed_ the way these reports were formatted, how they were structured, and how hospitals would access them. Starting in FY2026, the information in these reports was to be retrieved in various CSV files that hospitals could only download from within the <span class="co">[</span><span class="ot">Hospital Quality Reporting (HQR)</span><span class="co">](https://hqr.cms.gov/hqrng/login)</span> portal (which you need a login to access). The <span class="co">[</span><span class="ot">sample report page</span><span class="co">](https://qualitynet.cms.gov/inpatient/hrrp/reports#tab2)</span>, which the initial package version depended on for developing the right structure, no longer contained examples of the actual data files. I was blind. So even though the package was still useful for analyzing historical program results, the functions were obsolete to analyze future reports, and now I had this baggage of carrying around multiple reporting standards and trying to determine if I should try to accomodate both, or just forget about the old versions and try to work towards implementing for the future. </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>So this year, **I scratched all of it**.</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>Don't get me wrong. The concepts in the original package are still important, and I think there is definite value in having a strategy and method to analyze these reports to understand your hospital's results in the HRRP. But I wanted to give the package a more coherent identity and a more direct purpose.</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>Starting with the <span class="in">`1.0.0`</span> version, the <span class="in">`readmit`</span> R package is now the <span class="co">[</span><span class="ot">Readmission Risk Pool Platform (RRP)</span><span class="co">](https://readmit.centralstatz.com/)</span>. The current <span class="co">[</span><span class="ot">CRAN version</span><span class="co">](https://cran.r-project.org/web/packages/readmit/index.html)</span> is <span class="in">`1.1.0`</span>, so you should make sure you have that one when you install it:</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"readmit"</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"readmit"</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] ‘1.1.0’</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="fu"># What is the RRP?</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>This is something I've been sort of casually exploring and thinking about for years. I've spent most of my career working for hospitals as a data scientist, and I got to see readmissions from many different angles: on the research side focused on the methodology trying to build models to predict readmissions in different contexts, on the administration side trying to untangle the HRRP and convey to hospital leadership how the results relate to broader executive level reporting metrics, and on the day-to-day side working directly with the nurses and care teams trying to figure out which patients to call to prevent a readmission from occurring. </span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>Through all of that there was a lot of problems, or opportunities I should say, to do things better from a data science perspective. There are many layers to this. From the disconnect of readmission reporting metrics between teams and layers of the health system (e.g., HRRP vs. hospital readmission metrics, finance vs. quality, etc.), how readmission risk models get implemented and used in the clinical workflows, and even just the framing of the readmission risk estimation problem. In 2024 I sort of consolidated all of my observations about readmissions into a cohesive framing of the problem and my view of a solution which I wrote it all up in an article <span class="co">[</span><span class="ot">here</span><span class="co">](https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/)</span>.</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>The <span class="co">[</span><span class="ot">Readmission Risk Pool Platform (RRP)</span><span class="co">](https://readmit.centralstatz.com/)</span>, for now, focuses on the _risk model framing_ part. </span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>It essentially provides the analytic workflow to facilitate hospitals being able to track, estimate, and monitoring readmission risk throughout the 30-day post-discharge period. The premise being that, while potentially useful at that specific time, discharge risk scores (which are the most common/prominent way readmission risk models work) quickly grow stale after the patient leaves the hospital. We should be monitoring and updating risk (e.g., daily) to continually monitor who _currently_ needs the attention. That could be someone who was just discharged yesterday, or someone who was discharged 20 days ago (_both_ are at risk for readmission still, and thus are part of the "pool"). </span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>Future versions my incrementally add more scope to the readmission management problem: like thinking about interventions, tracking those, or lineage between HRRP and hospital readmission metrics to the day to day management of readmissions. It's all on the table.</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="fu"># How does it work?</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>The <span class="co">[</span><span class="ot">website</span><span class="co">](https://readmit.centralstatz.com/)</span> has much more detailed information, tutorials, and documentation, so you should browse that site for the technical specifics and how the package functions actually work, but I'll describe it here more off the cuff.</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>The basic idea is that you initialize an _RRP Project_ (using the <span class="co">[</span><span class="ot">`rrp_project_init()`</span><span class="co">](https://readmit.centralstatz.com/reference/rrp_project_init.html)</span> function). This generates a new project folder which all of your work will be configured in. As you configure things or want to operate/run the platform, you simply just use the other package functions to apply operations to your project. So you are just managing that project folder that gets created.</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## What's in an RRP project?</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>You can go and see it <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/centralstatz/readmit/tree/main/inst/project-template)</span>. That folder is the exact project template that is made to your computer. </span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>You get a <span class="in">`README.md`</span> file which tells you exactly what you need to do next and how to operate your project. </span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>You get some configuration (<span class="in">`.dcf`</span>) files that simply provide metadata about your project. </span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>You get a _runnable_ <span class="co">[</span><span class="ot">Shiny</span><span class="co">](https://shiny.posit.co/)</span> application in <span class="in">`app/`</span> that is completely self-contained (you can customize it or deploy it anywhere) (You also get some branding files to help with that config)</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Most Importantly**: You get two scripts in <span class="in">`R/`</span> that need to be configured. Once those are configured properly, then you can essentially just start making runs on the project.</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## What's in the R scripts?</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>These are the essential pieces, and represent the core concepts of the platform. One script is for you to map your hospital's data to the canonical data model the platform needs to perform operations. </span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>For <span class="in">`produce-canonical.R`</span>, you are essentially just determining what a "discharge" and "readmission" is for _your_ hospital (with timestamps) and mapping that to the column names the platform expects. It simply needs to be encoded in the R script, but you can use whatever database connectors/tools you'd like to retrieve your data. Then when a run is made on the platform, it's just going to run that script at the appropriate step to fetch the discharges it needed.</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>For <span class="in">`calculate-risk.R`</span>, you are configuring _how_ you want to estimate the risk of readmission for each discharge that gets passed through the function. This can be anything you want. You can have as simple or complex of a model you want. You can bring in any number of additional predictors you want. The main requirement is that you understand _what_ is being predicted, and your model should be reflective of that _estimand_ (which is the _remaining risk of readmission at the current point in time_). </span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>The choice to keep things pieces up to the user is COMPLETELY INTENTIONAL. First, you know your data, how it's captured, how things are defined. It's your call to make what represents discharges for your organization. Second, I think readmission risk models (and models in general) are actually better suited to be locally developed. I don't need to prescribe some risk model that I think is universally applicable to every hospital and patient. That's the EXACT OPPOSITE of my philosophy. Instead, I think every hospital probably has a different flavor as to why patients are readmitted, how they want to think about risk, and what specific drivers of that risk are. Thus, these are meant to empower analysts within health systems to build their methodology.</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>You can use validation functions (e.g., <span class="co">[</span><span class="ot">`rrp_project_validate()`</span><span class="co">](https://readmit.centralstatz.com/reference/rrp_project_validate.html)</span>) to check things and confirm things along the way. The <span class="in">`README.md`</span> and website <span class="co">[</span><span class="ot">tutorial</span><span class="co">](https://readmit.centralstatz.com/articles/implementing-rrp.html)</span> also help you understand how to make things fit together.</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## Persistent history and app data?</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>So when the RRP Project is initialized, there's actually one piece that's not in your folder until you make it so. First, you'll notice that if you try running the <span class="in">`app/`</span> right after project initialization, it _will_ work, there's just no data to feed it. You need to first configure your source mapping and model prediction functions. Once those are in place, you use the <span class="co">[</span><span class="ot">`rrp_state_init()`</span><span class="co">](https://readmit.centralstatz.com/reference/rrp_state_init.html)</span> function which then adds another folder to your RRP Project in order to capture persistent history of your operational runs. Specifically, it initializes an (empty) <span class="co">[</span><span class="ot">DuckDB</span><span class="co">](https://duckdb.org/)</span> database that will eventually store records and predictions as runs are made, along with the datasets needed to populate the application.</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>So if we assume you've configured the source mapping, a valid model, and initialized the state history, you can then use <span class="co">[</span><span class="ot">`rrp_run()`</span><span class="co">](https://readmit.centralstatz.com/reference/rrp_run.html)</span> to perform a "run" on your project. For example, a _run_ might (or should) mean: _"as of today, or right now, query all of the patients currently at risk for readmission, and compute their remaining risk of readmission"._ </span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>Your source mapping and model prediction scripts are invoked, and propogated through the platform functions. Ultimately, all (qualified) discharges will receive their readmission risk prediction (according to your model) and then write those records to the project's database. </span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>Now if I run it again tomorrow, it's going to do it again. And again. And again. Everytime you _run_ the platform, based on the _as-of_ time you input (which typically would be _right now_) it should see who is at risk for readmission and then store their risk in the database. </span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>_This means you now have a trajectory throughout follow-up for each patient at risk for readmission_.</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>You can query this database if you'd like to explore those results (or use the <span class="co">[</span><span class="ot">`rrp_inspect_history()`</span><span class="co">](https://readmit.centralstatz.com/reference/rrp_inspect_history.html)</span> function). </span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>Then, the next step of package functions is to actually get this data to now populate in the application.</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>Once you have your persistent, retained history in the database, you can use the <span class="co">[</span><span class="ot">`rrp_refresh_products()`</span><span class="co">](https://readmit.centralstatz.com/reference/rrp_refresh_products.html)</span> function which will _extract_ the relevant records from your current historical database and prepare them as CSV files that the application currently needs. </span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>This is key: _the app does NOT read from the database directly_. We intentionally create the extracts of what the app currently needs for its purpose. Namely, the patients who are _currently_ at risk for readmission, and their associated risk trajectories. The database stores everything, forever. The extracts get refreshed to facilitate the app for that point in time.</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="fu">## A self-contained app</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>THAT is the whole point. The refreshed application datasets make it so your applications is completely separated and independent of everything else, including the <span class="in">`readmit`</span> package. Thus, _you_ get to choose what to do with the application: you can add your own custom hospital logo (it comes with a placeholder), you can change the color schemes, you could even add a bunch more analytical content if you wanted to connect other sources. But importantly, you can _deploy_ the app wherever you want without a bunch of overhead besides the basic, standard dependencies that are required for the Shiny application. </span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a><span class="fu"># Empowering hospital analysts</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>One of the main goals of developing it this way was to empower data analysts, data scientists, quality folks, etc. to be able to build a usable data/modeling product that is operational almost out of the box without prescribing exactly how you do it. Again, you get to determine how the source mapping is done. You get to determine how the modeling is done (though I'm always open to discussing this :) ).</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>But more importantly, this is _just an R package_. It's FREE and OPEN SOURCE. You can literally just install/download it and start using it. Typically with platform vendors and stuff like that, there's so much bureacracy inside a hospital by the time a new tool can get "approved", then tested, then evaluated. Probably because there's money at stake. So by the time you've even been able to vet something it's already been forever. You have to likely already have all the different stakeholder buy-in, etc. because there's likely so much integration involved. </span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>_This tool takes a different approach._</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>_Instead_, it's immediately available to you. Just install it. And once you install it, you already have a _polished_ application out of the box. You just need to link up your data source and model and GO. Thus, you, on your own, as an analyst inside the hospital, could get it all configured with your ideas of how risk should be estimated, and simply start running the platform and getting predictions. The package tools let you easily operate your project, so now your Shiny app is going to be updated with the actual patient data and risk trajectories. You can add your hospital's logo to the app, and rebrand it if you'd like, and even _deploy_ it somewhere internally-accessible (e.g., Posit Connect, or some other app service). </span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>_By the time you even need to start talking to stakeholders about it, you can have a living, breathing polished product in place_. You don't need to go to people with the _idea_ of it, you can go to them with the actual product. They can see it, and determine if it's useful, or what would make it useful. They can put there hands on it right away. And YOU are the one that took the initiative and built it. </span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a><span class="fu"># Why is it a "platform"?</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>I call it a _platform_ because it's meant to be an operational tool that a hospital data science team or analyst can use to actually facilitate readmission prediction day to day. There is a web application that you can deploy wherever you want to have care teams navigate who is at risk, etc. So I see it more as a platform/software installation that is simply delivered as an R package. And actually, I spent a TON of time developing this into an actual stand alone, installable software with its own command line interface (CLI). It was fully working with an <span class="in">`rrp`</span> command you could run in terminal. That was going to be the primary interface to operate the platform. But I got to a point where it was becoming way overengineered for an initial version (even though it was pretty cool), and since most of the backend was written in R anyway, it DRAMATICALLY simplified things to declare the platform itself as an R package and implement it that way.</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a><span class="fu"># Future direction</span></span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>While the current platform operations and the application are pretty polished and rigorous, the scope of information is not yet. Right now it's quite simple: you just load your discharges, assess the risk, and the app displays the risk over follow. That's useful information. But eventually I want it to be able to connect MORE dots around readmission management (again going back to some of the broader points made in my <span class="co">[</span><span class="ot">2024 article</span><span class="co">](https://www.zajichekstats.com/post/managing-the-readmission-risk-pool/)</span>). </span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>For example, I could envision there being capabilities to test, record and assess local interventions on readmission reduction. Every hospital is trying all sorts of different things to try to achieve clinical outcomes. Why not let teams register and encode those strategies into the platform, see how they work, and potentially INFORM the risk estimation as they take shape? It's sort of like a feedback loop: implement an intervention, train new models with those interventions encoded, and then risks adjust based on those interventions. You start to be able to assess counterfactuals of different interventions, and not just identify _who_ is at highest risk, but _what_ intervention might be best for them at that point in time during follow-up.</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>Another layer is executive-level readmission reporting. There's so much disconnect in terms of what patients are included in which metrics that a lot of the times these become almost uninterpretable or meaningless. For example, the HRRP only cares about Medicare patients, but hospital-level readmission metrics typically look at everyone. You might still get penalized even though you are meeting your hospital level goals. This is a lineage problem. And I think hospitals can do a much better job of tracking that lineage across different readmission measures, how they relate to one another, and how things roll-up (or roll-down) into the day to day readmission management of individual patients.</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">br</span><span class="dt">&gt;</span></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>We'll end it there. Check out the <span class="co">[</span><span class="ot">website</span><span class="co">](https://readmit.centralstatz.com/index.html)</span> to get started with an RRP Project. It's free and open-source, so you don't have much to lose. Would love to hear any feedback from people actually trying to use it.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Zajichek Stats</p>
+</div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.centralstatz.com/">
+<p>CentralStatz</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../../index.xml">
+<p>RSS</p>
+</a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

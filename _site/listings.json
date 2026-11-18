@@ -38,6 +38,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/post/readmission-risk-pool-platform/index.html",
       "/post/what-if-implementation-is-no-longer-a-constraint/index.html",
       "/post/i-am-not-data-driven/index.html",
       "/post/the-worst-lead-in-hockey/index.html",
@@ -101,6 +102,7 @@
   {
     "listing": "/topics/healthcare-analytics.html",
     "items": [
+      "/post/readmission-risk-pool-platform/index.html",
       "/post/getting-started-with-the-hhs-medicaid-spending-dataset/index.html",
       "/post/conceptualizing-the-readmission-risk-pool/index.html",
       "/post/investigating-a-hospital-specific-report/index.html",

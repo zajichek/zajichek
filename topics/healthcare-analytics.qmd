@@ -4,6 +4,7 @@ description: "Articles on healthcare data, hospital readmissions, risk adjustmen
 listing:
   id: topic-listing
   contents:
+    - ../post/readmission-risk-pool-platform/index.qmd
     - ../post/managing-the-readmission-risk-pool/index.qmd
     - ../post/conceptualizing-the-readmission-risk-pool/index.qmd
     - ../post/investigating-a-hospital-specific-report/index.qmd
@@ -27,6 +28,9 @@ Concepts, tutorials, applications, etc. around topics in healthcare like readmis
 ## Start With These
 
 :::: {.link-grid}
+::: {.link-card}
+### [Introducing the readmission risk pool platform](../post/readmission-risk-pool-platform/)
+:::
 ::: {.link-card}
 ### [A prediction system for managing the hospital readmission risk pool](../post/managing-the-readmission-risk-pool/)
 :::
